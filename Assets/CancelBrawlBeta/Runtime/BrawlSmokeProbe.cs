@@ -18,7 +18,10 @@ namespace CancelBrawl.Beta
         private void Awake()
         {
             match = GetComponent<BrawlMatch>(); started = Time.realtimeSinceStartup;
-            output = Path.GetFullPath("Evidence"); Directory.CreateDirectory(output);
+            string[] args = Environment.GetCommandLineArgs();
+            int outputArg = Array.IndexOf(args, "-evidence-path");
+            output = Path.GetFullPath(outputArg >= 0 && outputArg + 1 < args.Length ? args[outputArg + 1] : "Evidence");
+            Directory.CreateDirectory(output);
             Application.logMessageReceived += OnLog;
         }
         private void OnDestroy() => Application.logMessageReceived -= OnLog;
@@ -132,7 +135,65 @@ namespace CancelBrawl.Beta
             Check(fought, "Los bots navegan y conectan ataques en partida real");
             yield return new WaitForEndOfFrame(); ScreenCapture.CaptureScreenshot(Path.Combine(output, "gameplay.png"));
             yield return new WaitForSeconds(.5f);
+            yield return TrainingChecks();
             Finish();
+        }
+
+        private IEnumerator TrainingChecks()
+        {
+            match.AutomatedTest = true; match.ReturnToMenu();
+            match.ArenaIndex = 0; match.SelectedCharacter = 0; match.OpponentCount = 4;
+            match.StartTraining();
+            yield return new WaitForSeconds(.3f);
+            Check(match.IsTraining && match.Phase == MatchPhase.Playing && match.Fighters.Length == 2,
+                "CombatLab inicia dos puestos sin alterar el número de rivales de versus");
+            var a = match.Fighters[0]; var b = match.Fighters[1];
+            Vector3 position = b.transform.position; float clock = match.RemainingTime;
+            yield return new WaitForSeconds(.5f);
+            Check((b.transform.position - position).magnitude < .03f && a.Damage == 0, "Objetivo inmóvil no genera entradas ni ataques");
+            Check(match.RemainingTime == clock, "Entrenamiento no agota el reloj");
+            Check(a.SkinName != "Provisional" && b.SkinName != "Provisional", "Laboratorio reutiliza modelos y aspectos originales");
+            match.SetTrainingDamage(100);
+            Check(b.Damage == 100 && b.Stocks == 3, "Daño ajustable a 100 sin perder stocks");
+            match.SetTrainingDamage(999); Check(b.Damage == 300, "Daño de entrenamiento acotado a 300");
+            match.SetTrainingDamage(-25); Check(b.Damage == 0, "Daño de entrenamiento no negativo");
+            match.FillTrainingMeter(); Check(a.Meter == 100, "Entrenamiento permite practicar super sin grind");
+            a.Submit(new BrawlCommand { Basic = true, Aim = match.WorldToCamera(Vector3.forward) });
+            yield return new WaitForSeconds(.12f);
+            Check(a.AttackIsActive && a.TryGetMeleeVolume(out float range, out float height, out float dot, out bool safe)
+                && Mathf.Abs(range - (a.CurrentAttackSpec.Range + .3f)) < .001f && height == a.CurrentAttackSpec.Height,
+                "Visualizador comparte alcance y tolerancia vertical del golpe real");
+            a.ClearInput(); yield return new WaitForSeconds(.3f);
+            Check(b.Damage == match.Settings.basicDamage, "Golpe en laboratorio conecta una sola vez sobre el objetivo");
+            match.SetTrainingDamage(125); match.ResetTraining();
+            yield return new WaitForSeconds(.2f);
+            a = match.Fighters[0]; b = match.Fighters[1];
+            Check(b.Damage == 125 && a.Meter == 0 && !a.IsAttacking, "Reinicio conserva daño inicial y limpia ataque y barra");
+            bool stable = true;
+            for (int i = 0; i < 100; i++)
+            {
+                a.RespawnAt(new Vector3(0, -10, 0), false); b.RespawnAt(new Vector3(0, -10, 0), false);
+                match.ResolveRingOuts();
+                stable &= a.Stocks == 3 && b.Stocks == 3 && b.Damage == 125 && match.Phase == MatchPhase.Playing;
+            }
+            Check(stable, "Cien caídas dobles en laboratorio recuperan ambos luchadores sin agotar stocks");
+            match.TogglePause(); position = a.transform.position;
+            yield return new WaitForSeconds(.2f);
+            Check(match.Phase == MatchPhase.Paused && a.transform.position == position, "Pausa de entrenamiento congela simulación");
+            match.TogglePause(); match.ShowCombatVolumes = false;
+            yield return null;
+            bool hidden = true;
+            foreach (var volume in FindObjectsByType<BrawlCombatVolumes>())
+                foreach (var line in volume.GetComponentsInChildren<LineRenderer>())
+                    if (line.gameObject.name == "Volumen ofensivo" || line.gameObject.name == "Referencia del objetivo") hidden &= !line.enabled;
+            Check(hidden, "Opción de volúmenes oculta las líneas de laboratorio");
+            match.ShowCombatVolumes = true;
+            yield return new WaitForEndOfFrame(); ScreenCapture.CaptureScreenshot(Path.Combine(output, "combat-lab.png"));
+            match.ReturnToMenu(); yield return null;
+            Check(!match.IsTraining && FindObjectsByType<BrawlCombatVolumes>().Length == 0, "Salir del laboratorio limpia sus visualizadores");
+            match.StartMatch(); yield return new WaitForSeconds(3.2f);
+            Check(!match.IsTraining && match.Fighters.Length == 5 && match.RemainingTime < 300,
+                "Volver a versus restaura cinco participantes y reloj normal");
         }
         private IEnumerator KitChecks()
         {

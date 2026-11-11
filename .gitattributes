@@ -4,3 +4,9 @@
 *.ogg filter=lfs diff=lfs merge=lfs -text
 *.blend filter=lfs diff=lfs merge=lfs -text
 *.zip filter=lfs diff=lfs merge=lfs -text
+
+# Unity writes empty YAML fields with a trailing space; keep its generated format.
+*.unity whitespace=-blank-at-eol
+*.meta whitespace=-blank-at-eol
+# Preserve raw Unity Player logs, including its input subsystem's CR/CRLF records.
+*.log -whitespace

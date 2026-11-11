@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/FunadosProduction/Scenes/Funados.unity
+    guid: e03e9ed69d1fc9744b1ed49099e1cdf0
+  - enabled: 1
+    path: Assets/FunadosProduction/Scenes/CombatLab.unity
+    guid: b61c891a10041d84a8cb3340c799b0eb
+  - enabled: 1
     path: Assets/CancelBrawlBeta/Scenes/CancelBrawlBeta.unity
     guid: 6b29e02e419871d45aef1a2be9bf8299
   m_configObjects:

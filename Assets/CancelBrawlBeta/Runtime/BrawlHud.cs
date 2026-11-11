@@ -137,10 +137,11 @@ namespace CancelBrawl.Beta
         {
             Fill(new Rect(0, 0, Width, Height), new Color(.02f, .03f, .065f, .9f));
             Fill(new Rect(80, 46, 65, 5), Cyan);
-            Label(new Rect(80, 58, 800, 86), "CANCEL BRAWL", title, Paper);
+            Label(new Rect(80, 58, 800, 86), match.Title, title, Paper);
             Label(new Rect(84, 146, 820, 34), "El último en pie se queda con la cancha.", heading, Muted);
-            Label(new Rect(1010, 70, 510, 26), "BETA LOCAL  /  " + BrawlMatch.Version, body, Cyan, TextAnchor.UpperRight);
+            Label(new Rect(1010, 70, 510, 26), "LOCAL  /  " + match.DisplayVersion, body, Cyan, TextAnchor.UpperRight);
             Label(new Rect(1010, 102, 510, 52), "Empuja a tus rivales fuera del escenario.\n100 % de daño no elimina por sí solo.", small, Paper, TextAnchor.UpperRight);
+            if (match.IsProduction && Button(new Rect(1010, 158, 510, 32), "ENTRENAMIENTO / COMBAT LAB", Cyan)) match.StartTraining();
 
             Panel(new Rect(80, 196, 900, 606));
             // 01 · fighter
@@ -192,7 +193,7 @@ namespace CancelBrawl.Beta
                 if (BrawlRoster.SkinCount(character) > 1)
                     Label(new Rect(chip.x + 8, chip.y + 4, chip.width - 14, 20),
                         $"aspecto {BrawlRoster.WrapSkin(character, match.SlotSkins[slot]) + 1}/{BrawlRoster.SkinCount(character)}", tiny, Muted, TextAnchor.UpperRight);
-                Label(new Rect(chip.x + 8, chip.y + 21, chip.width - 12, 22), kit.Name, small, Paper);
+                Label(new Rect(chip.x + 8, chip.y + 21, chip.width - 12, 22), match.CharacterName(character), small, Paper);
             }
             if (Button(new Rect(104, 642, 852, 50),
                     match.LocalCoop ? "MANDOS LOCALES ACTIVOS  ·  clic para jugar solo" :
@@ -217,7 +218,7 @@ namespace CancelBrawl.Beta
             {
                 if (selected) match.CycleSkin(0); else match.SelectedCharacter = index;
             }
-            Label(new Rect(rect.x + 13, rect.y + 12, rect.width - 18, 26), kit.Name.ToUpperInvariant(), small, selected ? kit.Accent : Paper);
+            Label(new Rect(rect.x + 13, rect.y + 12, rect.width - 18, 26), match.CharacterName(index).ToUpperInvariant(), small, selected ? kit.Accent : Paper);
             Label(new Rect(rect.x + 13, rect.y + 38, rect.width - 18, 24), kit.Role, tiny, Muted);
             int skins = BrawlRoster.SkinCount(index);
             string look = selected
@@ -255,13 +256,14 @@ namespace CancelBrawl.Beta
         private void DrawMatch()
         {
             Panel(new Rect(25, 22, 360, 68));
-            Label(new Rect(42, 31, 330, 28), "CANCEL BRAWL", body, Paper);
+            Label(new Rect(42, 31, 330, 28), match.Title, body, Paper);
             Label(new Rect(42, 63, 330, 20), "BETA LOCAL  ·  " + match.Arena.DisplayName.ToUpperInvariant(), small, Cyan);
             Panel(new Rect(710, 18, 180, 72));
             int seconds = Mathf.CeilToInt(Mathf.Max(0, match.RemainingTime));
-            Label(new Rect(710, 18, 180, 72), $"{seconds / 60:00}:{seconds % 60:00}", number,
+            Label(new Rect(710, 18, 180, 72), match.IsTraining ? "LAB" : $"{seconds / 60:00}:{seconds % 60:00}", number,
                 seconds <= 30 ? Pink : Paper, TextAnchor.MiddleCenter);
             Label(new Rect(1190, 30, 380, 34), "ESC  /  PAUSA", small, Muted, TextAnchor.UpperRight);
+            if (match.IsTraining) DrawTraining();
             if (!string.IsNullOrEmpty(match.Announcement) && match.Phase == MatchPhase.Playing)
             {
                 Panel(new Rect(440, 112, 720, 47));
@@ -289,13 +291,13 @@ namespace CancelBrawl.Beta
             Panel(rect);
             Fill(new Rect(rect.x, rect.y, rect.width, 4), accent);
             Label(new Rect(rect.x + 14, rect.y + 13, rect.width - 28, 24),
-                $"P{fighter.PlayerIndex + 1}  {fighter.DisplayName.ToUpperInvariant()}", small, accent);
+                $"P{fighter.PlayerIndex + 1}  {match.CharacterName(fighter.CharacterIndex).ToUpperInvariant()}", small, accent);
             Label(new Rect(rect.x + 14, rect.y + 36, 146, 57),
                 fighter.Eliminated ? "FUERA" : $"{Mathf.RoundToInt(fighter.Damage)}%",
                 fighter.Eliminated ? heading : number,
                 fighter.Damage >= 100f ? Pink : Paper);
             string status = fighter.Eliminated ? $"PUESTO {fighter.Place}" :
-                fighter.IsRespawning ? "VOLVIENDO…" : fighter.IsBot ? "IA" : "HUMANO";
+                fighter.IsRespawning ? "VOLVIENDO…" : match.IsTraining && fighter.PlayerIndex == 1 ? "OBJETIVO" : fighter.IsBot ? "IA" : "HUMANO";
             Label(new Rect(rect.x + 164, rect.y + 41, rect.width - 176, 22),
                 $"{fighter.Stocks} VIDAS", small, Paper);
             Label(new Rect(rect.x + 164, rect.y + 67, rect.width - 176, 24), status, small, Muted);
@@ -304,6 +306,23 @@ namespace CancelBrawl.Beta
                 fighter.Meter >= 100f ? Pink : accent);
             if (fighter.Meter >= 100f && !fighter.Eliminated)
                 Label(new Rect(rect.x + 154, rect.y + 85, rect.width - 168, 18), "SUPER LISTO", small, Pink);
+        }
+
+        private void DrawTraining()
+        {
+            Panel(new Rect(1000, 106, 570, 178));
+            Label(new Rect(1016, 114, 540, 26), "ENTRENAMIENTO  ·  objetivo sin entradas", body, Cyan);
+            Label(new Rect(1016, 148, 245, 24), $"Daño inicial: {match.TrainingDamage:0}%", small, Paper);
+            bool oldEnabled = GUI.enabled;
+            GUI.enabled = match.Phase == MatchPhase.Playing;
+            if (Button(new Rect(1260, 146, 62, 32), "−25", Muted)) match.SetTrainingDamage(match.TrainingDamage - 25);
+            if (Button(new Rect(1330, 146, 62, 32), "+25", Muted)) match.SetTrainingDamage(match.TrainingDamage + 25);
+            if (Button(new Rect(1400, 146, 150, 32), "REINICIAR", Cyan)) match.ResetTraining();
+            if (Button(new Rect(1016, 190, 258, 34), match.ShowCombatVolumes ? "VOLÚMENES: SÍ" : "VOLÚMENES: NO", Muted))
+                match.ShowCombatVolumes = !match.ShowCombatVolumes;
+            if (Button(new Rect(1286, 190, 264, 34), "SUPER LISTO", Pink)) match.FillTrainingMeter();
+            GUI.enabled = oldEnabled;
+            Label(new Rect(1016, 234, 530, 42), "Amarillo: preparación/final · rojo: activo.\nAlcance de melee; paredes bloquean. Cruz: raíz del objetivo.", small, Muted);
         }
 
         private void DrawCountdown()
@@ -344,7 +363,7 @@ namespace CancelBrawl.Beta
                 Color accent = fighter.Place == 1 ? Cyan : Muted;
                 Fill(new Rect(300, y, 1000, 72), Card);
                 Label(new Rect(320, y + 14, 82, 44), $"#{fighter.Place}", heading, accent);
-                Label(new Rect(411, y + 10, 440, 30), $"P{fighter.PlayerIndex + 1}  {fighter.DisplayName}", heading, fighter.PlayerColor);
+                Label(new Rect(411, y + 10, 440, 30), $"P{fighter.PlayerIndex + 1}  {match.CharacterName(fighter.CharacterIndex)}", heading, fighter.PlayerColor);
                 Label(new Rect(415, y + 44, 440, 20), fighter.IsBot ? "RIVAL IA" : "JUGADOR LOCAL", small, Muted);
                 Label(new Rect(850, y + 10, 430, 28), $"{fighter.Stocks} vidas  ·  {Mathf.RoundToInt(fighter.Damage)}%", body, Paper, TextAnchor.MiddleRight);
                 Label(new Rect(850, y + 42, 430, 22),

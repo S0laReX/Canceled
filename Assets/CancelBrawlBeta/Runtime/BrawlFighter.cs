@@ -38,6 +38,21 @@ namespace CancelBrawl.Beta
         public AttackKind CurrentAttack => attack.Kind;
         public float AttackProgress => attacking ? Mathf.Clamp01(attackTime / attack.Duration) : 0;
         public BrawlTrap ActiveTrap => activeTrap;
+        public AttackSpec CurrentAttackSpec => attack;
+        public bool AttackIsActive => attacking && attackTime >= attack.Windup && attackTime <= attack.Windup + attack.Active;
+
+        // The debug view and the actual sweep share these values.
+        public bool TryGetMeleeVolume(out float range, out float height, out float minDot, out bool safeSectors)
+        {
+            range = attack.Range + .3f; height = attack.Height; safeSectors = false; minDot = 0;
+            if (!attacking) return false;
+            if (attack.Kind == AttackKind.Basic) { minDot = Kit.BasicCone; return true; }
+            if (attack.Kind == AttackKind.Heavy) { minDot = .25f; return true; }
+            if (attack.Kind == AttackKind.Special && Kit.Special == SpecialStyle.Dash) { minDot = .2f; return true; }
+            if (attack.Kind == AttackKind.Super && Kit.Super == SuperStyle.Fan) { minDot = .26f; return true; }
+            if (attack.Kind == AttackKind.Super && Kit.Super == SuperStyle.SafeSweep) { minDot = -1; safeSectors = true; return true; }
+            return false;
+        }
 
         private BrawlMatch match;
         private BrawlSettings settings;
@@ -265,15 +280,15 @@ namespace CancelBrawl.Beta
                 if (!activeStarted) { activeStarted = true; OnActiveStart(); }
                 switch (attack.Kind)
                 {
-                    case AttackKind.Basic: Sweep(attack.Range, attack.Height, Kit.BasicCone, false); break;
-                    case AttackKind.Heavy: Sweep(attack.Range, attack.Height, .25f, false); break;
+                    case AttackKind.Basic:
+                    case AttackKind.Heavy: SweepCurrent(); break;
                     case AttackKind.Special:
-                        if (Kit.Special == SpecialStyle.Dash) { lunging = true; Sweep(Kit.SpecialRange, attack.Height, .2f, false); }
+                        if (Kit.Special == SpecialStyle.Dash) { lunging = true; SweepCurrent(); }
                         break;
                     case AttackKind.Super:
-                        if (Kit.Super == SuperStyle.Fan) Sweep(attack.Range, attack.Height, .26f, false);
+                        if (Kit.Super == SuperStyle.Fan) SweepCurrent();
                         else if (Kit.Super == SuperStyle.GroundWave) GroundWave();
-                        else if (Kit.Super == SuperStyle.SafeSweep) Sweep(attack.Range, attack.Height, -1, true);
+                        else if (Kit.Super == SuperStyle.SafeSweep) SweepCurrent();
                         break;
                 }
             }
@@ -315,14 +330,15 @@ namespace CancelBrawl.Beta
         }
 
         /// <summary>Volumetric melee/area check: horizontal reach, vertical reach, facing cone and line of sight.</summary>
-        private void Sweep(float range, float height, float minDot, bool safeSectors)
+        private void SweepCurrent()
         {
+            if (!TryGetMeleeVolume(out float range, out float height, out float minDot, out bool safeSectors)) return;
             foreach (var target in match.Fighters)
             {
                 if (target == this || target.Eliminated || target.IsRespawning) continue;
                 Vector3 difference = target.transform.position - transform.position;
                 Vector3 flat = Vector3.ProjectOnPlane(difference, Vector3.up);
-                if (flat.magnitude > range + .3f || Mathf.Abs(difference.y) > height) continue;
+                if (flat.magnitude > range || Mathf.Abs(difference.y) > height) continue;
                 if (flat.sqrMagnitude > .2f && Vector3.Dot(Facing, flat.normalized) < minDot) continue;
                 if (safeSectors && flat.sqrMagnitude > .2f && Mathf.Abs(Vector3.Angle(Facing, flat) - 90) < SafeHalfAngle) continue;
                 if (Physics.Linecast(transform.position + Vector3.up * .85f, target.transform.position + Vector3.up * .85f, 1, QueryTriggerInteraction.Ignore)) continue;
@@ -397,6 +413,17 @@ namespace CancelBrawl.Beta
 
         /// <summary>Test hook used only by the standalone smoke probe.</summary>
         internal void SetMeterForTest(float value) => Meter = Mathf.Clamp(value, 0, 100);
+
+        internal void SetPracticeDamage(float value) => Damage = Mathf.Clamp(value, 0, 300);
+
+        internal void ResetPractice(Vector3 position, float damage)
+        {
+            if (activeTrap) Destroy(activeTrap.gameObject);
+            attacking = false; comboWindow = 0; combo = 0; chainCharged = false;
+            attackToken = null; activeStarted = false; LastAttacker = null;
+            Damage = damage; Meter = 0; command = default;
+            RespawnAt(position, false);
+        }
 
         // ───────────────────────── Practice AI ─────────────────────────
         private BrawlCommand BotCommand(float dt)

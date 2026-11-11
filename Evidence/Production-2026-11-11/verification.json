@@ -1,0 +1,48 @@
+{
+  "buildResult": "Succeeded",
+  "checksFailed": 0,
+  "executableSHA256": "D05C5848F7CC2EB32FF6016F54762EE3C666A69B862BE297DF2390830C1EA8CF",
+  "checksPassed": 83,
+  "product": "FUNADOS",
+  "sources": [
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlFighter.cs",
+      "sha256": "B4FEAB27655806B0968CA98AC656437C8356544A8DEE027B26C6C27A9993B14A"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlMatch.cs",
+      "sha256": "BC4478453E71C8D764B9931A5BB5B3C55833B113774E688805FB0FFA842C8437"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlHud.cs",
+      "sha256": "29AC5BE214F008AA3B2F22D2DE45F642730F8FB13F7C1A6D90E7A16CE0A962E5"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlCombatVolumes.cs",
+      "sha256": "2CAC22A2CFC19BB96FA5733F68084815E2AD7F47EB920DB42F806931E1A18B81"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSmokeProbe.cs",
+      "sha256": "C16A82094E9038ECEE30C6194CABA58DCA58051781C820182BB0445927CDD911"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Editor/FunadosProjectBuilder.cs",
+      "sha256": "C23C5B91DDD55669ECAC5D5717F52E8F834D6A700790B126B5196B48584E8E42"
+    },
+    {
+      "path": "Assets/FunadosProduction/Scenes/Funados.unity",
+      "sha256": "856BEA4AEFE43B661783D496AA8EEC92F73A58B5486C09D30D1E5941A5BED6EA"
+    },
+    {
+      "path": "Assets/FunadosProduction/Scenes/CombatLab.unity",
+      "sha256": "BA1E2CB7E6D1E51DC5229CCD1FB0C79431EC91BD0B0229A8C6AF74F4E1073A6F"
+    }
+  ],
+  "editor": "6000.5.7f1",
+  "version": "0.4.0",
+  "gameAssemblySHA256": "61E30CABAAEA2C4851BCE3B9F11856DFDD722F468D50AFA121A6A5911E1920AF",
+  "baselineCommit": "d2bb25e",
+  "date": "2026-11-11",
+  "buildWarnings": 485,
+  "buildErrors": 0
+}

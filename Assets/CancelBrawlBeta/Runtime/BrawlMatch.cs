@@ -10,6 +10,16 @@ namespace CancelBrawl.Beta
         public const int MaxPlayers = 5;
         public const string Version = "0.3.0";
         [SerializeField] private BrawlSettings settings;
+        [SerializeField] private bool productionPresentation;
+        [SerializeField] private bool startInTraining;
+        public bool IsProduction => productionPresentation;
+        public bool IsTraining { get; private set; }
+        public bool ShowCombatVolumes { get; set; } = true;
+        public float TrainingDamage { get; private set; }
+        public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
+        public string DisplayVersion => IsProduction ? "0.4.0" : Version;
+        public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
+            character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
         public MatchPhase Phase { get; private set; } = MatchPhase.Menu;
         public float RemainingTime { get; private set; }
         public float CountdownRemaining { get; private set; }
@@ -109,10 +119,44 @@ namespace CancelBrawl.Beta
 
         public void StartMatch()
         {
+            IsTraining = false;
+            BeginRound();
+        }
+
+        private void Start()
+        {
+            if (startInTraining && !AutomatedTest) StartTraining();
+        }
+
+        public void StartTraining()
+        {
+            IsTraining = true;
+            BeginRound();
+        }
+
+        public void SetTrainingDamage(float damage)
+        {
+            if (!IsTraining || float.IsNaN(damage) || float.IsInfinity(damage)) return;
+            TrainingDamage = Mathf.Clamp(damage, 0, 300);
+            if (Fighters.Length > 1) Fighters[1].SetPracticeDamage(TrainingDamage);
+        }
+
+        public void ResetTraining()
+        {
+            if (IsTraining) BeginRound();
+        }
+
+        public void FillTrainingMeter()
+        {
+            if (IsTraining && Fighters.Length > 0) Fighters[0].SetMeterForTest(100);
+        }
+
+        private void BeginRound()
+        {
             CleanupRound();
             ArenaIndex = Mathf.Clamp(ArenaIndex, 0, BrawlArena.Count - 1);
             BuildArena(ArenaIndex);
-            int count = Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers);
+            int count = IsTraining ? 2 : Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers);
             Fighters = new BrawlFighter[count];
             var targets = new Transform[count];
             Vector3[] spawns = Arena.SpawnPoints;
@@ -123,12 +167,21 @@ namespace CancelBrawl.Beta
                 fighterObject.transform.position = spawns[i % spawns.Length];
                 var fighter = fighterObject.AddComponent<BrawlFighter>();
                 resolvedSkins[i] = ResolveSkin(i, count);
-                fighter.Configure(this, settings, i, SlotCharacters[i], resolvedSkins[i], i > padHumans, colors[i]);
+                fighter.Configure(this, settings, i, SlotCharacters[i], resolvedSkins[i], !IsTraining && i > padHumans, colors[i]);
                 Fighters[i] = fighter; targets[i] = fighter.transform;
             }
             RemainingTime = settings.matchSeconds; CountdownRemaining = 3; SimTime = 0;
             Phase = MatchPhase.Countdown; announcementTime = 0;
             groupCamera.Configure(targets);
+            if (IsTraining)
+            {
+                // Same arena and combat rules; only input, timer and stock exhaustion differ.
+                Fighters[0].RespawnAt(Arena.SpawnPoints[0], false);
+                Fighters[1].RespawnAt(Arena.SpawnPoints[0] + Vector3.forward * 1.6f, false);
+                Fighters[1].SetPracticeDamage(TrainingDamage);
+                foreach (var fighter in Fighters) fighter.gameObject.AddComponent<BrawlCombatVolumes>().Configure(this, fighter);
+                Phase = MatchPhase.Playing;
+            }
         }
 
         private void Update()
@@ -143,7 +196,7 @@ namespace CancelBrawl.Beta
             if (Phase != MatchPhase.Playing) return;
             for (int i = 0; i < Fighters.Length; i++)
             {
-                if (Fighters[i].IsBot || Fighters[i].Eliminated || Fighters[i].IsRespawning) continue;
+                if ((IsTraining && i > 0) || Fighters[i].IsBot || Fighters[i].Eliminated || Fighters[i].IsRespawning) continue;
                 if (i == 0)
                 {
                     var input = ReadKeyboard(Fighters[i]);
@@ -168,7 +221,12 @@ namespace CancelBrawl.Beta
             var mouse = Mouse.current;
             if (mouse != null)
             {
-                input.Basic = mouse.leftButton.wasPressedThisFrame; input.Heavy = mouse.rightButton.wasPressedThisFrame;
+                Vector2 pointer = mouse.position.ReadValue();
+                float scale = Mathf.Min(Screen.width / 1600f, Screen.height / 900f);
+                Vector2 uiPoint = (new Vector2(pointer.x, Screen.height - pointer.y) -
+                    new Vector2((Screen.width - 1600 * scale) * .5f, (Screen.height - 900 * scale) * .5f)) / Mathf.Max(.001f, scale);
+                bool overLab = IsTraining && new Rect(1000, 106, 570, 178).Contains(uiPoint);
+                input.Basic = !overLab && mouse.leftButton.wasPressedThisFrame; input.Heavy = !overLab && mouse.rightButton.wasPressedThisFrame;
                 Ray ray = view.ScreenPointToRay(mouse.position.ReadValue());
                 var plane = new Plane(Vector3.up, fighter.transform.position + Vector3.up * .75f);
                 if (plane.Raycast(ray, out float enter)) input.Aim = WorldToCamera(Vector3.ProjectOnPlane(ray.GetPoint(enter) - fighter.transform.position, Vector3.up).normalized);
@@ -234,10 +292,11 @@ namespace CancelBrawl.Beta
             if (Phase != MatchPhase.Playing) return;
             float dt = Time.fixedDeltaTime;
             SimTime += dt;
-            RemainingTime = Mathf.Max(0, RemainingTime - dt); announcementTime -= dt;
+            if (!IsTraining) RemainingTime = Mathf.Max(0, RemainingTime - dt);
+            announcementTime -= dt;
             foreach (var fighter in Fighters) fighter.Tick(dt);
             ResolveRingOuts();
-            if (Phase == MatchPhase.Playing && RemainingTime <= 0) FinishByTime();
+            if (!IsTraining && Phase == MatchPhase.Playing && RemainingTime <= 0) FinishByTime();
         }
 
         internal void ResolveRingOuts()
@@ -246,6 +305,13 @@ namespace CancelBrawl.Beta
             foreach (var fighter in Fighters)
             {
                 if (!fighter.OutsideArena) continue;
+                if (IsTraining)
+                {
+                    // A lab fall never exhausts stocks or ends the session.
+                    fighter.ResetPractice(Arena.SpawnPoints[0] + (fighter.PlayerIndex == 1 ? Vector3.forward * 1.6f : Vector3.zero),
+                        fighter.PlayerIndex == 1 ? TrainingDamage : 0);
+                    continue;
+                }
                 BrawlFighter credited = fighter.LoseStock();
                 string who = "P" + (fighter.PlayerIndex + 1);
                 string by = credited != null ? "P" + (credited.PlayerIndex + 1) + " EXPULSA A " + who : who + " CAE SOLO";
@@ -283,6 +349,7 @@ namespace CancelBrawl.Beta
 
         public void ReturnToMenu()
         {
+            IsTraining = false;
             Phase = MatchPhase.Menu; CleanupRound(); RemainingTime = settings.matchSeconds;
             groupCamera.Configure(null);
         }
