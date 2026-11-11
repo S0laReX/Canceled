@@ -141,7 +141,10 @@ namespace CancelBrawl.Beta
             Label(new Rect(84, 146, 820, 34), "El último en pie se queda con la cancha.", heading, Muted);
             Label(new Rect(1010, 70, 510, 26), "LOCAL  /  " + match.DisplayVersion, body, Cyan, TextAnchor.UpperRight);
             Label(new Rect(1010, 102, 510, 52), "Empuja a tus rivales fuera del escenario.\n100 % de daño no elimina por sí solo.", small, Paper, TextAnchor.UpperRight);
+            bool menuEnabled = GUI.enabled;
+            GUI.enabled = match.CanStartTraining;
             if (match.IsProduction && Button(new Rect(1010, 158, 510, 32), "ENTRENAMIENTO / COMBAT LAB", Cyan)) match.StartTraining();
+            GUI.enabled = menuEnabled;
 
             Panel(new Rect(80, 196, 900, 606));
             // 01 · fighter
@@ -177,7 +180,7 @@ namespace CancelBrawl.Beta
                 if (Button(new Rect(104 + (i - 1) * 56, 578, 48, 46), i.ToString(), match.OpponentCount == i ? Cyan : Muted))
                     match.OpponentCount = choice;
             }
-            int pads = match.LocalCoop ? Mathf.Min(match.ConnectedPads, 4) : 0;
+            int pads = match.LocalCoop ? Mathf.Min(Mathf.Max(0, match.ConnectedPads - (match.P1UsesGamepad ? 1 : 0)), 4) : 0;
             for (int slot = 1; slot <= match.OpponentCount; slot++)
             {
                 Rect chip = new Rect(338 + (slot - 1) * 156, 578, 148, 46);
@@ -199,12 +202,18 @@ namespace CancelBrawl.Beta
                     match.LocalCoop ? "MANDOS LOCALES ACTIVOS  ·  clic para jugar solo" :
                         "JUGAR SOLO CONTRA IA  ·  clic para sumar mandos", new Color(.69f, .75f, .86f)))
                 match.LocalCoop = !match.LocalCoop;
-            string padInfo = $"Mandos detectados: {match.ConnectedPads}.  P1 usa teclado y ratón; los mandos controlan P2–P5.";
+            GUI.enabled = match.LocalCoop;
+            if (Button(new Rect(104, 702, 320, 36), match.P1UsesGamepad ? "P1: MANDO" : "P1: TECLADO Y RATÓN", Cyan))
+                match.P1UsesGamepad = !match.P1UsesGamepad;
+            GUI.enabled = menuEnabled;
+            string padInfo = $"Mandos: {match.ConnectedPads}.  " + (match.LocalCoop && match.P1UsesGamepad ? "Dos mandos como mínimo para versus." : "Conecta mandos antes de empezar.");
             if (match.RejectedPads > 0) padInfo += $"  {match.RejectedPads} mando(s) sobrante(s) no participan: máximo 5 jugadores.";
-            Label(new Rect(104, 702, 852, 40), padInfo, small, match.RejectedPads > 0 ? Pink : Muted);
+            Label(new Rect(438, 702, 518, 42), padInfo, small, match.RejectedPads > 0 ? Pink : Muted);
             Label(new Rect(104, 748, 852, 40), $"{match.Settings.startingStocks} vidas  ·  {Mathf.RoundToInt(match.Settings.matchSeconds / 60)} minutos  ·  mayor daño = mayor empuje  ·  partida libre sin rating", small, Muted);
 
-            if (Button(new Rect(80, 818, 900, 62), $"ENTRAR A {BrawlArena.Names[match.ArenaIndex].ToUpperInvariant()}   /   ENTER", Cyan)) match.StartMatch();
+            GUI.enabled = match.CanStartMatch;
+            if (Button(new Rect(80, 818, 900, 62), match.CanStartMatch ? $"ENTRAR A {BrawlArena.Names[match.ArenaIndex].ToUpperInvariant()}   /   ENTER" : "CONECTA DOS MANDOS PARA INICIAR", Cyan)) match.StartMatch();
+            GUI.enabled = menuEnabled;
             DrawControls(new Rect(1010, 196, 510, 470), true);
             DrawOptions(new Rect(1010, 682, 510, 198));
         }
@@ -296,7 +305,7 @@ namespace CancelBrawl.Beta
                 fighter.Eliminated ? "FUERA" : $"{Mathf.RoundToInt(fighter.Damage)}%",
                 fighter.Eliminated ? heading : number,
                 fighter.Damage >= 100f ? Pink : Paper);
-            string status = fighter.Eliminated ? $"PUESTO {fighter.Place}" :
+            string status = (match.MissingDeviceMask & (1 << fighter.PlayerIndex)) != 0 ? "SIN MANDO" : fighter.Eliminated ? $"PUESTO {fighter.Place}" :
                 fighter.IsRespawning ? "VOLVIENDO…" : match.IsTraining && fighter.PlayerIndex == 1 ? "OBJETIVO" : fighter.IsBot ? "IA" : "HUMANO";
             Label(new Rect(rect.x + 164, rect.y + 41, rect.width - 176, 22),
                 $"{fighter.Stocks} VIDAS", small, Paper);
@@ -339,9 +348,17 @@ namespace CancelBrawl.Beta
             Fill(new Rect(0, 0, Width, Height), new Color(.015f, .022f, .045f, .87f));
             Panel(new Rect(130, 180, 530, 420));
             Label(new Rect(166, 210, 458, 70), "PAUSA", title, Paper);
-            Label(new Rect(170, 300, 420, 64), "Toma aire. La cancha puede esperar.", body, Muted);
+            string pauseText = match.DevicePause
+                ? match.MissingDeviceMask != 0 ? "Falta mando: " + match.MissingDeviceNames + ". Reconéctalo o pulsa Start en uno nuevo para ocupar el puesto libre."
+                    : "Mandos recuperados. Pulsa Continuar o Start para reanudar."
+                : "Toma aire. La cancha puede esperar.";
+            Label(new Rect(170, 300, 420, 90), pauseText, body, Muted);
+            bool previous = GUI.enabled;
+            GUI.enabled = match.MissingDeviceMask == 0;
             if (Button(new Rect(170, 400, 450, 62), "CONTINUAR  /  ESC", Cyan)) match.TogglePause();
-            if (Button(new Rect(170, 488, 450, 58), "VOLVER AL MENÚ", Muted)) match.ReturnToMenu();
+            GUI.enabled = previous;
+            if (match.DevicePause && match.MissingDeviceMask != 0 && Button(new Rect(170, 470, 450, 40), "ASIGNAR MANDOS DISPONIBLES", Cyan)) match.ReassignMissingDevices();
+            if (Button(new Rect(170, 526, 450, 58), "VOLVER AL MENÚ", Muted)) match.ReturnToMenu();
             DrawOptions(new Rect(130, 616, 530, 198));
             DrawControls(new Rect(720, 180, 750, 470), false);
         }
@@ -393,7 +410,7 @@ namespace CancelBrawl.Beta
             }
             Fill(new Rect(x, y + 4, rect.width - 56, 1), new Color(.18f, .22f, .30f));
             Label(new Rect(x, y + 18, rect.width - 56, 85),
-                "MANDO   Palancas: mover / orientar\nA salto · X básico · Y fuerte · B especial\nRB recuperar · RT esquiva · LB super · LT caer", small, Muted);
+                "MANDO   Palanca izq. o cruceta: mover / der.: orientar\nA salto · X básico · Y fuerte · B especial\nRB recuperar · RT esquiva · LB super · LT caer", small, Muted);
             if (includeIntro)
                 Label(new Rect(x, rect.yMax - 40, rect.width - 56, 30), "Conecta mandos antes de iniciar la partida.", small, Cyan);
         }

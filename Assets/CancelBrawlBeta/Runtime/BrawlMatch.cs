@@ -17,7 +17,8 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public string DisplayVersion => IsProduction ? "0.4.0" : Version;
+        public const string ProductionVersion = "0.4.1";
+        public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
         public MatchPhase Phase { get; private set; } = MatchPhase.Menu;
@@ -70,12 +71,32 @@ namespace CancelBrawl.Beta
         public int OpponentCount { get; set; } = 1;
         public int ArenaIndex { get; set; }
         public bool LocalCoop { get; set; }
+        public bool P1UsesGamepad { get; set; }
+        public bool CanStartMatch => !LocalCoop || !P1UsesGamepad || ConnectedPads >= 2;
+        public bool CanStartTraining => !LocalCoop || !P1UsesGamepad || ConnectedPads >= 1;
+        public BrawlDeviceSlots Devices { get; } = new BrawlDeviceSlots();
+        public bool DevicePause { get; private set; }
+        public int MissingDeviceMask => Devices.MissingMask;
+        private MatchPhase resumePhase = MatchPhase.Playing;
+        public string MissingDeviceNames
+        {
+            get
+            {
+                string names = "";
+                for (int i = 0; i < MaxPlayers; i++)
+                    if ((MissingDeviceMask & (1 << i)) != 0) names += (names.Length > 0 ? ", " : "") + "P" + (i + 1);
+                return names;
+            }
+        }
         public BrawlArena Arena { get; private set; }
         public BrawlSettings Settings => settings;
         public bool AutomatedTest { get; set; }
-        public int ConnectedPads => Gamepad.all.Count;
+        public int ConnectedPads
+        {
+            get { int count = 0; foreach (var pad in Gamepad.all) if (BrawlDeviceSlots.Available(pad)) count++; return count; }
+        }
         /// <summary>Pads beyond P2–P5 are rejected: a match never exceeds five participants.</summary>
-        public int RejectedPads => LocalCoop ? Mathf.Max(0, Gamepad.all.Count - (MaxPlayers - 1)) : 0;
+        public int RejectedPads => Mathf.Max(0, ConnectedPads - (LocalCoop ? Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers) - (P1UsesGamepad ? 0 : 1) : 1));
         public BrawlCamera GroupCamera => groupCamera;
         private BrawlCamera groupCamera;
         private Camera view;
@@ -103,7 +124,7 @@ namespace CancelBrawl.Beta
             BrawlFeedback.Initialize(transform);
             LoadOptions();
             RemainingTime = settings.matchSeconds;
-            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-beta-smoke") >= 0)
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-beta-smoke") >= 0 || Array.IndexOf(Environment.GetCommandLineArgs(), "-controls-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
         }
 
@@ -119,6 +140,7 @@ namespace CancelBrawl.Beta
 
         public void StartMatch()
         {
+            if (!CanStartMatch) return;
             IsTraining = false;
             BeginRound();
         }
@@ -130,6 +152,7 @@ namespace CancelBrawl.Beta
 
         public void StartTraining()
         {
+            if (!CanStartTraining) return;
             IsTraining = true;
             BeginRound();
         }
@@ -160,14 +183,15 @@ namespace CancelBrawl.Beta
             Fighters = new BrawlFighter[count];
             var targets = new Transform[count];
             Vector3[] spawns = Arena.SpawnPoints;
-            int padHumans = LocalCoop ? Mathf.Min(Gamepad.all.Count, count - 1) : 0;
+            Devices.Configure(count, LocalCoop, P1UsesGamepad, IsTraining);
+            DevicePause = false;
             for (int i = 0; i < count; i++)
             {
                 var fighterObject = new GameObject("P" + (i + 1)); fighterObject.transform.SetParent(participants);
                 fighterObject.transform.position = spawns[i % spawns.Length];
                 var fighter = fighterObject.AddComponent<BrawlFighter>();
                 resolvedSkins[i] = ResolveSkin(i, count);
-                fighter.Configure(this, settings, i, SlotCharacters[i], resolvedSkins[i], !IsTraining && i > padHumans, colors[i]);
+                fighter.Configure(this, settings, i, SlotCharacters[i], resolvedSkins[i], !IsTraining && !Devices.IsHuman(i), colors[i]);
                 Fighters[i] = fighter; targets[i] = fighter.transform;
             }
             RemainingTime = settings.matchSeconds; CountdownRemaining = 3; SimTime = 0;
@@ -186,24 +210,31 @@ namespace CancelBrawl.Beta
 
         private void Update()
         {
+            PollDevices();
             if (AutomatedTest) return;
             var keys = Keyboard.current;
             bool confirm = keys != null && keys.enterKey.wasPressedThisFrame;
             bool pause = keys != null && keys.escapeKey.wasPressedThisFrame;
-            foreach (var pad in Gamepad.all) { pause |= pad.startButton.wasPressedThisFrame; confirm |= pad.buttonSouth.wasPressedThisFrame; }
+            foreach (var pad in Gamepad.all)
+            {
+                if (Phase == MatchPhase.Menu || Devices.Owns(pad))
+                { pause |= pad.startButton.wasPressedThisFrame; confirm |= pad.buttonSouth.wasPressedThisFrame; }
+                else if (DevicePause && pad.startButton.wasPressedThisFrame) Devices.ClaimMissing(pad);
+            }
             if (Phase == MatchPhase.Menu || Phase == MatchPhase.Results) { if (confirm) StartMatch(); return; }
-            if (pause && (Phase == MatchPhase.Playing || Phase == MatchPhase.Paused)) { TogglePause(); return; }
+            if (pause && (Phase == MatchPhase.Playing || Phase == MatchPhase.Paused || Phase == MatchPhase.Countdown)) { TogglePause(); return; }
             if (Phase != MatchPhase.Playing) return;
             for (int i = 0; i < Fighters.Length; i++)
             {
                 if ((IsTraining && i > 0) || Fighters[i].IsBot || Fighters[i].Eliminated || Fighters[i].IsRespawning) continue;
                 if (i == 0)
                 {
-                    var input = ReadKeyboard(Fighters[i]);
-                    if (!LocalCoop && Gamepad.all.Count > 0) input = Combine(input, ReadGamepad(Gamepad.all[0]));
+                    var input = Devices.KeyboardP1 ? ReadKeyboard(Fighters[i]) : default;
+                    var pad = Devices.Pad(0);
+                    if (BrawlDeviceSlots.Available(pad)) input = Combine(input, ReadGamepad(pad));
                     Fighters[i].Submit(input);
                 }
-                else if (i - 1 < Gamepad.all.Count) Fighters[i].Submit(ReadGamepad(Gamepad.all[i - 1]));
+                else if (BrawlDeviceSlots.Available(Devices.Pad(i))) Fighters[i].Submit(ReadGamepad(Devices.Pad(i)));
             }
         }
 
@@ -234,11 +265,11 @@ namespace CancelBrawl.Beta
             return input;
         }
 
-        private static BrawlCommand ReadGamepad(Gamepad pad)
+        internal static BrawlCommand ReadGamepad(Gamepad pad)
         {
             return new BrawlCommand
             {
-                Move = pad.leftStick.ReadValue(), Aim = pad.rightStick.ReadValue(),
+                Move = Vector2.ClampMagnitude(pad.leftStick.ReadValue() + pad.dpad.ReadValue(), 1), Aim = pad.rightStick.ReadValue(),
                 Jump = pad.buttonSouth.wasPressedThisFrame, Basic = pad.buttonWest.wasPressedThisFrame,
                 Heavy = pad.buttonNorth.wasPressedThisFrame, Special = pad.buttonEast.wasPressedThisFrame,
                 Recovery = pad.rightShoulder.wasPressedThisFrame, Dodge = pad.rightTrigger.wasPressedThisFrame,
@@ -283,6 +314,7 @@ namespace CancelBrawl.Beta
 
         private void FixedUpdate()
         {
+            PollDevices();
             if (Phase == MatchPhase.Countdown)
             {
                 CountdownRemaining -= Time.fixedDeltaTime;
@@ -343,8 +375,26 @@ namespace CancelBrawl.Beta
 
         public void TogglePause()
         {
-            if (Phase == MatchPhase.Playing) { Phase = MatchPhase.Paused; ClearInputs(); }
-            else if (Phase == MatchPhase.Paused) { Phase = MatchPhase.Playing; ClearInputs(); }
+            if (Phase == MatchPhase.Playing || Phase == MatchPhase.Countdown)
+            { resumePhase = Phase; Phase = MatchPhase.Paused; ClearInputs(); }
+            else if (Phase == MatchPhase.Paused && MissingDeviceMask == 0)
+            { Phase = resumePhase; DevicePause = false; ClearInputs(); }
+        }
+
+        public void PollDevices()
+        {
+            if (Phase != MatchPhase.Playing && Phase != MatchPhase.Countdown && Phase != MatchPhase.Paused) return;
+            if (MissingDeviceMask == 0) return;
+            DevicePause = true;
+            if (Phase != MatchPhase.Paused) { resumePhase = Phase; Phase = MatchPhase.Paused; }
+            ClearInputs();
+        }
+
+        public void ReassignMissingDevices()
+        {
+            if (Phase != MatchPhase.Paused || !DevicePause) return;
+            foreach (var pad in Gamepad.all) Devices.ClaimMissing(pad);
+            ClearInputs();
         }
 
         public void ReturnToMenu()
@@ -356,6 +406,7 @@ namespace CancelBrawl.Beta
 
         private void CleanupRound()
         {
+            Devices.Clear(); DevicePause = false;
             foreach (var fighter in Fighters) if (fighter != null) { fighter.gameObject.SetActive(false); Destroy(fighter.gameObject); }
             Fighters = Array.Empty<BrawlFighter>();
             foreach (var projectile in FindObjectsByType<BrawlProjectile>()) { projectile.gameObject.SetActive(false); Destroy(projectile.gameObject); }

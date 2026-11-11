@@ -1,0 +1,143 @@
+Mono path[0] = 'D:/Funados/Builds/Funados/0.4.1/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/Builds/Funados/0.4.1/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/Builds/Funados/0.4.1/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.068 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.119500 ms
+BETA_CHECK_PASS Arranque al menú sin Editor
+BETA_CHECK_PASS Cuenta atrás e inicio de duelo
+BETA_CHECK_PASS Movimiento 3D continuo en pasos físicos
+BETA_CHECK_PASS Segundo salto real en el aire
+BETA_CHECK_PASS Recuperación aérea consume un uso
+BETA_CHECK_PASS Recuperación no se regenera en el aire
+BETA_CHECK_PASS Aterrizaje restablece recursos
+BETA_CHECK_PASS Básico conecta una vez por activación
+BETA_CHECK_PASS Cadena conectada carga 8 puntos
+BETA_CHECK_PASS Token impide daño duplicado al objetivo
+BETA_CHECK_PASS Daño superior a 100 no elimina
+BETA_CHECK_PASS Carga limitada a 100
+BETA_CHECK_PASS Super consume toda la carga al activar
+BETA_CHECK_PASS Protección de aparición bloquea impactos
+BETA_CHECK_PASS Atacar cancela protección de aparición
+BETA_CHECK_PASS Ventana de esquiva evita impactos
+BETA_CHECK_PASS Final de esquiva vuelve a ser vulnerable
+BETA_CHECK_PASS Geometría sólida bloquea proyectiles
+BETA_CHECK_PASS Expulsión descuenta vida y reinicia daño y carga
+BETA_CHECK_PASS Expulsión atribuida al último atacante dentro de 8 s
+BETA_CHECK_PASS Reaparición automática protegida tras dos segundos
+BETA_CHECK_PASS Pausa local congela reloj y simulación
+BETA_CHECK_PASS Últimas vidas simultáneas comparten primer puesto
+BETA_CHECK_PASS Dos eliminados de cinco comparten cuarto puesto
+BETA_CHECK_PASS Desempate exacto por tiempo conserva puestos compartidos
+BETA_CHECK_PASS El reloj termina la partida automáticamente
+BETA_CHECK_PASS Regreso al menú limpia la partida
+BETA_CHECK_PASS Don Decreto: Decreto exprés conecta
+BETA_CHECK_PASS Don Decreto: especial conectado carga 12 puntos
+BETA_CHECK_PASS Don Decreto: super Mayoría absoluta conecta y no recarga la barra
+BETA_CHECK_PASS Lola Loop: Ola de hate conecta
+BETA_CHECK_PASS Lola Loop: especial conectado carga 12 puntos
+BETA_CHECK_PASS Lola Loop: super Viralización masiva conecta y no recarga la barra
+BETA_CHECK_PASS Coach Tóxico: Serie al fallo conecta
+BETA_CHECK_PASS Coach Tóxico: especial conectado carga 12 puntos
+BETA_CHECK_PASS Coach Tóxico: super Preentreno nuclear conecta y no recarga la barra
+BETA_CHECK_PASS Cripto King: Token rebote conecta
+BETA_CHECK_PASS Cripto King: especial conectado carga 12 puntos
+BETA_CHECK_PASS Cripto King: token rebota en geometría sólida con rebotes limitados
+BETA_CHECK_PASS Cripto King: super Burbuja especulativa conecta y no recarga la barra
+BETA_CHECK_PASS Tío Antena: emisor visible y armado tras preparación
+BETA_CHECK_PASS Tío Antena: Interferencia lanza hacia arriba al primer rival
+BETA_CHECK_PASS Tío Antena: especial conectado carga 12 puntos
+BETA_CHECK_PASS Tío Antena: solo mantiene un emisor activo
+BETA_CHECK_PASS Tío Antena: super La señal definitiva conecta y no recarga la barra
+BETA_CHECK_PASS Tío Antena: sector seguro anunciado evita el super
+BETA_CHECK_PASS Azotea Neón: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Azotea Neón: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Azotea Neón: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Los cinco luchadores usan su modelo animado (The Dapper Tycoon, Pink Pop Princess, Turbo Max, Smirking Tycoon, Tin Foil Fred)
+BETA_CHECK_PASS El modelo de P1 tiene esqueleto generado con pesos
+BETA_CHECK_PASS Azotea Neón: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Mall del Ego: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Mall del Ego: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Mall del Ego: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Mall del Ego: la cámara atenúa el obstáculo que tapa a un luchador
+BETA_CHECK_PASS Mall del Ego: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Campus en Llamas: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Campus en Llamas: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Campus en Llamas: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Campus en Llamas: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Núcleo Cripto: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Núcleo Cripto: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Núcleo Cripto: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Núcleo Cripto: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Revancha de cinco avanza con IA activa
+BETA_CHECK_PASS Los bots navegan y conectan ataques en partida real
+BETA_CHECK_PASS CombatLab inicia dos puestos sin alterar el número de rivales de versus
+BETA_CHECK_PASS Objetivo inmóvil no genera entradas ni ataques
+BETA_CHECK_PASS Entrenamiento no agota el reloj
+BETA_CHECK_PASS Laboratorio reutiliza modelos y aspectos originales
+BETA_CHECK_PASS Daño ajustable a 100 sin perder stocks
+BETA_CHECK_PASS Daño de entrenamiento acotado a 300
+BETA_CHECK_PASS Daño de entrenamiento no negativo
+BETA_CHECK_PASS Entrenamiento permite practicar super sin grind
+BETA_CHECK_PASS Visualizador comparte alcance y tolerancia vertical del golpe real
+BETA_CHECK_PASS Golpe en laboratorio conecta una sola vez sobre el objetivo
+BETA_CHECK_PASS Reinicio conserva daño inicial y limpia ataque y barra
+BETA_CHECK_PASS Cien caídas dobles en laboratorio recuperan ambos luchadores sin agotar stocks
+BETA_CHECK_PASS Pausa de entrenamiento congela simulación
+BETA_CHECK_PASS Opción de volúmenes oculta las líneas de laboratorio
+BETA_CHECK_PASS Salir del laboratorio limpia sus visualizadores
+BETA_CHECK_PASS Volver a versus restaura cinco participantes y reloj normal
+BETA_CHECK_PASS Dos mandos: impide iniciar sin dispositivos suficientes
+BETA_CHECK_PASS Dos mandos: un solo mando no crea un rival humano ficticio
+BETA_CHECK_PASS Teclado y mandos: asignaciones P1/P2/P3 exclusivas
+BETA_CHECK_PASS Entrada real del Input System mueve solo el puesto dueño
+BETA_CHECK_PASS Desconectar P2 pausa e identifica el puesto perdido
+BETA_CHECK_PASS Reordenar Gamepad.all no transfiere P3 a P2
+BETA_CHECK_PASS No permite reanudar mientras falta un mando
+BETA_CHECK_PASS Desconexión conserva reloj, posición, stocks y porcentaje
+BETA_CHECK_PASS Reconectar el mismo dispositivo recupera P2 sin reanudación automática
+BETA_CHECK_PASS Confirmación explícita reanuda después de reconectar
+BETA_CHECK_PASS Dispositivo deshabilitado también bloquea la partida
+BETA_CHECK_PASS Dispositivo rehabilitado conserva su puesto
+BETA_CHECK_PASS Dos bajas simultáneas: los nuevos mandos no ocupan puestos solos
+BETA_CHECK_PASS No se puede asignar un mando ausente
+BETA_CHECK_PASS Reemplazo explícito reclama un solo puesto sin duplicarlo
+BETA_CHECK_PASS Asignar disponibles rellena el otro puesto sin robar el recuperado
+BETA_CHECK_PASS Dos mandos: P1 y P2 humanos con dispositivos diferentes
+BETA_CHECK_PASS Desconexión durante cuenta atrás congela la cuenta
+BETA_CHECK_PASS Reconectar en cuenta atrás vuelve a esa fase y preserva P2
+BETA_CHECK_PASS Dos mandos: entrada de P1 no mueve P2
+BETA_CHECK_PASS Cruceta digital admite diagonales normalizadas
+BETA_CHECK_PASS Cinco jugadores con mandos únicos; el sexto queda fuera
+BETA_CHECK_PASS Desconectar un mando sobrante no pausa la partida
+BETA_CHECK_PASS Número de mandos sobrantes respeta los puestos elegidos
+BETA_CHECK_PASS Entrenamiento conserva mando de P1 y objetivo sin entradas
+BETA_CHECK_PASS Volver al menú libera reservas y aviso de desconexión
+BETA_SMOKE_RESULT PASS checks=109 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

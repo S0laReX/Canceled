@@ -87,16 +87,17 @@ namespace CancelBrawl.Beta.Editor
             BetaProjectBuilder.ConfigureProject();
             EnsureScenes();
             PlayerSettings.productName = "FUNADOS";
-            PlayerSettings.bundleVersion = "0.4.0";
-            Directory.CreateDirectory("Builds/Funados/Windows");
+            PlayerSettings.bundleVersion = BrawlMatch.ProductionVersion;
+            string buildFolder = "Builds/Funados/" + BrawlMatch.ProductionVersion + "/Windows";
+            Directory.CreateDirectory(buildFolder);
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = new[] { MainScene, LabScene, BetaScene },
-                locationPathName = "Builds/Funados/Windows/FUNADOS.exe",
+                locationPathName = buildFolder + "/FUNADOS.exe",
                 target = BuildTarget.StandaloneWindows64, options = BuildOptions.None
             });
-            Directory.CreateDirectory("Evidence/Production-2026-11-11");
-            File.WriteAllText("Evidence/Production-2026-11-11/build.txt",
+            Directory.CreateDirectory("Evidence/Controls-0.4.1");
+            File.WriteAllText("Evidence/Controls-0.4.1/build.txt",
                 $"result={report.summary.result}\nerrors={report.summary.totalErrors}\nwarnings={report.summary.totalWarnings}\nbytes={report.summary.totalSize}\nseconds={report.summary.totalTime.TotalSeconds}\n");
             if (report.summary.result != BuildResult.Succeeded) throw new InvalidOperationException("FUNADOS build: " + report.summary.result);
             Debug.Log("FUNADOS_BUILD_SUCCEEDED");

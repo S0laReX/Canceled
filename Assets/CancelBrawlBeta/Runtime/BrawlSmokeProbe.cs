@@ -18,6 +18,7 @@ namespace CancelBrawl.Beta
         private void Awake()
         {
             match = GetComponent<BrawlMatch>(); started = Time.realtimeSinceStartup;
+            report.version = match.DisplayVersion;
             string[] args = Environment.GetCommandLineArgs();
             int outputArg = Array.IndexOf(args, "-evidence-path");
             output = Path.GetFullPath(outputArg >= 0 && outputArg + 1 < args.Length ? args[outputArg + 1] : "Evidence");
@@ -36,6 +37,11 @@ namespace CancelBrawl.Beta
         private IEnumerator Start()
         {
             yield return null;
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-controls-smoke") >= 0)
+            {
+                yield return BrawlDeviceChecks.Run(match, Check, output);
+                Finish(); yield break;
+            }
             Check(match.Phase == MatchPhase.Menu, "Arranque al menú sin Editor");
             yield return new WaitForEndOfFrame(); ScreenCapture.CaptureScreenshot(Path.Combine(output, "menu.png"));
             match.StartMatch();
@@ -136,6 +142,7 @@ namespace CancelBrawl.Beta
             yield return new WaitForEndOfFrame(); ScreenCapture.CaptureScreenshot(Path.Combine(output, "gameplay.png"));
             yield return new WaitForSeconds(.5f);
             yield return TrainingChecks();
+            yield return BrawlDeviceChecks.Run(match, Check, output);
             Finish();
         }
 

@@ -1,0 +1,38 @@
+{
+  "sources": [
+    {
+      "sha256": "72090421748F8537D6AA2EBF83A03F8627BBA1282B7D64E7C1CAC14F3C28F655",
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlMatch.cs"
+    },
+    {
+      "sha256": "A241CDA650DB7988BC4F3CF26164E57728CA39509224F45D4FEABBD294418D8F",
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlHud.cs"
+    },
+    {
+      "sha256": "A59F7CD7B526BECD13A7CEDB8D82B636B6E4490FB382E0D8770DB144465E1888",
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlDeviceSlots.cs"
+    },
+    {
+      "sha256": "92643B348D74C2B84D73DFD6DFD9E492A33BD2D38E8C26B63C17C260C9AFFDE5",
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlDeviceChecks.cs"
+    },
+    {
+      "sha256": "51732A098EB1504D61993AECCE71D36848478FD8C9ED4FC1C87B2EBF4FA00D09",
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSmokeProbe.cs"
+    },
+    {
+      "sha256": "E1DA244E34890834C7132D1C9124CFFF24980C8ACFC6D9AC40B28AB796DD6F44",
+      "path": "Assets/CancelBrawlBeta/Editor/FunadosProjectBuilder.cs"
+    }
+  ],
+  "parentCommit": "0413722",
+  "fullFailures": 0,
+  "version": "0.4.1",
+  "focusedChecks": 26,
+  "assemblySHA256": "B203736EC218D81B24F6F3DE0E9CFAD2FEED444F4B2CD690DC9AB67672F9562B",
+  "physicalGamepadsTested": false,
+  "fullChecks": 109,
+  "date": "2026-11-11",
+  "editor": "6000.5.7f1",
+  "unchangedVisualAssets": 22
+}
