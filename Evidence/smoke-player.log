@@ -1,0 +1,100 @@
+Mono path[0] = 'D:/Funados/Builds/Windows/CancelBrawlBeta_Data/Managed'
+Mono config path = 'D:/Funados/Builds/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/Builds/Windows/CancelBrawlBeta_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: AMD Radeon(TM) 780M (ID=0x15bf)
+    Vendor:   ATI
+    VRAM:     15969 MB
+    Driver:   32.0.32015.7029
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.052 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+D3D11 device created for Microsoft Media Foundation video decoding.
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.375100 ms
+BETA_CHECK_PASS Arranque al menú sin Editor
+BETA_CHECK_PASS Cuenta atrás e inicio de duelo
+BETA_CHECK_PASS Movimiento 3D continuo en pasos físicos
+BETA_CHECK_PASS Segundo salto real en el aire
+BETA_CHECK_PASS Recuperación aérea consume un uso
+BETA_CHECK_PASS Recuperación no se regenera en el aire
+BETA_CHECK_PASS Aterrizaje restablece recursos
+BETA_CHECK_PASS Básico conecta una vez por activación
+BETA_CHECK_PASS Cadena conectada carga 8 puntos
+BETA_CHECK_PASS Token impide daño duplicado al objetivo
+BETA_CHECK_PASS Daño superior a 100 no elimina
+BETA_CHECK_PASS Carga limitada a 100
+BETA_CHECK_PASS Super consume toda la carga al activar
+BETA_CHECK_PASS Protección de aparición bloquea impactos
+BETA_CHECK_PASS Atacar cancela protección de aparición
+BETA_CHECK_PASS Ventana de esquiva evita impactos
+BETA_CHECK_PASS Final de esquiva vuelve a ser vulnerable
+BETA_CHECK_PASS Geometría sólida bloquea proyectiles
+BETA_CHECK_PASS Expulsión descuenta vida y reinicia daño y carga
+BETA_CHECK_PASS Expulsión atribuida al último atacante dentro de 8 s
+BETA_CHECK_PASS Reaparición automática protegida tras dos segundos
+BETA_CHECK_PASS Pausa local congela reloj y simulación
+BETA_CHECK_PASS Últimas vidas simultáneas comparten primer puesto
+BETA_CHECK_PASS Dos eliminados de cinco comparten cuarto puesto
+BETA_CHECK_PASS Desempate exacto por tiempo conserva puestos compartidos
+BETA_CHECK_PASS El reloj termina la partida automáticamente
+BETA_CHECK_PASS Regreso al menú limpia la partida
+BETA_CHECK_PASS Don Decreto: Decreto exprés conecta
+BETA_CHECK_PASS Don Decreto: especial conectado carga 12 puntos
+BETA_CHECK_PASS Don Decreto: super Mayoría absoluta conecta y no recarga la barra
+BETA_CHECK_PASS Lola Loop: Ola de hate conecta
+BETA_CHECK_PASS Lola Loop: especial conectado carga 12 puntos
+BETA_CHECK_PASS Lola Loop: super Viralización masiva conecta y no recarga la barra
+BETA_CHECK_PASS Coach Tóxico: Serie al fallo conecta
+BETA_CHECK_PASS Coach Tóxico: especial conectado carga 12 puntos
+BETA_CHECK_PASS Coach Tóxico: super Preentreno nuclear conecta y no recarga la barra
+BETA_CHECK_PASS Cripto King: Token rebote conecta
+BETA_CHECK_PASS Cripto King: especial conectado carga 12 puntos
+BETA_CHECK_PASS Cripto King: token rebota en geometría sólida con rebotes limitados
+BETA_CHECK_PASS Cripto King: super Burbuja especulativa conecta y no recarga la barra
+BETA_CHECK_PASS Tío Antena: emisor visible y armado tras preparación
+BETA_CHECK_PASS Tío Antena: Interferencia lanza hacia arriba al primer rival
+BETA_CHECK_PASS Tío Antena: especial conectado carga 12 puntos
+BETA_CHECK_PASS Tío Antena: solo mantiene un emisor activo
+BETA_CHECK_PASS Tío Antena: super La señal definitiva conecta y no recarga la barra
+BETA_CHECK_PASS Tío Antena: sector seguro anunciado evita el super
+BETA_CHECK_PASS Azotea Neón: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Azotea Neón: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Azotea Neón: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Azotea Neón: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Mall del Ego: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Mall del Ego: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Mall del Ego: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Mall del Ego: la cámara atenúa el obstáculo que tapa a un luchador
+BETA_CHECK_PASS Mall del Ego: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Campus en Llamas: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Campus en Llamas: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Campus en Llamas: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Campus en Llamas: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Núcleo Cripto: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Núcleo Cripto: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Núcleo Cripto: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Núcleo Cripto: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Revancha de cinco avanza con IA activa
+BETA_CHECK_PASS Los bots navegan y conectan ataques en partida real
+BETA_SMOKE_RESULT PASS checks=65 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-10",
+  "project": "D:\\Funados",
+  "movement": "3D libre",
+  "blender": "4.5.16 LTS",
+  "unity": "6000.5.7f1",
+  "cinemachine": "3.1.7",
+  "animationRigging": "1.4.1",
+  "proBuilder": "6.1.4",
+  "urp": "17.5.0",
+  "shaderGraph": "17.5.0",
+  "inputSystem": "1.20.0",
+  "build": {
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 485
+  },
+  "smoke": {
+    "passed": true,
+    "checks": 67,
+    "failures": 0,
+    "visualValidation": false
+  },
+  "preservation": {
+    "originalFiles": 194,
+    "missingOriginalFiles": 0,
+    "changedOriginalFiles": [
+      "Packages/manifest.json",
+      "Packages/packages-lock.json"
+    ]
+  },
+  "blenderFbxRoundtrip": true,
+  "unityMeterCube": true,
+  "toonImported": true,
+  "toonAppliedToBeta": false,
+  "gddPages": 28,
+  "planningPages": 10,
+  "trelloCards": 42,
+  "miroNotes": 48,
+  "accountsModified": false,
+  "gitCommits": 0
+}

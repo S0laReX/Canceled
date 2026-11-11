@@ -1,0 +1,13 @@
+Unity beta metadata and reference verification after final scene regeneration
+Checked UTC: 2026-11-04T15:41:16.7091243Z
+Scope: Assets metadata, beta serialized script references, scene settings assignment. This is not a global project checker pass.
+Assets metadata: 39 GUIDs; invalid=0; duplicates=0; missing beta metas=0
+Beta serialized script references resolved: True
+Scene references BrawlMatch: True
+Scene settings explicitly assigned to BetaBalance: True
+BetaBalance GUID: e4ff71e9b941b5940a9aff265c38c485
+BrawlProjectile.cs.meta and BrawlTransient.cs.meta are present.
+Full skill checker was stopped after approximately 60 seconds without output while scanning PackageCache. No full post-import pass is claimed.
+Previous full scan had 4 missing-script findings in existing Assets/Settings/DefaultVolumeProfile.asset; none in Assets/CancelBrawlBeta.
+Compilation/build validation is recorded separately by the parent build workflow.
+Details: Evidence/beta-meta-check.json

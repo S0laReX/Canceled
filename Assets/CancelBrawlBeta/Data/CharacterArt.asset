@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 258984eae0ea4cb44850aa669bcfe6a0, type: 3}
+  m_Name: CharacterArt
+  m_EditorClassIdentifier: Assembly-CSharp::CancelBrawl.Beta.BrawlCharacterArt
+  entries:
+  - id: Commander_Vex
+    model: {fileID: 919132149155446097, guid: ff6207fe6198fcf4faf8e8d2d9fea7d8, type: 3}
+    albedo: {fileID: 2800000, guid: 9437f79d7b16428469c24b66791327fb, type: 3}
+  - id: Neon_Mischief
+    model: {fileID: 919132149155446097, guid: 62050f9f43e179a45a3c00ce2e1361dc, type: 3}
+    albedo: {fileID: 2800000, guid: 94eefc6d07f03a94ea2aead45f39f1be, type: 3}
+  - id: Neon_Rebel
+    model: {fileID: 919132149155446097, guid: 32b00d6b4fcec2045a7183b55b798529, type: 3}
+    albedo: {fileID: 2800000, guid: a1e78553328ab5041867254f3cd9585c, type: 3}
+  - id: Pink_Pop_Princess
+    model: {fileID: 919132149155446097, guid: 8dd0e5de17ffe0a4e91933d8dc5c5082, type: 3}
+    albedo: {fileID: 2800000, guid: d2c315f7a758d6742868514c3ef883fa, type: 3}
+  - id: Ruby_Starlight
+    model: {fileID: 919132149155446097, guid: c6a3f889b45017b4e9cf85370297f45e, type: 3}
+    albedo: {fileID: 2800000, guid: e82682e0cc7dc6a4b9a29f4e49789369, type: 3}
+  - id: Smirking_Tycoon
+    model: {fileID: 919132149155446097, guid: 05621539104ac844285492307cb8bdff, type: 3}
+    albedo: {fileID: 2800000, guid: cca7d8e43bc9c864d93eb165e3b9cea6, type: 3}
+  - id: The_Dapper_Tycoon
+    model: {fileID: 919132149155446097, guid: 995e53fb25f7f864c89c51aed297b18c, type: 3}
+    albedo: {fileID: 2800000, guid: 3241e4d1943d27544807ff28a0cd33ae, type: 3}
+  - id: The_Regal_Duelist
+    model: {fileID: 919132149155446097, guid: 4ee54126f5342a94a94a052f01ac3382, type: 3}
+    albedo: {fileID: 2800000, guid: 5bcabaac57d3488469acc42d56abe8d0, type: 3}
+  - id: Tin_Foil_Fred
+    model: {fileID: 919132149155446097, guid: fb5e3678e8f2d7c4eabffc79a5414c43, type: 3}
+    albedo: {fileID: 2800000, guid: 5f3682e243b444b458d1f01f76a1c32f, type: 3}
+  - id: Turbo_Max
+    model: {fileID: 919132149155446097, guid: 91b584efe491d7344a7e2e36e72738e7, type: 3}
+    albedo: {fileID: 2800000, guid: 552b2b28e6aa08a44870a1da218bddbe, type: 3}
+  - id: Victoria_Vexley
+    model: {fileID: 919132149155446097, guid: 3f17885094776b84da335f536a33e1de, type: 3}
+    albedo: {fileID: 2800000, guid: 10a045651640de84882d1ae147762992, type: 3}

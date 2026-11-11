@@ -1,0 +1,28 @@
+{
+  "checkedAtUtc": "2026-11-04T15:41:16.7091243Z",
+  "scope": "Assets metadata; beta serialized script references and settings assignment only",
+  "fullProjectCheck": "Not completed; full checker stopped because PackageCache scan exceeded time limit",
+  "metaCount": 39,
+  "invalidGuidCount": 0,
+  "duplicateGuidCount": 0,
+  "betaMissingMetaCount": 0,
+  "invalidGuids": [],
+  "duplicateGuids": [],
+  "betaMissingMetas": [],
+  "betaScriptReferences": [
+    {
+      "File": "D:\\Funados\\Assets\\CancelBrawlBeta\\Data\\BetaBalance.asset",
+      "Guid": "6b15687fd117bcd4c915d78a850f66da",
+      "Resolved": true
+    },
+    {
+      "File": "D:\\Funados\\Assets\\CancelBrawlBeta\\Scenes\\CancelBrawlBeta.unity",
+      "Guid": "97afc7c69252b894d9df2765ca73cc16",
+      "Resolved": true
+    }
+  ],
+  "sceneReferencesBrawlMatch": true,
+  "sceneReferencesBetaBalance": true,
+  "sceneSettingsAssignedToBetaBalance": true,
+  "betaBalanceGuid": "e4ff71e9b941b5940a9aff265c38c485"
+}

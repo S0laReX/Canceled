@@ -1,0 +1,341 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+namespace CancelBrawl.Beta
+{
+    public sealed class BrawlMatch : MonoBehaviour
+    {
+        public const int MaxPlayers = 5;
+        public const string Version = "0.3.0";
+        [SerializeField] private BrawlSettings settings;
+        public MatchPhase Phase { get; private set; } = MatchPhase.Menu;
+        public float RemainingTime { get; private set; }
+        public float CountdownRemaining { get; private set; }
+        /// <summary>Simulation clock of the current match (fixed steps while playing).</summary>
+        public float SimTime { get; private set; }
+        public BrawlFighter[] Fighters { get; private set; } = Array.Empty<BrawlFighter>();
+        public string Announcement => announcementTime > 0 ? announcement : "";
+        /// <summary>Character of every slot P1–P5. P1 is <see cref="SelectedCharacter"/>.</summary>
+        public int[] SlotCharacters { get; } = { 0, 1, 2, 3, 4 };
+        public int SelectedCharacter
+        {
+            get => SlotCharacters[0];
+            set
+            {
+                int character = ((value % BrawlRoster.Count) + BrawlRoster.Count) % BrawlRoster.Count;
+                // Rivals rotate through the rest of the roster so a five-player match shows the whole cast.
+                for (int i = 0; i < MaxPlayers; i++) SlotCharacters[i] = (character + i) % BrawlRoster.Count;
+                for (int i = 0; i < MaxPlayers; i++) SlotSkins[i] = 0;
+            }
+        }
+        /// <summary>Look chosen for every slot (index into the kit's Skins). Repeated fighters get distinct looks at match start.</summary>
+        public int[] SlotSkins { get; } = { 0, 0, 0, 0, 0 };
+
+        public void CycleCharacter(int slot)
+        {
+            SlotCharacters[slot] = (SlotCharacters[slot] + 1) % BrawlRoster.Count;
+            SlotSkins[slot] = 0;
+        }
+
+        public void CycleSkin(int slot) => SlotSkins[slot] = BrawlRoster.WrapSkin(SlotCharacters[slot], SlotSkins[slot] + 1);
+
+        /// <summary>Skin actually worn: a mirror match moves the later slot to the next free look so both stay readable.</summary>
+        private int ResolveSkin(int slot, int count)
+        {
+            int character = SlotCharacters[slot], skins = BrawlRoster.SkinCount(character);
+            int skin = BrawlRoster.WrapSkin(character, SlotSkins[slot]);
+            for (int attempt = 0; attempt < skins; attempt++)
+            {
+                bool taken = false;
+                for (int other = 0; other < slot && other < count; other++)
+                    if (SlotCharacters[other] == character && BrawlRoster.WrapSkin(character, resolvedSkins[other]) == skin) taken = true;
+                if (!taken) break;
+                skin = (skin + 1) % skins;
+            }
+            return skin;
+        }
+        private readonly int[] resolvedSkins = new int[MaxPlayers];
+        public int OpponentCount { get; set; } = 1;
+        public int ArenaIndex { get; set; }
+        public bool LocalCoop { get; set; }
+        public BrawlArena Arena { get; private set; }
+        public BrawlSettings Settings => settings;
+        public bool AutomatedTest { get; set; }
+        public int ConnectedPads => Gamepad.all.Count;
+        /// <summary>Pads beyond P2–P5 are rejected: a match never exceeds five participants.</summary>
+        public int RejectedPads => LocalCoop ? Mathf.Max(0, Gamepad.all.Count - (MaxPlayers - 1)) : 0;
+        public BrawlCamera GroupCamera => groupCamera;
+        private BrawlCamera groupCamera;
+        private Camera view;
+        private Transform participants;
+        private string announcement;
+        private float announcementTime;
+        private readonly List<BrawlFighter> finalLosses = new List<BrawlFighter>();
+        private readonly Color[] colors = { new Color(.18f,.95f,1), new Color(1,.3f,.6f), new Color(1,.77f,.2f), new Color(.5f,1,.42f), new Color(.66f,.5f,1) };
+
+        private void Awake()
+        {
+            Application.runInBackground = true;
+            Application.targetFrameRate = 60;
+            Time.fixedDeltaTime = 1f / 60;
+            Physics.IgnoreLayerCollision(8, 8, true);
+            if (settings == null) settings = ScriptableObject.CreateInstance<BrawlSettings>();
+            var cameraObject = new GameObject("Cámara de grupo"); cameraObject.tag = "MainCamera";
+            cameraObject.transform.SetParent(transform);
+            view = cameraObject.AddComponent<Camera>();
+            cameraObject.AddComponent<AudioListener>(); groupCamera = cameraObject.AddComponent<BrawlCamera>();
+            BuildArena(0);
+            groupCamera.Configure(null);
+            participants = new GameObject("Participantes").transform; participants.SetParent(transform);
+            gameObject.AddComponent<BrawlHud>().Configure(this);
+            BrawlFeedback.Initialize(transform);
+            LoadOptions();
+            RemainingTime = settings.matchSeconds;
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-beta-smoke") >= 0)
+            { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
+        }
+
+        private void BuildArena(int index)
+        {
+            index = Mathf.Clamp(index, 0, BrawlArena.Count - 1);
+            if (Arena != null && Arena.Layout == index) return;
+            if (Arena != null) { Arena.gameObject.SetActive(false); Destroy(Arena.gameObject); }
+            Arena = new GameObject("Cancha").AddComponent<BrawlArena>();
+            Arena.transform.SetParent(transform); Arena.Build(index);
+            groupCamera.Setup(Arena, settings.occluderMaterial);
+        }
+
+        public void StartMatch()
+        {
+            CleanupRound();
+            ArenaIndex = Mathf.Clamp(ArenaIndex, 0, BrawlArena.Count - 1);
+            BuildArena(ArenaIndex);
+            int count = Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers);
+            Fighters = new BrawlFighter[count];
+            var targets = new Transform[count];
+            Vector3[] spawns = Arena.SpawnPoints;
+            int padHumans = LocalCoop ? Mathf.Min(Gamepad.all.Count, count - 1) : 0;
+            for (int i = 0; i < count; i++)
+            {
+                var fighterObject = new GameObject("P" + (i + 1)); fighterObject.transform.SetParent(participants);
+                fighterObject.transform.position = spawns[i % spawns.Length];
+                var fighter = fighterObject.AddComponent<BrawlFighter>();
+                resolvedSkins[i] = ResolveSkin(i, count);
+                fighter.Configure(this, settings, i, SlotCharacters[i], resolvedSkins[i], i > padHumans, colors[i]);
+                Fighters[i] = fighter; targets[i] = fighter.transform;
+            }
+            RemainingTime = settings.matchSeconds; CountdownRemaining = 3; SimTime = 0;
+            Phase = MatchPhase.Countdown; announcementTime = 0;
+            groupCamera.Configure(targets);
+        }
+
+        private void Update()
+        {
+            if (AutomatedTest) return;
+            var keys = Keyboard.current;
+            bool confirm = keys != null && keys.enterKey.wasPressedThisFrame;
+            bool pause = keys != null && keys.escapeKey.wasPressedThisFrame;
+            foreach (var pad in Gamepad.all) { pause |= pad.startButton.wasPressedThisFrame; confirm |= pad.buttonSouth.wasPressedThisFrame; }
+            if (Phase == MatchPhase.Menu || Phase == MatchPhase.Results) { if (confirm) StartMatch(); return; }
+            if (pause && (Phase == MatchPhase.Playing || Phase == MatchPhase.Paused)) { TogglePause(); return; }
+            if (Phase != MatchPhase.Playing) return;
+            for (int i = 0; i < Fighters.Length; i++)
+            {
+                if (Fighters[i].IsBot || Fighters[i].Eliminated || Fighters[i].IsRespawning) continue;
+                if (i == 0)
+                {
+                    var input = ReadKeyboard(Fighters[i]);
+                    if (!LocalCoop && Gamepad.all.Count > 0) input = Combine(input, ReadGamepad(Gamepad.all[0]));
+                    Fighters[i].Submit(input);
+                }
+                else if (i - 1 < Gamepad.all.Count) Fighters[i].Submit(ReadGamepad(Gamepad.all[i - 1]));
+            }
+        }
+
+        private BrawlCommand ReadKeyboard(BrawlFighter fighter)
+        {
+            var input = new BrawlCommand(); var keys = Keyboard.current;
+            if (keys != null)
+            {
+                input.Move = Vector2.ClampMagnitude(new Vector2((keys.dKey.isPressed ? 1 : 0) - (keys.aKey.isPressed ? 1 : 0), (keys.wKey.isPressed ? 1 : 0) - (keys.sKey.isPressed ? 1 : 0)), 1);
+                input.Jump = keys.spaceKey.wasPressedThisFrame; input.Special = keys.eKey.wasPressedThisFrame;
+                input.Recovery = keys.rKey.wasPressedThisFrame; input.Super = keys.qKey.wasPressedThisFrame;
+                input.Dodge = keys.leftShiftKey.wasPressedThisFrame || keys.rightShiftKey.wasPressedThisFrame;
+                input.FastFall = keys.leftCtrlKey.isPressed || keys.rightCtrlKey.isPressed;
+            }
+            var mouse = Mouse.current;
+            if (mouse != null)
+            {
+                input.Basic = mouse.leftButton.wasPressedThisFrame; input.Heavy = mouse.rightButton.wasPressedThisFrame;
+                Ray ray = view.ScreenPointToRay(mouse.position.ReadValue());
+                var plane = new Plane(Vector3.up, fighter.transform.position + Vector3.up * .75f);
+                if (plane.Raycast(ray, out float enter)) input.Aim = WorldToCamera(Vector3.ProjectOnPlane(ray.GetPoint(enter) - fighter.transform.position, Vector3.up).normalized);
+            }
+            return input;
+        }
+
+        private static BrawlCommand ReadGamepad(Gamepad pad)
+        {
+            return new BrawlCommand
+            {
+                Move = pad.leftStick.ReadValue(), Aim = pad.rightStick.ReadValue(),
+                Jump = pad.buttonSouth.wasPressedThisFrame, Basic = pad.buttonWest.wasPressedThisFrame,
+                Heavy = pad.buttonNorth.wasPressedThisFrame, Special = pad.buttonEast.wasPressedThisFrame,
+                Recovery = pad.rightShoulder.wasPressedThisFrame, Dodge = pad.rightTrigger.wasPressedThisFrame,
+                Super = pad.leftShoulder.wasPressedThisFrame, FastFall = pad.leftTrigger.isPressed
+            };
+        }
+
+        private static BrawlCommand Combine(BrawlCommand keyboard, BrawlCommand pad)
+        {
+            keyboard.Move = Vector2.ClampMagnitude(keyboard.Move + pad.Move, 1);
+            if (pad.Aim.sqrMagnitude > .08f) keyboard.Aim = pad.Aim;
+            keyboard.Jump |= pad.Jump; keyboard.Basic |= pad.Basic; keyboard.Heavy |= pad.Heavy;
+            keyboard.Special |= pad.Special; keyboard.Recovery |= pad.Recovery; keyboard.Dodge |= pad.Dodge;
+            keyboard.Super |= pad.Super; keyboard.FastFall |= pad.FastFall;
+            return keyboard;
+        }
+
+        /// <summary>Safest spawn: far from active fighters and from persistent attacks (zones, emitters).</summary>
+        public Vector3 SafeSpawnFor(BrawlFighter returning)
+        {
+            Vector3[] points = Arena.SpawnPoints;
+            Vector3 best = points[returning.PlayerIndex % points.Length];
+            float bestScore = float.NegativeInfinity;
+            foreach (Vector3 point in points)
+            {
+                float nearest = 1000;
+                foreach (var other in Fighters)
+                {
+                    if (other == null || other == returning || other.Eliminated || other.IsRespawning) continue;
+                    nearest = Mathf.Min(nearest, (other.transform.position - point).sqrMagnitude);
+                }
+                foreach (var hazard in BrawlHazard.Active)
+                {
+                    if (!hazard) continue;
+                    float clearance = Mathf.Max(0, (hazard.transform.position - point).magnitude - hazard.Radius);
+                    nearest = Mathf.Min(nearest, clearance * clearance * .25f);
+                }
+                if (nearest > bestScore) { bestScore = nearest; best = point; }
+            }
+            return best;
+        }
+
+        private void FixedUpdate()
+        {
+            if (Phase == MatchPhase.Countdown)
+            {
+                CountdownRemaining -= Time.fixedDeltaTime;
+                if (CountdownRemaining <= 0) { Phase = MatchPhase.Playing; Announce(Arena.StartCall, 1.5f); }
+                return;
+            }
+            if (Phase != MatchPhase.Playing) return;
+            float dt = Time.fixedDeltaTime;
+            SimTime += dt;
+            RemainingTime = Mathf.Max(0, RemainingTime - dt); announcementTime -= dt;
+            foreach (var fighter in Fighters) fighter.Tick(dt);
+            ResolveRingOuts();
+            if (Phase == MatchPhase.Playing && RemainingTime <= 0) FinishByTime();
+        }
+
+        internal void ResolveRingOuts()
+        {
+            finalLosses.Clear();
+            foreach (var fighter in Fighters)
+            {
+                if (!fighter.OutsideArena) continue;
+                BrawlFighter credited = fighter.LoseStock();
+                string who = "P" + (fighter.PlayerIndex + 1);
+                string by = credited != null ? "P" + (credited.PlayerIndex + 1) + " EXPULSA A " + who : who + " CAE SOLO";
+                Announce(by + (fighter.Eliminated ? "  ·  FUERA DE LA PARTIDA" : "  ·  PIERDE UNA VIDA"), 2);
+                Shake(.45f);
+                if (fighter.Eliminated) finalLosses.Add(fighter);
+            }
+            int survivors = 0; BrawlFighter last = null;
+            foreach (var fighter in Fighters) if (!fighter.Eliminated) { survivors++; last = fighter; }
+            foreach (var fighter in finalLosses) fighter.Place = survivors + 1;
+            if (survivors <= 1)
+            {
+                if (last != null) last.Place = 1;
+                Phase = MatchPhase.Results; ClearInputs();
+            }
+        }
+
+        internal void FinishByTime()
+        {
+            var alive = new List<BrawlFighter>();
+            foreach (var fighter in Fighters) if (!fighter.Eliminated) alive.Add(fighter);
+            alive.Sort((a, b) => a.Stocks != b.Stocks ? b.Stocks.CompareTo(a.Stocks) : a.Damage.CompareTo(b.Damage));
+            for (int i = 0; i < alive.Count; i++)
+            {
+                alive[i].Place = i > 0 && alive[i].Stocks == alive[i - 1].Stocks && Mathf.Abs(alive[i].Damage - alive[i - 1].Damage) < .0001f ? alive[i - 1].Place : i + 1;
+            }
+            Phase = MatchPhase.Results; ClearInputs();
+        }
+
+        public void TogglePause()
+        {
+            if (Phase == MatchPhase.Playing) { Phase = MatchPhase.Paused; ClearInputs(); }
+            else if (Phase == MatchPhase.Paused) { Phase = MatchPhase.Playing; ClearInputs(); }
+        }
+
+        public void ReturnToMenu()
+        {
+            Phase = MatchPhase.Menu; CleanupRound(); RemainingTime = settings.matchSeconds;
+            groupCamera.Configure(null);
+        }
+
+        private void CleanupRound()
+        {
+            foreach (var fighter in Fighters) if (fighter != null) { fighter.gameObject.SetActive(false); Destroy(fighter.gameObject); }
+            Fighters = Array.Empty<BrawlFighter>();
+            foreach (var projectile in FindObjectsByType<BrawlProjectile>()) { projectile.gameObject.SetActive(false); Destroy(projectile.gameObject); }
+            foreach (var hazard in FindObjectsByType<BrawlHazard>()) { hazard.gameObject.SetActive(false); Destroy(hazard.gameObject); }
+            foreach (var effect in FindObjectsByType<BrawlTransient>()) { effect.gameObject.SetActive(false); Destroy(effect.gameObject); }
+        }
+
+        public void Shake(float amount) { if (groupCamera) groupCamera.Shake(amount); }
+
+        // ───────────── Options (per device; GDD §12 accessibility) ─────────────
+        public void SetReducedEffects(bool value) { BrawlFeedback.ReducedEffects = value; SaveOptions(); }
+        public void SetVolumes(float sfx, float music) { BrawlFeedback.SetVolumes(sfx, music); SaveOptions(); }
+
+        private void LoadOptions()
+        {
+            try
+            {
+                BrawlFeedback.ReducedEffects = PlayerPrefs.GetInt("cb.reducedEffects", 0) == 1;
+                BrawlFeedback.SetVolumes(PlayerPrefs.GetFloat("cb.sfx", .8f), PlayerPrefs.GetFloat("cb.music", .5f));
+            }
+            catch (Exception) { /* Options are conveniences: defaults are fine. */ }
+        }
+
+        private void SaveOptions()
+        {
+            if (AutomatedTest) return;
+            try
+            {
+                PlayerPrefs.SetInt("cb.reducedEffects", BrawlFeedback.ReducedEffects ? 1 : 0);
+                PlayerPrefs.SetFloat("cb.sfx", BrawlFeedback.SfxVolume);
+                PlayerPrefs.SetFloat("cb.music", BrawlFeedback.MusicVolume);
+                PlayerPrefs.Save();
+            }
+            catch (Exception) { }
+        }
+
+        private void ClearInputs() { foreach (var fighter in Fighters) fighter.ClearInput(); }
+        public void Announce(string message, float seconds) { announcement = message; announcementTime = seconds; }
+        public Vector3 CameraDirection(Vector2 input)
+        {
+            Vector3 forward = Vector3.ProjectOnPlane(view.transform.forward, Vector3.up).normalized;
+            return Vector3.ClampMagnitude(view.transform.right * input.x + forward * input.y, 1);
+        }
+        public Vector2 WorldToCamera(Vector3 direction)
+        {
+            Vector3 forward = Vector3.ProjectOnPlane(view.transform.forward, Vector3.up).normalized;
+            return new Vector2(Vector3.Dot(view.transform.right, direction), Vector3.Dot(forward, direction));
+        }
+    }
+}

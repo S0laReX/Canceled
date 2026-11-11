@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b15687fd117bcd4c915d78a850f66da, type: 3}
+  m_Name: BetaBalance
+  m_EditorClassIdentifier: Assembly-CSharp::CancelBrawl.Beta.BrawlSettings
+  startingStocks: 3
+  matchSeconds: 300
+  respawnSeconds: 2
+  protectionSeconds: 2
+  attributionSeconds: 8
+  moveSpeed: 7
+  airControl: 0.72
+  jumpSpeed: 10.8
+  gravity: 25
+  recoverySpeed: 13.8
+  dodgeSpeed: 15
+  dodgeCooldown: 0.9
+  knockbackPerDamage: 0.105
+  maxKnockback: 28
+  basicDamage: 5
+  heavyDamage: 12
+  specialDamage: 10
+  superDamage: 22
+  occluderMaterial: {fileID: 2100000, guid: 9e822dabd20076f4ca3495e0ec056ff3, type: 2}
+  characterArt: {fileID: 11400000, guid: 1d30517f5d3e585469b9fd6ae0eae0a3, type: 2}
