@@ -1,0 +1,97 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.4.2/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.4.2/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.4.2/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.093 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 8.151400 ms
+BETA_CHECK_PASS Dos mandos: impide iniciar sin dispositivos suficientes
+BETA_CHECK_PASS Dos mandos: un solo mando no crea un rival humano ficticio
+BETA_CHECK_PASS Teclado y mandos: asignaciones P1/P2/P3 exclusivas
+BETA_CHECK_PASS Entrada real del Input System mueve solo el puesto dueño
+BETA_CHECK_PASS Desconectar P2 pausa e identifica el puesto perdido
+BETA_CHECK_PASS Reordenar Gamepad.all no transfiere P3 a P2
+BETA_CHECK_PASS No permite reanudar mientras falta un mando
+BETA_CHECK_PASS Desconexión conserva reloj, posición, stocks y porcentaje
+BETA_CHECK_PASS Reconectar el mismo dispositivo recupera P2 sin reanudación automática
+BETA_CHECK_PASS Confirmación explícita reanuda después de reconectar
+BETA_CHECK_PASS Dispositivo deshabilitado también bloquea la partida
+BETA_CHECK_PASS Dispositivo rehabilitado conserva su puesto
+BETA_CHECK_PASS Dos bajas simultáneas: los nuevos mandos no ocupan puestos solos
+BETA_CHECK_PASS No se puede asignar un mando ausente
+BETA_CHECK_PASS Reemplazo explícito reclama un solo puesto sin duplicarlo
+BETA_CHECK_PASS Asignar disponibles rellena el otro puesto sin robar el recuperado
+BETA_CHECK_PASS Dos mandos: P1 y P2 humanos con dispositivos diferentes
+BETA_CHECK_PASS Desconexión durante cuenta atrás congela la cuenta
+BETA_CHECK_PASS Reconectar en cuenta atrás vuelve a esa fase y preserva P2
+BETA_CHECK_PASS Dos mandos: entrada de P1 no mueve P2
+BETA_CHECK_PASS Cruceta digital admite diagonales normalizadas
+BETA_CHECK_PASS Cinco jugadores con mandos únicos; el sexto queda fuera
+BETA_CHECK_PASS Desconectar un mando sobrante no pausa la partida
+BETA_CHECK_PASS Número de mandos sobrantes respeta los puestos elegidos
+BETA_CHECK_PASS Entrenamiento conserva mando de P1 y objetivo sin entradas
+BETA_CHECK_PASS Volver al menú libera reservas y aviso de desconexión
+BETA_CHECK_PASS Sin archivo de opciones se usan controles por defecto
+BETA_CHECK_PASS Controles por defecto sin conflictos
+BETA_CHECK_PASS Remapeo de teclado asigna la nueva tecla
+BETA_CHECK_PASS La partida lee el control remapeado y deja de leer el anterior
+BETA_CHECK_PASS Tecla en conflicto se detecta e intercambia sin duplicados
+BETA_CHECK_PASS Vista previa de conflicto identifica la acción ocupante
+BETA_CHECK_PASS Esc reservado para pausa no se asigna
+BETA_CHECK_PASS Controles inexistentes, reservados o no remapeables se rechazan
+BETA_CHECK_PASS Conflicto de mando intercambia salto y fuerte
+BETA_CHECK_PASS Mando lee la asignación remapeada en ambos botones
+BETA_CHECK_PASS Botón de ratón remapeable; bloqueado sobre el panel del laboratorio
+BETA_CHECK_PASS Captura interactiva asigna la tecla pulsada
+BETA_CHECK_PASS Esc cancela la captura sin cambiar controles
+BETA_CHECK_PASS Captura en conflicto avisa e intercambia
+BETA_CHECK_PASS Captura de mando asigna el botón pulsado
+BETA_CHECK_PASS Start cancela la captura de mando
+BETA_CHECK_PASS Etiquetas de teclado y ratón salen de la misma tabla
+BETA_CHECK_PASS Mando PlayStation muestra sus botones reales
+BETA_CHECK_PASS Mando Xbox muestra sus botones reales
+BETA_CHECK_PASS Sin mando conectado las etiquetas siguen definidas
+BETA_CHECK_PASS Luchador salta con el botón remapeado durante la partida
+BETA_CHECK_PASS Remapeo disponible en pausa
+BETA_CHECK_PASS Remapeo y modo se guardan en archivo versionado
+BETA_CHECK_PASS Escritura deja copia válida y ningún temporal
+BETA_CHECK_PASS Reinicio restaura controles guardados
+BETA_CHECK_PASS Archivo truncado: se recupera la copia y se aparta el dañado
+BETA_CHECK_PASS La recuperación se comunica en opciones
+BETA_CHECK_PASS Archivo dañado sin copia restaura valores seguros
+BETA_CHECK_PASS Archivo vacío se trata como dañado
+BETA_CHECK_PASS Archivo incompleto no se acepta a medias
+BETA_CHECK_PASS Formato ajeno se rechaza
+BETA_CHECK_PASS Valores fuera de rango se corrigen
+BETA_CHECK_PASS Versión futura conserva campos conocidos
+BETA_CHECK_PASS Controles duplicados, reservados o desconocidos vuelven a valores seguros
+BETA_CHECK_PASS El archivo reparado se reescribe limpio
+BETA_CHECK_PASS Escritura interrumpida (temporal huérfano) no afecta al archivo válido
+BETA_CHECK_PASS Sin archivo principal se recupera la copia
+BETA_SMOKE_RESULT PASS checks=63 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

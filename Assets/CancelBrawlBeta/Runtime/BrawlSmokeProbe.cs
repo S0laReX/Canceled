@@ -40,6 +40,7 @@ namespace CancelBrawl.Beta
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-controls-smoke") >= 0)
             {
                 yield return BrawlDeviceChecks.Run(match, Check, output);
+                yield return BrawlBindingChecks.Run(match, Check, output);
                 Finish(); yield break;
             }
             Check(match.Phase == MatchPhase.Menu, "Arranque al menú sin Editor");
@@ -143,6 +144,7 @@ namespace CancelBrawl.Beta
             yield return new WaitForSeconds(.5f);
             yield return TrainingChecks();
             yield return BrawlDeviceChecks.Run(match, Check, output);
+            yield return BrawlBindingChecks.Run(match, Check, output);
             Finish();
         }
 

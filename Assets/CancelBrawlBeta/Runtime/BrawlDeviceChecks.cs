@@ -89,7 +89,7 @@ namespace CancelBrawl.Beta
                     "Dos mandos: entrada de P1 no mueve P2");
                 InputSystem.QueueStateEvent(p1Pad, new GamepadState().WithButton(GamepadButton.DpadUp).WithButton(GamepadButton.DpadRight));
                 yield return null;
-                var digital = BrawlMatch.ReadGamepad(p1Pad);
+                var digital = match.ReadGamepad(p1Pad);
                 check(digital.Move.x > 0 && digital.Move.y > 0 && digital.Move.magnitude <= 1.001f, "Cruceta digital admite diagonales normalizadas");
                 InputSystem.QueueStateEvent(p1Pad, new GamepadState()); yield return null; match.AutomatedTest = true;
                 match.ReturnToMenu(); match.OpponentCount = 4;

@@ -1,40 +1,55 @@
 # Continuación de FUNADOS
 
-Proyecto: `D:\Funados`. Unity Hub + Editor **6000.5.7f1**, URP **17.5.0**, Input System **1.20.0**. Estado actual: **0.4.1**, controles locales con dispositivos reservados. Mantener los cinco kits, cuatro arenas y once aspectos originales; no sustituir los recursos habituales. Los nombres públicos Don Promesio/Lola Viral conservan los IDs internos Don Decreto/Lola Loop.
+Proyecto: `D:\Funados`. Unity Hub + Editor **6000.5.7f1**, URP **17.5.0**, Input System **1.20.0**. Estado actual: **0.4.2**, controles remapeables y opciones guardadas con recuperación. Mantener los cinco kits, cuatro arenas y once aspectos originales; no sustituir los recursos habituales. Los nombres públicos Don Promesio/Lola Viral conservan los IDs internos Don Decreto/Lola Loop.
 
 ## Punto de la checklist
 
-Se trabajó el bloque **Dispositivos y control**, especialmente **SYS-022, SYS-023 y SYS-027**. Hay implementación y prueba automática con mandos virtuales. **Falta validación con mandos físicos**, por lo que esas casillas no se declaran aceptadas completamente. SYS-026 avanzó únicamente en cruceta digital y normalización; sensibilidad y vibración siguen pendientes. SYS-066 avanzó con el aviso de desconexión por puesto. QA-445 tiene cobertura automática de desconexión/reconexión y mandos sobrantes; remapeo/conflictos sigue pendiente.
+Bloque **Dispositivos y control**. En 0.4.1 se implementaron SYS-022, SYS-023 y SYS-027 (asignación y reconexión de mandos). En 0.4.2 se añaden **SYS-024/025** (tabla única de acciones, etiquetas reales por dispositivo y remapeo con detección de conflictos) y **SYS-068/069** (archivo de opciones versionado, escritura recuperable y valores seguros ante archivos dañados). Todo tiene prueba automática con dispositivos virtuales; **ninguna casilla está aceptada**, porque faltan mandos físicos y personas. QA-445 cubre ya desconexión, reconexión, mandos sobrantes, remapeo y teclas en conflicto, solo con dispositivos virtuales.
 
-**Siguiente implementación: SYS-025, remapeo de controles con detección de conflictos y etiquetas reales por dispositivo.** Después SYS-068/SYS-069: guardar ajustes y controles mediante formato versionado, escritura recuperable y restauración ante archivos dañados. Hoy la entrada de gameplay se lee directamente de Keyboard/Gamepad; no existe todavía un sistema de bindings de gameplay editable. Reutilizar una única fuente de bindings para lectura y etiquetas al implementarlo, evitando una segunda tabla de teclas independiente.
+**Siguiente:**
+1. Validación humana y física. Ver la lista de abajo.
+2. **SYS-026**: deadzones, sensibilidad y vibración editables. Guardarlas en `BrawlOptionsData`, subiendo `BrawlOptionsStore.CurrentVersion` a 2, con migración desde la 1 y una prueba con un archivo v1.
+3. Pendientes de la primera entrega local: CIERRE-455 a 458, hitboxes/hurtboxes completas, SYS-045, cámara con personas, arte final y rendimiento medido.
 
-La primera entrega local continúa abierta: CIERRE-455 a CIERRE-458 no están aceptados. El laboratorio y la regresión anterior existen; no confundir el número de comprobaciones con casillas completas. También están pendientes hitboxes/hurtboxes completas, resolución imparcial de impactos simultáneos (SYS-045), cámara/recuperación con personas, opciones robustas, arte final y rendimiento medido. El catálogo sigue en **5/13 kits y 4/8 arenas provisionales**. Online no está implementado y es posterior al local estable.
+El catálogo sigue en **5/13 kits y 4/8 arenas provisionales**. Online no está implementado y es posterior al local estable.
 
 ## Comportamiento entregado
 
-- Modo teclado/ratón + mandos, o P1 con mando para jugar con dos mandos. El modo dos mandos exige dos dispositivos para versus y uno para entrenamiento.
-- Asignación fija por ronda; reordenar Gamepad.all no cambia el dueño de un luchador. Los nuevos mandos no convierten bots en humanos durante la ronda.
-- Al perder un mando reservado, se pausa antes de simular, también durante cuenta atrás. Se preservan posiciones, porcentaje, stocks y reloj. Se muestra el puesto perdido y se bloquea Continuar.
-- El mismo objeto de dispositivo recupera su puesto al reconectar. Si el backend crea un dispositivo nuevo, Start en él reclama el primer puesto perdido; el botón Asignar mandos disponibles permite recuperar varios. Luego se exige confirmar para continuar. No se roban puestos activos.
-- Los mandos sobrantes no controlan ni pausan la partida. Cruceta y stick se combinan con magnitud máxima 1.
-- En modo solo, el primer mando presente al iniciar puede controlar P1 junto al teclado. Si se pierde, también pausa: recuperarlo o regresar al menú. No existe todavía un botón para abandonar ese mando y seguir solo con teclado durante la misma ronda.
+- Dispositivos (0.4.1): modo teclado/ratón + mandos, o P1 con mando. La asignación es fija por ronda. Al perder un mando se pausa, el mismo mando o uno de reemplazo recupera su puesto y los mandos sobrantes quedan fuera. Detalle en `Docs/Produccion_2026-11-11/Avance_controles_0.4.1.md`.
+- Controles (0.4.2): panel CONTROLES en el menú y en la pausa. Un clic en una celda captura la siguiente tecla, botón del ratón o botón del mando. Si hay conflicto, avisa e intercambia. Esc y Start están reservados y cancelan. Hay botones para restaurar teclado y mando. Las etiquetas usan la distribución del teclado y la familia del mando (Xbox, PlayStation, Nintendo o genérico). La barra inferior del combate también sale de la tabla.
+- Opciones (0.4.2): `funados-options.json` en `persistentDataPath`. Guarda volúmenes, efectos reducidos, modo de entrada y controles. Si el archivo está dañado, se aparta como `.danado-<fecha>` y se usa la copia `.bak` o los valores seguros. Las opciones antiguas de PlayerPrefs se importan una vez.
+- Un perfil de botones compartido por todos los mandos y una tecla por acción. El movimiento y la orientación del mando no se remapean.
 
 ## Archivos y pruebas
 
-`Assets/CancelBrawlBeta/Runtime/BrawlDeviceSlots.cs` mantiene identidad y reservas. `BrawlMatch.cs` enruta entradas y pausa/reanuda. `BrawlHud.cs` presenta selección de dispositivo y recuperación. `BrawlDeviceChecks.cs` contiene pruebas optativas con dispositivos virtuales. No ejecuta nada durante juego normal.
+- `BrawlBindings.cs`: tabla de acciones, validación, conflictos, captura y etiquetas.
+- `BrawlOptionsStore.cs`: formato, escritura atómica, validación y recuperación.
+- `BrawlMatch.cs`: lectura de entradas mediante bindings, captura de remapeo y carga/guardado de opciones.
+- `BrawlHud.cs`: panel de controles y avisos.
+- `BrawlDeviceSlots.cs` y `BrawlDeviceChecks.cs`: dispositivos (0.4.1).
+- `BrawlBindingChecks.cs`: 37 pruebas nuevas.
 
-Escenas: `Assets/FunadosProduction/Scenes/Funados.unity`, `CombatLab.unity`; beta original en `Assets/CancelBrawlBeta/Scenes/CancelBrawlBeta.unity`. Los escenarios se generan en runtime como en la beta. Menú del editor FUNADOS para abrir escenas y generar Windows.
+Ninguna prueba se ejecuta durante el juego normal.
 
-Build actual: `Builds/Funados/0.4.1/Windows/FUNADOS.exe`. Se conservan las entregas anteriores. `FunadosProjectBuilder.BuildWindows` usa la versión de BrawlMatch.ProductionVersion para la carpeta y genera el informe en Evidence/Controls-0.4.1/build.txt; al cambiar de entrega, actualizar también la carpeta de evidencia.
+Escenas: `Assets/FunadosProduction/Scenes/Funados.unity`, `CombatLab.unity`; la beta original está en `Assets/CancelBrawlBeta/Scenes/CancelBrawlBeta.unity`.
 
-Prueba focal: **26 comprobaciones superadas, 0 fallos**, en `Evidence/Controls-0.4.1/Focused/smoke-report.json`. Regresión completa: **109 comprobaciones superadas, 0 fallos**, en `Evidence/Controls-0.4.1/Full/smoke-report.json` (83 anteriores + 26 nuevas). Las capturas se guardan junto al informe. Se revisaron visualmente el menú y el aviso de desconexión. El informe nuevo identifica la versión de presentación 0.4.1. Build Windows: Succeeded, 0 errores, 485 avisos, 47,39 segundos. Los 22 archivos visuales del inventario anterior conservan sus SHA256.
+Build: `Builds/Funados/0.4.2/Windows/FUNADOS.exe`. Se generó en el worktree de esta sesión; en `D:\Funados` hay que regenerarla con FUNADOS → Generar Windows. `FunadosProjectBuilder.BuildWindows` usa `BrawlMatch.ProductionVersion` para la carpeta y escribe `Evidence/Controls-0.4.2/build.txt`. **Al cambiar de entrega, actualizar ambas cosas.** Resultado: Succeeded, 0 errores, 485 avisos.
 
-Ejecutar desde la raíz con `-beta-smoke -evidence-path D:/Funados/Evidence/NuevaPrueba -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0`. Para solo controles usar `-controls-smoke`. Ambas opciones cierran el Player al terminar. **Desconectar mandos físicos antes del bloque automático**: se niega a alterar dispositivos reales. Usa una carpeta nueva para no sobrescribir evidencia.
+Pruebas: focal **63/63** y completa **146/146** (109 anteriores + 37), sin fallos, en `Evidence/Controls-0.4.2/{Focused,Full}`. Se ejecutan con:
 
-Para validación humana: teclado+mando y dos mandos; desconectar P1 y P2 en cuenta atrás y partida; comprobar que otro jugador no cambia de puesto, que el mismo/reemplazo recupera el puesto correcto, que no se gastan stocks y que resultado/revancha siguen funcionando. Repetir con dos bajas y un mando sobrante.
+`-beta-smoke` (o `-controls-smoke`) `-evidence-path <carpeta nueva> -options-path <carpeta nueva>\player-options.json -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0`
+
+Sin `-options-path`, las pruebas no escriben las opciones del jugador, pero las comprobaciones de opciones siguen usando archivos dentro de la evidencia. **Desconecta los mandos físicos antes**: los bloques de dispositivos y de remapeo se niegan a ejecutarse con mandos reales.
+
+**Validación humana pendiente:**
+- Teclado+mando y dos mandos físicos. Desconectar P1/P2 en cuenta atrás y en partida.
+- Remapear salto/ataques en teclado y mando (Xbox y PlayStation si es posible), provocar un conflicto y comprobar que el aviso se entiende.
+- Cerrar y abrir el juego para comprobar que se conservan controles, volúmenes y modo.
+- Estropear a mano `%USERPROFILE%\AppData\LocalLow\<compañía>\FUNADOS\funados-options.json` y comprobar el aviso y la recuperación.
+- Probar con una distribución AZERTY/QWERTZ.
 
 ## Historial y límites
 
-Base preservada: `d2bb25e`. Laboratorio/escenas: `0413722`. El commit siguiente a estos contiene controles 0.4.1; localizarlo con `git log -3 --oneline`. Solo commits locales; no publicar remoto sin la instrucción correspondiente. Git LFS contiene FBX/PNG/audio/Blender/ZIP y se conservaron GUID y .meta.
+Base: `d2bb25e`. Laboratorio/escenas: `0413722`. Controles 0.4.1: `b49b358`. El commit siguiente contiene 0.4.2. Solo commits locales; no publicar en remoto sin instrucción. Git LFS contiene FBX/PNG/audio/Blender/ZIP; se conservan GUID y .meta. En un worktree nuevo hay que ejecutar `git lfs checkout` antes de abrir Unity.
 
-Checklist original: `Docs/Produccion_2026-11-11/FUNADOS_Checklist_maestra_implementacion.docx`. GDD: `Docs/Produccion_2026-11-10/FUNADOS_GDD.md`. Evidencia 0.4.0: Evidence/Production-2026-11-11. Las licencias originales Meshy, rig/animación final y 485 avisos de build siguen pendientes de evaluación. No se probó rendimiento sostenido ni hardware de mandos en esta sesión.
+Checklist: `Docs/Produccion_2026-11-11/FUNADOS_Checklist_maestra_implementacion.docx`. GDD: `Docs/Produccion_2026-11-10/FUNADOS_GDD.md`. Siguen pendientes las licencias originales de Meshy, el rig/animación final y la evaluación de los 485 avisos. No se probó rendimiento sostenido ni hardware real de mandos.

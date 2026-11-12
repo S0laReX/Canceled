@@ -241,6 +241,8 @@ namespace CancelBrawl.Beta
             Panel(rect);
             float x = rect.x + 24, y = rect.y + 16;
             Label(new Rect(x, y, rect.width - 48, 30), "OPCIONES", heading, Paper);
+            if (!string.IsNullOrEmpty(match.OptionsStatusText))
+                Label(new Rect(x + 150, y + 2, rect.width - 174, 34), match.OptionsStatusText, tiny, Pink, TextAnchor.UpperRight);
             y += 42;
             Label(new Rect(x, y + 8, 250, 26), "Reducir destellos y temblor", small, Muted);
             if (Button(new Rect(rect.xMax - 150, y, 126, 36), BrawlFeedback.ReducedEffects ? "SÍ" : "NO",
@@ -290,7 +292,8 @@ namespace CancelBrawl.Beta
                 }
             }
             Label(new Rect(25, 876, 1550, 22),
-                "WASD mover   ·   RATÓN orientar   ·   ESPACIO doble salto   ·   CLICS básico / fuerte   ·   E especial   ·   R recuperar   ·   SHIFT esquiva   ·   Q super   ·   CTRL caer",
+                $"{MoveLabel()} mover   ·   RATÓN orientar   ·   {KeyLabel(BrawlAction.Jump)} doble salto   ·   {KeyLabel(BrawlAction.Basic)} / {KeyLabel(BrawlAction.Heavy)} básico / fuerte   ·   " +
+                $"{KeyLabel(BrawlAction.Special)} especial   ·   {KeyLabel(BrawlAction.Recovery)} recuperar   ·   {KeyLabel(BrawlAction.Dodge)} esquiva   ·   {KeyLabel(BrawlAction.Super)} super   ·   {KeyLabel(BrawlAction.FastFall)} caer",
                 small, Paper, TextAnchor.MiddleCenter);
         }
 
@@ -392,28 +395,66 @@ namespace CancelBrawl.Beta
             Label(new Rect(300, 782, 1000, 40), "Partida libre local · sin puntuación competitiva. KO y daño son estadísticas: el puesto lo decide la supervivencia.", small, Muted, TextAnchor.MiddleCenter);
         }
 
+        /// <summary>
+        /// Controls table drawn from <see cref="BrawlMatch.Bindings"/> — the same data gameplay reads — with the
+        /// real names of the connected keyboard layout and gamepad family. Clicking a cell starts a remap.
+        /// </summary>
         private void DrawControls(Rect rect, bool includeIntro)
         {
             Panel(rect);
-            float x = rect.x + 28;
-            float y = rect.y + 22;
-            Label(new Rect(x, y, rect.width - 56, 35), "CONTROLES", heading, Paper);
-            y += 50;
-            string[] names = { "Mover / orientar", "Doble salto", "Básico / fuerte", "Especial / recuperar", "Esquivar / super", "Caída rápida / pausa" };
-            string[] keys = { "WASD / ratón", "Espacio", "Clic izq. / der.", "E / R en el aire", "Shift / Q", "Ctrl / Esc" };
-            float actionWidth = Mathf.Min(245, rect.width * .46f);
-            for (int i = 0; i < names.Length; i++)
+            BrawlBindings bindings = match.Bindings;
+            UnityEngine.InputSystem.Gamepad pad = match.LabelPad;
+            float x = rect.x + 22, inner = rect.width - 44;
+            float y = rect.y + 14;
+            Label(new Rect(x, y, 214, 32), "CONTROLES", heading, Paper);
+            Label(new Rect(x + 214, y, inner - 214, 48),
+                "Clic en un control para cambiarlo.\nEsc / Start: pausa (reservados).\nOrientar: ratón / palanca der.", tiny, Muted);
+            bool previous = GUI.enabled;
+            GUI.enabled = previous && match.CanRemap && !match.RemapListening;
+            y += 48;
+            float actionWidth = inner * .36f, cellWidth = (inner - actionWidth - 8) * .5f;
+            Label(new Rect(x + actionWidth, y, cellWidth, 20), "TECLADO Y RATÓN", tiny, Cyan);
+            Label(new Rect(x + actionWidth + cellWidth + 8, y, cellWidth, 20), BrawlBindings.PadFamily(pad), tiny, Cyan);
+            y += 22;
+            float row = Mathf.Floor((rect.yMax - 76 - y) / BrawlBindings.KeyboardActions.Length);
+            foreach (BrawlAction action in BrawlBindings.KeyboardActions)
             {
-                Label(new Rect(x, y, actionWidth, 30), names[i], body, Muted);
-                Label(new Rect(x + actionWidth, y, rect.width - actionWidth - 56, 32), keys[i], body, Paper);
-                y += 40;
+                Label(new Rect(x, y + 3, actionWidth - 6, row), BrawlBindings.ActionName(action), small, Muted);
+                BindingCell(new Rect(x + actionWidth, y, cellWidth, row - 3), BindingScheme.Keyboard, action, bindings.Label(BindingScheme.Keyboard, action));
+                Rect padCell = new Rect(x + actionWidth + cellWidth + 8, y, cellWidth, row - 3);
+                if (Array.IndexOf(BrawlBindings.GamepadActions, action) >= 0)
+                    BindingCell(padCell, BindingScheme.Gamepad, action, bindings.Label(BindingScheme.Gamepad, action, pad));
+                else if (action == BrawlAction.MoveUp)
+                    Label(new Rect(padCell.x + 8, padCell.y + 3, padCell.width, row), "Palanca izq. / cruceta", small, Muted);
+                y += row;
             }
-            Fill(new Rect(x, y + 4, rect.width - 56, 1), new Color(.18f, .22f, .30f));
-            Label(new Rect(x, y + 18, rect.width - 56, 85),
-                "MANDO   Palanca izq. o cruceta: mover / der.: orientar\nA salto · X básico · Y fuerte · B especial\nRB recuperar · RT esquiva · LB super · LT caer", small, Muted);
-            if (includeIntro)
-                Label(new Rect(x, rect.yMax - 40, rect.width - 56, 30), "Conecta mandos antes de iniciar la partida.", small, Cyan);
+            string message = match.RemapMessage;
+            Label(new Rect(x, rect.yMax - 72, inner, 34), string.IsNullOrEmpty(message) ? "Un control repetido se intercambia con la acción que lo tenía." : message,
+                tiny, match.RemapListening ? Cyan : match.RemapMessageIsWarning ? Pink : Muted);
+            if (SmallButton(new Rect(x, rect.yMax - 36, 168, 26), "RESTAURAR TECLADO", Muted)) bindings.ResetDefaults(BindingScheme.Keyboard);
+            if (SmallButton(new Rect(x + 176, rect.yMax - 36, 168, 26), "RESTAURAR MANDO", Muted)) bindings.ResetDefaults(BindingScheme.Gamepad);
+            GUI.enabled = previous;
         }
+
+        private void BindingCell(Rect rect, BindingScheme scheme, BrawlAction action, string text)
+        {
+            bool listening = match.RemapListening && match.RemapScheme == scheme && match.RemapAction == action;
+            Fill(rect, listening ? new Color(Pink.r * .3f, Pink.g * .3f, Pink.b * .3f, 1f) : Card);
+            Fill(new Rect(rect.x, rect.y, 3, rect.height), listening ? Pink : Muted * .5f);
+            if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.BeginRemap(scheme, action);
+            Label(new Rect(rect.x + 10, rect.y + 2, rect.width - 14, rect.height - 2), listening ? "pulsa…" : text, small, listening ? Pink : Paper);
+        }
+
+        /// <summary>Movement keys as one label: "WASD" when all four are single characters.</summary>
+        private string MoveLabel()
+        {
+            BrawlBindings b = match.Bindings;
+            string up = b.Label(BindingScheme.Keyboard, BrawlAction.MoveUp), left = b.Label(BindingScheme.Keyboard, BrawlAction.MoveLeft);
+            string down = b.Label(BindingScheme.Keyboard, BrawlAction.MoveDown), right = b.Label(BindingScheme.Keyboard, BrawlAction.MoveRight);
+            return up.Length == 1 && left.Length == 1 && down.Length == 1 && right.Length == 1 ? up + left + down + right : $"{up}/{left}/{down}/{right}";
+        }
+
+        private string KeyLabel(BrawlAction action) => match.Bindings.Label(BindingScheme.Keyboard, action).ToUpperInvariant();
 
         private void Panel(Rect rect) => Fill(rect, Ink);
 
@@ -435,6 +476,14 @@ namespace CancelBrawl.Beta
             GUI.Label(rect, text, style);
             style.alignment = previousAlignment;
             GUI.color = previous;
+        }
+
+        private bool SmallButton(Rect rect, string text, Color color)
+        {
+            int size = button.fontSize; button.fontSize = 12;
+            bool clicked = Button(rect, text, color);
+            button.fontSize = size;
+            return clicked;
         }
 
         private bool Button(Rect rect, string text, Color color)

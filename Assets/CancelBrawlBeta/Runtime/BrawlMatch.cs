@@ -17,7 +17,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.4.1";
+        public const string ProductionVersion = "0.4.2";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -70,8 +70,47 @@ namespace CancelBrawl.Beta
         private readonly int[] resolvedSkins = new int[MaxPlayers];
         public int OpponentCount { get; set; } = 1;
         public int ArenaIndex { get; set; }
-        public bool LocalCoop { get; set; }
-        public bool P1UsesGamepad { get; set; }
+        public bool LocalCoop { get => localCoop; set { if (localCoop == value) return; localCoop = value; SaveOptions(); } }
+        public bool P1UsesGamepad { get => p1UsesGamepad; set { if (p1UsesGamepad == value) return; p1UsesGamepad = value; SaveOptions(); } }
+        private bool localCoop, p1UsesGamepad;
+        /// <summary>Single binding table: gameplay reads it, the HUD labels it, remapping edits it, options persist it.</summary>
+        public BrawlBindings Bindings { get; } = new BrawlBindings();
+        public string OptionsPath { get; private set; }
+        public OptionsLoadStatus OptionsStatus { get; private set; }
+        public string OptionsStatusText
+        {
+            get
+            {
+                switch (OptionsStatus)
+                {
+                    case OptionsLoadStatus.RecoveredBackup: return "Opciones recuperadas de la copia de seguridad.";
+                    case OptionsLoadStatus.RepairedFields: return "Opciones no válidas corregidas con valores seguros.";
+                    case OptionsLoadStatus.ResetCorrupt: return "Archivo de opciones dañado: valores seguros restaurados.";
+                    case OptionsLoadStatus.MigratedLegacy: return "Opciones anteriores importadas al nuevo formato.";
+                    default: return "";
+                }
+            }
+        }
+        // ───────────── Remap capture (SYS-025) ─────────────
+        public bool RemapListening { get; private set; }
+        public BindingScheme RemapScheme { get; private set; }
+        public BrawlAction RemapAction { get; private set; }
+        public string RemapMessage { get; private set; } = "";
+        public bool RemapMessageIsWarning { get; private set; }
+        private int remapArmedFrame;
+        private float remapStarted;
+        public bool CanRemap => Phase == MatchPhase.Menu || Phase == MatchPhase.Paused;
+        /// <summary>Gamepad whose real button names the controls panel shows: P1's pad, else the first connected.</summary>
+        public Gamepad LabelPad
+        {
+            get
+            {
+                var own = Devices.Pad(0);
+                if (BrawlDeviceSlots.Available(own)) return own;
+                foreach (var pad in Gamepad.all) if (BrawlDeviceSlots.Available(pad)) return pad;
+                return null;
+            }
+        }
         public bool CanStartMatch => !LocalCoop || !P1UsesGamepad || ConnectedPads >= 2;
         public bool CanStartTraining => !LocalCoop || !P1UsesGamepad || ConnectedPads >= 1;
         public BrawlDeviceSlots Devices { get; } = new BrawlDeviceSlots();
@@ -122,7 +161,9 @@ namespace CancelBrawl.Beta
             participants = new GameObject("Participantes").transform; participants.SetParent(transform);
             gameObject.AddComponent<BrawlHud>().Configure(this);
             BrawlFeedback.Initialize(transform);
+            OptionsPath = ResolveOptionsPath();
             LoadOptions();
+            Bindings.Changed += SaveOptions;
             RemainingTime = settings.matchSeconds;
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-beta-smoke") >= 0 || Array.IndexOf(Environment.GetCommandLineArgs(), "-controls-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
@@ -211,6 +252,7 @@ namespace CancelBrawl.Beta
         private void Update()
         {
             PollDevices();
+            if (RemapListening) { PollRemap(); return; }
             if (AutomatedTest) return;
             var keys = Keyboard.current;
             bool confirm = keys != null && keys.enterKey.wasPressedThisFrame;
@@ -241,23 +283,20 @@ namespace CancelBrawl.Beta
         private BrawlCommand ReadKeyboard(BrawlFighter fighter)
         {
             var input = new BrawlCommand(); var keys = Keyboard.current;
-            if (keys != null)
-            {
-                input.Move = Vector2.ClampMagnitude(new Vector2((keys.dKey.isPressed ? 1 : 0) - (keys.aKey.isPressed ? 1 : 0), (keys.wKey.isPressed ? 1 : 0) - (keys.sKey.isPressed ? 1 : 0)), 1);
-                input.Jump = keys.spaceKey.wasPressedThisFrame; input.Special = keys.eKey.wasPressedThisFrame;
-                input.Recovery = keys.rKey.wasPressedThisFrame; input.Super = keys.qKey.wasPressedThisFrame;
-                input.Dodge = keys.leftShiftKey.wasPressedThisFrame || keys.rightShiftKey.wasPressedThisFrame;
-                input.FastFall = keys.leftCtrlKey.isPressed || keys.rightCtrlKey.isPressed;
-            }
             var mouse = Mouse.current;
+            bool overLab = false;
             if (mouse != null)
             {
                 Vector2 pointer = mouse.position.ReadValue();
                 float scale = Mathf.Min(Screen.width / 1600f, Screen.height / 900f);
                 Vector2 uiPoint = (new Vector2(pointer.x, Screen.height - pointer.y) -
                     new Vector2((Screen.width - 1600 * scale) * .5f, (Screen.height - 900 * scale) * .5f)) / Mathf.Max(.001f, scale);
-                bool overLab = IsTraining && new Rect(1000, 106, 570, 178).Contains(uiPoint);
-                input.Basic = !overLab && mouse.leftButton.wasPressedThisFrame; input.Heavy = !overLab && mouse.rightButton.wasPressedThisFrame;
+                // Clicks on the lab panel are UI, not attacks, whatever action the mouse button is bound to.
+                overLab = IsTraining && new Rect(1000, 106, 570, 178).Contains(uiPoint);
+            }
+            input = ReadKeyboardButtons(keys, mouse, overLab);
+            if (mouse != null)
+            {
                 Ray ray = view.ScreenPointToRay(mouse.position.ReadValue());
                 var plane = new Plane(Vector3.up, fighter.transform.position + Vector3.up * .75f);
                 if (plane.Raycast(ray, out float enter)) input.Aim = WorldToCamera(Vector3.ProjectOnPlane(ray.GetPoint(enter) - fighter.transform.position, Vector3.up).normalized);
@@ -265,16 +304,94 @@ namespace CancelBrawl.Beta
             return input;
         }
 
-        internal static BrawlCommand ReadGamepad(Gamepad pad)
+        /// <summary>Keyboard/mouse buttons and movement through the editable binding table.</summary>
+        internal BrawlCommand ReadKeyboardButtons(Keyboard keys, Mouse mouse, bool blockMouse)
         {
+            var b = Bindings;
+            float x = (b.Held(BrawlAction.MoveRight, keys, mouse, blockMouse) ? 1 : 0) - (b.Held(BrawlAction.MoveLeft, keys, mouse, blockMouse) ? 1 : 0);
+            float y = (b.Held(BrawlAction.MoveUp, keys, mouse, blockMouse) ? 1 : 0) - (b.Held(BrawlAction.MoveDown, keys, mouse, blockMouse) ? 1 : 0);
+            return new BrawlCommand
+            {
+                Move = Vector2.ClampMagnitude(new Vector2(x, y), 1),
+                Jump = b.Pressed(BrawlAction.Jump, keys, mouse, blockMouse), Basic = b.Pressed(BrawlAction.Basic, keys, mouse, blockMouse),
+                Heavy = b.Pressed(BrawlAction.Heavy, keys, mouse, blockMouse), Special = b.Pressed(BrawlAction.Special, keys, mouse, blockMouse),
+                Recovery = b.Pressed(BrawlAction.Recovery, keys, mouse, blockMouse), Dodge = b.Pressed(BrawlAction.Dodge, keys, mouse, blockMouse),
+                Super = b.Pressed(BrawlAction.Super, keys, mouse, blockMouse), FastFall = b.Held(BrawlAction.FastFall, keys, mouse, blockMouse)
+            };
+        }
+
+        internal BrawlCommand ReadGamepad(Gamepad pad)
+        {
+            var b = Bindings;
             return new BrawlCommand
             {
                 Move = Vector2.ClampMagnitude(pad.leftStick.ReadValue() + pad.dpad.ReadValue(), 1), Aim = pad.rightStick.ReadValue(),
-                Jump = pad.buttonSouth.wasPressedThisFrame, Basic = pad.buttonWest.wasPressedThisFrame,
-                Heavy = pad.buttonNorth.wasPressedThisFrame, Special = pad.buttonEast.wasPressedThisFrame,
-                Recovery = pad.rightShoulder.wasPressedThisFrame, Dodge = pad.rightTrigger.wasPressedThisFrame,
-                Super = pad.leftShoulder.wasPressedThisFrame, FastFall = pad.leftTrigger.isPressed
+                Jump = b.Pressed(BrawlAction.Jump, pad), Basic = b.Pressed(BrawlAction.Basic, pad),
+                Heavy = b.Pressed(BrawlAction.Heavy, pad), Special = b.Pressed(BrawlAction.Special, pad),
+                Recovery = b.Pressed(BrawlAction.Recovery, pad), Dodge = b.Pressed(BrawlAction.Dodge, pad),
+                Super = b.Pressed(BrawlAction.Super, pad), FastFall = b.Held(BrawlAction.FastFall, pad)
             };
+        }
+
+        public void BeginRemap(BindingScheme scheme, BrawlAction action)
+        {
+            if (!CanRemap || Array.IndexOf(BrawlBindings.Actions(scheme), action) < 0) return;
+            RemapListening = true; RemapScheme = scheme; RemapAction = action;
+            remapArmedFrame = Time.frameCount; remapStarted = Time.realtimeSinceStartup;
+            RemapMessage = $"{BrawlBindings.ActionName(action)}: pulsa {(scheme == BindingScheme.Keyboard ? "una tecla o botón del ratón" : "un botón del mando")}. Esc o Start cancelan.";
+            RemapMessageIsWarning = false;
+            ClearInputs();
+        }
+
+        public void CancelRemap(string message = "Reasignación cancelada.")
+        {
+            if (!RemapListening) return;
+            RemapListening = false; RemapMessage = message; RemapMessageIsWarning = false;
+        }
+
+        /// <summary>Applies a captured control; also the path used by automated checks.</summary>
+        public BindResult ApplyRemap(string path)
+        {
+            BindingScheme scheme = RemapScheme; BrawlAction action = RemapAction;
+            RemapListening = false;
+            var result = Bindings.Rebind(scheme, action, path);
+            string control = BrawlBindings.ControlLabel(scheme, path, Keyboard.current, LabelPad);
+            switch (result.Status)
+            {
+                case BindStatus.Swapped:
+                    RemapMessage = $"CONFLICTO: {control} ya era {BrawlBindings.ActionName(result.Conflict.Value)}. Intercambiados: {BrawlBindings.ActionName(result.Conflict.Value)} pasa a {Bindings.Label(scheme, result.Conflict.Value, LabelPad)}.";
+                    RemapMessageIsWarning = true; break;
+                case BindStatus.Reserved:
+                    RemapMessage = $"{control} está reservado para pausa/menú. No se cambió nada."; RemapMessageIsWarning = true; break;
+                case BindStatus.Invalid:
+                case BindStatus.NotRemappable:
+                    RemapMessage = "Ese control no se puede asignar."; RemapMessageIsWarning = true; break;
+                case BindStatus.Unchanged:
+                    RemapMessage = $"{BrawlBindings.ActionName(action)} sigue en {control}."; RemapMessageIsWarning = false; break;
+                default:
+                    RemapMessage = $"{BrawlBindings.ActionName(action)} ahora usa {control}."; RemapMessageIsWarning = false; break;
+            }
+            return result;
+        }
+
+        private void PollRemap()
+        {
+            ClearInputs();
+            if (Time.frameCount <= remapArmedFrame) return;
+            if (!CanRemap) { CancelRemap(); return; }
+            if (Time.realtimeSinceStartup - remapStarted > 10) { CancelRemap("Tiempo agotado: no se cambió nada."); return; }
+            string path = BrawlBindings.CapturePressed(RemapScheme, Gamepad.all);
+            if (path == null)
+            {
+                // The reserved cancel control of the other scheme also aborts (e.g. Start while capturing a key).
+                bool cancel = false;
+                foreach (var device in InputSystem.devices) if (device is Keyboard k && k.escapeKey.wasPressedThisFrame) cancel = true;
+                foreach (var pad in Gamepad.all) cancel |= BrawlDeviceSlots.Available(pad) && pad.startButton.wasPressedThisFrame;
+                if (cancel) CancelRemap();
+                return;
+            }
+            if (BrawlBindings.IsReserved(RemapScheme, path)) { CancelRemap(); return; }
+            ApplyRemap(path);
         }
 
         private static BrawlCommand Combine(BrawlCommand keyboard, BrawlCommand pad)
@@ -420,28 +537,77 @@ namespace CancelBrawl.Beta
         public void SetReducedEffects(bool value) { BrawlFeedback.ReducedEffects = value; SaveOptions(); }
         public void SetVolumes(float sfx, float music) { BrawlFeedback.SetVolumes(sfx, music); SaveOptions(); }
 
-        private void LoadOptions()
+        private static string ResolveOptionsPath()
         {
+            string[] args = Environment.GetCommandLineArgs();
+            int index = Array.IndexOf(args, "-options-path");
+            return index >= 0 && index + 1 < args.Length ? System.IO.Path.GetFullPath(args[index + 1]) : BrawlOptionsStore.DefaultPath;
+        }
+
+        private bool loadingOptions;
+        /// <summary>SYS-068/069: versioned file; damaged or incomplete data falls back to safe values.</summary>
+        internal void LoadOptions()
+        {
+            loadingOptions = true;
             try
             {
-                BrawlFeedback.ReducedEffects = PlayerPrefs.GetInt("cb.reducedEffects", 0) == 1;
-                BrawlFeedback.SetVolumes(PlayerPrefs.GetFloat("cb.sfx", .8f), PlayerPrefs.GetFloat("cb.music", .5f));
+                BrawlOptionsData data;
+                OptionsLoadStatus status;
+                try { data = BrawlOptionsStore.Load(OptionsPath, out status, out _); }
+                catch (Exception) { data = new BrawlOptionsData(); status = OptionsLoadStatus.ResetCorrupt; }
+                if (status == OptionsLoadStatus.Defaults && HasLegacyOptions())
+                {
+                    // 0.4.1 and earlier kept three options in PlayerPrefs (implicit format version 0).
+                    try
+                    {
+                        data.reducedEffects = PlayerPrefs.GetInt("cb.reducedEffects", 0) == 1;
+                        data.sfx = Mathf.Clamp01(PlayerPrefs.GetFloat("cb.sfx", .8f));
+                        data.music = Mathf.Clamp01(PlayerPrefs.GetFloat("cb.music", .5f));
+                        status = OptionsLoadStatus.MigratedLegacy;
+                    }
+                    catch (Exception) { }
+                }
+                ApplyOptions(data, ref status);
+                OptionsStatus = status;
             }
-            catch (Exception) { /* Options are conveniences: defaults are fine. */ }
+            finally { loadingOptions = false; }
+            // Rewrite a repaired/migrated/recovered file so the next start reads clean data.
+            if (OptionsStatus != OptionsLoadStatus.Loaded && OptionsStatus != OptionsLoadStatus.Defaults) SaveOptions();
         }
+
+        private void ApplyOptions(BrawlOptionsData data, ref OptionsLoadStatus status)
+        {
+            BrawlFeedback.ReducedEffects = data.reducedEffects;
+            BrawlFeedback.SetVolumes(data.sfx, data.music);
+            localCoop = data.localCoop; p1UsesGamepad = data.p1UsesGamepad;
+            bool keyboardClean = Bindings.TryLoad(BindingScheme.Keyboard, data.keyboard);
+            bool gamepadClean = Bindings.TryLoad(BindingScheme.Gamepad, data.gamepad);
+            if (status == OptionsLoadStatus.Loaded && (!keyboardClean || !gamepadClean)) status = OptionsLoadStatus.RepairedFields;
+        }
+
+        private static bool HasLegacyOptions()
+        {
+            try { return PlayerPrefs.HasKey("cb.sfx") || PlayerPrefs.HasKey("cb.music") || PlayerPrefs.HasKey("cb.reducedEffects"); }
+            catch (Exception) { return false; }
+        }
+
+        internal BrawlOptionsData CaptureOptions() => new BrawlOptionsData
+        {
+            reducedEffects = BrawlFeedback.ReducedEffects, sfx = BrawlFeedback.SfxVolume, music = BrawlFeedback.MusicVolume,
+            localCoop = localCoop, p1UsesGamepad = p1UsesGamepad,
+            keyboard = Bindings.Export(BindingScheme.Keyboard), gamepad = Bindings.Export(BindingScheme.Gamepad)
+        };
 
         private void SaveOptions()
         {
-            if (AutomatedTest) return;
-            try
-            {
-                PlayerPrefs.SetInt("cb.reducedEffects", BrawlFeedback.ReducedEffects ? 1 : 0);
-                PlayerPrefs.SetFloat("cb.sfx", BrawlFeedback.SfxVolume);
-                PlayerPrefs.SetFloat("cb.music", BrawlFeedback.MusicVolume);
-                PlayerPrefs.Save();
-            }
-            catch (Exception) { }
+            // Automated runs never touch the player's own file; they point OptionsPath at their evidence folder.
+            if (loadingOptions || OptionsPath == null || (AutomatedTest && OptionsPath == BrawlOptionsStore.DefaultPath)) return;
+            try { BrawlOptionsStore.Save(OptionsPath, CaptureOptions()); }
+            catch (Exception error) { Debug.LogWarning("FUNADOS: no se pudieron guardar las opciones: " + error.Message); }
         }
+
+        /// <summary>Test hook: point options at another file and reload it.</summary>
+        internal void UseOptionsFile(string path) { OptionsPath = path; LoadOptions(); }
 
         private void ClearInputs() { foreach (var fighter in Fighters) fighter.ClearInput(); }
         public void Announce(string message, float seconds) { announcement = message; announcementTime = seconds; }

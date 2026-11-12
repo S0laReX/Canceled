@@ -1,0 +1,49 @@
+﻿{
+    "version":  "0.4.2",
+    "date":  "2026-11-12",
+    "editor":  "6000.5.7f1",
+    "parentCommit":  "b49b358",
+    "focusedChecks":  63,
+    "fullChecks":  146,
+    "fullFailures":  0,
+    "previousFullChecks":  109,
+    "newChecks":  37,
+    "physicalGamepadsTested":  false,
+    "humanRemapTested":  false,
+    "changedArtFiles":  0,
+    "assemblySHA256":  "F9A9E03A5A733E7A7309AD95BC5BCE15E88AD933C57E9024F816739102FFD8E8",
+    "sources":  [
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlBindings.cs",
+                        "sha256":  "438AFE7CA9698F0B51DC1C839BC7FA03FC3A1BC163E33B8845C68E7CA9B99004"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlOptionsStore.cs",
+                        "sha256":  "47B29B0FDF0EE0DDC97D7B18DE772FBB6808FEF90CB26FED75F0C137600EA2B0"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlBindingChecks.cs",
+                        "sha256":  "5FEC6075FA8CA31F98898D13F470368FC9DBC029F13C590FC8DF3948D85BFBCC"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlMatch.cs",
+                        "sha256":  "F3CBFECFE3025270C056D10EA1A4D9E0BB143996E05E2DFA62437272AC0E9713"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHud.cs",
+                        "sha256":  "138F9AED7C7000BF87A59AB93B8B25ECE41227EFD7D292EEDDAF9BF9657E9BF3"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlDeviceChecks.cs",
+                        "sha256":  "870D0A23CFC14098E148D57494DF481C2E38C36D5E7758CA5DE1C78A4E2F9D1D"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlSmokeProbe.cs",
+                        "sha256":  "EF8168D3ABDA9CE84813CB29D531FACF2D9473FDC6068BCC352C67EFFACDD967"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Editor/FunadosProjectBuilder.cs",
+                        "sha256":  "60D045EF1CFF19DF41076D282CEB52395D45C1906582D69B19C14E93D16EA393"
+                    }
+                ]
+}
