@@ -21,6 +21,9 @@ namespace CancelBrawl.Beta
         public float aimDeadzone = .25f;
         public float stickResponse = 1f;
         public float vibration = .5f;
+        // Version 3 (SYS-071).
+        public float textScale = 1f;
+        public float hudScale = 1f;
         public List<BrawlBindingEntry> keyboard = new List<BrawlBindingEntry>();
         public List<BrawlBindingEntry> gamepad = new List<BrawlBindingEntry>();
     }
@@ -34,9 +37,10 @@ namespace CancelBrawl.Beta
     public static class BrawlOptionsStore
     {
         public const string Format = "funados-options";
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 3;
         private static readonly string[] FieldsV1 = { "\"format\"", "\"version\"", "\"reducedEffects\"", "\"sfx\"", "\"music\"", "\"keyboard\"", "\"gamepad\"" };
         private static readonly string[] FieldsV2 = { "\"moveDeadzone\"", "\"aimDeadzone\"", "\"stickResponse\"", "\"vibration\"" };
+        private static readonly string[] FieldsV3 = { "\"textScale\"", "\"hudScale\"" };
         public const string FileName = "funados-options.json";
 
         public static string DefaultPath => Path.Combine(Application.persistentDataPath, FileName);
@@ -116,6 +120,7 @@ namespace CancelBrawl.Beta
             // Every expected field must be present; JsonUtility would silently default missing ones.
             foreach (string field in FieldsV1)
                 if (trimmed.IndexOf(field, StringComparison.Ordinal) < 0) { data = null; return false; }
+            var defaults = new BrawlOptionsData();
             if (data.version >= 2)
             {
                 foreach (string field in FieldsV2)
@@ -124,9 +129,19 @@ namespace CancelBrawl.Beta
             else
             {
                 // Version 1 → 2: stick tuning and vibration did not exist yet.
-                var defaults = new BrawlOptionsData();
                 data.moveDeadzone = defaults.moveDeadzone; data.aimDeadzone = defaults.aimDeadzone;
                 data.stickResponse = defaults.stickResponse; data.vibration = defaults.vibration;
+                migrated = true;
+            }
+            if (data.version >= 3)
+            {
+                foreach (string field in FieldsV3)
+                    if (trimmed.IndexOf(field, StringComparison.Ordinal) < 0) { data = null; return false; }
+            }
+            else
+            {
+                // Version 2 → 3: text and HUD size did not exist yet.
+                data.textScale = defaults.textScale; data.hudScale = defaults.hudScale;
                 migrated = true;
             }
             data.sfx = Sanitize(data.sfx, .8f, ref repaired);
@@ -135,6 +150,8 @@ namespace CancelBrawl.Beta
             data.moveDeadzone = SanitizeRange(data.moveDeadzone, .2f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);
             data.aimDeadzone = SanitizeRange(data.aimDeadzone, .25f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);
             data.stickResponse = SanitizeRange(data.stickResponse, 1f, BrawlInputTuning.MinResponse, BrawlInputTuning.MaxResponse, ref repaired);
+            data.textScale = SanitizeRange(data.textScale, 1f, BrawlHudLayout.MinScaleOption, BrawlHudLayout.MaxScaleOption, ref repaired);
+            data.hudScale = SanitizeRange(data.hudScale, 1f, BrawlHudLayout.MinScaleOption, BrawlHudLayout.MaxScaleOption, ref repaired);
             if (data.keyboard == null) { data.keyboard = new List<BrawlBindingEntry>(); repaired = true; }
             if (data.gamepad == null) { data.gamepad = new List<BrawlBindingEntry>(); repaired = true; }
             return true;

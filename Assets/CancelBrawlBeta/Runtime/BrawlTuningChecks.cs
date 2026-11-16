@@ -68,7 +68,7 @@ namespace CancelBrawl.Beta
                 match.UseOptionsFile(file);
                 check(match.OptionsStatus == OptionsLoadStatus.Loaded && Mathf.Approximately(match.MoveDeadzone, .15f) && Mathf.Approximately(match.AimDeadzone, .2f) &&
                       Mathf.Approximately(match.StickResponse, 1.25f) && Mathf.Approximately(match.VibrationStrength, .75f) &&
-                      BrawlOptionsStore.TryParse(File.ReadAllText(file), out var stored, out _) && stored.version == 2, "Ajustes de mando se guardan en formato versión 2");
+                      BrawlOptionsStore.TryParse(File.ReadAllText(file), out var stored, out _) && stored.version == BrawlOptionsStore.CurrentVersion, "Ajustes de mando se guardan en el formato actual");
 
                 // ── SYS-068: version 1 files migrate ──
                 string legacy = Path.Combine(folder, "v1.json");
@@ -78,7 +78,7 @@ namespace CancelBrawl.Beta
                 check(match.OptionsStatus == OptionsLoadStatus.MigratedLegacy && match.Bindings.Get(BindingScheme.Keyboard, BrawlAction.Jump) == "Keyboard/k" &&
                       Mathf.Approximately(BrawlFeedback.SfxVolume, .3f) && Mathf.Approximately(match.VibrationStrength, .5f) && Mathf.Approximately(match.MoveDeadzone, .2f),
                     "Archivo versión 1 se migra conservando controles y volúmenes");
-                check(BrawlOptionsStore.TryParse(File.ReadAllText(legacy), out var migrated, out _, out bool stillOld) && migrated.version == 2 && !stillOld &&
+                check(BrawlOptionsStore.TryParse(File.ReadAllText(legacy), out var migrated, out _, out bool stillOld) && migrated.version == BrawlOptionsStore.CurrentVersion && !stillOld &&
                       File.ReadAllText(BrawlOptionsStore.BackupPath(legacy)).Contains("\"version\":1"), "Migración reescribe v2 y guarda la v1 como copia");
                 File.WriteAllText(legacy, "{\"format\":\"funados-options\",\"version\":2,\"reducedEffects\":false,\"sfx\":0.3,\"music\":0.6,\"keyboard\":[],\"gamepad\":[]}");
                 BrawlOptionsStore.Load(legacy, out var status, out _);

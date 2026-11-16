@@ -1,0 +1,53 @@
+﻿{
+    "version":  "0.4.5",
+    "date":  "2026-11-16",
+    "editor":  "6000.5.7f1",
+    "parentCommit":  "7c73c00",
+    "focusedChecks":  123,
+    "fullChecks":  206,
+    "fullFailures":  0,
+    "previousFullChecks":  191,
+    "newChecks":  15,
+    "windowSizesCaptured":  [
+                                "960x720",
+                                "1280x800",
+                                "1280x548"
+                            ],
+    "physicalGamepadsTested":  false,
+    "changedArtFiles":  0,
+    "assemblySHA256":  "D895CF8C7E58F3EEF521CB28BC4DCDA81978CCDC2CD8CF5EA7573DF2136553E9",
+    "sources":  [
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHudLayout.cs",
+                        "sha256":  "3EED79E71F4B8E7C3482464CC4A10B6EC9F5D7A6F262F25976DC1A8024CC2F82"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHud.cs",
+                        "sha256":  "AE1169AF82471B3131A576ABE2DB7004E5DAC6D004F58A7DC7B69AD666039C2F"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHud.Navigation.cs",
+                        "sha256":  "F028A7B31DEE28CBBADFAA7C65E677E05010C98962F854B362EC4245D5CDB788"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlDisplayChecks.cs",
+                        "sha256":  "0ECF466944D00621FAFCAE7C56BDE29C69213DE1CC11CD57C2334471D1CE44EA"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlMatch.cs",
+                        "sha256":  "099BE91B3CB6E44934DF75CF53CD98BD32B92775BF75C7C803D7313ED760AC2E"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlOptionsStore.cs",
+                        "sha256":  "165091211AF1D5AD3E84BE0A229BD204090A0FDF1105EFD93615537572D02526"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlBindings.cs",
+                        "sha256":  "8AC77C1A31A0930A1D3F053FB280246A80112F49AC3889DAEA194001FAB89648"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlSmokeProbe.cs",
+                        "sha256":  "E54EA0615E10BC399F03FA41AB5AAA325C1E858AD5C462E30E935058B7708DDC"
+                    }
+                ]
+}

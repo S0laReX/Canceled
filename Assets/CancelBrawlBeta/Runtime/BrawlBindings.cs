@@ -304,7 +304,7 @@ namespace CancelBrawl.Beta
         /// <summary>Family name shown beside gamepad labels (from the actual device, not a guess).</summary>
         public static string PadFamily(Gamepad pad)
         {
-            if (pad == null) return "MANDO (sin conectar: etiquetas Xbox)";
+            if (pad == null) return "MANDO · nombres Xbox";
             string layout = pad.layout ?? "";
             if (layout.IndexOf("DualShock", StringComparison.OrdinalIgnoreCase) >= 0 || layout.IndexOf("DualSense", StringComparison.OrdinalIgnoreCase) >= 0) return "MANDO PLAYSTATION";
             if (layout.IndexOf("XInput", StringComparison.OrdinalIgnoreCase) >= 0 || layout.IndexOf("Xbox", StringComparison.OrdinalIgnoreCase) >= 0) return "MANDO XBOX";

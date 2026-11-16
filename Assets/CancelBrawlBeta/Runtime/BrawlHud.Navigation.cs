@@ -17,7 +17,8 @@ namespace CancelBrawl.Beta
         private List<NavItem> navItems = new List<NavItem>(), navBuilding = new List<NavItem>();
         private string focusId;
         private MatchPhase navPhase = (MatchPhase)(-1);
-        private bool navDevicePause, navPadPage;
+        private bool navDevicePause;
+        private int navPage;
         private readonly Dictionary<Gamepad, (Vector2Int dir, float next)> stickRepeat = new Dictionary<Gamepad, (Vector2Int, float)>();
         private const float RepeatDelay = .35f, RepeatRate = .12f;
 
@@ -34,7 +35,10 @@ namespace CancelBrawl.Beta
             Event current = Event.current;
             if (current.type == EventType.MouseDown && rect.Contains(current.mousePosition)) focusId = id;
             if (current.type != EventType.Repaint) return;
-            navBuilding.Add(new NavItem { Id = id, Rect = rect, Activate = activate, Adjust = adjust });
+            // Groups use different anchors/scales, so spatial navigation compares rects in screen space.
+            Vector3 a = GUI.matrix.MultiplyPoint3x4(new Vector3(rect.xMin, rect.yMin, 0));
+            Vector3 b = GUI.matrix.MultiplyPoint3x4(new Vector3(rect.xMax, rect.yMax, 0));
+            navBuilding.Add(new NavItem { Id = id, Rect = Rect.MinMaxRect(a.x, a.y, b.x, b.y), Activate = activate, Adjust = adjust });
             if (id == focusId) Outline(rect, 3, Paper);
         }
 
@@ -66,6 +70,18 @@ namespace CancelBrawl.Beta
             }
         }
 
+        /// <summary>The 3D view ends exactly where the bottom HUD strip begins, at any aspect ratio and HUD size.</summary>
+        private void LateUpdate()
+        {
+            if (match == null) return;
+            if (markerCamera == null) markerCamera = Camera.main;
+            if (markerCamera == null) return;
+            int cards = match.Phase == MatchPhase.Menu || match.Fighters == null ? 0 : match.Fighters.Length;
+            float strip = BrawlHudLayout.Compute(Screen.width, Screen.height, match.HudScale, cards).StripFraction;
+            var wanted = new Rect(0, strip, 1, 1 - strip);
+            if (markerCamera.rect != wanted) markerCamera.rect = wanted;
+        }
+
         private int IndexOf(string id) { for (int i = 0; i < navItems.Count; i++) if (navItems[i].Id == id) return i; return -1; }
 
         private void Update()
@@ -73,10 +89,10 @@ namespace CancelBrawl.Beta
             if (match == null) return;
             bool menuScreen = match.Phase == MatchPhase.Menu || match.Phase == MatchPhase.Paused || match.Phase == MatchPhase.Results;
             // A new screen starts on its main action.
-            if (match.Phase != navPhase || match.DevicePause != navDevicePause || match.ShowPadOptions != navPadPage)
+            if (match.Phase != navPhase || match.DevicePause != navDevicePause || match.OptionsPage != navPage)
             {
                 bool pageOnly = match.Phase == navPhase && match.DevicePause == navDevicePause;
-                navPhase = match.Phase; navDevicePause = match.DevicePause; navPadPage = match.ShowPadOptions;
+                navPhase = match.Phase; navDevicePause = match.DevicePause; navPage = match.OptionsPage;
                 if (!pageOnly) { focusId = DefaultFocus(); navItems.Clear(); }
             }
             if (!menuScreen || match.RemapListening || navItems.Count == 0) return;

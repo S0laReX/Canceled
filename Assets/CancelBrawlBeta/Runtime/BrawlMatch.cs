@@ -19,7 +19,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.4.4";
+        public const string ProductionVersion = "0.4.5";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -291,12 +291,8 @@ namespace CancelBrawl.Beta
             bool overLab = false;
             if (mouse != null)
             {
-                Vector2 pointer = mouse.position.ReadValue();
-                float scale = Mathf.Min(Screen.width / 1600f, Screen.height / 900f);
-                Vector2 uiPoint = (new Vector2(pointer.x, Screen.height - pointer.y) -
-                    new Vector2((Screen.width - 1600 * scale) * .5f, (Screen.height - 900 * scale) * .5f)) / Mathf.Max(.001f, scale);
                 // Clicks on the lab panel are UI, not attacks, whatever action the mouse button is bound to.
-                overLab = IsTraining && new Rect(1000, 106, 570, 178).Contains(uiPoint);
+                overLab = IsTraining && Hud != null && Hud.PointerOverTraining(mouse.position.ReadValue());
             }
             input = ReadKeyboardButtons(keys, mouse, overLab);
             if (mouse != null)
@@ -332,7 +328,19 @@ namespace CancelBrawl.Beta
         public BrawlHud Hud { get; private set; }
         public BrawlHazardVolumes HazardVolumes { get; private set; }
         /// <summary>Options panel page shown by the HUD (GENERAL / MANDO).</summary>
-        public bool ShowPadOptions { get; set; }
+        /// <summary>Options panel page: 0 GENERAL, 1 MANDO, 2 PANTALLA.</summary>
+        public int OptionsPage { get; set; }
+        public bool ShowPadOptions { get => OptionsPage == 1; set => OptionsPage = value ? 1 : 0; }
+        /// <summary>SYS-071: text size (1–1.3) for menus and HUD, and HUD element size (1–1.3) during play.</summary>
+        public float TextScale { get; private set; } = 1f;
+        public float HudScale { get; private set; } = 1f;
+
+        public void SetDisplayScale(float text, float hud)
+        {
+            TextScale = Mathf.Clamp(Round(text), BrawlHudLayout.MinScaleOption, BrawlHudLayout.MaxScaleOption);
+            HudScale = Mathf.Clamp(Round(hud), BrawlHudLayout.MinScaleOption, BrawlHudLayout.MaxScaleOption);
+            SaveOptions();
+        }
 
         public void SetStickTuning(float moveDeadzone, float aimDeadzone, float response)
         {
@@ -709,6 +717,7 @@ namespace CancelBrawl.Beta
             BrawlFeedback.SetVolumes(data.sfx, data.music);
             localCoop = data.localCoop; p1UsesGamepad = data.p1UsesGamepad;
             MoveDeadzone = data.moveDeadzone; AimDeadzone = data.aimDeadzone; StickResponse = data.stickResponse; VibrationStrength = data.vibration;
+            TextScale = data.textScale; HudScale = data.hudScale;
             bool keyboardClean = Bindings.TryLoad(BindingScheme.Keyboard, data.keyboard);
             bool gamepadClean = Bindings.TryLoad(BindingScheme.Gamepad, data.gamepad);
             if ((status == OptionsLoadStatus.Loaded || status == OptionsLoadStatus.MigratedLegacy) && (!keyboardClean || !gamepadClean))
@@ -726,6 +735,7 @@ namespace CancelBrawl.Beta
             reducedEffects = BrawlFeedback.ReducedEffects, sfx = BrawlFeedback.SfxVolume, music = BrawlFeedback.MusicVolume,
             localCoop = localCoop, p1UsesGamepad = p1UsesGamepad,
             moveDeadzone = MoveDeadzone, aimDeadzone = AimDeadzone, stickResponse = StickResponse, vibration = VibrationStrength,
+            textScale = TextScale, hudScale = HudScale,
             keyboard = Bindings.Export(BindingScheme.Keyboard), gamepad = Bindings.Export(BindingScheme.Gamepad)
         };
 

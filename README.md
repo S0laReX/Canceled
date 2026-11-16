@@ -1,6 +1,6 @@
 # FUNADOS
 
-Juego local de lucha de plataformas 3D: movimiento X/Z, salto Y, porcentaje de daño y expulsiones. Proyecto de producción iniciado sobre Cancel Brawl 0.3, conservando sus cinco kits, cuatro arenas y once aspectos originales. Entrega actual: 0.4.4, menús navegables con teclado o mando y volúmenes de proyectiles y zonas en el laboratorio; incluye los ajustes de mando, vibración e impactos simultáneos de 0.4.3, incluye remapeo y opciones guardadas de 0.4.2, gestión de mandos de 0.4.1 y el laboratorio de 0.4.0.
+Juego local de lucha de plataformas 3D: movimiento X/Z, salto Y, porcentaje de daño y expulsiones. Proyecto de producción iniciado sobre Cancel Brawl 0.3, conservando sus cinco kits, cuatro arenas y once aspectos originales. Entrega actual: 0.4.5, tamaño de texto y HUD ajustables y HUD adaptado a otras proporciones de pantalla; incluye los menús navegables y volúmenes del laboratorio de 0.4.4, los ajustes de mando, vibración e impactos simultáneos de 0.4.3, incluye remapeo y opciones guardadas de 0.4.2, gestión de mandos de 0.4.1 y el laboratorio de 0.4.0.
 
 Abre `D:\Funados` desde Unity Hub con **Unity 6000.5.7f1**. Las versiones de paquetes están fijadas en `Packages/manifest.json` y `packages-lock.json`; no aceptes una actualización de Editor para reproducir esta entrega.
 
@@ -14,7 +14,7 @@ Para continuar con otro agente, empezar por `CONTINUAR.md`: contiene los puntos 
 
 Menú del editor: **FUNADOS → Abrir juego local**, **Abrir CombatLab** y **Generar Windows**. La generación de escenas crea únicamente las que faltan; no sobrescribe escenas existentes. Guarda primero cualquier escena sin título modificada.
 
-El ejecutable nuevo se genera en `Builds/Funados/0.4.4/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte.
+El ejecutable nuevo se genera en `Builds/Funados/0.4.5/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte.
 
 ## Mandos locales
 
@@ -34,7 +34,9 @@ El panel **CONTROLES** del menú y de la pausa muestra las asignaciones con los 
 
 La pestaña **MANDO** de OPCIONES ajusta la zona muerta para mover y para orientar, la respuesta de la palanca (fina, lineal o rápida) y la vibración; al cambiar la vibración, el mando vibra un instante como muestra. La cruceta no usa esos ajustes. Solo vibra el mando del luchador que recibe el golpe, pierde una vida o lanza su super.
 
-Volúmenes, efectos reducidos, modo de entrada, ajustes de mando y controles se guardan en `funados-options.json`, dentro de la carpeta de datos persistentes de Unity. Cada guardado conserva la versión anterior como `.bak`. Si el archivo se daña, se aparta con el sufijo `.danado-<fecha>`, se recupera la copia o se cargan valores seguros, y el panel OPCIONES lo indica.
+La pestaña **PANTALLA** ajusta el tamaño del texto y del HUD (100, 115 o 130 %). El HUD se adapta a pantallas 4:3, 16:10 y 21:9 sin bandas negras, y el texto pequeño nunca baja de un tamaño legible para la resolución.
+
+Volúmenes, efectos reducidos, modo de entrada, ajustes de mando, tamaños de pantalla y controles se guardan en `funados-options.json`, dentro de la carpeta de datos persistentes de Unity. Cada guardado conserva la versión anterior como `.bak`. Si el archivo se daña, se aparta con el sufijo `.danado-<fecha>`, se recupera la copia o se cargan valores seguros, y el panel OPCIONES lo indica.
 
 El objetivo no emite entradas; recibe daño y knockback normal. El laboratorio no agota tiempo ni stocks. Las caídas devuelven al luchador al punto de práctica. **−25/+25** modifica el daño inicial del objetivo entre 0 y 300; **Reiniciar** reconstruye la sesión, elimina proyectiles/zonas y restablece ese porcentaje. **Super listo** llena la barra de P1.
 
@@ -53,7 +55,7 @@ Genera Windows desde el menú FUNADOS. Para repetir las pruebas en una carpeta d
 ```powershell
 $proof = 'D:\Funados\Evidence\MiPrueba'
 New-Item -ItemType Directory -Force $proof | Out-Null
-$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.4.4\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-beta-smoke -evidence-path $proof -options-path $proof\player-options.json -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
+$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.4.5\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-beta-smoke -evidence-path $proof -options-path $proof\player-options.json -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
 $game.ExitCode
 ```
 

@@ -19,6 +19,10 @@ namespace CancelBrawl.Beta
         private Texture2D pixel;
         private GUIStyle title, heading, body, small, number, centered, button, markerText, tiny;
         private bool stylesReady;
+        private float styleScale = -1, styleText = -1;
+        private int smallButtonSize = 12;
+        /// <summary>Layout of the current frame (SYS-071); also used by the camera strip and pointer checks.</summary>
+        public BrawlHudLayout Layout { get; private set; } = BrawlHudLayout.Compute(1600, 900, 1, 0);
 
         public void Configure(BrawlMatch owner) => match = owner;
 
@@ -53,6 +57,36 @@ namespace CancelBrawl.Beta
             stylesReady = true;
         }
 
+        /// <summary>Applies the text option and a minimum on-screen size (in real pixels) for the dense styles.</summary>
+        private void UpdateFontSizes()
+        {
+            float t = match.TextScale;
+            if (Mathf.Approximately(styleScale, Layout.Scale) && Mathf.Approximately(styleText, t)) return;
+            styleScale = Layout.Scale; styleText = t;
+            body.fontSize = Layout.FontSize(20, t, 15);
+            small.fontSize = Layout.FontSize(15, t, 13);
+            tiny.fontSize = Layout.FontSize(13, t, 12);
+            centered.fontSize = Layout.FontSize(21, t, 15);
+            markerText.fontSize = Layout.FontSize(17, t, 14);
+            button.fontSize = Layout.FontSize(19, t, 15, 1.25f);
+            smallButtonSize = Layout.FontSize(12, t, 11, 1.25f);
+        }
+
+        /// <summary>Real pixel height of the smallest text style at the current resolution (legibility check).</summary>
+        public float SmallestTextPixels => stylesReady ? Mathf.Min(tiny.fontSize, small.fontSize) * Layout.Scale : 0;
+
+        /// <summary>Whether a screen point (Input System coordinates, origin bottom-left) is over the lab panel.</summary>
+        public bool PointerOverTraining(Vector2 screenPoint)
+        {
+            var layout = BrawlHudLayout.Compute(Screen.width, Screen.height, match.HudScale, match.Fighters.Length);
+            Vector2 canvas = layout.ScreenToCanvas(new Vector2(screenPoint.x, Screen.height - screenPoint.y));
+            Vector2 top = new Vector2(canvas.x - layout.PadX, canvas.y);
+            Vector2 local = new Vector2(Width + (top.x - Width) / layout.HudScale, top.y / layout.HudScale);
+            return TrainingRect.Contains(local);
+        }
+
+        private static readonly Rect TrainingRect = new Rect(1000, 106, 570, 178);
+
         private static GUIStyle TextStyle(int size, FontStyle weight = FontStyle.Normal,
             TextAnchor alignment = TextAnchor.UpperLeft)
         {
@@ -74,41 +108,51 @@ namespace CancelBrawl.Beta
             EnsureStyles();
             Matrix4x4 oldMatrix = GUI.matrix;
             Color oldColor = GUI.color;
-            float scale = Mathf.Min(Screen.width / Width, Screen.height / Height);
-            Vector3 offset = new Vector3((Screen.width - Width * scale) * .5f,
-                (Screen.height - Height * scale) * .5f, 0f);
-            GUI.matrix = Matrix4x4.TRS(offset, Quaternion.identity, Vector3.one * scale);
-            // The camera reserves this strip for UI; repaint it fully to remove previous menu pixels.
-            Fill(new Rect(0, 729, Width, 171), new Color(.02f, .03f, .06f, 1f));
-            if (match.Phase == MatchPhase.Menu) DrawMenu();
+            int cards = match.Phase == MatchPhase.Menu || match.Fighters == null ? 0 : match.Fighters.Length;
+            Layout = BrawlHudLayout.Compute(Screen.width, Screen.height, match.HudScale, cards);
+            UpdateFontSizes();
+            Rect screen = new Rect(0, 0, Layout.ViewWidth, Layout.ViewHeight);
+            GUI.matrix = Layout.Canvas;
+            // The camera reserves exactly this strip (see LateUpdate); repaint it edge to edge every frame.
+            Fill(new Rect(0, Layout.ViewHeight - Layout.StripHeight, Layout.ViewWidth, Layout.StripHeight), new Color(.02f, .03f, .06f, 1f));
+            if (match.Phase == MatchPhase.Menu)
+            {
+                Fill(screen, new Color(.02f, .03f, .065f, .9f));
+                GUI.matrix = Layout.Centre; DrawMenu();
+            }
             else
             {
-                DrawWorldMarkers(scale, offset);
+                GUI.matrix = Layout.Top; DrawWorldMarkers();
                 DrawMatch();
+                if (match.Phase != MatchPhase.Playing && match.Phase != MatchPhase.Countdown)
+                { GUI.matrix = Layout.Canvas; Fill(screen, new Color(.015f, .022f, .045f, match.Phase == MatchPhase.Results ? .9f : .87f)); }
+                GUI.matrix = Layout.Centre;
                 if (match.Phase == MatchPhase.Countdown) DrawCountdown();
                 else if (match.Phase == MatchPhase.Paused) DrawPause();
                 else if (match.Phase == MatchPhase.Results) DrawResults();
             }
             CommitNavigation();
+            if (Event.current.type == EventType.Repaint) { FittedTexts = fittedThisFrame; fittedThisFrame = 0; }
             GUI.color = oldColor;
             GUI.matrix = oldMatrix;
         }
 
-        private void DrawWorldMarkers(float scale, Vector3 offset)
+        private void DrawWorldMarkers()
         {
-            if (match.Fighters == null || scale <= 0f) return;
+            if (match.Fighters == null) return;
             if (markerCamera == null) markerCamera = Camera.main;
             if (markerCamera == null) return;
 
             // Leave space for the header and stock cards, even when a launch leaves the view.
-            Rect field = new Rect(52, 125, Width - 104, 575);
+            Rect field = new Rect(52 - Layout.PadX, 125 * Layout.HudScale, Width - 104 + 2 * Layout.PadX,
+                Layout.ViewHeight - Layout.StripHeight - 25 - 125 * Layout.HudScale);
+            Matrix4x4 top = Layout.Top;
             foreach (BrawlFighter fighter in match.Fighters)
             {
                 if (fighter == null || fighter.Eliminated || fighter.IsRespawning ||
                     !fighter.gameObject.activeInHierarchy) continue;
                 Vector3 screen = markerCamera.WorldToScreenPoint(fighter.transform.position + Vector3.up * 2.25f);
-                Vector2 position = new Vector2((screen.x - offset.x) / scale,
-                    (Screen.height - screen.y - offset.y) / scale);
+                Vector2 position = Layout.ScreenToCanvas(new Vector2(screen.x, Screen.height - screen.y)) - new Vector2(Layout.PadX, 0);
                 if (screen.z < 0)
                     position = field.center - (position - field.center);
 
@@ -125,18 +169,19 @@ namespace CancelBrawl.Beta
                     position.y = Mathf.Clamp(position.y, field.yMin, field.yMax);
                 }
 
+                GUI.matrix = top * BrawlHudLayout.About(position, Layout.HudScale);
                 Rect badge = new Rect(position.x - 39, position.y - 29, 78, 28);
                 Fill(badge, new Color(.025f, .035f, .065f, .94f));
                 Fill(new Rect(badge.x, badge.yMax - 3, badge.width, 3), fighter.PlayerColor);
                 Label(new Rect(badge.x + 2, badge.y, badge.width - 4, badge.height - 3), label,
                     markerText, fighter.PlayerColor);
             }
+            GUI.matrix = top;
         }
 
         // ───────────────────────── Menu ─────────────────────────
         private void DrawMenu()
         {
-            Fill(new Rect(0, 0, Width, Height), new Color(.02f, .03f, .065f, .9f));
             Fill(new Rect(80, 46, 65, 5), Cyan);
             Label(new Rect(80, 58, 800, 86), match.Title, title, Paper);
             Label(new Rect(84, 146, 820, 34), "El último en pie se queda con la cancha.", heading, Muted);
@@ -204,9 +249,9 @@ namespace CancelBrawl.Beta
                 if (GUI.Button(chip, GUIContent.none, GUIStyle.none)) match.CycleCharacter(chipSlot);
                 Nav("rival-" + slot, chip, () => match.CycleCharacter(chipSlot), d => match.CycleSkin(chipSlot));
                 int character = match.SlotCharacters[slot];
-                Label(new Rect(chip.x + 8, chip.y + 4, chip.width - 12, 20), $"P{slot + 1}  ·  {(slot <= pads ? "MANDO" : "IA")}", tiny, Muted);
+                Label(new Rect(chip.x + 8, chip.y + 4, chip.width * .5f - 8, 20), $"P{slot + 1}  ·  {(slot <= pads ? "MANDO" : "IA")}", tiny, Muted);
                 if (BrawlRoster.SkinCount(character) > 1)
-                    Label(new Rect(chip.x + 8, chip.y + 4, chip.width - 14, 20),
+                    Label(new Rect(chip.x + chip.width * .5f, chip.y + 4, chip.width * .5f - 6, 20),
                         $"aspecto {BrawlRoster.WrapSkin(character, match.SlotSkins[slot]) + 1}/{BrawlRoster.SkinCount(character)}", tiny, Muted, TextAnchor.UpperRight);
                 Label(new Rect(chip.x + 8, chip.y + 21, chip.width - 12, 22), match.CharacterName(character), small, Paper);
             }
@@ -257,13 +302,17 @@ namespace CancelBrawl.Beta
             Panel(rect);
             float x = rect.x + 24, y = rect.y + 16;
             Label(new Rect(x, y, rect.width - 48, 30), "OPCIONES", heading, Paper);
-            Rect generalTab = new Rect(rect.xMax - 24 - 196, y + 2, 96, 26), padTab = new Rect(rect.xMax - 24 - 96, y + 2, 96, 26);
-            if (SmallButton(generalTab, "GENERAL", match.ShowPadOptions ? Muted : Cyan)) match.ShowPadOptions = false;
-            Nav("tab-general", generalTab, () => match.ShowPadOptions = false);
-            if (SmallButton(padTab, "MANDO", match.ShowPadOptions ? Cyan : Muted)) match.ShowPadOptions = true;
-            Nav("tab-pad", padTab, () => match.ShowPadOptions = true);
+            string[] tabNames = { "GENERAL", "MANDO", "PANTALLA" }, tabIds = { "tab-general", "tab-pad", "tab-display" };
+            for (int i = 0; i < 3; i++)
+            {
+                int page = i;
+                Rect tab = new Rect(rect.xMax - 24 - (3 - i) * 92, y + 2, 88, 26);
+                if (SmallButton(tab, tabNames[i], match.OptionsPage == i ? Cyan : Muted)) match.OptionsPage = page;
+                Nav(tabIds[i], tab, () => match.OptionsPage = page);
+            }
             y += 40;
-            if (match.ShowPadOptions) { DrawPadOptions(x, y, rect.width - 48); return; }
+            if (match.OptionsPage == 1) { DrawPadOptions(x, y, rect.width - 48); return; }
+            if (match.OptionsPage == 2) { DrawDisplayOptions(x, y, rect.width - 48); return; }
             Label(new Rect(x, y + 8, 250, 26), "Reducir destellos y temblor", small, Muted);
             Rect reducedRect = new Rect(rect.xMax - 150, y, 126, 36);
             if (Button(reducedRect, BrawlFeedback.ReducedEffects ? "SÍ" : "NO", BrawlFeedback.ReducedEffects ? Cyan : Muted))
@@ -273,6 +322,23 @@ namespace CancelBrawl.Beta
             VolumeRow("opt-sfx", new Rect(x, y, rect.width - 48, 36), "Efectos", BrawlFeedback.SfxVolume, v => match.SetVolumes(v, BrawlFeedback.MusicVolume));
             y += 46;
             VolumeRow("opt-music", new Rect(x, y, rect.width - 48, 36), "Música", BrawlFeedback.MusicVolume, v => match.SetVolumes(BrawlFeedback.SfxVolume, v));
+        }
+
+        /// <summary>SYS-071: text and HUD size. Text never renders below a legible pixel size, whatever the resolution.</summary>
+        private void DrawDisplayOptions(float x, float y, float width)
+        {
+            const float row = 34;
+            StepRow("display-text", new Rect(x, y, width, row - 4), "Tamaño de texto", $"{Mathf.RoundToInt(match.TextScale * 100)} %",
+                Mathf.InverseLerp(BrawlHudLayout.MinScaleOption, BrawlHudLayout.MaxScaleOption, match.TextScale),
+                d => match.SetDisplayScale(match.TextScale + d * .15f, match.HudScale));
+            y += row;
+            StepRow("display-hud", new Rect(x, y, width, row - 4), "Tamaño del HUD", $"{Mathf.RoundToInt(match.HudScale * 100)} %",
+                Mathf.InverseLerp(BrawlHudLayout.MinScaleOption, BrawlHudLayout.MaxScaleOption, match.HudScale),
+                d => match.SetDisplayScale(match.TextScale, match.HudScale + d * .15f));
+            y += row + 4;
+            Label(new Rect(x, y, width, 44),
+                $"Pantalla {Screen.width}×{Screen.height}. Texto más pequeño: {Mathf.RoundToInt(SmallestTextPixels)} px reales. " +
+                "Las tarjetas de jugador crecen mientras quepan.", tiny, Muted);
         }
 
         /// <summary>SYS-026: stick deadzones, response curve and vibration; the d-pad stays a digital alternative.</summary>
@@ -321,35 +387,42 @@ namespace CancelBrawl.Beta
         // ───────────────────────── Match ─────────────────────────
         private void DrawMatch()
         {
+            GUI.matrix = Layout.TopScaled(Vector2.zero);
             Panel(new Rect(25, 22, 360, 68));
             Label(new Rect(42, 31, 330, 28), match.Title, body, Paper);
             Label(new Rect(42, 63, 330, 20), "BETA LOCAL  ·  " + match.Arena.DisplayName.ToUpperInvariant(), small, Cyan);
+            GUI.matrix = Layout.TopScaled(new Vector2(Width * .5f, 0));
             Panel(new Rect(710, 18, 180, 72));
             int seconds = Mathf.CeilToInt(Mathf.Max(0, match.RemainingTime));
             Label(new Rect(710, 18, 180, 72), match.IsTraining ? "LAB" : $"{seconds / 60:00}:{seconds % 60:00}", number,
                 seconds <= 30 ? Pink : Paper, TextAnchor.MiddleCenter);
-            Label(new Rect(1190, 30, 380, 34), "ESC  /  PAUSA", small, Muted, TextAnchor.UpperRight);
+            GUI.matrix = Layout.TopScaled(new Vector2(Width, 0));
+            Label(new Rect(1190, 30, 380, 34), "ESC · START  /  PAUSA", small, Muted, TextAnchor.UpperRight);
             if (match.IsTraining) DrawTraining();
             if (!string.IsNullOrEmpty(match.Announcement) && match.Phase == MatchPhase.Playing)
             {
+                GUI.matrix = Layout.TopScaled(new Vector2(Width * .5f, 112));
                 Panel(new Rect(440, 112, 720, 47));
                 Label(new Rect(450, 114, 700, 43), match.Announcement, body, Paper, TextAnchor.MiddleCenter);
             }
 
             BrawlFighter[] fighters = match.Fighters;
+            GUI.matrix = Layout.Bottom;
             if (fighters != null && fighters.Length > 0)
             {
-                float cardWidth = Mathf.Min(310, (Width - 70 - (fighters.Length - 1) * 12) / fighters.Length);
+                float cardWidth = BrawlHudLayout.CardWidth(fighters.Length);
                 float start = (Width - (cardWidth * fighters.Length + 12 * (fighters.Length - 1))) * .5f;
                 for (int i = 0; i < fighters.Length; i++)
                 {
                     if (fighters[i] != null) DrawFighter(new Rect(start + i * (cardWidth + 12), 738, cardWidth, 124), fighters[i]);
                 }
             }
-            Label(new Rect(25, 876, 1550, 22),
+            GUI.matrix = Layout.Hint;
+            Label(new Rect(25, 876, BrawlHudLayout.HintWidth, 22),
                 $"{MoveLabel()} mover   ·   RATÓN orientar   ·   {KeyLabel(BrawlAction.Jump)} doble salto   ·   {KeyLabel(BrawlAction.Basic)} / {KeyLabel(BrawlAction.Heavy)} básico / fuerte   ·   " +
                 $"{KeyLabel(BrawlAction.Special)} especial   ·   {KeyLabel(BrawlAction.Recovery)} recuperar   ·   {KeyLabel(BrawlAction.Dodge)} esquiva   ·   {KeyLabel(BrawlAction.Super)} super   ·   {KeyLabel(BrawlAction.FastFall)} caer",
                 small, Paper, TextAnchor.MiddleCenter);
+            GUI.matrix = Layout.Top;
         }
 
         private void DrawFighter(Rect rect, BrawlFighter fighter)
@@ -377,7 +450,7 @@ namespace CancelBrawl.Beta
 
         private void DrawTraining()
         {
-            Panel(new Rect(1000, 106, 570, 178));
+            Panel(TrainingRect);
             Label(new Rect(1016, 114, 540, 26), "ENTRENAMIENTO  ·  objetivo sin entradas", body, Cyan);
             Label(new Rect(1016, 148, 245, 24), $"Daño inicial: {match.TrainingDamage:0}%", small, Paper);
             bool oldEnabled = GUI.enabled;
@@ -403,7 +476,6 @@ namespace CancelBrawl.Beta
 
         private void DrawPause()
         {
-            Fill(new Rect(0, 0, Width, Height), new Color(.015f, .022f, .045f, .87f));
             Panel(new Rect(130, 180, 530, 420));
             Label(new Rect(166, 210, 458, 70), "PAUSA", title, Paper);
             string pauseText = match.DevicePause
@@ -430,7 +502,6 @@ namespace CancelBrawl.Beta
 
         private void DrawResults()
         {
-            Fill(new Rect(0, 0, Width, Height), new Color(.015f, .022f, .045f, .9f));
             Panel(new Rect(260, 70, 1080, 760));
             Label(new Rect(300, 98, 1000, 42), match.Arena.DisplayName.ToUpperInvariant() + " TIENE UN VEREDICTO", heading, Cyan);
             Label(new Rect(300, 146, 1000, 92), "RESULTADOS", title, Paper);
@@ -545,14 +616,36 @@ namespace CancelBrawl.Beta
             TextAnchor previousAlignment = style.alignment;
             GUI.color = color;
             if (alignment.HasValue) style.alignment = alignment.Value;
+            int size = style.fontSize;
+            FitText(style, text, rect);
             GUI.Label(rect, text, style);
+            style.fontSize = size;
             style.alignment = previousAlignment;
             GUI.color = previous;
         }
 
+        private static readonly GUIContent fitContent = new GUIContent();
+        /// <summary>Number of labels/buttons that had to shrink this frame (larger text in a tight spot).</summary>
+        public int FittedTexts { get; private set; }
+        private int fittedThisFrame;
+
+        /// <summary>
+        /// SYS-071: larger text grows where there is room and shrinks back where the rect is tight, never below 70 %
+        /// of its size (or 9 units), so nothing is clipped or wraps into a neighbour.
+        /// </summary>
+        private void FitText(GUIStyle style, string text, Rect rect)
+        {
+            if (string.IsNullOrEmpty(text) || rect.width <= 0) return;
+            fitContent.text = text;
+            int floor = Mathf.Max(9, Mathf.RoundToInt(style.fontSize * .7f));
+            bool shrunk = false;
+            while (style.fontSize > floor && style.CalcHeight(fitContent, rect.width) > rect.height + 1) { style.fontSize--; shrunk = true; }
+            if (shrunk) fittedThisFrame++;
+        }
+
         private bool SmallButton(Rect rect, string text, Color color)
         {
-            int size = button.fontSize; button.fontSize = 12;
+            int size = button.fontSize; button.fontSize = smallButtonSize;
             bool clicked = Button(rect, text, color);
             button.fontSize = size;
             return clicked;
@@ -562,7 +655,10 @@ namespace CancelBrawl.Beta
         {
             Color previous = GUI.backgroundColor;
             GUI.backgroundColor = color;
+            int size = button.fontSize;
+            FitText(button, text, rect);
             bool clicked = GUI.Button(rect, text, button);
+            button.fontSize = size;
             GUI.backgroundColor = previous;
             return clicked;
         }

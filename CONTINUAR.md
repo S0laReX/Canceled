@@ -1,14 +1,14 @@
 # Continuación de FUNADOS
 
-Proyecto: `D:\Funados`. Unity Hub + Editor **6000.5.7f1**, URP **17.5.0**, Input System **1.20.0**. Estado actual: **0.4.4**: menús navegables con teclado/mando y foco visible, y volúmenes de proyectiles/zonas en el laboratorio. Incluye los ajustes de mando, vibración e impactos simultáneos de 0.4.3 y los controles remapeables y opciones guardadas de 0.4.2. Mantener los cinco kits, cuatro arenas y once aspectos originales; no sustituir los recursos habituales. Los nombres públicos Don Promesio/Lola Viral conservan los IDs internos Don Decreto/Lola Loop.
+Proyecto: `D:\Funados`. Unity Hub + Editor **6000.5.7f1**, URP **17.5.0**, Input System **1.20.0**. Estado actual: **0.4.5**: tamaño de texto y HUD ajustables, y HUD adaptado a 4:3, 16:10 y 21:9. Incluye los menús navegables con foco visible y los volúmenes del laboratorio de 0.4.4, los ajustes de mando, vibración e impactos simultáneos de 0.4.3 y los controles remapeables y opciones guardadas de 0.4.2. Mantener los cinco kits, cuatro arenas y once aspectos originales; no sustituir los recursos habituales. Los nombres públicos Don Promesio/Lola Viral conservan los IDs internos Don Decreto/Lola Loop.
 
 ## Punto de la checklist
 
-Bloque **Dispositivos y control**. En 0.4.1 se implementaron SYS-022, SYS-023 y SYS-027 (asignación y reconexión de mandos). En 0.4.2 se añaden **SYS-024/025** (tabla única de acciones, etiquetas reales por dispositivo y remapeo con detección de conflictos) y **SYS-068/069** (archivo de opciones versionado, escritura recuperable y valores seguros ante archivos dañados). En 0.4.3 se añaden **SYS-026** (zonas muertas, respuesta de palanca y vibración en la pestaña MANDO de OPCIONES, guardadas en el formato de opciones v2 con migración desde v1), vibración apagable (parte de SYS-072) y **SYS-045** (impactos acumulados por paso y aplicados juntos, sin ventaja por número de jugador). En 0.4.4 se añade **SYS-070** (foco visible y navegación completa de menú, pausa y resultados con teclado o mando) y el laboratorio amplía SYS-065 con volúmenes de proyectiles, zonas, emisor y onda. Todo tiene prueba automática con dispositivos virtuales; **ninguna casilla está aceptada**, porque faltan mandos físicos y personas. QA-445 cubre ya desconexión, reconexión, mandos sobrantes, remapeo y teclas en conflicto, solo con dispositivos virtuales.
+Bloque **Dispositivos y control**. En 0.4.1 se implementaron SYS-022, SYS-023 y SYS-027 (asignación y reconexión de mandos). En 0.4.2 se añaden **SYS-024/025** (tabla única de acciones, etiquetas reales por dispositivo y remapeo con detección de conflictos) y **SYS-068/069** (archivo de opciones versionado, escritura recuperable y valores seguros ante archivos dañados). En 0.4.3 se añaden **SYS-026** (zonas muertas, respuesta de palanca y vibración en la pestaña MANDO de OPCIONES, guardadas en el formato de opciones v2 con migración desde v1), vibración apagable (parte de SYS-072) y **SYS-045** (impactos acumulados por paso y aplicados juntos, sin ventaja por número de jugador). En 0.4.4 se añade **SYS-070** (foco visible y navegación completa de menú, pausa y resultados con teclado o mando) y el laboratorio amplía SYS-065 con volúmenes de proyectiles, zonas, emisor y onda. En 0.4.5 se añade **SYS-071**: diseño único `BrawlHudLayout` (lienzo extendido sin bandas, grupos anclados, franja de cámara exacta), pestaña PANTALLA con tamaño de texto/HUD, tamaño mínimo en píxeles reales y ajuste automático de cada texto a su rectángulo. Las opciones pasan a formato v3. Todo tiene prueba automática con dispositivos virtuales; **ninguna casilla está aceptada**, porque faltan mandos físicos y personas. QA-445 cubre ya desconexión, reconexión, mandos sobrantes, remapeo y teclas en conflicto, solo con dispositivos virtuales.
 
 **Siguiente:**
 1. Validación humana y física de todo el bloque de controles: el usuario pidió hacerla al final. Ver la lista de abajo.
-2. SYS-071: tamaño de texto y HUD ajustables; legibilidad a 720p y en otras relaciones de aspecto.
+2. SYS-072: reducción de destellos, sacudida y movimiento del fondo por separado (hoy hay un solo interruptor y la vibración aparte).
 3. Hurtboxes anatómicas (hoy: raíz y pecho como referencias).
 4. Pendientes de la primera entrega local: CIERRE-455 a 458, cámara con personas, arte final y rendimiento medido.
 
@@ -23,6 +23,7 @@ El catálogo sigue en **5/13 kits y 4/8 arenas provisionales**. Online no está 
 - Impactos (0.4.3): `BrawlMatch` abre una ventana al inicio de cada paso (orden de ejecución -100) y `BrawlHitResolver` la cierra al final (orden 100). Los golpes del paso se aplican juntos con `BrawlFighter.CombineHits`, cuyo resultado no depende del orden. Fuera de un paso (llamadas directas de las pruebas) el golpe es inmediato.
 - Menús (0.4.4): `BrawlHud.Navigation.cs`. Cada control llama a `Nav(id, rect, activar, ajustar)` al dibujarse. Las flechas, las teclas de movimiento, la cruceta o la palanca (con repetición) mueven el foco en el espacio; Enter, Espacio o A activan; ←/→ ajustan; B reanuda en la pausa. El foco es un borde blanco. Cada pantalla abre en ENTRAR, CONTINUAR o REVANCHA. En la pausa no navegan los mandos sobrantes. `BrawlMatch.Update` ya no inicia la partida con Enter/A: lo hace el control enfocado. Start sigue siendo atajo.
 - Laboratorio (0.4.4): `BrawlHazardVolumes` dibuja proyectiles, zonas, emisor y onda con las mismas constantes públicas que usan sus comprobaciones de impacto.
+- Pantalla (0.4.5): `BrawlHudLayout.Compute(ancho, alto, hudScale, tarjetas)` da la escala, el espacio extra, la escala de las tarjetas y de la ayuda, y la franja. El HUD dibuja con las matrices `Top`, `TopScaled(pivote)`, `Bottom`, `Hint` y `Centre`; la cámara toma `StripFraction` en `BrawlHud.LateUpdate`. `Label`/`Button` reducen su fuente hasta caber (`FitText`). Límite conocido: a 960×720 (4:3) el texto más pequeño queda en ~11 px.
 - Un perfil de botones compartido por todos los mandos y una tecla por acción. El movimiento y la orientación del mando no se remapean.
 
 ## Archivos y pruebas
@@ -36,14 +37,15 @@ El catálogo sigue en **5/13 kits y 4/8 arenas provisionales**. Online no está 
 - `BrawlInputTuning.cs`: forma de la palanca. `BrawlHitResolver.cs`: cierre de la ventana de impactos.
 - `BrawlTuningChecks.cs`: 23 pruebas de ajustes de mando, vibración, migración v1→v2 e intercambios simultáneos (0.4.3).
 - `BrawlMenuChecks.cs`: 22 pruebas de navegación de menús y volúmenes del laboratorio (0.4.4).
+- `BrawlDisplayChecks.cs`: 15 pruebas de diseño por proporción, legibilidad, opciones v3 y capturas cambiando la ventana (0.4.5). Restaura el tamaño de la ventana al terminar.
 
 Ninguna prueba se ejecuta durante el juego normal.
 
 Escenas: `Assets/FunadosProduction/Scenes/Funados.unity`, `CombatLab.unity`; la beta original está en `Assets/CancelBrawlBeta/Scenes/CancelBrawlBeta.unity`.
 
-Build: `Builds/Funados/0.4.4/Windows/FUNADOS.exe`. Se generó en el worktree de esta sesión; en `D:\Funados` hay que regenerarla con FUNADOS → Generar Windows. `FunadosProjectBuilder.BuildWindows` usa `BrawlMatch.ProductionVersion` para la carpeta y para `Evidence/Controls-<versión>/build.txt`. **Al cambiar de entrega basta con cambiar `ProductionVersion`.** Resultado: Succeeded, 0 errores, 485 avisos.
+Build: `Builds/Funados/0.4.5/Windows/FUNADOS.exe`. Se generó en el worktree de esta sesión; en `D:\Funados` hay que regenerarla con FUNADOS → Generar Windows. `FunadosProjectBuilder.BuildWindows` usa `BrawlMatch.ProductionVersion` para la carpeta y para `Evidence/Controls-<versión>/build.txt`. **Al cambiar de entrega basta con cambiar `ProductionVersion`.** Resultado: Succeeded, 0 errores, 485 avisos.
 
-Pruebas: focal **108/108** y completa **191/191** (169 anteriores + 22), sin fallos, en `Evidence/Controls-0.4.4/{Focused,Full}`. Se ejecutan con:
+Pruebas: focal **123/123** y completa **206/206** (191 anteriores + 15), sin fallos, en `Evidence/Controls-0.4.5/{Focused,Full}`. Se ejecutan con:
 
 `-beta-smoke` (o `-controls-smoke`) `-evidence-path <carpeta nueva> -options-path <carpeta nueva>\player-options.json -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0`
 
@@ -59,9 +61,10 @@ Sin `-options-path`, las pruebas no escriben las opciones del jugador, pero las 
 - Intercambio simultáneo con dos personas: dos básicos a la vez deben golpear a ambos.
 - Recorrer menú, pausa y resultados **sin ratón**, solo con el mando PlayStation: elegir luchador y aspecto, cancha, rivales, remapear un botón, ajustar la vibración y empezar.
 - En el laboratorio con VOLÚMENES: comprobar que proyectiles, zonas y emisor golpean dentro de lo dibujado.
+- Pestaña PANTALLA: texto y HUD al 130 % desde el sofá; probar a pantalla completa y, si es posible, en un monitor de otra proporción.
 
 ## Historial y límites
 
-Base: `d2bb25e`. Laboratorio/escenas: `0413722`. Controles 0.4.1: `b49b358`. Controles 0.4.2: `9065e0b`. Ajustes de mando 0.4.3: `6d0bb01`. El commit siguiente contiene 0.4.4. Solo commits locales; no publicar en remoto sin instrucción. Git LFS contiene FBX/PNG/audio/Blender/ZIP; se conservan GUID y .meta. En un worktree nuevo hay que ejecutar `git lfs checkout` antes de abrir Unity.
+Base: `d2bb25e`. Laboratorio/escenas: `0413722`. Controles 0.4.1: `b49b358`. Controles 0.4.2: `9065e0b`. Ajustes de mando 0.4.3: `6d0bb01`. Menús 0.4.4: `7c73c00`. El commit siguiente contiene 0.4.5. Solo commits locales; no publicar en remoto sin instrucción. Git LFS contiene FBX/PNG/audio/Blender/ZIP; se conservan GUID y .meta. En un worktree nuevo hay que ejecutar `git lfs checkout` antes de abrir Unity.
 
 Checklist: `Docs/Produccion_2026-11-11/FUNADOS_Checklist_maestra_implementacion.docx`. GDD: `Docs/Produccion_2026-11-10/FUNADOS_GDD.md`. Siguen pendientes las licencias originales de Meshy, el rig/animación final y la evaluación de los 485 avisos. No se probó rendimiento sostenido ni hardware real de mandos.
