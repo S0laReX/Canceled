@@ -35,6 +35,8 @@ namespace CancelBrawl.Beta
         public Material occluderMaterial;
         [Tooltip("Modelos importados de cada luchador (Art/Characters). Sin catálogo se usan primitivas.")]
         public BrawlCharacterArt characterArt;
+        [Tooltip("Escenarios de producción, uno por cancha (mismo orden). Solo los usan las escenas de producción; un hueco vacío deja la cancha gris de la beta.")]
+        public GameObject[] stagePrefabs;
 
         public AttackSpec Attack(AttackKind kind, int character, int combo) => Attack(kind, BrawlRoster.Get(character), combo);
 

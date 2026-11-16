@@ -314,7 +314,8 @@ namespace CancelBrawl.Beta
                     Check(skinned != null && skinned.bones.Length == BrawlAutoRig.BoneCount && skinned.sharedMesh.boneWeights.Length > 0,
                         "El modelo de P1 tiene esqueleto generado con pesos");
                 }
-                if (arena == 1)
+                // The kiosk that hides a fighter only exists in the beta greybox of this court.
+                if (arena == 1 && !match.Arena.UsesStageArt)
                 {
                     Place(match.Fighters[0], new Vector3(0, .12f, 1.9f));
                     yield return new WaitForSeconds(.25f);

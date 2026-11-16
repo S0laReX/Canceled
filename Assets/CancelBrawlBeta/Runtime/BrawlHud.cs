@@ -168,8 +168,8 @@ namespace CancelBrawl.Beta
                 Fill(rect, selected ? new Color(Cyan.r * .16f, Cyan.g * .16f, Cyan.b * .16f, 1f) : Card);
                 Fill(new Rect(rect.x, rect.y, 4, rect.height), selected ? Cyan : Muted * .5f);
                 if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.ArenaIndex = i;
-                Label(new Rect(rect.x + 14, rect.y + 10, rect.width - 22, 24), BrawlArena.Names[i].ToUpperInvariant(), small, selected ? Cyan : Paper);
-                Label(new Rect(rect.x + 14, rect.y + 34, rect.width - 22, 40), BrawlArena.Descriptions[i], tiny, Muted);
+                Label(new Rect(rect.x + 14, rect.y + 10, rect.width - 22, 24), BrawlArena.NameOf(i, match.UsesStageArt(i)).ToUpperInvariant(), small, selected ? Cyan : Paper);
+                Label(new Rect(rect.x + 14, rect.y + 34, rect.width - 22, 40), BrawlArena.DescriptionOf(i, match.UsesStageArt(i)), tiny, Muted);
             }
 
             // 03 · rivals
@@ -212,7 +212,7 @@ namespace CancelBrawl.Beta
             Label(new Rect(104, 748, 852, 40), $"{match.Settings.startingStocks} vidas  ·  {Mathf.RoundToInt(match.Settings.matchSeconds / 60)} minutos  ·  mayor daño = mayor empuje  ·  partida libre sin rating", small, Muted);
 
             GUI.enabled = match.CanStartMatch;
-            if (Button(new Rect(80, 818, 900, 62), match.CanStartMatch ? $"ENTRAR A {BrawlArena.Names[match.ArenaIndex].ToUpperInvariant()}   /   ENTER" : "CONECTA DOS MANDOS PARA INICIAR", Cyan)) match.StartMatch();
+            if (Button(new Rect(80, 818, 900, 62), match.CanStartMatch ? $"ENTRAR A {BrawlArena.NameOf(match.ArenaIndex, match.UsesStageArt(match.ArenaIndex)).ToUpperInvariant()}   /   ENTER" : "CONECTA DOS MANDOS PARA INICIAR", Cyan)) match.StartMatch();
             GUI.enabled = menuEnabled;
             DrawControls(new Rect(1010, 196, 510, 470), true);
             DrawOptions(new Rect(1010, 682, 510, 198));

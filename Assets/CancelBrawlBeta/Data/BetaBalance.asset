@@ -32,3 +32,8 @@ MonoBehaviour:
   superDamage: 22
   occluderMaterial: {fileID: 2100000, guid: 9e822dabd20076f4ca3495e0ec056ff3, type: 2}
   characterArt: {fileID: 11400000, guid: 1d30517f5d3e585469b9fd6ae0eae0a3, type: 2}
+  stagePrefabs:
+  - {fileID: 1534491595101816163, guid: 3908a65ec7d961f47bf1da9d8b7d7066, type: 3}
+  - {fileID: 774724994149785285, guid: 510cd0f31db4fcc448d6c480a634208b, type: 3}
+  - {fileID: 1510094738089134484, guid: 27bf18f441affb8409bf862eff2fb62c, type: 3}
+  - {fileID: 659594263965615653, guid: 4dccf0df21f666d4a9fb906917f37aa5, type: 3}

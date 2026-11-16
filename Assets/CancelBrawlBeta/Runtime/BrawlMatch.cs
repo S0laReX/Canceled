@@ -134,9 +134,16 @@ namespace CancelBrawl.Beta
             if (Arena != null && Arena.Layout == index) return;
             if (Arena != null) { Arena.gameObject.SetActive(false); Destroy(Arena.gameObject); }
             Arena = new GameObject("Cancha").AddComponent<BrawlArena>();
-            Arena.transform.SetParent(transform); Arena.Build(index);
+            Arena.transform.SetParent(transform); Arena.Build(index, StagePrefab(index));
             groupCamera.Setup(Arena, settings.occluderMaterial);
         }
+
+        /// <summary>True when court <paramref name="index"/> is played on its production stage prefab.</summary>
+        public bool UsesStageArt(int index) => StagePrefab(index) != null;
+
+        private GameObject StagePrefab(int index) =>
+            IsProduction && settings != null && settings.stagePrefabs != null && index >= 0 && index < settings.stagePrefabs.Length
+                ? settings.stagePrefabs[index] : null;
 
         public void StartMatch()
         {
