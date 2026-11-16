@@ -91,6 +91,11 @@ namespace CancelBrawl.Beta
                 yield return null;
                 var digital = BrawlMatch.ReadGamepad(p1Pad);
                 check(digital.Move.x > 0 && digital.Move.y > 0 && digital.Move.magnitude <= 1.001f, "Cruceta digital admite diagonales normalizadas");
+                if (match.IsSideView)
+                {
+                    var side = BrawlMatch.Combine(default, BrawlMatch.ReadGamepad(p1Pad,true),true);
+                    check(side.Move.x == 1 && side.Move.y == 1, "Orientar un golpe hacia arriba no reduce la velocidad horizontal de la cruceta");
+                }
                 InputSystem.QueueStateEvent(p1Pad, new GamepadState()); yield return null; match.AutomatedTest = true;
                 match.ReturnToMenu(); match.OpponentCount = 4;
                 for (int i = 0; i < 4; i++) created.Add(InputSystem.AddDevice<Gamepad>());

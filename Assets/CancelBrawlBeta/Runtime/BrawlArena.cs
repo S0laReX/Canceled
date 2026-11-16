@@ -41,6 +41,9 @@ namespace CancelBrawl.Beta
         private Vector3[] spawns = new Vector3[0];
 
         public int Layout { get; private set; }
+        public bool IsSideView { get; private set; }
+        public float UpperLimit => IsSideView ? 20 : float.PositiveInfinity;
+        public Collider[] OneWayPlatforms { get; private set; } = new Collider[0];
         /// <summary>True when this court was built from a production stage prefab instead of greyboxes.</summary>
         public bool UsesStageArt { get; private set; }
         /// <summary>Clear colour the group camera should use behind this court.</summary>
@@ -75,8 +78,9 @@ namespace CancelBrawl.Beta
         public void Build() => Build(Layout);
 
         /// <param name="stage">Production stage prefab for this slot; null builds the beta greybox.</param>
-        public void Build(int layout, GameObject stage = null)
+        public void Build(int layout, GameObject stage = null, bool sideView = false)
         {
+            IsSideView = sideView;
             Layout = Mathf.Clamp(layout, 0, Count - 1);
             UsesStageArt = stage != null;
             Backdrop = DefaultBackdrop;
@@ -91,7 +95,8 @@ namespace CancelBrawl.Beta
 
             Transform root = new GameObject(GeneratedName).transform;
             root.SetParent(transform, false);
-            if (UsesStageArt) { BuildStage(root, stage); return; }
+            if (UsesStageArt) { BuildStage(root, stage); if (sideView) AdaptSideStage(root); return; }
+            if (sideView) { BuildSideGreybox(root); return; }
             switch (Layout)
             {
                 case 1: BuildMall(root); break;
@@ -99,6 +104,41 @@ namespace CancelBrawl.Beta
                 case 3: BuildCore(root); break;
                 default: BuildRooftop(root); break;
             }
+        }
+
+        private void SideMetrics()
+        {
+            OuterLimits = new Vector2(22, 1); LowerLimit = -10; CameraClamp = new Vector2(19, 1);
+            spawns = new[] { P(-4, 0, 0), P(4, 0, 0), P(-6, 0, 0), P(6, 0, 0), P(0, 0, 0) };
+        }
+
+        private void BuildSideGreybox(Transform root)
+        {
+            SideMetrics(); Palette(new Color(.12f,.17f,.27f), new Color(.2f,.9f,1), new Color(1,.3f,.6f));
+            Platform(root, "Side main", Vector3.zero, new Vector3(16,.8f,3), surface, cyan);
+            Platform(root, "Side left", new Vector3(-4.8f,2.6f,0), new Vector3(3.8f,.3f,3), bridge, pink);
+            Platform(root, "Side right", new Vector3(4.8f,2.6f,0), new Vector3(3.8f,.3f,3), bridge, pink);
+            OneWayPlatforms = new[] { root.Find("Side left").GetComponent<Collider>(), root.Find("Side right").GetComponent<Collider>() };
+            AddLight(root, Color.white, new Color(.5f,.55f,.65f), DefaultBackdrop);
+        }
+
+        private void AdaptSideStage(Transform root)
+        {
+            SideMetrics(); var elevated = new List<Collider>();
+            foreach (var child in root.GetComponentsInChildren<Transform>())
+                if (child.name == "Back floor" || child.name == "Back floor trim") child.gameObject.SetActive(false);
+            // Preserve the source prefab: adapt only this runtime instance.
+            foreach (var collider in root.GetComponentsInChildren<Collider>())
+            {
+                bool combat = collider.transform.parent && collider.transform.parent.name == "Combat surfaces";
+                collider.enabled = combat;
+                if (!combat || collider.name == "Main platform") continue;
+                float top = collider.bounds.max.y;
+                Vector3 p = collider.transform.position;
+                collider.transform.position = new Vector3(p.x < 0 ? -4.8f : 4.8f, p.y + 2.6f - top, 0);
+                elevated.Add(collider);
+            }
+            OneWayPlatforms = elevated.ToArray();
         }
 
         // ───────────────────────── Production stages ─────────────────────────

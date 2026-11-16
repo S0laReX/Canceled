@@ -1,6 +1,6 @@
 # FUNADOS
 
-Juego local de lucha de plataformas 3D: movimiento X/Z, salto Y, porcentaje de daño y expulsiones. Proyecto de producción iniciado sobre Cancel Brawl 0.3, conservando sus cinco kits, cuatro arenas y once aspectos originales. Entrega actual: 0.4.1, asignación estable y recuperación de mandos; incluye el laboratorio de 0.4.0.
+Juego local de lucha de plataformas **2.5D**: personajes 3D, movimiento lateral X, salto Y y profundidad bloqueada. Por instrucción del 16/11/2026, la referencia es el combo aéreo del video “The PERFECT Mario Ladder Combo”; la producción abandona el movimiento libre X/Z. Se conservan los cinco kits, cuatro escenarios de producción y once aspectos originales. Entrega actual: **0.5.0**, golpes direccionales, combos aéreos y poderes en vista lateral.
 
 Abre `D:\Funados` desde Unity Hub con **Unity 6000.5.7f1**. Las versiones de paquetes están fijadas en `Packages/manifest.json` y `packages-lock.json`; no aceptes una actualización de Editor para reproducir esta entrega.
 
@@ -14,7 +14,7 @@ Para continuar con otro agente, empezar por `CONTINUAR.md`: contiene los puntos 
 
 Menú del editor: **FUNADOS → Abrir juego local**, **Abrir CombatLab** y **Generar Windows**. La generación de escenas crea únicamente las que faltan; no sobrescribe escenas existentes. Guarda primero cualquier escena sin título modificada.
 
-El ejecutable nuevo se genera en `Builds/Funados/0.4.1/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte.
+El ejecutable nuevo se genera en `Builds/Funados/0.5.0/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte. El cambio de diseño y sus límites están en `Docs/Produccion_2026-11-16/Combate_2p5D.md`.
 
 ## Mandos locales
 
@@ -26,7 +26,9 @@ Los nuevos mandos no sustituyen bots a mitad de ronda. Regresa al menú para cam
 
 ## Entrenamiento
 
-Usa los controles habituales: WASD para moverse, ratón para orientar, Espacio para saltar dos veces, clic izquierdo/derecho para básico/fuerte, E especial, R recuperación aérea, Shift esquiva, Q super, Ctrl caída acelerada y Esc pausa.
+Usa **A/D** para moverte lateralmente, ratón para orientar izquierda/derecha, **W + clic** para un golpe ascendente y **S + clic en el aire** para un remate descendente. Espacio permite saltar dos veces, clic izquierdo/derecho ejecuta básico/fuerte, E especial, R recuperación aérea, Shift esquiva, Q super, S o Ctrl caída acelerada y Esc pausa. **S+Espacio** permite bajar de las plataformas elevadas. En mando, palanca/cruceta izquierda elige movimiento y dirección del ataque; también se puede orientar con la palanca derecha.
+
+Para practicar un combo: acércate, mantén W y golpea con clic izquierdo; después del impacto pulsa Espacio y vuelve a golpear con W en el aire. El contador muestra impactos consecutivos sobre el mismo rival separados por menos de 1,1 segundos. El salto cancela un básico confirmado, mientras un golpe fallado conserva su recuperación. Hay una pequeña pausa de impacto y buffer de entrada. El remate descendente cambia el lanzamiento vertical hacia abajo. Los valores son provisionales y no reproducen cifras internas del juego de referencia.
 
 El objetivo no emite entradas; recibe daño y knockback normal. El laboratorio no agota tiempo ni stocks. Las caídas devuelven al luchador al punto de práctica. **−25/+25** modifica el daño inicial del objetivo entre 0 y 300; **Reiniciar** reconstruye la sesión, elimina proyectiles/zonas y restablece ese porcentaje. **Super listo** llena la barra de P1.
 
@@ -45,11 +47,11 @@ Genera Windows desde el menú FUNADOS. Para repetir las pruebas en una carpeta d
 ```powershell
 $proof = 'D:\Funados\Evidence\MiPrueba'
 New-Item -ItemType Directory -Force $proof | Out-Null
-$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.4.1\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-beta-smoke -evidence-path $proof -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
+$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.5.0\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-side-smoke -evidence-path $proof -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
 $game.ExitCode
 ```
 
-La prueba recorre los cinco kits, las cuatro arenas, reglas de partida, laboratorio y dispositivos; dura unos tres minutos y se cierra al terminar. Usa una ruta sin espacios en este comando o entrecomilla cada ruta en ArgumentList. Las capturas y `smoke-report.json` se guardan en esa carpeta. Desconecta mandos físicos antes de esta prueba: el último bloque crea dispositivos virtuales y se niega a manipular los reales. Para ejecutar solo ese bloque, cambia `-beta-smoke` por `-controls-smoke`. El informe identifica ahora la versión de presentación de la escena. Mandos físicos, pruebas con personas y aceptación del arte siguen pendientes.
+`-side-smoke` prueba las reglas nuevas: combo escalera, remate, poderes piloto, plataformas, cuatro escenarios, bots y dispositivos. Genera `side-report.json` y capturas. `-beta-smoke` activa exclusivamente las reglas históricas 3D para regresión y genera `smoke-report.json`; no representa el diseño actual de producción. `-controls-smoke` ejecuta solo dispositivos bajo esas reglas históricas. Usa una carpeta de evidencia nueva y sin espacios o entrecomilla las rutas. Desconecta mandos físicos antes de las pruebas: se crean dispositivos virtuales y el bloque se niega a manipular los reales. Mandos físicos, pruebas con personas y aceptación del arte siguen pendientes.
 
 ## Git y restauración
 

@@ -1,6 +1,24 @@
 # Continuación de FUNADOS
 
-Proyecto: `D:\Funados`. Unity Hub + Editor **6000.5.7f1**, URP **17.5.0**, Input System **1.20.0**. Estado actual: **0.4.1**, controles locales con dispositivos reservados. Mantener los cinco kits, cuatro arenas y once aspectos originales; no sustituir los recursos habituales. Los nombres públicos Don Promesio/Lola Viral conservan los IDs internos Don Decreto/Lola Loop.
+Proyecto: `D:\Funados`. Unity Hub + Editor **6000.5.7f1**, URP **17.5.0**, Input System **1.20.0**. Estado actual: **0.5.0, combate lateral 2.5D**, por petición y confirmación explícita de Santiago el 16/11/2026. Mantener los cinco kits, cuatro escenarios y once aspectos originales; no sustituir los recursos habituales. Don Promesio/Lola Viral conservan los IDs internos Don Decreto/Lola Loop.
+
+## Prioridad vigente desde el 16 de noviembre
+
+Leer primero `Docs/Produccion_2026-11-16/Combate_2p5D.md`. Santiago pidió replicar la dinámica del video https://www.youtube.com/shorts/pj4WF6dMzP4 y eligió combate lateral 2.5D: X horizontal, Y altura, Z bloqueado. **La dirección anterior de movimiento libre 3D queda reemplazada en producción.** No restaurarla por seguir el GDD o la checklist históricos.
+
+La versión actual tiene cámara frontal ortográfica, plataformas atravesables, golpes ascendentes, aéreos neutrales y descendentes, salto tras básico confirmado, buffer de entradas, pausa de impacto, contador de golpes y poderes existentes en el plano lateral. Se conserva porcentaje/expulsiones; se añade KO superior a 20 m. A/D mueve, W/S+golpe elige dirección y S+Espacio baja de plataforma. Los mandos conservan asignación y recuperación de desconexiones.
+
+Build actual: `Builds/Funados/0.5.0/Windows/FUNADOS.exe`. Menú del editor FUNADOS para abrir la escena principal y CombatLab. La evidencia nueva está en `Evidence/Side-0.5.0`. `-side-smoke` activa la prueba de las reglas nuevas; `-beta-smoke` fuerza las reglas históricas y ejecuta regresión 3D. Esas opciones son de prueba; el juego normal siempre arranca 2.5D en producción.
+
+Resultado 2.5D vigente: **56 comprobaciones superadas, 0 fallos**, en Evidence/Side-0.5.0/Validated/side-report.json. Regresión histórica con el mismo ejecutable final: **109 comprobaciones superadas, 0 fallos**, en LegacyValidated/smoke-report.json. Se corrigió un fallo de velocidad de cruceta diagonal; la ejecución intermedia fallida permanece en la carpeta Final como historial, no como aceptación. Los 22 archivos visuales originales de personajes conservan sus hashes. El rig automático y el balance siguen siendo provisionales.
+
+Primero aceptar y ajustar el nuevo combate con personas: realizar launcher → salto → aéreo → remate, probar recuperación, bordes y cuatro escenarios, medir lectura y ventanas. Aún no están calibrados como un producto final. Después retomar remapeo SYS-025 y guardado recuperable SYS-068/069. Revisar SYS-024/028/033/036/037 y SYS-041/043/046/047 bajo 2.5D; no exigir movimiento Z. Los ataques direccionales ya son alcance autorizado, aunque la checklist antigua SYS-061 los posponía.
+
+Archivos nuevos o cambiados: BrawlFighter (ataques, buffer, plano, hitstop), BrawlFighterVisual.Model (poses direccionales), BrawlMatch (reglas laterales y entradas), BrawlCamera, BrawlArena (adaptación runtime de prefabs), BrawlHud y BrawlSideSmokeProbe. Los escenarios que ya estaban sin commit al comenzar quedaron preservados separadamente en `c2ad544`; la conversión no generó ni sustituyó ese arte. Respaldo previo: Builds/Backups/Before2p5D-2026-11-16.zip.
+
+## Historial de 0.4.1 — referencia anterior
+
+Los apartados siguientes conservan el estado de controles y evidencia de la entrega anterior; sus rutas y próximos pasos deben leerse subordinados a la prioridad 0.5.0 indicada arriba.
 
 ## Punto de la checklist
 

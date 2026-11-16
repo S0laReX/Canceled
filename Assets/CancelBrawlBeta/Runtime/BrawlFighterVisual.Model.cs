@@ -14,6 +14,8 @@ namespace CancelBrawl.Beta
         public int Combo;
         /// <summary>0–1 over the whole attack; WindupEnd/ActiveEnd mark where the hit starts and ends.</summary>
         public float AttackProgress, WindupEnd, ActiveEnd;
+        public int VerticalAttack;
+        public bool AirAttack;
     }
 
     public sealed partial class BrawlFighterVisual
@@ -182,6 +184,14 @@ namespace CancelBrawl.Beta
             }
 
             if (p.Attacking) ComposeAttack(p);
+            if (p.Attacking && p.VerticalAttack != 0 && (p.Attack == AttackKind.Basic || p.Attack == AttackKind.Heavy))
+            {
+                float strike = Mathf.Sin(p.AttackProgress * Mathf.PI);
+                Set(BrawlAutoRig.UpperArmR, p.VerticalAttack > 0 ? -155 * strike : 25, 0, 15);
+                Set(BrawlAutoRig.ForearmR, -25, 0, 0);
+                Set(BrawlAutoRig.Chest, p.VerticalAttack > 0 ? -15 : 35, 0, 0);
+                if (p.AirAttack && p.VerticalAttack < 0) { Set(BrawlAutoRig.ThighR, 40, 0, 0); Set(BrawlAutoRig.ShinR, 0, 0, 0); }
+            }
 
             if (p.Hurt)
             {

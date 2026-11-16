@@ -138,7 +138,7 @@ namespace CancelBrawl.Beta
             Fill(new Rect(0, 0, Width, Height), new Color(.02f, .03f, .065f, .9f));
             Fill(new Rect(80, 46, 65, 5), Cyan);
             Label(new Rect(80, 58, 800, 86), match.Title, title, Paper);
-            Label(new Rect(84, 146, 820, 34), "El último en pie se queda con la cancha.", heading, Muted);
+            Label(new Rect(84, 146, 820, 34), match.IsSideView ? "Combos aéreos. Golpes y poderes. Fuera de la plataforma." : "El último en pie se queda con la cancha.", heading, Muted);
             Label(new Rect(1010, 70, 510, 26), "LOCAL  /  " + match.DisplayVersion, body, Cyan, TextAnchor.UpperRight);
             Label(new Rect(1010, 102, 510, 52), "Empuja a tus rivales fuera del escenario.\n100 % de daño no elimina por sí solo.", small, Paper, TextAnchor.UpperRight);
             bool menuEnabled = GUI.enabled;
@@ -266,7 +266,9 @@ namespace CancelBrawl.Beta
         {
             Panel(new Rect(25, 22, 360, 68));
             Label(new Rect(42, 31, 330, 28), match.Title, body, Paper);
-            Label(new Rect(42, 63, 330, 20), "BETA LOCAL  ·  " + match.Arena.DisplayName.ToUpperInvariant(), small, Cyan);
+            Label(new Rect(42, 63, 330, 20), (match.IsSideView ? "2.5D  ·  " : "BETA LOCAL  ·  ") + match.Arena.DisplayName.ToUpperInvariant(), small, Cyan);
+            if (match.IsSideView && match.Fighters.Length > 0 && match.Fighters[0].ComboHits >= 2)
+                Label(new Rect(45, 108, 330, 44), match.Fighters[0].ComboHits + " GOLPES", heading, Pink);
             Panel(new Rect(710, 18, 180, 72));
             int seconds = Mathf.CeilToInt(Mathf.Max(0, match.RemainingTime));
             Label(new Rect(710, 18, 180, 72), match.IsTraining ? "LAB" : $"{seconds / 60:00}:{seconds % 60:00}", number,
@@ -290,7 +292,7 @@ namespace CancelBrawl.Beta
                 }
             }
             Label(new Rect(25, 876, 1550, 22),
-                "WASD mover   ·   RATÓN orientar   ·   ESPACIO doble salto   ·   CLICS básico / fuerte   ·   E especial   ·   R recuperar   ·   SHIFT esquiva   ·   Q super   ·   CTRL caer",
+                match.IsSideView ? "A/D mover · W/S + clic: arriba/abajo · ESPACIO doble salto · S+ESPACIO bajar · CLICS básico/fuerte · E poder · R recuperar · SHIFT esquiva · Q super" : "WASD mover   ·   RATÓN orientar   ·   ESPACIO doble salto   ·   CLICS básico / fuerte   ·   E especial   ·   R recuperar   ·   SHIFT esquiva   ·   Q super   ·   CTRL caer",
                 small, Paper, TextAnchor.MiddleCenter);
         }
 
@@ -400,7 +402,7 @@ namespace CancelBrawl.Beta
             Label(new Rect(x, y, rect.width - 56, 35), "CONTROLES", heading, Paper);
             y += 50;
             string[] names = { "Mover / orientar", "Doble salto", "Básico / fuerte", "Especial / recuperar", "Esquivar / super", "Caída rápida / pausa" };
-            string[] keys = { "WASD / ratón", "Espacio", "Clic izq. / der.", "E / R en el aire", "Shift / Q", "Ctrl / Esc" };
+            string[] keys = { match.IsSideView ? "A-D / ratón" : "WASD / ratón", "Espacio", "Clic izq. / der.", "E / R en el aire", "Shift / Q", "Ctrl / Esc" };
             float actionWidth = Mathf.Min(245, rect.width * .46f);
             for (int i = 0; i < names.Length; i++)
             {
@@ -412,7 +414,7 @@ namespace CancelBrawl.Beta
             Label(new Rect(x, y + 18, rect.width - 56, 85),
                 "MANDO   Palanca izq. o cruceta: mover / der.: orientar\nA salto · X básico · Y fuerte · B especial\nRB recuperar · RT esquiva · LB super · LT caer", small, Muted);
             if (includeIntro)
-                Label(new Rect(x, rect.yMax - 40, rect.width - 56, 30), "Conecta mandos antes de iniciar la partida.", small, Cyan);
+                Label(new Rect(x, rect.yMax - 40, rect.width - 56, 30), match.IsSideView ? "W/S + golpe: arriba/abajo · S+Espacio: bajar" : "Conecta mandos antes de iniciar la partida.", small, Cyan);
         }
 
         private void Panel(Rect rect) => Fill(rect, Ink);

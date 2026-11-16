@@ -74,6 +74,7 @@ namespace CancelBrawl.Beta
         private void Frame(float blend)
         {
             if (!view) return;
+            if (arena && arena.IsSideView) { FrameSide(blend); return; }
             Vector2 clamp = arena ? arena.CameraClamp : new Vector2(14f, 11f);
             Bounds bounds = new Bounds(new Vector3(0f, 0.5f, 0f), Vector3.zero);
             int count = 0;
@@ -117,6 +118,21 @@ namespace CancelBrawl.Beta
             }
             else shake = 0f;
             transform.position = basePosition + rotation * offset;
+        }
+
+        private void FrameSide(float blend)
+        {
+            Bounds bounds = new Bounds(new Vector3(0, 2.5f, 0), new Vector3(17, 6, 0));
+            foreach (var target in targets)
+                if (target && target.gameObject.activeInHierarchy)
+                    bounds.Encapsulate(new Vector3(Mathf.Clamp(target.position.x,-19,19), Mathf.Clamp(target.position.y,-4,18) + 1,0));
+            view.orthographic = true;
+            float size = Mathf.Clamp(Mathf.Max(bounds.extents.y + 2, (bounds.extents.x + 2) / Mathf.Max(.7f, view.aspect)), 5.5f, 16);
+            view.orthographicSize = initialized ? Mathf.Lerp(view.orthographicSize, size, blend) : size;
+            transform.rotation = Quaternion.identity;
+            Vector3 desired = new Vector3(bounds.center.x, bounds.center.y, -35);
+            basePosition = initialized ? Vector3.Lerp(basePosition, desired, blend) : desired;
+            transform.position = basePosition; initialized = true;
         }
 
         /// <summary>Fades any solid court piece between the camera and a fighter; restores it when clear.</summary>

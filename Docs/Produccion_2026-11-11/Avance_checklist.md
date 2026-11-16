@@ -4,6 +4,8 @@ Fecha: 11/11/2026. Responsable del proyecto: Santiago. Esta entrega inicia el de
 
 Actualización posterior: la entrega 0.4.1 implementa asignación estable, modo dos mandos y recuperación de desconexiones. El estado actual y el punto de continuación están en `CONTINUAR.md`, en la raíz del repositorio. El resto de este documento conserva la evidencia de 0.4.0.
 
+Decisión del 16/11/2026: Santiago reemplazó el movimiento libre 3D por **combate lateral 2.5D con golpes direccionales y combos aéreos**. La entrega 0.5.0 y los criterios que deben revalidarse están en `Docs/Produccion_2026-11-16/Combate_2p5D.md`. Los requisitos históricos X/Z quedan subordinados a esa decisión.
+
 La checklist original se conserva sin marcar en esta carpeta. Las instrucciones de sus documentos se usan como requisitos de diseño y aceptación, dentro del trabajo local solicitado. No se modificaron Trello, Miro ni cuentas externas.
 
 ## Entrega implementada

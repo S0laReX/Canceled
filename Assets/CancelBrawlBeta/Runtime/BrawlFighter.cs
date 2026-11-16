@@ -40,12 +40,19 @@ namespace CancelBrawl.Beta
         public BrawlTrap ActiveTrap => activeTrap;
         public AttackSpec CurrentAttackSpec => attack;
         public bool AttackIsActive => attacking && attackTime >= attack.Windup && attackTime <= attack.Windup + attack.Active;
+        public int AttackVertical { get; private set; }
+        public bool AttackAirborne { get; private set; }
+        public int ComboHits => match != null && match.SimTime - comboHitClock < 1.1f ? comboHitCount : 0;
+        private float comboHitClock, hitPause, dropRemaining, basicBuffer, heavyBuffer, jumpBuffer;
+        private int comboHitCount, comboTarget = -1;
+        private bool attackConnected;
 
         // The debug view and the actual sweep share these values.
         public bool TryGetMeleeVolume(out float range, out float height, out float minDot, out bool safeSectors)
         {
             range = attack.Range + .3f; height = attack.Height; safeSectors = false; minDot = 0;
             if (!attacking) return false;
+            if (match.IsSideView && AttackVertical != 0 && (attack.Kind == AttackKind.Basic || attack.Kind == AttackKind.Heavy)) { minDot = -1; return true; }
             if (attack.Kind == AttackKind.Basic) { minDot = Kit.BasicCone; return true; }
             if (attack.Kind == AttackKind.Heavy) { minDot = .25f; return true; }
             if (attack.Kind == AttackKind.Special && Kit.Special == SpecialStyle.Dash) { minDot = .2f; return true; }
@@ -105,6 +112,15 @@ namespace CancelBrawl.Beta
         public void Tick(float dt)
         {
             if (Eliminated) return;
+            if (match.IsSideView)
+            {
+                if (command.Basic) basicBuffer = .14f;
+                if (command.Heavy) heavyBuffer = .14f;
+                if (command.Jump) jumpBuffer = .12f;
+                command.Basic = basicBuffer > 0; command.Heavy = heavyBuffer > 0; command.Jump = jumpBuffer > 0;
+                basicBuffer -= dt; heavyBuffer -= dt; jumpBuffer -= dt; dropRemaining -= dt;
+                if (hitPause > 0) { hitPause -= dt; return; }
+            }
             if (IsRespawning)
             {
                 RespawnRemaining -= dt;
@@ -124,10 +140,14 @@ namespace CancelBrawl.Beta
                 if (aim.sqrMagnitude > .08f) Facing = aim.normalized;
                 else if (move.sqrMagnitude > .05f) Facing = move.normalized;
             }
+            if (match.IsSideView && attacking && attackConnected && attack.Kind == AttackKind.Basic && command.Jump && stun <= 0 && jumps < 2)
+                attacking = false; // Confirmed basic can be followed by a jump, never a whiff cancel.
             if (stun <= 0 && !attacking)
             {
+                if (match.IsSideView && Grounded && transform.position.y > 1 && command.Move.y < -.5f && command.Jump)
+                { dropRemaining = .24f; command.Jump = false; jumpBuffer = 0; }
                 if (command.Jump && jumps < 2 && dodgeRemaining <= 0)
-                { velocity.y = settings.jumpSpeed * (jumps == 1 ? .94f : 1); jumps++; Grounded = false; hoverTimer = 0; BrawlFeedback.Sound("jump"); }
+                { velocity.y = settings.jumpSpeed * (jumps == 1 ? .94f : 1); jumps++; jumpBuffer = 0; Grounded = false; hoverTimer = 0; BrawlFeedback.Sound("jump"); }
                 if (command.Recovery && !Grounded && !recoveryUsed) Recover(move);
                 if (command.Dodge && dodgeCooldown <= 0 && (Grounded || !airDodgeUsed))
                 {
@@ -147,7 +167,7 @@ namespace CancelBrawl.Beta
             bool lunging = false;
             if (attacking) lunging = AdvanceAttack(dt);
             if (Grounded && velocity.y < 0) velocity.y = -2;
-            float gravity = settings.gravity * (command.FastFall && !Grounded ? 2.1f : 1) * (hoverTimer > 0 ? .25f : 1);
+            float gravity = settings.gravity * ((command.FastFall || (match.IsSideView && command.Move.y < -.5f)) && !Grounded ? 2.1f : 1) * (hoverTimer > 0 ? .25f : 1);
             velocity.y = Mathf.Max(-32, velocity.y - gravity * dt);
             Vector3 controlled = move * settings.moveSpeed * (Grounded ? 1 : settings.airControl);
             if (recoveryTimer > 0) controlled *= Kit.RecoveryAirControl;
@@ -155,6 +175,12 @@ namespace CancelBrawl.Beta
             if (attacking) controlled *= attack.Kind == AttackKind.Super ? 0 : .38f;
             if (lunging) controlled = Facing * Kit.LungeSpeed;
             if (dodgeRemaining > 0) controlled = dashDirection * settings.dodgeSpeed;
+            if (match.IsSideView)
+            {
+                velocity.z = 0; controlled.z = 0;
+                foreach (var platform in match.Arena.OneWayPlatforms)
+                    if (platform) Physics.IgnoreCollision(controller, platform, velocity.y > 0 || transform.position.y < platform.bounds.max.y - .13f || dropRemaining > 0);
+            }
             CollisionFlags flags = controller.Move((controlled + velocity) * dt);
             Grounded = (flags & CollisionFlags.Below) != 0 && velocity.y <= 0;
             if ((flags & CollisionFlags.Above) != 0 && velocity.y > 0) velocity.y = 0;
@@ -171,7 +197,8 @@ namespace CancelBrawl.Beta
                 Attacking = attacking, Attack = attack.Kind, Special = Kit.Special, Combo = combo,
                 AttackProgress = AttackProgress,
                 WindupEnd = attack.Duration > 0 ? attack.Windup / attack.Duration : 0,
-                ActiveEnd = attack.Duration > 0 ? (attack.Windup + attack.Active) / attack.Duration : 0
+                ActiveEnd = attack.Duration > 0 ? (attack.Windup + attack.Active) / attack.Duration : 0,
+                VerticalAttack = AttackVertical, AirAttack = AttackAirborne
             });
             UpdateMarker();
             command.Jump = command.Basic = command.Heavy = command.Special = command.Recovery = command.Dodge = command.Super = false;
@@ -193,7 +220,7 @@ namespace CancelBrawl.Beta
             {
                 if (IsRespawning || Eliminated) return false;
                 Vector3 p = transform.position; BrawlArena arena = match.Arena;
-                return p.y < arena.LowerLimit || Mathf.Abs(p.x) > arena.OuterLimits.x || Mathf.Abs(p.z) > arena.OuterLimits.y;
+                return p.y < arena.LowerLimit || p.y > arena.UpperLimit || Mathf.Abs(p.x) > arena.OuterLimits.x || Mathf.Abs(p.z) > arena.OuterLimits.y;
             }
         }
 
@@ -220,9 +247,24 @@ namespace CancelBrawl.Beta
             }
             else { combo = 0; chainCharged = false; }
             protection = 0; attack = settings.Attack(kind, Kit, combo);
+            AttackAirborne = !Grounded;
+            float vertical = Mathf.Abs(command.Move.y) > .5f ? command.Move.y : command.Aim.y;
+            AttackVertical = match.IsSideView && (kind == AttackKind.Basic || kind == AttackKind.Heavy) && Mathf.Abs(vertical) > .5f ? (vertical > 0 ? 1 : -1) : 0;
+            attackConnected = false; basicBuffer = heavyBuffer = 0;
+            if (match.IsSideView && (kind == AttackKind.Basic || kind == AttackKind.Heavy))
+            {
+                if (AttackVertical > 0)
+                    attack = new AttackSpec(kind, kind == AttackKind.Basic ? 4 : 10, .06f, .12f, .13f, 1.35f, 1.1f, kind == AttackKind.Basic ? 8.8f : 12, 2.6f);
+                else if (AttackAirborne && AttackVertical < 0)
+                    attack = new AttackSpec(kind, kind == AttackKind.Basic ? 7 : 12, .12f, .12f, .27f, 1.3f, 2.5f, -11, 2.3f);
+                else if (AttackAirborne && kind == AttackKind.Basic)
+                    attack = new AttackSpec(kind, 5, .05f, .12f, .15f, 2.1f, 3.5f, 5, 1.65f);
+            }
             if (kind == AttackKind.Basic || kind == AttackKind.Heavy) AssistFacing(attack.Range);
             attackTime = 0; attacking = true; activeStarted = false; attackToken = new BrawlAttackToken(this, attack);
             Vector3 position = transform.position;
+            if (match.IsSideView && AttackVertical != 0 && (kind == AttackKind.Basic || kind == AttackKind.Heavy))
+                BrawlFeedback.Burst(position + Vector3.up * (AttackVertical > 0 ? 1.6f : .25f), PlayerColor, 5);
             if (kind == AttackKind.Heavy) BrawlFeedback.Telegraph(position, Facing, attack.Range, attack.Windup + attack.Active, PlayerColor);
             if (kind == AttackKind.Special && Kit.Special == SpecialStyle.BounceToken)
                 BrawlFeedback.Telegraph(position, Facing, 6, attack.Windup + .2f, PlayerColor);
@@ -307,7 +349,7 @@ namespace CancelBrawl.Beta
                         BrawlProjectile.Create(match, attackToken, muzzle, Facing, PlayerColor, "Decreto", new Vector3(.8f, .7f, .18f)); break;
                     case SpecialStyle.TagBurst:
                         for (int i = 0; i < 3; i++)
-                            BrawlProjectile.Create(match, attackToken, muzzle, Quaternion.Euler(0, (i - 1) * 16, 0) * Facing, PlayerColor,
+                                BrawlProjectile.Create(match, attackToken, muzzle, (match.IsSideView ? Quaternion.AngleAxis((i - 1) * 12, Vector3.forward) : Quaternion.Euler(0, (i - 1) * 16, 0)) * Facing, PlayerColor,
                                 "Etiqueta", new Vector3(.33f, .33f, .25f), 13, .9f);
                         break;
                     case SpecialStyle.BounceToken:
@@ -338,6 +380,8 @@ namespace CancelBrawl.Beta
                 if (target == this || target.Eliminated || target.IsRespawning) continue;
                 Vector3 difference = target.transform.position - transform.position;
                 Vector3 flat = Vector3.ProjectOnPlane(difference, Vector3.up);
+                if (match.IsSideView && AttackVertical > 0 && difference.y < -.5f) continue;
+                if (match.IsSideView && AttackVertical < 0 && AttackAirborne && difference.y > .5f) continue;
                 if (flat.magnitude > range || Mathf.Abs(difference.y) > height) continue;
                 if (flat.sqrMagnitude > .2f && Vector3.Dot(Facing, flat.normalized) < minDot) continue;
                 if (safeSectors && flat.sqrMagnitude > .2f && Mathf.Abs(Vector3.Angle(Facing, flat) - 90) < SafeHalfAngle) continue;
@@ -362,6 +406,8 @@ namespace CancelBrawl.Beta
 
         internal void Connected(AttackKind kind, float dealt)
         {
+            attackConnected = true;
+            if (match.IsSideView) hitPause = .035f;
             float before = Meter;
             if (kind == AttackKind.Basic && !chainCharged) { Meter = Mathf.Min(100, Meter + 8); chainCharged = true; }
             if (kind == AttackKind.Special) Meter = Mathf.Min(100, Meter + 12);
@@ -375,8 +421,15 @@ namespace CancelBrawl.Beta
             if (Eliminated || IsRespawning || Invulnerable) return false;
             Damage += spec.Damage;
             if (source != null && source != this) { LastAttacker = source; lastHitClock = match.SimTime; source.Dealt(spec.Damage); }
+            if (match.IsSideView && source != null && source != this)
+            {
+                source.comboHitCount = source.comboTarget == PlayerIndex && match.SimTime - source.comboHitClock < 1.1f ? source.comboHitCount + 1 : 1;
+                source.comboTarget = PlayerIndex; source.comboHitClock = match.SimTime;
+                hitPause = source.hitPause = .035f;
+            }
             float push = Mathf.Min(settings.maxKnockback, (spec.Push + Damage * settings.knockbackPerDamage) / Kit.Resistance);
             direction.y = 0;
+            if (match.IsSideView) direction = Vector3.right * Mathf.Sign(direction.x == 0 ? (source ? source.Facing.x : 1) : direction.x);
             velocity = direction.normalized * push + Vector3.up * Mathf.Min(16, spec.Lift + Damage * .018f);
             stun = Mathf.Min(.48f, .13f + push * .009f); Grounded = false; hoverTimer = 0;
             attacking = false; comboWindow = 0; dodgeRemaining = 0;
@@ -403,10 +456,25 @@ namespace CancelBrawl.Beta
 
         public void RespawnAt(Vector3 position, bool grantProtection)
         {
+            if (match.IsSideView) position.z = 0;
             controller.enabled = false; transform.position = position; controller.enabled = true;
             IsRespawning = false; velocity = Vector3.zero; jumps = 0; recoveryUsed = false; airDodgeUsed = false;
             dodgeRemaining = 0; dodgeCooldown = 0; stun = 0; Grounded = false; hoverTimer = 0; recoveryTimer = 0;
             protection = grantProtection ? settings.protectionSeconds : 0;
+            if (match.IsSideView)
+            {
+                Facing = transform.position.x > 0 ? Vector3.left : Vector3.right;
+                float nearest = float.PositiveInfinity;
+                foreach (var rival in match.Fighters)
+                {
+                    if (!rival || rival == this || rival.Eliminated) continue;
+                    float delta = rival.transform.position.x - transform.position.x;
+                    if (Mathf.Abs(delta) < .01f || Mathf.Abs(delta) >= nearest) continue;
+                    nearest = Mathf.Abs(delta); Facing = delta > 0 ? Vector3.right : Vector3.left;
+                }
+                basicBuffer = heavyBuffer = jumpBuffer = hitPause = dropRemaining = 0;
+                comboHitCount = 0; comboTarget = -1;
+            }
             if (visual != null) visual.gameObject.SetActive(true);
             if (facingLine != null) facingLine.enabled = true;
         }
@@ -487,6 +555,8 @@ namespace CancelBrawl.Beta
                 if (delta.y > .8f && distance < 5 && jumps < 2) result.Jump = true;
                 if (distance < 3 && target.attacking && target.attack.Kind != AttackKind.Basic && Random.value < .45f) result.Dodge = true;
             }
+            if (match.IsSideView && distance < 2.5f && Mathf.Abs(delta.y) > .6f)
+                result.Move.y = delta.y > 0 ? 1 : (!Grounded ? -1 : 0);
             return result;
         }
 

@@ -12,12 +12,14 @@ namespace CancelBrawl.Beta
         [SerializeField] private BrawlSettings settings;
         [SerializeField] private bool productionPresentation;
         [SerializeField] private bool startInTraining;
-        public bool IsProduction => productionPresentation;
+        private bool legacyRegression;
+        public bool IsProduction => productionPresentation && !legacyRegression;
+        public bool IsSideView => IsProduction;
         public bool IsTraining { get; private set; }
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.4.1";
+        public const string ProductionVersion = "0.5.0";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -108,6 +110,8 @@ namespace CancelBrawl.Beta
 
         private void Awake()
         {
+            string[] args = Environment.GetCommandLineArgs();
+            legacyRegression = Array.IndexOf(args, "-beta-smoke") >= 0 || Array.IndexOf(args, "-controls-smoke") >= 0;
             Application.runInBackground = true;
             Application.targetFrameRate = 60;
             Time.fixedDeltaTime = 1f / 60;
@@ -126,6 +130,8 @@ namespace CancelBrawl.Beta
             RemainingTime = settings.matchSeconds;
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-beta-smoke") >= 0 || Array.IndexOf(Environment.GetCommandLineArgs(), "-controls-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
+            if (Array.IndexOf(args, "-side-smoke") >= 0)
+            { AutomatedTest = true; gameObject.AddComponent<BrawlSideSmokeProbe>(); }
         }
 
         private void BuildArena(int index)
@@ -134,7 +140,7 @@ namespace CancelBrawl.Beta
             if (Arena != null && Arena.Layout == index) return;
             if (Arena != null) { Arena.gameObject.SetActive(false); Destroy(Arena.gameObject); }
             Arena = new GameObject("Cancha").AddComponent<BrawlArena>();
-            Arena.transform.SetParent(transform); Arena.Build(index, StagePrefab(index));
+            Arena.transform.SetParent(transform); Arena.Build(index, StagePrefab(index), IsSideView);
             groupCamera.Setup(Arena, settings.occluderMaterial);
         }
 
@@ -208,7 +214,7 @@ namespace CancelBrawl.Beta
             {
                 // Same arena and combat rules; only input, timer and stock exhaustion differ.
                 Fighters[0].RespawnAt(Arena.SpawnPoints[0], false);
-                Fighters[1].RespawnAt(Arena.SpawnPoints[0] + Vector3.forward * 1.6f, false);
+                Fighters[1].RespawnAt(Arena.SpawnPoints[0] + (IsSideView ? Vector3.right : Vector3.forward) * 1.6f, false);
                 Fighters[1].SetPracticeDamage(TrainingDamage);
                 foreach (var fighter in Fighters) fighter.gameObject.AddComponent<BrawlCombatVolumes>().Configure(this, fighter);
                 Phase = MatchPhase.Playing;
@@ -238,10 +244,10 @@ namespace CancelBrawl.Beta
                 {
                     var input = Devices.KeyboardP1 ? ReadKeyboard(Fighters[i]) : default;
                     var pad = Devices.Pad(0);
-                    if (BrawlDeviceSlots.Available(pad)) input = Combine(input, ReadGamepad(pad));
+                    if (BrawlDeviceSlots.Available(pad)) input = Combine(input, ReadGamepad(pad, IsSideView), IsSideView);
                     Fighters[i].Submit(input);
                 }
-                else if (BrawlDeviceSlots.Available(Devices.Pad(i))) Fighters[i].Submit(ReadGamepad(Devices.Pad(i)));
+                else if (BrawlDeviceSlots.Available(Devices.Pad(i))) Fighters[i].Submit(ReadGamepad(Devices.Pad(i), IsSideView));
             }
         }
 
@@ -251,6 +257,7 @@ namespace CancelBrawl.Beta
             if (keys != null)
             {
                 input.Move = Vector2.ClampMagnitude(new Vector2((keys.dKey.isPressed ? 1 : 0) - (keys.aKey.isPressed ? 1 : 0), (keys.wKey.isPressed ? 1 : 0) - (keys.sKey.isPressed ? 1 : 0)), 1);
+                if (IsSideView) input.Move = new Vector2((keys.dKey.isPressed ? 1 : 0) - (keys.aKey.isPressed ? 1 : 0), (keys.wKey.isPressed ? 1 : 0) - (keys.sKey.isPressed ? 1 : 0));
                 input.Jump = keys.spaceKey.wasPressedThisFrame; input.Special = keys.eKey.wasPressedThisFrame;
                 input.Recovery = keys.rKey.wasPressedThisFrame; input.Super = keys.qKey.wasPressedThisFrame;
                 input.Dodge = keys.leftShiftKey.wasPressedThisFrame || keys.rightShiftKey.wasPressedThisFrame;
@@ -266,17 +273,27 @@ namespace CancelBrawl.Beta
                 bool overLab = IsTraining && new Rect(1000, 106, 570, 178).Contains(uiPoint);
                 input.Basic = !overLab && mouse.leftButton.wasPressedThisFrame; input.Heavy = !overLab && mouse.rightButton.wasPressedThisFrame;
                 Ray ray = view.ScreenPointToRay(mouse.position.ReadValue());
-                var plane = new Plane(Vector3.up, fighter.transform.position + Vector3.up * .75f);
-                if (plane.Raycast(ray, out float enter)) input.Aim = WorldToCamera(Vector3.ProjectOnPlane(ray.GetPoint(enter) - fighter.transform.position, Vector3.up).normalized);
+                var plane = IsSideView ? new Plane(Vector3.forward, Vector3.zero) : new Plane(Vector3.up, fighter.transform.position + Vector3.up * .75f);
+                if (plane.Raycast(ray, out float enter)) input.Aim = IsSideView ? new Vector2(Mathf.Sign(ray.GetPoint(enter).x - fighter.transform.position.x), 0) : WorldToCamera(Vector3.ProjectOnPlane(ray.GetPoint(enter) - fighter.transform.position, Vector3.up).normalized);
             }
             return input;
         }
 
-        internal static BrawlCommand ReadGamepad(Gamepad pad)
+        internal static BrawlCommand ReadGamepad(Gamepad pad, bool sideView = false)
         {
+            Vector2 movement;
+            if (sideView)
+            {
+                // DpadControl.ReadValue normalizes diagonals; direction selection must not slow X.
+                Vector2 digital = new Vector2((pad.dpad.right.isPressed ? 1 : 0) - (pad.dpad.left.isPressed ? 1 : 0),
+                    (pad.dpad.up.isPressed ? 1 : 0) - (pad.dpad.down.isPressed ? 1 : 0));
+                Vector2 combined = pad.leftStick.ReadValue() + digital;
+                movement = new Vector2(Mathf.Clamp(combined.x,-1,1), Mathf.Clamp(combined.y,-1,1));
+            }
+            else movement = Vector2.ClampMagnitude(pad.leftStick.ReadValue() + pad.dpad.ReadValue(), 1);
             return new BrawlCommand
             {
-                Move = Vector2.ClampMagnitude(pad.leftStick.ReadValue() + pad.dpad.ReadValue(), 1), Aim = pad.rightStick.ReadValue(),
+                Move = movement, Aim = pad.rightStick.ReadValue(),
                 Jump = pad.buttonSouth.wasPressedThisFrame, Basic = pad.buttonWest.wasPressedThisFrame,
                 Heavy = pad.buttonNorth.wasPressedThisFrame, Special = pad.buttonEast.wasPressedThisFrame,
                 Recovery = pad.rightShoulder.wasPressedThisFrame, Dodge = pad.rightTrigger.wasPressedThisFrame,
@@ -284,9 +301,10 @@ namespace CancelBrawl.Beta
             };
         }
 
-        private static BrawlCommand Combine(BrawlCommand keyboard, BrawlCommand pad)
+        internal static BrawlCommand Combine(BrawlCommand keyboard, BrawlCommand pad, bool sideView = false)
         {
-            keyboard.Move = Vector2.ClampMagnitude(keyboard.Move + pad.Move, 1);
+            Vector2 movement = keyboard.Move + pad.Move;
+            keyboard.Move = sideView ? new Vector2(Mathf.Clamp(movement.x,-1,1), Mathf.Clamp(movement.y,-1,1)) : Vector2.ClampMagnitude(movement,1);
             if (pad.Aim.sqrMagnitude > .08f) keyboard.Aim = pad.Aim;
             keyboard.Jump |= pad.Jump; keyboard.Basic |= pad.Basic; keyboard.Heavy |= pad.Heavy;
             keyboard.Special |= pad.Special; keyboard.Recovery |= pad.Recovery; keyboard.Dodge |= pad.Dodge;
@@ -347,7 +365,7 @@ namespace CancelBrawl.Beta
                 if (IsTraining)
                 {
                     // A lab fall never exhausts stocks or ends the session.
-                    fighter.ResetPractice(Arena.SpawnPoints[0] + (fighter.PlayerIndex == 1 ? Vector3.forward * 1.6f : Vector3.zero),
+                    fighter.ResetPractice(Arena.SpawnPoints[0] + (fighter.PlayerIndex == 1 ? (IsSideView ? Vector3.right : Vector3.forward) * 1.6f : Vector3.zero),
                         fighter.PlayerIndex == 1 ? TrainingDamage : 0);
                     continue;
                 }
@@ -454,11 +472,13 @@ namespace CancelBrawl.Beta
         public void Announce(string message, float seconds) { announcement = message; announcementTime = seconds; }
         public Vector3 CameraDirection(Vector2 input)
         {
+            if (IsSideView) return Vector3.right * Mathf.Clamp(input.x, -1, 1);
             Vector3 forward = Vector3.ProjectOnPlane(view.transform.forward, Vector3.up).normalized;
             return Vector3.ClampMagnitude(view.transform.right * input.x + forward * input.y, 1);
         }
         public Vector2 WorldToCamera(Vector3 direction)
         {
+            if (IsSideView) return new Vector2(direction.x, direction.y);
             Vector3 forward = Vector3.ProjectOnPlane(view.transform.forward, Vector3.up).normalized;
             return new Vector2(Vector3.Dot(view.transform.right, direction), Vector3.Dot(forward, direction));
         }

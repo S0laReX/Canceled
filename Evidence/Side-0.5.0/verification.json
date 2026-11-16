@@ -1,0 +1,53 @@
+{
+  "parentCommit": "c2ad544",
+  "sideChecks": 56,
+  "legacyChecks": 109,
+  "legacyFailures": 0,
+  "physicalGamepadsTested": false,
+  "sources": [
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlMatch.cs",
+      "sha256": "9358DA369DE3FC6852A5E499368AA0E64E388330CA31D92D48DAE0826FA4DE61"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlArena.cs",
+      "sha256": "6F87A7A7D64DEA4ED77311D71378D3E0D454F00D38C6A90EA9111D43E3CB7602"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlCamera.cs",
+      "sha256": "45006AD0AA365875A9F7F166BDE616865E40AB4D99B4543E0967A80D3B8A1D38"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlFighter.cs",
+      "sha256": "ED56188E3FFFA497738BAF27941AF197DD305CF4F0414D322C8F2E26744399A9"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlFighterVisual.Model.cs",
+      "sha256": "FFEFD650416015DD444ED9FFE9D480B75AC79A7766D812056EE78D15843F9A88"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlHud.cs",
+      "sha256": "25A89294F5A5E3190646A570507B20B37D6B128F6A0256D42D555207352F483A"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSideSmokeProbe.cs",
+      "sha256": "F05E9F0BA6D7416C2062DDAB0845AD9253992F8E37080BC593B64D3F6D41D107"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlDeviceChecks.cs",
+      "sha256": "CDA176D87887CEE12BA99C5A44C56C29619F05D2503184E23E0B2C5FD2874687"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Editor/FunadosProjectBuilder.cs",
+      "sha256": "3C1E8A788201837CDB14FC07EE19A008D29B6D9A93B090D759A5328B93FE89C6"
+    }
+  ],
+  "design": "Lateral 2.5D explicitly confirmed by Santiago",
+  "editor": "6000.5.7f1",
+  "assemblySHA256": "152DB97A2908E58B3A15C1FB8FE936A0D68CA3C5CC00275C0460E5A6600227FA",
+  "unchangedCharacterFiles": 22,
+  "version": "0.5.0",
+  "sideFailures": 0,
+  "reference": "https://www.youtube.com/shorts/pj4WF6dMzP4",
+  "date": "2026-11-16"
+}
