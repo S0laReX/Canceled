@@ -24,6 +24,10 @@ namespace CancelBrawl.Beta
             output = Path.GetFullPath(outputArg >= 0 && outputArg + 1 < args.Length ? args[outputArg + 1] : "Evidence");
             Directory.CreateDirectory(output);
             Application.logMessageReceived += OnLog;
+            // Automated runs last minutes; switching windows meanwhile must not disable the virtual pads under test.
+            // Normal play keeps the default (reset and disable devices when the game loses focus).
+            UnityEngine.InputSystem.InputSystem.settings.backgroundBehavior = UnityEngine.InputSystem.InputSettings.BackgroundBehavior.IgnoreFocus;
+            report.notes.Add("Entrada configurada para ignorar el foco de ventana durante la prueba automática.");
         }
         private void OnDestroy() => Application.logMessageReceived -= OnLog;
         private void OnLog(string message, string stack, LogType type)
@@ -41,6 +45,7 @@ namespace CancelBrawl.Beta
             {
                 yield return BrawlDeviceChecks.Run(match, Check, output);
                 yield return BrawlBindingChecks.Run(match, Check, output);
+                yield return BrawlTuningChecks.Run(match, Check, output);
                 Finish(); yield break;
             }
             Check(match.Phase == MatchPhase.Menu, "Arranque al menú sin Editor");
@@ -145,6 +150,7 @@ namespace CancelBrawl.Beta
             yield return TrainingChecks();
             yield return BrawlDeviceChecks.Run(match, Check, output);
             yield return BrawlBindingChecks.Run(match, Check, output);
+            yield return BrawlTuningChecks.Run(match, Check, output);
             Finish();
         }
 

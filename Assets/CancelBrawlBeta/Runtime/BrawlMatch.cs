@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 namespace CancelBrawl.Beta
 {
+    /// <summary>Runs before projectiles and zones so a whole physics step shares one hit window (SYS-045).</summary>
+    [DefaultExecutionOrder(-100)]
     public sealed class BrawlMatch : MonoBehaviour
     {
         public const int MaxPlayers = 5;
@@ -17,7 +19,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.4.2";
+        public const string ProductionVersion = "0.4.3";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -160,6 +162,7 @@ namespace CancelBrawl.Beta
             groupCamera.Configure(null);
             participants = new GameObject("Participantes").transform; participants.SetParent(transform);
             gameObject.AddComponent<BrawlHud>().Configure(this);
+            gameObject.AddComponent<BrawlHitResolver>().Configure(this);
             BrawlFeedback.Initialize(transform);
             OptionsPath = ResolveOptionsPath();
             LoadOptions();
@@ -252,6 +255,7 @@ namespace CancelBrawl.Beta
         private void Update()
         {
             PollDevices();
+            UpdateHaptics();
             if (RemapListening) { PollRemap(); return; }
             if (AutomatedTest) return;
             var keys = Keyboard.current;
@@ -320,12 +324,91 @@ namespace CancelBrawl.Beta
             };
         }
 
+        // ───────────── Stick tuning and vibration (SYS-026, SYS-072) ─────────────
+        public float MoveDeadzone { get; private set; } = .2f;
+        public float AimDeadzone { get; private set; } = .25f;
+        public float StickResponse { get; private set; } = 1f;
+        public float VibrationStrength { get; private set; } = .5f;
+        /// <summary>Options panel page shown by the HUD (GENERAL / MANDO).</summary>
+        public bool ShowPadOptions { get; set; }
+
+        public void SetStickTuning(float moveDeadzone, float aimDeadzone, float response)
+        {
+            MoveDeadzone = Mathf.Clamp(Round(moveDeadzone), BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone);
+            AimDeadzone = Mathf.Clamp(Round(aimDeadzone), BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone);
+            StickResponse = Mathf.Clamp(Round(response), BrawlInputTuning.MinResponse, BrawlInputTuning.MaxResponse);
+            SaveOptions();
+        }
+
+        public void SetVibration(float strength)
+        {
+            VibrationStrength = Mathf.Clamp01(Round(strength));
+            SaveOptions();
+            // Immediate preview on the pad shown in the controls panel, so the change can be felt.
+            var pad = LabelPad;
+            if (pad != null && VibrationStrength > 0) StartHaptic(pad, .5f, .5f, .25f, true);
+        }
+
+        private static float Round(float value) => float.IsNaN(value) ? 0 : Mathf.Round(value * 100) / 100;
+
+        private struct HapticPulse { public float Low, High, Until; public bool Preview; }
+        private readonly Dictionary<Gamepad, HapticPulse> haptics = new Dictionary<Gamepad, HapticPulse>();
+        private readonly List<Gamepad> hapticScratch = new List<Gamepad>();
+
+        /// <summary>Rumble for the pad that owns this slot; bots and keyboard-only players get none.</summary>
+        internal void Haptic(int playerIndex, float low, float high, float seconds)
+        {
+            if (Phase != MatchPhase.Playing || DevicePause || VibrationStrength <= 0) return;
+            var pad = Devices.Pad(playerIndex);
+            if (!BrawlDeviceSlots.Available(pad)) return;
+            StartHaptic(pad, low, high, seconds, false);
+        }
+
+        private void StartHaptic(Gamepad pad, float low, float high, float seconds, bool preview)
+        {
+            float scale = VibrationStrength;
+            low = Mathf.Clamp01(low * scale); high = Mathf.Clamp01(high * scale);
+            if (haptics.TryGetValue(pad, out var current) && current.Until > Time.unscaledTime)
+            { low = Mathf.Max(low, current.Low); high = Mathf.Max(high, current.High); }
+            haptics[pad] = new HapticPulse { Low = low, High = high, Until = Time.unscaledTime + seconds, Preview = preview };
+            try { pad.SetMotorSpeeds(low, high); } catch (Exception) { /* pads without motors */ }
+        }
+
+        /// <summary>Current motor level for a pad (0 when idle); used by the HUD-free automated checks.</summary>
+        public float HapticLevel(Gamepad pad) => pad != null && haptics.TryGetValue(pad, out var pulse) ? Mathf.Max(pulse.Low, pulse.High) : 0;
+
+        private void UpdateHaptics()
+        {
+            if (haptics.Count == 0) return;
+            bool live = Phase == MatchPhase.Playing && !DevicePause;
+            hapticScratch.Clear();
+            foreach (var pair in haptics)
+                if (pair.Value.Until <= Time.unscaledTime || (!live && !pair.Value.Preview) || !BrawlDeviceSlots.Available(pair.Key)) hapticScratch.Add(pair.Key);
+            foreach (var pad in hapticScratch)
+            {
+                haptics.Remove(pad);
+                try { if (pad.added) pad.ResetHaptics(); } catch (Exception) { }
+            }
+        }
+
+        private void StopHaptics()
+        {
+            foreach (var pad in haptics.Keys) { try { if (pad.added) pad.ResetHaptics(); } catch (Exception) { } }
+            haptics.Clear();
+        }
+
+        private void OnDisable() => StopHaptics();
+        private void OnApplicationFocus(bool focused) { if (!focused) StopHaptics(); }
+
         internal BrawlCommand ReadGamepad(Gamepad pad)
         {
             var b = Bindings;
+            // Digital d-pad stays an exact alternative; the analog stick goes through the player's tuning.
+            Vector2 stick = BrawlInputTuning.Shape(pad.leftStick.ReadUnprocessedValue(), MoveDeadzone, StickResponse);
+            Vector2 aim = BrawlInputTuning.Shape(pad.rightStick.ReadUnprocessedValue(), AimDeadzone, 1);
             return new BrawlCommand
             {
-                Move = Vector2.ClampMagnitude(pad.leftStick.ReadValue() + pad.dpad.ReadValue(), 1), Aim = pad.rightStick.ReadValue(),
+                Move = Vector2.ClampMagnitude(stick + pad.dpad.ReadValue(), 1), Aim = aim,
                 Jump = b.Pressed(BrawlAction.Jump, pad), Basic = b.Pressed(BrawlAction.Basic, pad),
                 Heavy = b.Pressed(BrawlAction.Heavy, pad), Special = b.Pressed(BrawlAction.Special, pad),
                 Recovery = b.Pressed(BrawlAction.Recovery, pad), Dodge = b.Pressed(BrawlAction.Dodge, pad),
@@ -443,9 +526,50 @@ namespace CancelBrawl.Beta
             SimTime += dt;
             if (!IsTraining) RemainingTime = Mathf.Max(0, RemainingTime - dt);
             announcementTime -= dt;
+            OpenHitWindow();
             foreach (var fighter in Fighters) fighter.Tick(dt);
             ResolveRingOuts();
             if (!IsTraining && Phase == MatchPhase.Playing && RemainingTime <= 0) FinishByTime();
+        }
+
+        // ───────────── Simultaneous hits (SYS-045) ─────────────
+        /// <summary>True from the start of a playing step until <see cref="BrawlHitResolver"/> flushes it.</summary>
+        public bool CollectingHits { get; private set; }
+        private readonly List<PendingHit> pendingHits = new List<PendingHit>();
+        private readonly HashSet<BrawlFighter> hittableAtStepStart = new HashSet<BrawlFighter>();
+        private readonly List<PendingHit> targetHits = new List<PendingHit>();
+        public int LastStepHitCount { get; private set; }
+
+        private void OpenHitWindow()
+        {
+            if (CollectingHits) FlushHits(); // never carry hits into the next step
+            pendingHits.Clear(); hittableAtStepStart.Clear();
+            // Vulnerability is judged on the state every fighter had before anyone moved this step.
+            foreach (var fighter in Fighters) if (fighter != null && fighter.Hittable) hittableAtStepStart.Add(fighter);
+            CollectingHits = true;
+        }
+
+        internal bool QueueHit(PendingHit hit)
+        {
+            if (!hittableAtStepStart.Contains(hit.Target)) return false;
+            pendingHits.Add(hit);
+            return true;
+        }
+
+        /// <summary>Applies all hits of the step at once, grouped by target, so player order cannot decide a trade.</summary>
+        internal void FlushHits()
+        {
+            if (!CollectingHits) return;
+            CollectingHits = false;
+            LastStepHitCount = pendingHits.Count;
+            if (Phase == MatchPhase.Playing)
+                foreach (var fighter in Fighters)
+                {
+                    targetHits.Clear();
+                    foreach (var hit in pendingHits) if (hit.Target == fighter) targetHits.Add(hit);
+                    if (targetHits.Count > 0) fighter.ApplyHits(targetHits);
+                }
+            pendingHits.Clear(); hittableAtStepStart.Clear();
         }
 
         internal void ResolveRingOuts()
@@ -523,6 +647,8 @@ namespace CancelBrawl.Beta
 
         private void CleanupRound()
         {
+            CollectingHits = false; pendingHits.Clear(); hittableAtStepStart.Clear();
+            StopHaptics();
             Devices.Clear(); DevicePause = false;
             foreach (var fighter in Fighters) if (fighter != null) { fighter.gameObject.SetActive(false); Destroy(fighter.gameObject); }
             Fighters = Array.Empty<BrawlFighter>();
@@ -580,9 +706,11 @@ namespace CancelBrawl.Beta
             BrawlFeedback.ReducedEffects = data.reducedEffects;
             BrawlFeedback.SetVolumes(data.sfx, data.music);
             localCoop = data.localCoop; p1UsesGamepad = data.p1UsesGamepad;
+            MoveDeadzone = data.moveDeadzone; AimDeadzone = data.aimDeadzone; StickResponse = data.stickResponse; VibrationStrength = data.vibration;
             bool keyboardClean = Bindings.TryLoad(BindingScheme.Keyboard, data.keyboard);
             bool gamepadClean = Bindings.TryLoad(BindingScheme.Gamepad, data.gamepad);
-            if (status == OptionsLoadStatus.Loaded && (!keyboardClean || !gamepadClean)) status = OptionsLoadStatus.RepairedFields;
+            if ((status == OptionsLoadStatus.Loaded || status == OptionsLoadStatus.MigratedLegacy) && (!keyboardClean || !gamepadClean))
+                status = OptionsLoadStatus.RepairedFields;
         }
 
         private static bool HasLegacyOptions()
@@ -595,6 +723,7 @@ namespace CancelBrawl.Beta
         {
             reducedEffects = BrawlFeedback.ReducedEffects, sfx = BrawlFeedback.SfxVolume, music = BrawlFeedback.MusicVolume,
             localCoop = localCoop, p1UsesGamepad = p1UsesGamepad,
+            moveDeadzone = MoveDeadzone, aimDeadzone = AimDeadzone, stickResponse = StickResponse, vibration = VibrationStrength,
             keyboard = Bindings.Export(BindingScheme.Keyboard), gamepad = Bindings.Export(BindingScheme.Gamepad)
         };
 

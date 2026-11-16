@@ -2,7 +2,7 @@
 
 Fecha: 11/11/2026. Responsable del proyecto: Santiago. Esta entrega inicia el desarrollo siguiendo la checklist maestra v1.0 y el GDD; no declara terminado el juego completo ni la vertical slice. Se concentra en herramientas de práctica y preservación de la base jugable.
 
-Actualización posterior: la entrega 0.4.1 implementa asignación estable, modo dos mandos y recuperación de desconexiones. La 0.4.2 añade remapeo con conflictos (SYS-024/025) y opciones versionadas y recuperables (SYS-068/069); ver `Avance_controles_0.4.2.md`. El estado actual y el punto de continuación están en `CONTINUAR.md`, en la raíz del repositorio. El resto de este documento conserva la evidencia de 0.4.0.
+Actualización posterior: la entrega 0.4.1 implementa asignación estable, modo dos mandos y recuperación de desconexiones. La 0.4.2 añade remapeo con conflictos (SYS-024/025) y opciones versionadas y recuperables (SYS-068/069); ver `Avance_controles_0.4.2.md`. La 0.4.3 añade ajustes de mando y vibración (SYS-026), opciones v2 e impactos simultáneos imparciales (SYS-045); ver `Avance_0.4.3.md`. El estado actual y el punto de continuación están en `CONTINUAR.md`, en la raíz del repositorio. El resto de este documento conserva la evidencia de 0.4.0.
 
 La checklist original se conserva sin marcar en esta carpeta. Las instrucciones de sus documentos se usan como requisitos de diseño y aceptación, dentro del trabajo local solicitado. No se modificaron Trello, Miro ni cuentas externas.
 

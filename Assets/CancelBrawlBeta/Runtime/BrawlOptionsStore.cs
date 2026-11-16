@@ -16,6 +16,11 @@ namespace CancelBrawl.Beta
         public float music = .5f;
         public bool localCoop;
         public bool p1UsesGamepad;
+        // Version 2 (SYS-026). Missing in version 1 files: the initializers below are their migrated values.
+        public float moveDeadzone = .2f;
+        public float aimDeadzone = .25f;
+        public float stickResponse = 1f;
+        public float vibration = .5f;
         public List<BrawlBindingEntry> keyboard = new List<BrawlBindingEntry>();
         public List<BrawlBindingEntry> gamepad = new List<BrawlBindingEntry>();
     }
@@ -29,7 +34,9 @@ namespace CancelBrawl.Beta
     public static class BrawlOptionsStore
     {
         public const string Format = "funados-options";
-        public const int CurrentVersion = 1;
+        public const int CurrentVersion = 2;
+        private static readonly string[] FieldsV1 = { "\"format\"", "\"version\"", "\"reducedEffects\"", "\"sfx\"", "\"music\"", "\"keyboard\"", "\"gamepad\"" };
+        private static readonly string[] FieldsV2 = { "\"moveDeadzone\"", "\"aimDeadzone\"", "\"stickResponse\"", "\"vibration\"" };
         public const string FileName = "funados-options.json";
 
         public static string DefaultPath => Path.Combine(Application.persistentDataPath, FileName);
@@ -64,7 +71,11 @@ namespace CancelBrawl.Beta
             detail = "";
             // A stale temp file means a write was interrupted before the swap: the main file is still authoritative.
             try { if (File.Exists(TempPath(path))) File.Delete(TempPath(path)); } catch (Exception) { }
-            if (TryRead(path, out var data, out bool repaired)) { status = repaired ? OptionsLoadStatus.RepairedFields : OptionsLoadStatus.Loaded; return data; }
+            if (TryRead(path, out var data, out bool repaired, out bool migrated))
+            {
+                status = repaired ? OptionsLoadStatus.RepairedFields : migrated ? OptionsLoadStatus.MigratedLegacy : OptionsLoadStatus.Loaded;
+                return data;
+            }
             bool primaryExisted = File.Exists(path);
             if (primaryExisted) { detail = Quarantine(path); }
             if (TryRead(BackupPath(path), out data, out _))
@@ -77,17 +88,24 @@ namespace CancelBrawl.Beta
             return new BrawlOptionsData();
         }
 
-        private static bool TryRead(string path, out BrawlOptionsData data, out bool repaired)
+        private static bool TryRead(string path, out BrawlOptionsData data, out bool repaired) => TryRead(path, out data, out repaired, out _);
+
+        private static bool TryRead(string path, out BrawlOptionsData data, out bool repaired, out bool migrated)
         {
-            data = null; repaired = false;
-            try { return File.Exists(path) && TryParse(File.ReadAllText(path), out data, out repaired); }
+            data = null; repaired = false; migrated = false;
+            try { return File.Exists(path) && TryParse(File.ReadAllText(path), out data, out repaired, out migrated); }
             catch (Exception) { return false; }
         }
 
-        /// <summary>Parses and validates. Wrong format/version/syntax fails; out-of-range values are repaired.</summary>
-        public static bool TryParse(string json, out BrawlOptionsData data, out bool repaired)
+        public static bool TryParse(string json, out BrawlOptionsData data, out bool repaired) => TryParse(json, out data, out repaired, out _);
+
+        /// <summary>
+        /// Parses and validates. Wrong format/version/syntax fails; out-of-range values are repaired. An older version
+        /// is migrated: fields it never had take their safe defaults and <paramref name="migrated"/> is set.
+        /// </summary>
+        public static bool TryParse(string json, out BrawlOptionsData data, out bool repaired, out bool migrated)
         {
-            data = null; repaired = false;
+            data = null; repaired = false; migrated = false;
             if (string.IsNullOrWhiteSpace(json)) return false;
             string trimmed = json.Trim();
             if (!trimmed.StartsWith("{", StringComparison.Ordinal) || !trimmed.EndsWith("}", StringComparison.Ordinal)) return false;
@@ -96,10 +114,27 @@ namespace CancelBrawl.Beta
             if (data == null || data.format != Format || data.version < 1) { data = null; return false; }
             if (data.version > CurrentVersion) repaired = true; // Newer file: keep known fields only.
             // Every expected field must be present; JsonUtility would silently default missing ones.
-            foreach (string field in new[] { "\"format\"", "\"version\"", "\"reducedEffects\"", "\"sfx\"", "\"music\"", "\"keyboard\"", "\"gamepad\"" })
+            foreach (string field in FieldsV1)
                 if (trimmed.IndexOf(field, StringComparison.Ordinal) < 0) { data = null; return false; }
+            if (data.version >= 2)
+            {
+                foreach (string field in FieldsV2)
+                    if (trimmed.IndexOf(field, StringComparison.Ordinal) < 0) { data = null; return false; }
+            }
+            else
+            {
+                // Version 1 → 2: stick tuning and vibration did not exist yet.
+                var defaults = new BrawlOptionsData();
+                data.moveDeadzone = defaults.moveDeadzone; data.aimDeadzone = defaults.aimDeadzone;
+                data.stickResponse = defaults.stickResponse; data.vibration = defaults.vibration;
+                migrated = true;
+            }
             data.sfx = Sanitize(data.sfx, .8f, ref repaired);
             data.music = Sanitize(data.music, .5f, ref repaired);
+            data.vibration = Sanitize(data.vibration, .5f, ref repaired);
+            data.moveDeadzone = SanitizeRange(data.moveDeadzone, .2f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);
+            data.aimDeadzone = SanitizeRange(data.aimDeadzone, .25f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);
+            data.stickResponse = SanitizeRange(data.stickResponse, 1f, BrawlInputTuning.MinResponse, BrawlInputTuning.MaxResponse, ref repaired);
             if (data.keyboard == null) { data.keyboard = new List<BrawlBindingEntry>(); repaired = true; }
             if (data.gamepad == null) { data.gamepad = new List<BrawlBindingEntry>(); repaired = true; }
             return true;
@@ -109,6 +144,14 @@ namespace CancelBrawl.Beta
         {
             if (float.IsNaN(value) || float.IsInfinity(value)) { repaired = true; return fallback; }
             float clamped = Mathf.Clamp01(value);
+            if (clamped != value) repaired = true;
+            return clamped;
+        }
+
+        private static float SanitizeRange(float value, float fallback, float min, float max, ref bool repaired)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value)) { repaired = true; return fallback; }
+            float clamped = Mathf.Clamp(value, min, max);
             if (clamped != value) repaired = true;
             return clamped;
         }

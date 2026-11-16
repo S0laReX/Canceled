@@ -229,6 +229,7 @@ namespace CancelBrawl.Beta
             if (kind != AttackKind.Super) return;
             Meter = 0;
             BrawlFeedback.Sound("warning");
+            match.Haptic(PlayerIndex, .35f, .55f, .2f);
             switch (Kit.Super)
             {
                 case SuperStyle.Fan:
@@ -370,18 +371,65 @@ namespace CancelBrawl.Beta
 
         internal void Dealt(float amount) => TotalDamageDealt += amount;
 
+        internal BrawlMatch Match => match;
+        /// <summary>Can be hit right now (not eliminated, respawning or protected).</summary>
+        public bool Hittable => !Eliminated && !IsRespawning && !Invulnerable;
+
+        /// <summary>
+        /// Immediate hit outside a simulation step. Inside a step, <see cref="BrawlAttackToken"/> queues hits in the
+        /// match instead, and they arrive here together through <see cref="ApplyHits"/> (SYS-045).
+        /// </summary>
         public bool ReceiveHit(AttackSpec spec, Vector3 direction, BrawlFighter source)
         {
-            if (Eliminated || IsRespawning || Invulnerable) return false;
-            Damage += spec.Damage;
-            if (source != null && source != this) { LastAttacker = source; lastHitClock = match.SimTime; source.Dealt(spec.Damage); }
-            float push = Mathf.Min(settings.maxKnockback, (spec.Push + Damage * settings.knockbackPerDamage) / Kit.Resistance);
-            direction.y = 0;
-            velocity = direction.normalized * push + Vector3.up * Mathf.Min(16, spec.Lift + Damage * .018f);
-            stun = Mathf.Min(.48f, .13f + push * .009f); Grounded = false; hoverTimer = 0;
+            if (!Hittable) return false;
+            ApplyHits(new List<PendingHit> { new PendingHit(this, source, spec, direction) });
+            return true;
+        }
+
+        /// <summary>Applies every hit this fighter received in one step at once; the result does not depend on list order.</summary>
+        internal void ApplyHits(List<PendingHit> hits)
+        {
+            if (hits.Count == 0 || Eliminated || IsRespawning) return;
+            var result = CombineHits(Damage, Kit.Resistance, settings, hits);
+            foreach (var hit in hits)
+                if (hit.Source != null && hit.Source != this) hit.Source.Dealt(hit.Spec.Damage);
+            Damage = result.Damage;
+            if (result.Attacker != null) { LastAttacker = result.Attacker; lastHitClock = match.SimTime; }
+            velocity = result.Velocity;
+            stun = result.Stun; Grounded = false; hoverTimer = 0;
             attacking = false; comboWindow = 0; dodgeRemaining = 0;
-            BrawlFeedback.Burst(transform.position + Vector3.up * .9f, PlayerColor, 9);
-            BrawlFeedback.Sound("hit"); return true;
+            BrawlFeedback.Burst(transform.position + Vector3.up * .9f, PlayerColor, 9 + 3 * (hits.Count - 1));
+            BrawlFeedback.Sound("hit");
+            float strength = Mathf.Clamp01(result.Push / Mathf.Max(1, settings.maxKnockback));
+            match.Haptic(PlayerIndex, .25f + .55f * strength, .15f + .7f * strength, .1f + .15f * strength);
+        }
+
+        public struct HitOutcome { public float Damage; public Vector3 Velocity; public float Push; public float Stun; public BrawlFighter Attacker; }
+
+        /// <summary>
+        /// Order-independent combination: total damage first, then each hit's push uses the resulting damage,
+        /// horizontal pushes add up (clamped), lift and stun take the strongest. One hit equals the beta formula.
+        /// Attribution goes to the strongest hit; ties go to the attacker with the lower player number.
+        /// </summary>
+        public static HitOutcome CombineHits(float damageBefore, float resistance, BrawlSettings settings, IList<PendingHit> hits)
+        {
+            float damage = damageBefore;
+            foreach (var hit in hits) damage += hit.Spec.Damage;
+            Vector3 horizontal = Vector3.zero; float lift = 0, stun = 0, strongest = -1; BrawlFighter attacker = null;
+            foreach (var hit in hits)
+            {
+                float push = Mathf.Min(settings.maxKnockback, (hit.Spec.Push + damage * settings.knockbackPerDamage) / resistance);
+                Vector3 direction = hit.Direction; direction.y = 0;
+                horizontal += direction.normalized * push;
+                lift = Mathf.Max(lift, Mathf.Min(16, hit.Spec.Lift + damage * .018f));
+                stun = Mathf.Max(stun, Mathf.Min(.48f, .13f + push * .009f));
+                if (hit.Source == null || hit.Source == hit.Target) continue;
+                float weight = hit.Spec.Damage * 1000 + push;
+                if (weight > strongest + .0001f || (Mathf.Abs(weight - strongest) <= .0001f && attacker != null && hit.Source.PlayerIndex < attacker.PlayerIndex))
+                { strongest = weight; attacker = hit.Source; }
+            }
+            horizontal = Vector3.ClampMagnitude(horizontal, settings.maxKnockback);
+            return new HitOutcome { Damage = damage, Velocity = horizontal + Vector3.up * lift, Push = horizontal.magnitude, Stun = stun, Attacker = attacker };
         }
 
         /// <returns>The fighter credited with this expulsion, or null for a self-destruct.</returns>
@@ -394,6 +442,7 @@ namespace CancelBrawl.Beta
             attacking = false; protection = 0; stun = 0; chainCharged = false; comboWindow = 0; hoverTimer = 0; recoveryTimer = 0;
             if (activeTrap) Destroy(activeTrap.gameObject);
             BrawlFeedback.Burst(transform.position + Vector3.up, PlayerColor, 20); BrawlFeedback.Sound("ko");
+            match.Haptic(PlayerIndex, .9f, .9f, .45f);
             controller.enabled = false;
             transform.position = match.SafeSpawnFor(this);
             if (Eliminated) gameObject.SetActive(false);
@@ -510,10 +559,24 @@ namespace CancelBrawl.Beta
         public BrawlAttackToken(BrawlFighter source, AttackSpec spec) { Source = source; Spec = spec; }
         public bool Hit(BrawlFighter target, Vector3 direction)
         {
-            if (target == Source || hits.Contains(target.PlayerIndex) || !target.ReceiveHit(Spec, direction, Source)) return false;
+            if (target == Source || hits.Contains(target.PlayerIndex)) return false;
+            BrawlMatch match = target.Match;
+            // Inside a simulation step every hit is queued and checked against the state at the start of the step.
+            if (match != null && match.CollectingHits)
+            {
+                if (!match.QueueHit(new PendingHit(target, Source, Spec, direction))) return false;
+            }
+            else if (!target.ReceiveHit(Spec, direction, Source)) return false;
             hits.Add(target.PlayerIndex);
             if (!charged) { Source.Connected(Spec.Kind, Spec.Damage); charged = true; }
             return true;
         }
+    }
+
+    public readonly struct PendingHit
+    {
+        public readonly BrawlFighter Target, Source; public readonly AttackSpec Spec; public readonly Vector3 Direction;
+        public PendingHit(BrawlFighter target, BrawlFighter source, AttackSpec spec, Vector3 direction)
+        { Target = target; Source = source; Spec = spec; Direction = direction; }
     }
 }

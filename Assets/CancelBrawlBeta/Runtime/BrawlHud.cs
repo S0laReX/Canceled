@@ -241,9 +241,10 @@ namespace CancelBrawl.Beta
             Panel(rect);
             float x = rect.x + 24, y = rect.y + 16;
             Label(new Rect(x, y, rect.width - 48, 30), "OPCIONES", heading, Paper);
-            if (!string.IsNullOrEmpty(match.OptionsStatusText))
-                Label(new Rect(x + 150, y + 2, rect.width - 174, 34), match.OptionsStatusText, tiny, Pink, TextAnchor.UpperRight);
-            y += 42;
+            if (SmallButton(new Rect(rect.xMax - 24 - 196, y + 2, 96, 26), "GENERAL", match.ShowPadOptions ? Muted : Cyan)) match.ShowPadOptions = false;
+            if (SmallButton(new Rect(rect.xMax - 24 - 96, y + 2, 96, 26), "MANDO", match.ShowPadOptions ? Cyan : Muted)) match.ShowPadOptions = true;
+            y += 40;
+            if (match.ShowPadOptions) { DrawPadOptions(x, y, rect.width - 48); return; }
             Label(new Rect(x, y + 8, 250, 26), "Reducir destellos y temblor", small, Muted);
             if (Button(new Rect(rect.xMax - 150, y, 126, 36), BrawlFeedback.ReducedEffects ? "SÍ" : "NO",
                     BrawlFeedback.ReducedEffects ? Cyan : Muted))
@@ -252,6 +253,38 @@ namespace CancelBrawl.Beta
             VolumeRow(new Rect(x, y, rect.width - 48, 36), "Efectos", BrawlFeedback.SfxVolume, v => match.SetVolumes(v, BrawlFeedback.MusicVolume));
             y += 46;
             VolumeRow(new Rect(x, y, rect.width - 48, 36), "Música", BrawlFeedback.MusicVolume, v => match.SetVolumes(BrawlFeedback.SfxVolume, v));
+        }
+
+        /// <summary>SYS-026: stick deadzones, response curve and vibration; the d-pad stays a digital alternative.</summary>
+        private void DrawPadOptions(float x, float y, float width)
+        {
+            const float row = 34;
+            StepRow(new Rect(x, y, width, row - 4), "Zona muerta mover", $"{Mathf.RoundToInt(match.MoveDeadzone * 100)} %",
+                Mathf.InverseLerp(BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, match.MoveDeadzone),
+                d => match.SetStickTuning(match.MoveDeadzone + d * .05f, match.AimDeadzone, match.StickResponse));
+            y += row;
+            StepRow(new Rect(x, y, width, row - 4), "Zona muerta orientar", $"{Mathf.RoundToInt(match.AimDeadzone * 100)} %",
+                Mathf.InverseLerp(BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, match.AimDeadzone),
+                d => match.SetStickTuning(match.MoveDeadzone, match.AimDeadzone + d * .05f, match.StickResponse));
+            y += row;
+            string response = match.StickResponse > 1.01f ? "rápida" : match.StickResponse < .99f ? "fina" : "lineal";
+            StepRow(new Rect(x, y, width, row - 4), "Respuesta palanca", $"{match.StickResponse:0.00} {response}",
+                Mathf.InverseLerp(BrawlInputTuning.MinResponse, BrawlInputTuning.MaxResponse, match.StickResponse),
+                d => match.SetStickTuning(match.MoveDeadzone, match.AimDeadzone, match.StickResponse + d * .25f));
+            y += row;
+            StepRow(new Rect(x, y, width, row - 4), "Vibración", match.VibrationStrength <= 0 ? "apagada" : $"{Mathf.RoundToInt(match.VibrationStrength * 100)} %",
+                match.VibrationStrength, d => match.SetVibration(match.VibrationStrength + d * .25f));
+        }
+
+        /// <summary>Label · value · [–] bar [+] row; <paramref name="step"/> receives -1 or +1.</summary>
+        private void StepRow(Rect rect, string name, string value, float fraction, Action<int> step)
+        {
+            Label(new Rect(rect.x, rect.y + 6, 170, 24), name, small, Muted);
+            Label(new Rect(rect.x + 168, rect.y + 6, 92, 24), value, tiny, Paper);
+            if (Button(new Rect(rect.xMax - 200, rect.y, 38, rect.height), "–", Muted)) step(-1);
+            Fill(new Rect(rect.xMax - 154, rect.y + rect.height * .5f - 4, 108, 8), new Color(.18f, .22f, .30f));
+            Fill(new Rect(rect.xMax - 154, rect.y + rect.height * .5f - 4, 108 * Mathf.Clamp01(fraction), 8), Cyan);
+            if (Button(new Rect(rect.xMax - 38, rect.y, 38, rect.height), "+", Muted)) step(1);
         }
 
         private void VolumeRow(Rect rect, string name, float value, Action<float> apply)
@@ -428,9 +461,12 @@ namespace CancelBrawl.Beta
                     Label(new Rect(padCell.x + 8, padCell.y + 3, padCell.width, row), "Palanca izq. / cruceta", small, Muted);
                 y += row;
             }
+            // Priority: remap feedback, then how the options file was recovered, then the conflict rule.
             string message = match.RemapMessage;
+            bool optionsNotice = string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(match.OptionsStatusText);
+            if (optionsNotice) message = match.OptionsStatusText;
             Label(new Rect(x, rect.yMax - 72, inner, 34), string.IsNullOrEmpty(message) ? "Un control repetido se intercambia con la acción que lo tenía." : message,
-                tiny, match.RemapListening ? Cyan : match.RemapMessageIsWarning ? Pink : Muted);
+                tiny, match.RemapListening ? Cyan : match.RemapMessageIsWarning || optionsNotice ? Pink : Muted);
             if (SmallButton(new Rect(x, rect.yMax - 36, 168, 26), "RESTAURAR TECLADO", Muted)) bindings.ResetDefaults(BindingScheme.Keyboard);
             if (SmallButton(new Rect(x + 176, rect.yMax - 36, 168, 26), "RESTAURAR MANDO", Muted)) bindings.ResetDefaults(BindingScheme.Gamepad);
             GUI.enabled = previous;
