@@ -34,10 +34,15 @@ namespace CancelBrawl.Beta
             if (!visible) return;
             // Sweeps compare the fighters' roots; this cross marks that exact reference point.
             Vector3 root = transform.position + Vector3.up * .04f;
-            target.positionCount = 5;
+            // Projectiles and sphere zones compare the chest point instead; a vertical tick leads to its cross.
+            Vector3 chest = transform.position + Vector3.up * BrawlProjectile.ChestHeight;
+            target.positionCount = 11;
             target.startColor = target.endColor = fighter.PlayerColor;
             target.SetPosition(0, root - Vector3.right * .3f); target.SetPosition(1, root + Vector3.right * .3f);
             target.SetPosition(2, root); target.SetPosition(3, root - Vector3.forward * .3f); target.SetPosition(4, root + Vector3.forward * .3f);
+            target.SetPosition(5, root); target.SetPosition(6, chest);
+            target.SetPosition(7, chest - Vector3.right * .18f); target.SetPosition(8, chest + Vector3.right * .18f);
+            target.SetPosition(9, chest); target.SetPosition(10, chest + Vector3.forward * .18f);
             if (!fighter.TryGetMeleeVolume(out float range, out float height, out float dot, out bool safe)) return;
             // SafeSweep has two excluded sectors. Its existing telegraph draws these; avoid drawing an incorrect full disk.
             if (safe) return;

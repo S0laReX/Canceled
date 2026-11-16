@@ -5,6 +5,9 @@ namespace CancelBrawl.Beta
     public sealed class BrawlProjectile : MonoBehaviour
     {
         private const float Radius = .22f;
+        /// <summary>A fighter is hit when its chest point is closer than this to the projectile centre.</summary>
+        public const float HitDistance = .8f;
+        public const float ChestHeight = .85f;
         private BrawlMatch match;
         private BrawlAttackToken token;
         private Vector3 direction;
@@ -51,7 +54,7 @@ namespace CancelBrawl.Beta
             foreach (var fighter in match.Fighters)
             {
                 if (fighter == token.Source || fighter.Eliminated || fighter.IsRespawning) continue;
-                if (Vector3.Distance(fighter.transform.position + Vector3.up * .85f, transform.position) < .8f && token.Hit(fighter, direction))
+                if (Vector3.Distance(fighter.transform.position + Vector3.up * ChestHeight, transform.position) < HitDistance && token.Hit(fighter, direction))
                 { Destroy(gameObject); return; }
             }
             remaining -= Time.fixedDeltaTime;

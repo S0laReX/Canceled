@@ -1,6 +1,6 @@
 # FUNADOS
 
-Juego local de lucha de plataformas 3D: movimiento X/Z, salto Y, porcentaje de daño y expulsiones. Proyecto de producción iniciado sobre Cancel Brawl 0.3, conservando sus cinco kits, cuatro arenas y once aspectos originales. Entrega actual: 0.4.3, ajustes de mando, vibración e impactos simultáneos imparciales; incluye remapeo y opciones guardadas de 0.4.2, gestión de mandos de 0.4.1 y el laboratorio de 0.4.0.
+Juego local de lucha de plataformas 3D: movimiento X/Z, salto Y, porcentaje de daño y expulsiones. Proyecto de producción iniciado sobre Cancel Brawl 0.3, conservando sus cinco kits, cuatro arenas y once aspectos originales. Entrega actual: 0.4.4, menús navegables con teclado o mando y volúmenes de proyectiles y zonas en el laboratorio; incluye los ajustes de mando, vibración e impactos simultáneos de 0.4.3, incluye remapeo y opciones guardadas de 0.4.2, gestión de mandos de 0.4.1 y el laboratorio de 0.4.0.
 
 Abre `D:\Funados` desde Unity Hub con **Unity 6000.5.7f1**. Las versiones de paquetes están fijadas en `Packages/manifest.json` y `packages-lock.json`; no aceptes una actualización de Editor para reproducir esta entrega.
 
@@ -14,7 +14,7 @@ Para continuar con otro agente, empezar por `CONTINUAR.md`: contiene los puntos 
 
 Menú del editor: **FUNADOS → Abrir juego local**, **Abrir CombatLab** y **Generar Windows**. La generación de escenas crea únicamente las que faltan; no sobrescribe escenas existentes. Guarda primero cualquier escena sin título modificada.
 
-El ejecutable nuevo se genera en `Builds/Funados/0.4.3/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte.
+El ejecutable nuevo se genera en `Builds/Funados/0.4.4/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte.
 
 ## Mandos locales
 
@@ -26,6 +26,8 @@ Los nuevos mandos no sustituyen bots a mitad de ronda. Regresa al menú para cam
 
 ## Controles y opciones
 
+Los menús se manejan sin ratón: flechas (o las teclas de movimiento), cruceta o palanca para mover el foco, que se marca con un borde blanco; Enter, Espacio o A para elegir; izquierda/derecha para ajustar volúmenes, ajustes de mando o el aspecto de un rival; B para salir de la pausa. Start empieza la partida desde el menú.
+
 Por defecto: WASD para moverse, ratón para orientar, Espacio para el doble salto, clic izquierdo/derecho para básico/fuerte, E especial, R recuperación aérea, Shift izquierdo esquiva, Q super, Ctrl izquierdo caída acelerada y Esc pausa. En mando: palanca izquierda o cruceta para moverse, palanca derecha para orientar, A salto, X básico, Y fuerte, B especial, RB recuperación, RT esquiva, LB super, LT caída y Start pausa.
 
 El panel **CONTROLES** del menú y de la pausa muestra las asignaciones con los nombres del teclado y del mando conectados. Haz clic en una celda y pulsa la tecla, botón del ratón o botón del mando nuevo. Si ese control ya lo usaba otra acción, las dos se intercambian y aparece un aviso. Esc y Start están reservados para la pausa y cancelan la captura. **Restaurar teclado** y **Restaurar mando** vuelven a los valores por defecto. Todos los mandos comparten el mismo perfil.
@@ -36,7 +38,7 @@ Volúmenes, efectos reducidos, modo de entrada, ajustes de mando y controles se 
 
 El objetivo no emite entradas; recibe daño y knockback normal. El laboratorio no agota tiempo ni stocks. Las caídas devuelven al luchador al punto de práctica. **−25/+25** modifica el daño inicial del objetivo entre 0 y 300; **Reiniciar** reconstruye la sesión, elimina proyectiles/zonas y restablece ese porcentaje. **Super listo** llena la barra de P1.
 
-**Volúmenes** muestra el alcance horizontal, cono y tolerancia vertical del cuerpo a cuerpo usando los mismos datos del golpe: amarillo durante preparación/final y rojo durante la ventana activa. La cruz marca la raíz que el barrido consulta. La geometría sólida sigue bloqueando impactos. Los proyectiles, zonas, onda y sectores seguros conservan sus avisos existentes; sus volúmenes de colisión completos aún no tienen un visualizador adicional.
+**Volúmenes** muestra el alcance horizontal, cono y tolerancia vertical del cuerpo a cuerpo, y también la esfera de impacto de los proyectiles, las zonas de super, el emisor y la onda, usando las mismas constantes que las comprobaciones de impacto: amarillo cuando aún no golpea y rojo cuando está activo. La cruz baja marca la raíz (cuerpo a cuerpo, emisor) y la alta el pecho (proyectiles, burbuja). La geometría sólida sigue bloqueando impactos.
 
 El entrenamiento respeta la arena, personajes y aspectos seleccionados en el menú. Volver al menú permite iniciar versus con el número de rivales elegido anteriormente. El modo no cambia el balance compartido ni los controles de la beta.
 
@@ -51,7 +53,7 @@ Genera Windows desde el menú FUNADOS. Para repetir las pruebas en una carpeta d
 ```powershell
 $proof = 'D:\Funados\Evidence\MiPrueba'
 New-Item -ItemType Directory -Force $proof | Out-Null
-$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.4.3\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-beta-smoke -evidence-path $proof -options-path $proof\player-options.json -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
+$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.4.4\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-beta-smoke -evidence-path $proof -options-path $proof\player-options.json -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
 $game.ExitCode
 ```
 

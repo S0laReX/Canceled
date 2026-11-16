@@ -347,6 +347,16 @@ namespace CancelBrawl.Beta
             }
         }
 
+        /// <summary>Current shockwave ring shared by the hit check and the lab visualizer.</summary>
+        public bool TryGetWaveVolume(out float radius, out float height)
+        {
+            radius = 0; height = attack.Height;
+            if (!attacking || attack.Kind != AttackKind.Super || Kit.Super != SuperStyle.GroundWave) return false;
+            radius = attack.Range * Mathf.Clamp01((attackTime - attack.Windup) / attack.Active) + WaveTolerance;
+            return true;
+        }
+        private const float WaveTolerance = .4f;
+
         /// <summary>Coach's shockwave: travels outward and only hits grounded fighters within the height tolerance.</summary>
         private void GroundWave()
         {
@@ -356,7 +366,7 @@ namespace CancelBrawl.Beta
                 if (target == this || target.Eliminated || target.IsRespawning || !target.Grounded) continue;
                 Vector3 difference = target.transform.position - transform.position;
                 Vector3 flat = Vector3.ProjectOnPlane(difference, Vector3.up);
-                if (flat.magnitude > radius + .4f || Mathf.Abs(difference.y) > attack.Height) continue;
+                if (flat.magnitude > radius + WaveTolerance || Mathf.Abs(difference.y) > attack.Height) continue;
                 attackToken.Hit(target, flat.sqrMagnitude > .01f ? flat.normalized : Facing);
             }
         }

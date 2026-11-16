@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CancelBrawl.Beta
 {
     /// <summary>Small, resolution-independent presentation layer for the local prototype.</summary>
-    public sealed class BrawlHud : MonoBehaviour
+    public sealed partial class BrawlHud : MonoBehaviour
     {
         private const float Width = 1600f;
         private const float Height = 900f;
@@ -89,6 +89,7 @@ namespace CancelBrawl.Beta
                 else if (match.Phase == MatchPhase.Paused) DrawPause();
                 else if (match.Phase == MatchPhase.Results) DrawResults();
             }
+            CommitNavigation();
             GUI.color = oldColor;
             GUI.matrix = oldMatrix;
         }
@@ -143,12 +144,18 @@ namespace CancelBrawl.Beta
             Label(new Rect(1010, 102, 510, 52), "Empuja a tus rivales fuera del escenario.\n100 % de daño no elimina por sí solo.", small, Paper, TextAnchor.UpperRight);
             bool menuEnabled = GUI.enabled;
             GUI.enabled = match.CanStartTraining;
-            if (match.IsProduction && Button(new Rect(1010, 158, 510, 32), "ENTRENAMIENTO / COMBAT LAB", Cyan)) match.StartTraining();
+            Rect trainingRect = new Rect(1010, 158, 510, 32);
+            if (match.IsProduction)
+            {
+                if (Button(trainingRect, "ENTRENAMIENTO / COMBAT LAB", Cyan)) match.StartTraining();
+                Nav("training", trainingRect, match.StartTraining);
+            }
             GUI.enabled = menuEnabled;
 
             Panel(new Rect(80, 196, 900, 606));
             // 01 · fighter
-            Label(new Rect(104, 212, 852, 28), "01  TU LUCHADOR  (P1)  ·  clic otra vez para cambiar de aspecto", body, Muted);
+            Label(new Rect(104, 212, 852, 28), "01  TU LUCHADOR  (P1)  ·  elegir otra vez para cambiar de aspecto", body, Muted);
+            Label(new Rect(560, 118, 440, 24), "Flechas / cruceta: moverse  ·  Enter / A: elegir  ·  ← →: ajustar", small, Muted);
             for (int i = 0; i < BrawlRoster.Count; i++)
             {
                 BrawlKit kit = BrawlRoster.Get(i);
@@ -167,18 +174,21 @@ namespace CancelBrawl.Beta
                 bool selected = match.ArenaIndex == i;
                 Fill(rect, selected ? new Color(Cyan.r * .16f, Cyan.g * .16f, Cyan.b * .16f, 1f) : Card);
                 Fill(new Rect(rect.x, rect.y, 4, rect.height), selected ? Cyan : Muted * .5f);
-                if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.ArenaIndex = i;
+                int arena = i;
+                if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.ArenaIndex = arena;
+                Nav("arena-" + i, rect, () => match.ArenaIndex = arena);
                 Label(new Rect(rect.x + 14, rect.y + 10, rect.width - 22, 24), BrawlArena.Names[i].ToUpperInvariant(), small, selected ? Cyan : Paper);
                 Label(new Rect(rect.x + 14, rect.y + 34, rect.width - 22, 40), BrawlArena.Descriptions[i], tiny, Muted);
             }
 
             // 03 · rivals
-            Label(new Rect(104, 540, 700, 28), "03  RIVALES  ·  clic: personaje  ·  clic derecho: aspecto", body, Muted);
+            Label(new Rect(104, 540, 852, 28), "03  RIVALES  ·  elegir: personaje  ·  clic derecho o ← →: aspecto", body, Muted);
             for (int i = 1; i <= 4; i++)
             {
                 int choice = i;
-                if (Button(new Rect(104 + (i - 1) * 56, 578, 48, 46), i.ToString(), match.OpponentCount == i ? Cyan : Muted))
-                    match.OpponentCount = choice;
+                Rect countRect = new Rect(104 + (i - 1) * 56, 578, 48, 46);
+                if (Button(countRect, i.ToString(), match.OpponentCount == i ? Cyan : Muted)) match.OpponentCount = choice;
+                Nav("rivals-" + i, countRect, () => match.OpponentCount = choice);
             }
             int pads = match.LocalCoop ? Mathf.Min(Mathf.Max(0, match.ConnectedPads - (match.P1UsesGamepad ? 1 : 0)), 4) : 0;
             for (int slot = 1; slot <= match.OpponentCount; slot++)
@@ -190,7 +200,9 @@ namespace CancelBrawl.Beta
                 Event click = Event.current;
                 if (click.type == EventType.MouseDown && click.button == 1 && chip.Contains(click.mousePosition))
                 { match.CycleSkin(slot); click.Use(); }
-                if (GUI.Button(chip, GUIContent.none, GUIStyle.none)) match.CycleCharacter(slot);
+                int chipSlot = slot;
+                if (GUI.Button(chip, GUIContent.none, GUIStyle.none)) match.CycleCharacter(chipSlot);
+                Nav("rival-" + slot, chip, () => match.CycleCharacter(chipSlot), d => match.CycleSkin(chipSlot));
                 int character = match.SlotCharacters[slot];
                 Label(new Rect(chip.x + 8, chip.y + 4, chip.width - 12, 20), $"P{slot + 1}  ·  {(slot <= pads ? "MANDO" : "IA")}", tiny, Muted);
                 if (BrawlRoster.SkinCount(character) > 1)
@@ -198,13 +210,16 @@ namespace CancelBrawl.Beta
                         $"aspecto {BrawlRoster.WrapSkin(character, match.SlotSkins[slot]) + 1}/{BrawlRoster.SkinCount(character)}", tiny, Muted, TextAnchor.UpperRight);
                 Label(new Rect(chip.x + 8, chip.y + 21, chip.width - 12, 22), match.CharacterName(character), small, Paper);
             }
-            if (Button(new Rect(104, 642, 852, 50),
-                    match.LocalCoop ? "MANDOS LOCALES ACTIVOS  ·  clic para jugar solo" :
-                        "JUGAR SOLO CONTRA IA  ·  clic para sumar mandos", new Color(.69f, .75f, .86f)))
+            Rect coopRect = new Rect(104, 642, 852, 50), p1Rect = new Rect(104, 702, 320, 36);
+            if (Button(coopRect,
+                    match.LocalCoop ? "MANDOS LOCALES ACTIVOS  ·  elegir para jugar solo" :
+                        "JUGAR SOLO CONTRA IA  ·  elegir para sumar mandos", new Color(.69f, .75f, .86f)))
                 match.LocalCoop = !match.LocalCoop;
+            Nav("coop", coopRect, () => match.LocalCoop = !match.LocalCoop);
             GUI.enabled = match.LocalCoop;
-            if (Button(new Rect(104, 702, 320, 36), match.P1UsesGamepad ? "P1: MANDO" : "P1: TECLADO Y RATÓN", Cyan))
+            if (Button(p1Rect, match.P1UsesGamepad ? "P1: MANDO" : "P1: TECLADO Y RATÓN", Cyan))
                 match.P1UsesGamepad = !match.P1UsesGamepad;
+            Nav("p1-input", p1Rect, () => match.P1UsesGamepad = !match.P1UsesGamepad);
             GUI.enabled = menuEnabled;
             string padInfo = $"Mandos: {match.ConnectedPads}.  " + (match.LocalCoop && match.P1UsesGamepad ? "Dos mandos como mínimo para versus." : "Conecta mandos antes de empezar.");
             if (match.RejectedPads > 0) padInfo += $"  {match.RejectedPads} mando(s) sobrante(s) no participan: máximo 5 jugadores.";
@@ -212,7 +227,9 @@ namespace CancelBrawl.Beta
             Label(new Rect(104, 748, 852, 40), $"{match.Settings.startingStocks} vidas  ·  {Mathf.RoundToInt(match.Settings.matchSeconds / 60)} minutos  ·  mayor daño = mayor empuje  ·  partida libre sin rating", small, Muted);
 
             GUI.enabled = match.CanStartMatch;
-            if (Button(new Rect(80, 818, 900, 62), match.CanStartMatch ? $"ENTRAR A {BrawlArena.Names[match.ArenaIndex].ToUpperInvariant()}   /   ENTER" : "CONECTA DOS MANDOS PARA INICIAR", Cyan)) match.StartMatch();
+            Rect startRect = new Rect(80, 818, 900, 62);
+            if (Button(startRect, match.CanStartMatch ? $"ENTRAR A {BrawlArena.Names[match.ArenaIndex].ToUpperInvariant()}   /   ENTER · A" : "CONECTA DOS MANDOS PARA INICIAR", Cyan)) match.StartMatch();
+            Nav("start", startRect, match.StartMatch);
             GUI.enabled = menuEnabled;
             DrawControls(new Rect(1010, 196, 510, 470), true);
             DrawOptions(new Rect(1010, 682, 510, 198));
@@ -223,10 +240,9 @@ namespace CancelBrawl.Beta
             Fill(rect, selected ? new Color(kit.Accent.r * .18f, kit.Accent.g * .18f, kit.Accent.b * .18f, 1f) : Card);
             Fill(new Rect(rect.x, rect.y, 4, rect.height), selected ? kit.Accent : Muted * .5f);
             // Clicking the selected card again cycles its look.
-            if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-            {
-                if (selected) match.CycleSkin(0); else match.SelectedCharacter = index;
-            }
+            Action choose = () => { if (match.SelectedCharacter == index) match.CycleSkin(0); else match.SelectedCharacter = index; };
+            if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) choose();
+            Nav("char-" + index, rect, choose);
             Label(new Rect(rect.x + 13, rect.y + 12, rect.width - 18, 26), match.CharacterName(index).ToUpperInvariant(), small, selected ? kit.Accent : Paper);
             Label(new Rect(rect.x + 13, rect.y + 38, rect.width - 18, 24), kit.Role, tiny, Muted);
             int skins = BrawlRoster.SkinCount(index);
@@ -241,44 +257,49 @@ namespace CancelBrawl.Beta
             Panel(rect);
             float x = rect.x + 24, y = rect.y + 16;
             Label(new Rect(x, y, rect.width - 48, 30), "OPCIONES", heading, Paper);
-            if (SmallButton(new Rect(rect.xMax - 24 - 196, y + 2, 96, 26), "GENERAL", match.ShowPadOptions ? Muted : Cyan)) match.ShowPadOptions = false;
-            if (SmallButton(new Rect(rect.xMax - 24 - 96, y + 2, 96, 26), "MANDO", match.ShowPadOptions ? Cyan : Muted)) match.ShowPadOptions = true;
+            Rect generalTab = new Rect(rect.xMax - 24 - 196, y + 2, 96, 26), padTab = new Rect(rect.xMax - 24 - 96, y + 2, 96, 26);
+            if (SmallButton(generalTab, "GENERAL", match.ShowPadOptions ? Muted : Cyan)) match.ShowPadOptions = false;
+            Nav("tab-general", generalTab, () => match.ShowPadOptions = false);
+            if (SmallButton(padTab, "MANDO", match.ShowPadOptions ? Cyan : Muted)) match.ShowPadOptions = true;
+            Nav("tab-pad", padTab, () => match.ShowPadOptions = true);
             y += 40;
             if (match.ShowPadOptions) { DrawPadOptions(x, y, rect.width - 48); return; }
             Label(new Rect(x, y + 8, 250, 26), "Reducir destellos y temblor", small, Muted);
-            if (Button(new Rect(rect.xMax - 150, y, 126, 36), BrawlFeedback.ReducedEffects ? "SÍ" : "NO",
-                    BrawlFeedback.ReducedEffects ? Cyan : Muted))
+            Rect reducedRect = new Rect(rect.xMax - 150, y, 126, 36);
+            if (Button(reducedRect, BrawlFeedback.ReducedEffects ? "SÍ" : "NO", BrawlFeedback.ReducedEffects ? Cyan : Muted))
                 match.SetReducedEffects(!BrawlFeedback.ReducedEffects);
+            Nav("opt-reduced", reducedRect, () => match.SetReducedEffects(!BrawlFeedback.ReducedEffects));
             y += 46;
-            VolumeRow(new Rect(x, y, rect.width - 48, 36), "Efectos", BrawlFeedback.SfxVolume, v => match.SetVolumes(v, BrawlFeedback.MusicVolume));
+            VolumeRow("opt-sfx", new Rect(x, y, rect.width - 48, 36), "Efectos", BrawlFeedback.SfxVolume, v => match.SetVolumes(v, BrawlFeedback.MusicVolume));
             y += 46;
-            VolumeRow(new Rect(x, y, rect.width - 48, 36), "Música", BrawlFeedback.MusicVolume, v => match.SetVolumes(BrawlFeedback.SfxVolume, v));
+            VolumeRow("opt-music", new Rect(x, y, rect.width - 48, 36), "Música", BrawlFeedback.MusicVolume, v => match.SetVolumes(BrawlFeedback.SfxVolume, v));
         }
 
         /// <summary>SYS-026: stick deadzones, response curve and vibration; the d-pad stays a digital alternative.</summary>
         private void DrawPadOptions(float x, float y, float width)
         {
             const float row = 34;
-            StepRow(new Rect(x, y, width, row - 4), "Zona muerta mover", $"{Mathf.RoundToInt(match.MoveDeadzone * 100)} %",
+            StepRow("pad-move", new Rect(x, y, width, row - 4), "Zona muerta mover", $"{Mathf.RoundToInt(match.MoveDeadzone * 100)} %",
                 Mathf.InverseLerp(BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, match.MoveDeadzone),
                 d => match.SetStickTuning(match.MoveDeadzone + d * .05f, match.AimDeadzone, match.StickResponse));
             y += row;
-            StepRow(new Rect(x, y, width, row - 4), "Zona muerta orientar", $"{Mathf.RoundToInt(match.AimDeadzone * 100)} %",
+            StepRow("pad-aim", new Rect(x, y, width, row - 4), "Zona muerta orientar", $"{Mathf.RoundToInt(match.AimDeadzone * 100)} %",
                 Mathf.InverseLerp(BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, match.AimDeadzone),
                 d => match.SetStickTuning(match.MoveDeadzone, match.AimDeadzone + d * .05f, match.StickResponse));
             y += row;
             string response = match.StickResponse > 1.01f ? "rápida" : match.StickResponse < .99f ? "fina" : "lineal";
-            StepRow(new Rect(x, y, width, row - 4), "Respuesta palanca", $"{match.StickResponse:0.00} {response}",
+            StepRow("pad-response", new Rect(x, y, width, row - 4), "Respuesta palanca", $"{match.StickResponse:0.00} {response}",
                 Mathf.InverseLerp(BrawlInputTuning.MinResponse, BrawlInputTuning.MaxResponse, match.StickResponse),
                 d => match.SetStickTuning(match.MoveDeadzone, match.AimDeadzone, match.StickResponse + d * .25f));
             y += row;
-            StepRow(new Rect(x, y, width, row - 4), "Vibración", match.VibrationStrength <= 0 ? "apagada" : $"{Mathf.RoundToInt(match.VibrationStrength * 100)} %",
+            StepRow("pad-vibration", new Rect(x, y, width, row - 4), "Vibración", match.VibrationStrength <= 0 ? "apagada" : $"{Mathf.RoundToInt(match.VibrationStrength * 100)} %",
                 match.VibrationStrength, d => match.SetVibration(match.VibrationStrength + d * .25f));
         }
 
         /// <summary>Label · value · [–] bar [+] row; <paramref name="step"/> receives -1 or +1.</summary>
-        private void StepRow(Rect rect, string name, string value, float fraction, Action<int> step)
+        private void StepRow(string id, Rect rect, string name, string value, float fraction, Action<int> step)
         {
+            Nav(id, new Rect(rect.xMax - 200, rect.y, 200, rect.height), null, step);
             Label(new Rect(rect.x, rect.y + 6, 170, 24), name, small, Muted);
             Label(new Rect(rect.x + 168, rect.y + 6, 92, 24), value, tiny, Paper);
             if (Button(new Rect(rect.xMax - 200, rect.y, 38, rect.height), "–", Muted)) step(-1);
@@ -287,8 +308,9 @@ namespace CancelBrawl.Beta
             if (Button(new Rect(rect.xMax - 38, rect.y, 38, rect.height), "+", Muted)) step(1);
         }
 
-        private void VolumeRow(Rect rect, string name, float value, Action<float> apply)
+        private void VolumeRow(string id, Rect rect, string name, float value, Action<float> apply)
         {
+            Nav(id, new Rect(rect.xMax - 236, rect.y, 236, rect.height), null, d => apply(Mathf.Round((value + d * .1f) * 10) / 10));
             Label(new Rect(rect.x, rect.y + 8, 140, 26), name, small, Muted);
             if (Button(new Rect(rect.xMax - 236, rect.y, 44, rect.height), "–", Muted)) apply(Mathf.Round((value - .1f) * 10) / 10);
             Fill(new Rect(rect.xMax - 184, rect.y + 14, 132, 8), new Color(.18f, .22f, .30f));
@@ -367,7 +389,7 @@ namespace CancelBrawl.Beta
                 match.ShowCombatVolumes = !match.ShowCombatVolumes;
             if (Button(new Rect(1286, 190, 264, 34), "SUPER LISTO", Pink)) match.FillTrainingMeter();
             GUI.enabled = oldEnabled;
-            Label(new Rect(1016, 234, 530, 42), "Amarillo: preparación/final · rojo: activo.\nAlcance de melee; paredes bloquean. Cruz: raíz del objetivo.", small, Muted);
+            Label(new Rect(1016, 234, 530, 42), "Amarillo: aún no golpea · rojo: activo. Melee, proyectiles, zonas,\nemisor y onda; paredes bloquean. Cruz baja: raíz · alta: pecho.", small, Muted);
         }
 
         private void DrawCountdown()
@@ -391,10 +413,17 @@ namespace CancelBrawl.Beta
             Label(new Rect(170, 300, 420, 90), pauseText, body, Muted);
             bool previous = GUI.enabled;
             GUI.enabled = match.MissingDeviceMask == 0;
-            if (Button(new Rect(170, 400, 450, 62), "CONTINUAR  /  ESC", Cyan)) match.TogglePause();
+            Rect continueRect = new Rect(170, 400, 450, 62), assignRect = new Rect(170, 470, 450, 40), menuRect = new Rect(170, 526, 450, 58);
+            if (Button(continueRect, "CONTINUAR  /  ESC · B", Cyan)) match.TogglePause();
+            Nav("continue", continueRect, match.TogglePause);
             GUI.enabled = previous;
-            if (match.DevicePause && match.MissingDeviceMask != 0 && Button(new Rect(170, 470, 450, 40), "ASIGNAR MANDOS DISPONIBLES", Cyan)) match.ReassignMissingDevices();
-            if (Button(new Rect(170, 526, 450, 58), "VOLVER AL MENÚ", Muted)) match.ReturnToMenu();
+            if (match.DevicePause && match.MissingDeviceMask != 0)
+            {
+                if (Button(assignRect, "ASIGNAR MANDOS DISPONIBLES", Cyan)) match.ReassignMissingDevices();
+                Nav("assign", assignRect, match.ReassignMissingDevices);
+            }
+            if (Button(menuRect, "VOLVER AL MENÚ", Muted)) match.ReturnToMenu();
+            Nav("menu", menuRect, match.ReturnToMenu);
             DrawOptions(new Rect(130, 616, 530, 198));
             DrawControls(new Rect(720, 180, 750, 470), false);
         }
@@ -423,8 +452,11 @@ namespace CancelBrawl.Beta
                     $"{fighter.KOs} KO  ·  {fighter.SelfDestructs} caídas propias  ·  {Mathf.RoundToInt(fighter.TotalDamageDealt)} daño", small, Muted, TextAnchor.MiddleRight);
                 y += 82;
             }
-            if (Button(new Rect(300, 712, 490, 58), "REVANCHA  /  ENTER", Cyan)) match.StartMatch();
-            if (Button(new Rect(810, 712, 490, 58), "CAMBIAR LUCHADOR O CANCHA", Muted)) match.ReturnToMenu();
+            Rect rematchRect = new Rect(300, 712, 490, 58), backRect = new Rect(810, 712, 490, 58);
+            if (Button(rematchRect, "REVANCHA  /  ENTER · A", Cyan)) match.StartMatch();
+            Nav("rematch", rematchRect, match.StartMatch);
+            if (Button(backRect, "CAMBIAR LUCHADOR O CANCHA", Muted)) match.ReturnToMenu();
+            Nav("results-menu", backRect, match.ReturnToMenu);
             Label(new Rect(300, 782, 1000, 40), "Partida libre local · sin puntuación competitiva. KO y daño son estadísticas: el puesto lo decide la supervivencia.", small, Muted, TextAnchor.MiddleCenter);
         }
 
@@ -441,7 +473,7 @@ namespace CancelBrawl.Beta
             float y = rect.y + 14;
             Label(new Rect(x, y, 214, 32), "CONTROLES", heading, Paper);
             Label(new Rect(x + 214, y, inner - 214, 48),
-                "Clic en un control para cambiarlo.\nEsc / Start: pausa (reservados).\nOrientar: ratón / palanca der.", tiny, Muted);
+                "Elige un control para cambiarlo.\nEsc / Start: pausa (reservados).\nOrientar: ratón / palanca der.", tiny, Muted);
             bool previous = GUI.enabled;
             GUI.enabled = previous && match.CanRemap && !match.RemapListening;
             y += 48;
@@ -467,8 +499,11 @@ namespace CancelBrawl.Beta
             if (optionsNotice) message = match.OptionsStatusText;
             Label(new Rect(x, rect.yMax - 72, inner, 34), string.IsNullOrEmpty(message) ? "Un control repetido se intercambia con la acción que lo tenía." : message,
                 tiny, match.RemapListening ? Cyan : match.RemapMessageIsWarning || optionsNotice ? Pink : Muted);
-            if (SmallButton(new Rect(x, rect.yMax - 36, 168, 26), "RESTAURAR TECLADO", Muted)) bindings.ResetDefaults(BindingScheme.Keyboard);
-            if (SmallButton(new Rect(x + 176, rect.yMax - 36, 168, 26), "RESTAURAR MANDO", Muted)) bindings.ResetDefaults(BindingScheme.Gamepad);
+            Rect resetKeys = new Rect(x, rect.yMax - 36, 168, 26), resetPad = new Rect(x + 176, rect.yMax - 36, 168, 26);
+            if (SmallButton(resetKeys, "RESTAURAR TECLADO", Muted)) bindings.ResetDefaults(BindingScheme.Keyboard);
+            Nav("reset-keys", resetKeys, () => bindings.ResetDefaults(BindingScheme.Keyboard));
+            if (SmallButton(resetPad, "RESTAURAR MANDO", Muted)) bindings.ResetDefaults(BindingScheme.Gamepad);
+            Nav("reset-pad", resetPad, () => bindings.ResetDefaults(BindingScheme.Gamepad));
             GUI.enabled = previous;
         }
 
@@ -478,6 +513,7 @@ namespace CancelBrawl.Beta
             Fill(rect, listening ? new Color(Pink.r * .3f, Pink.g * .3f, Pink.b * .3f, 1f) : Card);
             Fill(new Rect(rect.x, rect.y, 3, rect.height), listening ? Pink : Muted * .5f);
             if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.BeginRemap(scheme, action);
+            Nav((scheme == BindingScheme.Keyboard ? "kb-" : "pad-") + action, rect, () => match.BeginRemap(scheme, action));
             Label(new Rect(rect.x + 10, rect.y + 2, rect.width - 14, rect.height - 2), listening ? "pulsa…" : text, small, listening ? Pink : Paper);
         }
 

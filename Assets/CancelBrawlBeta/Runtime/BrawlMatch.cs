@@ -19,7 +19,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.4.3";
+        public const string ProductionVersion = "0.4.4";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -161,7 +161,8 @@ namespace CancelBrawl.Beta
             BuildArena(0);
             groupCamera.Configure(null);
             participants = new GameObject("Participantes").transform; participants.SetParent(transform);
-            gameObject.AddComponent<BrawlHud>().Configure(this);
+            Hud = gameObject.AddComponent<BrawlHud>(); Hud.Configure(this);
+            HazardVolumes = gameObject.AddComponent<BrawlHazardVolumes>(); HazardVolumes.Configure(this);
             gameObject.AddComponent<BrawlHitResolver>().Configure(this);
             BrawlFeedback.Initialize(transform);
             OptionsPath = ResolveOptionsPath();
@@ -259,15 +260,14 @@ namespace CancelBrawl.Beta
             if (RemapListening) { PollRemap(); return; }
             if (AutomatedTest) return;
             var keys = Keyboard.current;
-            bool confirm = keys != null && keys.enterKey.wasPressedThisFrame;
             bool pause = keys != null && keys.escapeKey.wasPressedThisFrame;
             foreach (var pad in Gamepad.all)
             {
-                if (Phase == MatchPhase.Menu || Devices.Owns(pad))
-                { pause |= pad.startButton.wasPressedThisFrame; confirm |= pad.buttonSouth.wasPressedThisFrame; }
+                if (Phase == MatchPhase.Menu || Devices.Owns(pad)) pause |= pad.startButton.wasPressedThisFrame;
                 else if (DevicePause && pad.startButton.wasPressedThisFrame) Devices.ClaimMissing(pad);
             }
-            if (Phase == MatchPhase.Menu || Phase == MatchPhase.Results) { if (confirm) StartMatch(); return; }
+            // Enter/A in menus belong to the focused control (BrawlHud navigation, SYS-070); Start is a shortcut to play.
+            if (Phase == MatchPhase.Menu || Phase == MatchPhase.Results) { if (pause && !(keys != null && keys.escapeKey.wasPressedThisFrame)) StartMatch(); return; }
             if (pause && (Phase == MatchPhase.Playing || Phase == MatchPhase.Paused || Phase == MatchPhase.Countdown)) { TogglePause(); return; }
             if (Phase != MatchPhase.Playing) return;
             for (int i = 0; i < Fighters.Length; i++)
@@ -329,6 +329,8 @@ namespace CancelBrawl.Beta
         public float AimDeadzone { get; private set; } = .25f;
         public float StickResponse { get; private set; } = 1f;
         public float VibrationStrength { get; private set; } = .5f;
+        public BrawlHud Hud { get; private set; }
+        public BrawlHazardVolumes HazardVolumes { get; private set; }
         /// <summary>Options panel page shown by the HUD (GENERAL / MANDO).</summary>
         public bool ShowPadOptions { get; set; }
 

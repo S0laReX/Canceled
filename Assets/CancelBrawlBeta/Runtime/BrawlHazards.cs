@@ -28,7 +28,14 @@ namespace CancelBrawl.Beta
         private float radius, height, delay, elapsed;
         private bool sphere;
         private Transform visual;
+        /// <summary>Extra reach added to the announced radius when resolving.</summary>
+        public const float Tolerance = .3f;
+        /// <summary>Cylinder zones also catch fighters standing this far below their base.</summary>
+        public const float BelowTolerance = .6f;
         public override float Radius => radius;
+        public bool IsSphere => sphere;
+        public float HitRadius => radius + Tolerance;
+        public float Height => height;
         public float Remaining => Mathf.Max(0, delay - elapsed);
 
         public static BrawlZone Create(BrawlMatch owner, BrawlAttackToken activation, Vector3 center, float radius, float height, float delay, bool sphere)
@@ -62,11 +69,11 @@ namespace CancelBrawl.Beta
             foreach (var fighter in match.Fighters)
             {
                 if (!Valid(fighter, Owner)) continue;
-                Vector3 chest = fighter.transform.position + Vector3.up * .85f;
+                Vector3 chest = fighter.transform.position + Vector3.up * BrawlProjectile.ChestHeight;
                 Vector3 flat = Vector3.ProjectOnPlane(chest - transform.position, Vector3.up);
                 float dy = fighter.transform.position.y - transform.position.y;
-                bool inside = sphere ? (chest - transform.position).magnitude <= radius + .3f
-                                     : flat.magnitude <= radius + .3f && dy > -.6f && dy < height;
+                bool inside = sphere ? (chest - transform.position).magnitude <= HitRadius
+                                     : flat.magnitude <= HitRadius && dy > -BelowTolerance && dy < height;
                 if (inside) token.Hit(fighter, flat.sqrMagnitude > .01f ? flat.normalized : Owner.Facing);
             }
             BrawlFeedback.Burst(transform.position + Vector3.up * .6f, Owner.PlayerColor, 20);
@@ -80,6 +87,8 @@ namespace CancelBrawl.Beta
     public sealed class BrawlTrap : BrawlHazard
     {
         public const float Lifetime = 7f, ArmTime = .35f, TriggerRadius = 1.15f;
+        /// <summary>Vertical window, relative to the emitter base, in which a fighter's root triggers it.</summary>
+        public const float BelowReach = .4f, AboveReach = 1.3f;
         private float age;
         private Transform pulse;
         public override float Radius => TriggerRadius;
@@ -119,7 +128,7 @@ namespace CancelBrawl.Beta
                 if (!Valid(fighter, Owner)) continue;
                 Vector3 flat = Vector3.ProjectOnPlane(fighter.transform.position - transform.position, Vector3.up);
                 float dy = fighter.transform.position.y - transform.position.y;
-                if (flat.magnitude > TriggerRadius || dy < -.4f || dy > 1.3f) continue;
+                if (flat.magnitude > TriggerRadius || dy < -BelowReach || dy > AboveReach) continue;
                 if (!token.Hit(fighter, flat.sqrMagnitude > .01f ? flat.normalized : Owner.Facing)) continue;
                 BrawlFeedback.Burst(transform.position + Vector3.up, Owner.PlayerColor, 12);
                 Destroy(gameObject);
