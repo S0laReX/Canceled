@@ -38,7 +38,9 @@ namespace CancelBrawl.Beta
             var zone = obj.AddComponent<BrawlZone>();
             zone.match = owner; zone.token = activation; zone.radius = radius; zone.height = height; zone.delay = delay; zone.sphere = sphere;
             Color color = activation.Source.PlayerColor;
-            if (sphere)
+            if (owner.IsSideView)
+                BrawlSideTelegraph.Zone(owner,obj.transform,radius,height,delay,sphere);
+            else if (sphere)
             {
                 zone.visual = new GameObject("Contorno").transform; zone.visual.SetParent(obj.transform, false);
                 BrawlFeedback.Circle(zone.visual, 1, color, Quaternion.identity, .05f);

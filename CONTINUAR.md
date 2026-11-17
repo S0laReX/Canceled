@@ -1,5 +1,21 @@
 # Continuación de FUNADOS
 
+**Empezar por `CHECKLIST_2p5D.md`.** Es la checklist activa con prioridades, criterios de aceptación y tareas para otro agente. La entrega es **0.5.1**, corrección de Tío Antena y avisos laterales. Los apartados 0.5.0/0.4.1 siguientes son historial.
+
+## Relevo 0.5.1
+
+Se implementó un refugio central de ±1,4 m frente al súper de Tío Antena. Sus lados siguen siendo peligrosos y se puede escapar entrando al centro durante la preparación, saliendo del alcance o superando su altura. Los avisos de los cinco supers, fuerte y trayectoria de token se dibujan en X/Y; blanco indica refugio y rojo peligro. Pausa, interrupción y retorno al menú eliminan o congelan los avisos según corresponda. Se conservan los recursos originales.
+
+Build: `Builds/Funados/0.5.1/Windows/FUNADOS.exe`. Evidencia: `Evidence/Production-0.5.1`; sus carpetas Initial y LabelFirst conservan las revisiones anteriores a la corrección visual final del rótulo REFUGIO. Consultar `verification.json` y los informes de las carpetas Focused, Side y Legacy para aceptar la build final. `-power-smoke` comprueba poderes; `-side-smoke` añade esos casos a la suite lateral. El informe histórico muestra versión 0.3.0 porque fuerza esas reglas; la identidad de su ejecutable se registra mediante hashes.
+
+**Siguiente implementación: P0-03 / SYS-045, impactos simultáneos imparciales.** BrawlMatch simula luchadores secuencialmente; recibir un golpe puede cancelar el ataque del segundo antes de su turno. Añadir un caso que invierta orden y puestos, resolver contactos sin ventaja de índice y cubrir KO simultáneo, interrupciones, proyectiles y cargas sin doble daño. No empezar ocho personajes nuevos antes de resolver y aceptar este núcleo. Remapeo SYS-025 y opciones SYS-068/069 continúan después, como P1.
+
+Las pruebas automáticas no aceptan balance, rig, claridad del combate con personas, rendimiento ni mandos físicos. CIERRE-455–458 siguen abiertos. No hay publicación remota.
+
+Resultado de la build final 0.5.1: **32/32 focales, 88/88 laterales y 109/109 históricos, cero fallos**; la focal es un subconjunto de la lateral. Build con cero errores/cero advertencias; capturas revisadas, fuentes/ensamblado/informes vinculados por SHA256. Los 22 recursos de personajes conservan sus hashes y Git LFS fsck terminó OK. La escena principal queda abierta y detenida. Detalle de la entrega en `Docs/Produccion_2026-11-16/Poderes_0.5.1.md`.
+
+## Historial 0.5.0
+
 Proyecto: `D:\Funados`. Unity Hub + Editor **6000.5.7f1**, URP **17.5.0**, Input System **1.20.0**. Estado actual: **0.5.0, combate lateral 2.5D**, por petición y confirmación explícita de Santiago el 16/11/2026. Mantener los cinco kits, cuatro escenarios y once aspectos originales; no sustituir los recursos habituales. Don Promesio/Lola Viral conservan los IDs internos Don Decreto/Lola Loop.
 
 ## Prioridad vigente desde el 16 de noviembre

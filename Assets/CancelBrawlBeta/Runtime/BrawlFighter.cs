@@ -265,16 +265,24 @@ namespace CancelBrawl.Beta
             Vector3 position = transform.position;
             if (match.IsSideView && AttackVertical != 0 && (kind == AttackKind.Basic || kind == AttackKind.Heavy))
                 BrawlFeedback.Burst(position + Vector3.up * (AttackVertical > 0 ? 1.6f : .25f), PlayerColor, 5);
-            if (kind == AttackKind.Heavy) BrawlFeedback.Telegraph(position, Facing, attack.Range, attack.Windup + attack.Active, PlayerColor);
+            if (kind == AttackKind.Heavy)
+            {
+                if (match.IsSideView) BrawlSideTelegraph.Melee(match,this,attack);
+                else BrawlFeedback.Telegraph(position, Facing, attack.Range, attack.Windup + attack.Active, PlayerColor);
+            }
             if (kind == AttackKind.Special && Kit.Special == SpecialStyle.BounceToken)
-                BrawlFeedback.Telegraph(position, Facing, 6, attack.Windup + .2f, PlayerColor);
+            {
+                if (match.IsSideView) BrawlSideTelegraph.Trajectory(match,this,6,attack.Windup+.2f);
+                else BrawlFeedback.Telegraph(position, Facing, 6, attack.Windup + .2f, PlayerColor);
+            }
             if (kind != AttackKind.Super) return;
             Meter = 0;
             BrawlFeedback.Sound("warning");
             switch (Kit.Super)
             {
                 case SuperStyle.Fan:
-                    BrawlFeedback.Warning(position, attack.Range, attack.Height, attack.Windup, PlayerColor, Facing, 150); break;
+                    if (match.IsSideView) BrawlSideTelegraph.Caster(match,this,attack);
+                    else BrawlFeedback.Warning(position, attack.Range, attack.Height, attack.Windup, PlayerColor, Facing, 150); break;
                 case SuperStyle.Zone:
                 {
                     Vector3 centre = position + Facing * 3.6f;
@@ -283,15 +291,21 @@ namespace CancelBrawl.Beta
                     break;
                 }
                 case SuperStyle.GroundWave:
-                    BrawlFeedback.Warning(position, attack.Range, attack.Height, attack.Windup + attack.Active, PlayerColor, Vector3.zero, 360); break;
+                    if (match.IsSideView) BrawlSideTelegraph.Caster(match,this,attack);
+                    else BrawlFeedback.Warning(position, attack.Range, attack.Height, attack.Windup + attack.Active, PlayerColor, Vector3.zero, 360); break;
                 case SuperStyle.Bubble:
                     BrawlZone.Create(match, attackToken, position + Facing * 4.2f + Vector3.up, attack.Range, attack.Height, attack.Windup, true); break;
                 case SuperStyle.SafeSweep:
-                    BrawlFeedback.Warning(position, attack.Range, attack.Height, attack.Windup + attack.Active, PlayerColor, Facing, 360, SafeHalfAngle); break;
+                    if (match.IsSideView)
+                    {
+                        BrawlSideTelegraph.Caster(match,this,attack);
+                    }
+                    else BrawlFeedback.Warning(position, attack.Range, attack.Height, attack.Windup + attack.Active, PlayerColor, Facing, 360, SafeHalfAngle); break;
             }
         }
 
         private const float SafeHalfAngle = 35;
+        public const float SideSafeRadius = 1.4f;
 
         /// <summary>Soft aim help: small correction toward a visible rival inside a short cone. Never through walls.</summary>
         private void AssistFacing(float range)
@@ -364,7 +378,11 @@ namespace CancelBrawl.Beta
                 return;
             }
             bool super = attack.Kind == AttackKind.Super;
-            if (super && Kit.Super == SuperStyle.GroundWave) BrawlFeedback.Pulse(transform.position, attack.Range, attack.Active, PlayerColor);
+            if (super && Kit.Super == SuperStyle.GroundWave)
+            {
+                if (match.IsSideView) BrawlSideTelegraph.Wave(match,this,attack.Range,attack.Height,attack.Active);
+                else BrawlFeedback.Pulse(transform.position, attack.Range, attack.Active, PlayerColor);
+            }
             if (super && (Kit.Super == SuperStyle.Zone || Kit.Super == SuperStyle.Bubble)) return; // resolved by the zone
             BrawlFeedback.Burst(transform.position + Vector3.up * .9f + Facing * (super ? .5f : 1), PlayerColor, super ? 18 : 5);
             BrawlFeedback.Sound(super ? "super" : "swing");
@@ -384,7 +402,7 @@ namespace CancelBrawl.Beta
                 if (match.IsSideView && AttackVertical < 0 && AttackAirborne && difference.y > .5f) continue;
                 if (flat.magnitude > range || Mathf.Abs(difference.y) > height) continue;
                 if (flat.sqrMagnitude > .2f && Vector3.Dot(Facing, flat.normalized) < minDot) continue;
-                if (safeSectors && flat.sqrMagnitude > .2f && Mathf.Abs(Vector3.Angle(Facing, flat) - 90) < SafeHalfAngle) continue;
+                if (safeSectors && (match.IsSideView ? Mathf.Abs(difference.x)<=SideSafeRadius : flat.sqrMagnitude > .2f && Mathf.Abs(Vector3.Angle(Facing, flat) - 90) < SafeHalfAngle)) continue;
                 if (Physics.Linecast(transform.position + Vector3.up * .85f, target.transform.position + Vector3.up * .85f, 1, QueryTriggerInteraction.Ignore)) continue;
                 attackToken.Hit(target, safeSectors && flat.sqrMagnitude > .01f ? flat.normalized : Facing);
             }

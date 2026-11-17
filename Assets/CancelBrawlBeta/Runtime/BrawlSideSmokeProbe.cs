@@ -24,7 +24,7 @@ namespace CancelBrawl.Beta
         {
             match = GetComponent<BrawlMatch>(); started = Time.realtimeSinceStartup;
             var args = Environment.GetCommandLineArgs(); int index = Array.IndexOf(args, "-evidence-path");
-            output = Path.GetFullPath(index >= 0 && index + 1 < args.Length ? args[index + 1] : "Evidence/Side-0.5.0");
+            output = Path.GetFullPath(index >= 0 && index + 1 < args.Length ? args[index + 1] : "Evidence/Production-"+BrawlMatch.ProductionVersion);
             Directory.CreateDirectory(output); Application.logMessageReceived += OnLog;
         }
         private void OnDestroy() => Application.logMessageReceived -= OnLog;
@@ -43,6 +43,10 @@ namespace CancelBrawl.Beta
         private IEnumerator Start()
         {
             yield return null;
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-power-smoke")>=0)
+            {
+                yield return BrawlSidePowerChecks.Run(match,Check,output); Finish(); yield break;
+            }
             Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
             yield return new WaitForEndOfFrame(); ScreenCapture.CaptureScreenshot(Path.Combine(output,"menu.png"));
             match.StartTraining(); yield return new WaitForSeconds(.25f);
@@ -115,6 +119,7 @@ namespace CancelBrawl.Beta
             Check(dealt>0 && plane && match.Fighters.Length==5,"Partida normal con cinco luchadores: bots combaten y conservan plano lateral");
             yield return new WaitForEndOfFrame(); ScreenCapture.CaptureScreenshot(Path.Combine(output,"gameplay.png"));
             match.AutomatedTest=true;
+            yield return BrawlSidePowerChecks.Run(match,Check,output);
             Finish();
         }
         private static void Place(BrawlFighter f,Vector3 p) => f.ResetPractice(p,0);

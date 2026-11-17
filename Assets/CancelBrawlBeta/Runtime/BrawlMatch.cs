@@ -19,7 +19,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.5.0";
+        public const string ProductionVersion = "0.5.1";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -130,7 +130,7 @@ namespace CancelBrawl.Beta
             RemainingTime = settings.matchSeconds;
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-beta-smoke") >= 0 || Array.IndexOf(Environment.GetCommandLineArgs(), "-controls-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
-            if (Array.IndexOf(args, "-side-smoke") >= 0)
+            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSideSmokeProbe>(); }
         }
 

@@ -1,10 +1,10 @@
 # FUNADOS
 
-Juego local de lucha de plataformas **2.5D**: personajes 3D, movimiento lateral X, salto Y y profundidad bloqueada. Por instrucción del 16/11/2026, la referencia es el combo aéreo del video “The PERFECT Mario Ladder Combo”; la producción abandona el movimiento libre X/Z. Se conservan los cinco kits, cuatro escenarios de producción y once aspectos originales. Entrega actual: **0.5.0**, golpes direccionales, combos aéreos y poderes en vista lateral.
+Juego local de lucha de plataformas **2.5D**: personajes 3D, movimiento lateral X, salto Y y profundidad bloqueada. Por instrucción del 16/11/2026, la referencia es el combo aéreo del video “The PERFECT Mario Ladder Combo”; la producción abandona el movimiento libre X/Z. Se conservan los cinco kits, cuatro escenarios de producción y once aspectos originales. Entrega actual: **0.5.1**, golpes direccionales, combos aéreos, poderes con avisos de alcance/altura y refugio central accesible frente al súper de Tío Antena.
 
 Abre `D:\Funados` desde Unity Hub con **Unity 6000.5.7f1**. Las versiones de paquetes están fijadas en `Packages/manifest.json` y `packages-lock.json`; no aceptes una actualización de Editor para reproducir esta entrega.
 
-Para continuar con otro agente, empezar por `CONTINUAR.md`: contiene los puntos de checklist, evidencia, archivos relevantes y siguiente implementación.
+Para continuar con otro agente, empezar por `CHECKLIST_2p5D.md` y `CONTINUAR.md`: contienen prioridades, criterios de aceptación, evidencia, archivos relevantes y siguiente implementación.
 
 ## Escenas y ejecución
 
@@ -14,7 +14,7 @@ Para continuar con otro agente, empezar por `CONTINUAR.md`: contiene los puntos 
 
 Menú del editor: **FUNADOS → Abrir juego local**, **Abrir CombatLab** y **Generar Windows**. La generación de escenas crea únicamente las que faltan; no sobrescribe escenas existentes. Guarda primero cualquier escena sin título modificada.
 
-El ejecutable nuevo se genera en `Builds/Funados/0.5.0/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte. El cambio de diseño y sus límites están en `Docs/Produccion_2026-11-16/Combate_2p5D.md`.
+El ejecutable nuevo se genera en `Builds/Funados/0.5.1/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte. El cambio de diseño y sus límites están en `Docs/Produccion_2026-11-16/Combate_2p5D.md`.
 
 ## Mandos locales
 
@@ -47,11 +47,11 @@ Genera Windows desde el menú FUNADOS. Para repetir las pruebas en una carpeta d
 ```powershell
 $proof = 'D:\Funados\Evidence\MiPrueba'
 New-Item -ItemType Directory -Force $proof | Out-Null
-$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.5.0\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-side-smoke -evidence-path $proof -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
+$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.5.1\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-side-smoke -evidence-path $proof -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
 $game.ExitCode
 ```
 
-`-side-smoke` prueba las reglas nuevas: combo escalera, remate, poderes piloto, plataformas, cuatro escenarios, bots y dispositivos. Genera `side-report.json` y capturas. `-beta-smoke` activa exclusivamente las reglas históricas 3D para regresión y genera `smoke-report.json`; no representa el diseño actual de producción. `-controls-smoke` ejecuta solo dispositivos bajo esas reglas históricas. Usa una carpeta de evidencia nueva y sin espacios o entrecomilla las rutas. Desconecta mandos físicos antes de las pruebas: se crean dispositivos virtuales y el bloque se niega a manipular los reales. Mandos físicos, pruebas con personas y aceptación del arte siguen pendientes.
+`-side-smoke` prueba las reglas nuevas: combo escalera, remate, los cinco supers, especiales, avisos XY, refugio de Tío Antena, plataformas, cuatro escenarios, bots y dispositivos. Genera `side-report.json` y capturas. `-power-smoke` ejecuta solo las 32 comprobaciones de poderes y avisos. `-beta-smoke` activa exclusivamente las reglas históricas 3D para regresión y genera `smoke-report.json`; no representa el diseño actual de producción. `-controls-smoke` ejecuta solo dispositivos bajo esas reglas históricas. Usa una carpeta de evidencia nueva y sin espacios o entrecomilla las rutas. Desconecta mandos físicos antes de las pruebas: se crean dispositivos virtuales y el bloque se niega a manipular los reales. Mandos físicos, pruebas con personas y aceptación del arte siguen pendientes.
 
 ## Git y restauración
 

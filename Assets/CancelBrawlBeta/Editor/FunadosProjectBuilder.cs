@@ -96,8 +96,9 @@ namespace CancelBrawl.Beta.Editor
                 locationPathName = buildFolder + "/FUNADOS.exe",
                 target = BuildTarget.StandaloneWindows64, options = BuildOptions.None
             });
-            Directory.CreateDirectory("Evidence/Side-0.5.0");
-            File.WriteAllText("Evidence/Side-0.5.0/build.txt",
+            string evidenceFolder = "Evidence/Production-" + BrawlMatch.ProductionVersion;
+            Directory.CreateDirectory(evidenceFolder);
+            File.WriteAllText(evidenceFolder + "/build.txt",
                 $"result={report.summary.result}\nerrors={report.summary.totalErrors}\nwarnings={report.summary.totalWarnings}\nbytes={report.summary.totalSize}\nseconds={report.summary.totalTime.TotalSeconds}\n");
             if (report.summary.result != BuildResult.Succeeded) throw new InvalidOperationException("FUNADOS build: " + report.summary.result);
             Debug.Log("FUNADOS_BUILD_SUCCEEDED");
