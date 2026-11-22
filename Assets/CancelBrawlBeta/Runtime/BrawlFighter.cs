@@ -368,7 +368,8 @@ namespace CancelBrawl.Beta
                     case AttackKind.Basic:
                     case AttackKind.Heavy: SweepCurrent(); break;
                     case AttackKind.Special:
-                        if (Kit.Special == SpecialStyle.Dash) { lunging = true; SweepCurrent(); }
+                        // "Avance corto": the lunge stops once it connects instead of carrying the caster past the rival.
+                        if (Kit.Special == SpecialStyle.Dash) { lunging = !attackConnected; SweepCurrent(); }
                         break;
                     case AttackKind.Super:
                         if (Kit.Super == SuperStyle.Fan) SweepCurrent();
@@ -533,6 +534,8 @@ namespace CancelBrawl.Beta
                     if (hit.Source != null && hit.Source != this && hit.Source.comboTarget == PlayerIndex) comboHit = Mathf.Max(comboHit, hit.Source.comboHitCount);
             LastHitstunScale = match.IsSideView ? settings.HitstunScale(comboHit) : 1;
             stun = result.Stun * LastHitstunScale; Grounded = false; hoverTimer = 0;
+            // An interrupted super never leaves its announced zone/bubble pending (GDD 2.0 §5: no hitbox survives an interruption).
+            if (attacking && attack.Kind == AttackKind.Super && attackToken != null) BrawlZone.CancelFor(attackToken);
             attacking = false; comboWindow = 0; dodgeRemaining = 0;
             BrawlFeedback.Burst(transform.position + Vector3.up * .9f, PlayerColor, 9 + 3 * (hits.Count - 1));
             BrawlFeedback.Sound("hit");

@@ -1,10 +1,10 @@
 # Checklist activa de FUNADOS 2.5D (GDD 2.0)
 
-Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.3** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
+Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.4** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **30 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en 0.6.2 + 1 en 0.6.3). Ninguna en ⧗. Evidencia vigente 0.6.3 (`Evidence/Production-0.6.3`): power 32/32, moves 21/21, side-controls 127/127, side 207/207, controls 125/125, beta 208/208.
+Recuento: **31 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en 0.6.2 + 1 en 0.6.3 + 1 en 0.6.4). Ninguna en ⧗. Evidencia vigente 0.6.4 (`Evidence/Production-0.6.4`): power 32/32, moves 21/21, kits 91/91, side-controls 127/127, side 297/297, controls 125/125, beta 208/208.
 
 ## Instrucciones para el siguiente agente
 
@@ -57,7 +57,8 @@ Recuento: **30 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en
 - [x] Super de Tío Antena con refugio central de ±1,4 m (SYS-050)
 - [x] Avisos de los cinco supers, del fuerte y del token en X/Y (SYS-043/073)
 - [x] Pruebas de los cinco supers y los especiales (88 casos)
-- [ ] Verificar especial, recuperación y super de cada kit en todas las situaciones (acierto, fallo, interrupción, pausa, plataforma y borde)
+- [x] Verificar especial, recuperación y super de cada kit en todas las situaciones (acierto, fallo, interrupción, pausa, plataforma y borde)
+  - 0.6.4: matriz `BrawlKitMatrixChecks` (`-kits-smoke`, también en `-side-smoke`): 5 kits × especial/super × 6 situaciones + recuperación × 6 = 90 casos, todos superados. Fallos reales encontrados y corregidos: (1) interrumpir el super de Lola Viral o Cripto King dejaba su zona/burbuja pendiente y estallaba igual → ahora se cancela (`BrawlZone.CancelFor`); (2) la embestida de Coach Tóxico seguía tras conectar y lo sacaba de la plataforma → ahora se detiene al conectar (fallar mantiene el avance completo). La recuperación se verifica volviendo desde ambos bordes desde cerca (0,6 m fuera); el alcance máximo por kit es la tarea SYS-030–035.
 - [ ] Aceptar los cinco kits con personas
 
 ## Controles y dispositivos

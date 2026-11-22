@@ -2,6 +2,13 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.4 (matriz de los cinco kits)
+
+- `BrawlKitMatrixChecks` (`-kits-smoke`): especial, recuperación y super de los 5 kits en acierto, fallo, interrupción, pausa, plataforma y borde (90 casos).
+- Corregido: interrumpir los supers de zona (Lola) o burbuja (Cripto) cancela la zona pendiente; la embestida de Coach se detiene al conectar.
+- Suites 0.6.4: power 32, moves 21, kits 91, side-controls 127, side 297, controls 125, beta 208; cero fallos. Checklist **31 de 63**.
+- **Siguiente:** recuperación desde ambos bordes con los cinco kits midiendo el alcance máximo (SYS-030–035); luego cámara y avisos fuera de pantalla (SYS-036–040).
+
 ## Relevo 0.6.3 (D03: reducción de hitstun)
 
 - Decisión de Santiago: reducir hitstun. Golpes repetidos del mismo atacante al mismo rival dentro de 1,1 s: hitstun × 0,8 por golpe, mínimo 40 % (`BetaBalance.hitstunDecay` / `hitstunMinScale`). El combo escalera de 3 golpes sigue igual.

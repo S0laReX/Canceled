@@ -34,6 +34,16 @@ namespace CancelBrawl.Beta
         public const float BelowTolerance = .6f;
         public override float Radius => radius;
         public bool IsSphere => sphere;
+
+        /// <summary>Removes zones of an activation that has not resolved yet (its caster was interrupted).</summary>
+        public static int CancelFor(BrawlAttackToken activation)
+        {
+            int removed = 0;
+            for (int i = Active.Count - 1; i >= 0; i--)
+                if (Active[i] is BrawlZone zone && zone.token == activation && zone.elapsed < zone.delay)
+                { zone.gameObject.SetActive(false); Destroy(zone.gameObject); removed++; }
+            return removed;
+        }
         public float HitRadius => radius + Tolerance;
         public float Height => height;
         public float Remaining => Mathf.Max(0, delay - elapsed);
