@@ -1,0 +1,217 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.3/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.3/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.3/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.049 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.868800 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS Dos mandos: impide iniciar sin dispositivos suficientes
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=15 | activo=True
+SIDE_CHECK_PASS Dos mandos: un solo mando no crea un rival humano ficticio
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+SIDE_CHECK_PASS Teclado y mandos: asignaciones P1/P2/P3 exclusivas
+SIDE_CHECK_PASS Entrada real del Input System mueve solo el puesto dueño
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=15 | activo=True
+SIDE_CHECK_PASS Desconectar P2 pausa e identifica el puesto perdido
+SIDE_CHECK_PASS Reordenar Gamepad.all no transfiere P3 a P2
+SIDE_CHECK_PASS No permite reanudar mientras falta un mando
+SIDE_CHECK_PASS Desconexión conserva reloj, posición, stocks y porcentaje
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=15 | activo=True
+SIDE_CHECK_PASS Reconectar el mismo dispositivo recupera P2 sin reanudación automática
+SIDE_CHECK_PASS Confirmación explícita reanuda después de reconectar
+FUNADOS_INPUT HardReset Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=False
+FUNADOS_INPUT Disabled Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=False
+SIDE_CHECK_PASS Dispositivo deshabilitado también bloquea la partida
+FUNADOS_INPUT HardReset Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=False
+FUNADOS_INPUT Enabled Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+SIDE_CHECK_PASS Dispositivo rehabilitado conserva su puesto
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=15 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+SIDE_CHECK_PASS Dos bajas simultáneas: los nuevos mandos no ocupan puestos solos
+SIDE_CHECK_PASS No se puede asignar un mando ausente
+SIDE_CHECK_PASS Reemplazo explícito reclama un solo puesto sin duplicarlo
+SIDE_CHECK_PASS Asignar disponibles rellena el otro puesto sin robar el recuperado
+SIDE_CHECK_PASS Dos mandos: P1 y P2 humanos con dispositivos diferentes
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+SIDE_CHECK_PASS Desconexión durante cuenta atrás congela la cuenta
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+SIDE_CHECK_PASS Reconectar en cuenta atrás vuelve a esa fase y preserva P2
+SIDE_CHECK_PASS Dos mandos: entrada de P1 no mueve P2
+SIDE_CHECK_PASS Cruceta digital admite diagonales normalizadas
+SIDE_CHECK_PASS Orientar un golpe hacia arriba no reduce la velocidad horizontal de la cruceta
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=19 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=20 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=21 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=22 | activo=True
+SIDE_CHECK_PASS Cinco jugadores con mandos únicos; el sexto queda fuera
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=22 | activo=True
+SIDE_CHECK_PASS Desconectar un mando sobrante no pausa la partida
+SIDE_CHECK_PASS Número de mandos sobrantes respeta los puestos elegidos
+SIDE_CHECK_PASS Entrenamiento conserva mando de P1 y objetivo sin entradas
+SIDE_CHECK_PASS Volver al menú libera reservas y aviso de desconexión
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=19 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=20 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=21 | activo=True
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\options-checks\live.json
+SIDE_CHECK_PASS Sin archivo de opciones se usan controles por defecto
+SIDE_CHECK_PASS Controles por defecto sin conflictos
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=25 | activo=True
+SIDE_CHECK_PASS Remapeo de teclado asigna la nueva tecla
+SIDE_CHECK_PASS La partida lee el control remapeado y deja de leer el anterior
+SIDE_CHECK_PASS Tecla en conflicto se detecta e intercambia sin duplicados
+SIDE_CHECK_PASS Vista previa de conflicto identifica la acción ocupante
+SIDE_CHECK_PASS Esc reservado para pausa no se asigna
+SIDE_CHECK_PASS Controles inexistentes, reservados o no remapeables se rechazan
+SIDE_CHECK_PASS Conflicto de mando intercambia salto y fuerte
+SIDE_CHECK_PASS Mando lee la asignación remapeada en ambos botones
+SIDE_CHECK_PASS Botón de ratón remapeable; bloqueado sobre el panel del laboratorio
+SIDE_CHECK_PASS Captura interactiva asigna la tecla pulsada
+SIDE_CHECK_PASS Esc cancela la captura sin cambiar controles
+SIDE_CHECK_PASS Captura en conflicto avisa e intercambia
+SIDE_CHECK_PASS Captura de mando asigna el botón pulsado
+SIDE_CHECK_PASS Start cancela la captura de mando
+SIDE_CHECK_PASS Etiquetas de teclado y ratón salen de la misma tabla
+SIDE_CHECK_PASS Nombres de tecla sin restos de teclas muertas; Ñ y AZERTY se conservan
+FUNADOS_INPUT Added PlayStation Controller | tipo=DualShock4GamepadHID | layout=DualShock4GamepadHID | interfaz= | producto= | fabricante= | id=26 | activo=True
+SIDE_CHECK_PASS Mando PlayStation muestra sus botones reales
+FUNADOS_INPUT Added Xbox Controller | tipo=XInputControllerWindows | layout=XInputControllerWindows | interfaz= | producto= | fabricante= | id=27 | activo=True
+SIDE_CHECK_PASS Mando Xbox muestra sus botones reales
+FUNADOS_INPUT Removed Xbox Controller | tipo=XInputControllerWindows | layout=XInputControllerWindows | interfaz= | producto= | fabricante= | id=27 | activo=True
+FUNADOS_INPUT Removed PlayStation Controller | tipo=DualShock4GamepadHID | layout=DualShock4GamepadHID | interfaz= | producto= | fabricante= | id=26 | activo=True
+SIDE_CHECK_PASS Sin mando conectado las etiquetas siguen definidas
+SIDE_CHECK_PASS Luchador salta con el botón remapeado durante la partida
+SIDE_CHECK_PASS Remapeo disponible en pausa
+SIDE_CHECK_PASS Remapeo y modo se guardan en archivo versionado
+SIDE_CHECK_PASS Escritura deja copia válida y ningún temporal
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\options-checks\live.json
+SIDE_CHECK_PASS Reinicio restaura controles guardados
+FUNADOS_OPTIONS cargadas estado=RecoveredBackup ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\options-checks\live.json
+SIDE_CHECK_PASS Archivo truncado: se recupera la copia y se aparta el dañado
+SIDE_CHECK_PASS La recuperación se comunica en opciones
+SIDE_CHECK_PASS Archivo dañado sin copia restaura valores seguros
+SIDE_CHECK_PASS Archivo vacío se trata como dañado
+SIDE_CHECK_PASS Archivo incompleto no se acepta a medias
+SIDE_CHECK_PASS Formato ajeno se rechaza
+SIDE_CHECK_PASS Valores fuera de rango se corrigen
+SIDE_CHECK_PASS Versión futura conserva campos conocidos
+FUNADOS_OPTIONS cargadas estado=RepairedFields ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\options-checks\live.json
+SIDE_CHECK_PASS Controles duplicados, reservados o desconocidos vuelven a valores seguros
+SIDE_CHECK_PASS El archivo reparado se reescribe limpio
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\options-checks\live.json
+SIDE_CHECK_PASS Escritura interrumpida (temporal huérfano) no afecta al archivo válido
+FUNADOS_OPTIONS cargadas estado=RecoveredBackup ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\options-checks\live.json
+SIDE_CHECK_PASS Sin archivo principal se recupera la copia
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=25 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\tuning-checks\tuning.json
+SIDE_CHECK_PASS Zona muerta ignora deriva de la palanca
+SIDE_CHECK_PASS Fuera de la zona muerta la escala recorre 0–1 sin saltos
+SIDE_CHECK_PASS Respuesta rápida y fina cambian la curva
+SIDE_CHECK_PASS Diagonal conserva dirección y magnitud máxima 1
+SIDE_CHECK_PASS Ajustes de palanca limitados a rangos seguros
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=28 | activo=True
+SIDE_CHECK_PASS Zonas muertas de mover y orientar se aplican al mando real
+SIDE_CHECK_PASS Cruceta sigue siendo alternativa digital completa
+SIDE_CHECK_PASS Vista previa de vibración termina sola
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\tuning-checks\tuning.json
+SIDE_CHECK_PASS Ajustes de mando se guardan en el formato actual
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\tuning-checks\v1.json
+SIDE_CHECK_PASS Archivo versión 1 se migra conservando controles y volúmenes
+SIDE_CHECK_PASS Migración reescribe v2 y guarda la v1 como copia
+SIDE_CHECK_PASS Archivo v2 sin campos de mando se trata como incompleto
+SIDE_CHECK_PASS Ajustes de mando fuera de rango se corrigen
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\tuning-checks\tuning.json
+SIDE_CHECK_PASS Golpes simultáneos al mismo objetivo no dependen del orden de jugadores
+SIDE_CHECK_PASS Un solo golpe conserva la fórmula de empuje anterior
+SIDE_CHECK_PASS Golpes opuestos suman daño y anulan el empuje horizontal
+SIDE_CHECK_PASS Intercambio simultáneo: ambos reciben el golpe (P1 al sur)
+SIDE_CHECK_PASS Intercambio simultáneo: mismo resultado con los puestos invertidos
+SIDE_CHECK_PASS La ventana de impactos se cierra al final de cada paso
+SIDE_CHECK_PASS Golpe recibido vibra el mando dueño con fuerza perceptible
+SIDE_CHECK_PASS Vibración nunca queda bajo el mínimo perceptible; 0 % la apaga
+SIDE_CHECK_PASS Pausa detiene la vibración
+SIDE_CHECK_PASS Vibración apagada no hace vibrar
+SIDE_CHECK_PASS Golpe a P1 con teclado no hace vibrar el mando de P2
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=28 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\menu-checks\menu.json
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=30 | activo=True
+SIDE_CHECK_PASS Menú abre con el foco en ENTRAR
+SIDE_CHECK_PASS Todos los controles del menú son alcanzables con foco
+SIDE_CHECK_PASS Cruceta mueve el foco a la cancha de la derecha
+SIDE_CHECK_PASS A elige la cancha enfocada
+SIDE_CHECK_PASS Flecha arriba lleva al luchador alineado encima
+SIDE_CHECK_PASS Enter elige el luchador enfocado sin iniciar la partida
+SIDE_CHECK_PASS Elegir de nuevo cambia el aspecto, como con el ratón
+SIDE_CHECK_PASS Izquierda/derecha ajustan el valor sin perder el foco
+SIDE_CHECK_PASS Derecha en un rival cambia su aspecto
+SIDE_CHECK_PASS Pestaña MANDO navegable sin perder el foco
+SIDE_CHECK_PASS Palanca mantenida repite el movimiento del foco
+SIDE_CHECK_PASS Remapeo accesible con el mando desde el foco
+SIDE_CHECK_PASS Enter sobre ENTRAR inicia la partida como antes
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=31 | activo=True
+SIDE_CHECK_PASS Pausa abre con el foco en CONTINUAR
+SIDE_CHECK_PASS Mando sobrante no mueve el foco de la pausa
+SIDE_CHECK_PASS Mando del jugador navega la pausa
+SIDE_CHECK_PASS B reanuda desde la pausa
+SIDE_CHECK_PASS Resultados abren con el foco en REVANCHA
+SIDE_CHECK_PASS Enter en resultados inicia la revancha
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=31 | activo=True
+SIDE_CHECK_PASS Volumen de proyectil coincide con su distancia real de impacto
+SIDE_CHECK_PASS Zonas y emisor se dibujan con su volumen real
+SIDE_CHECK_PASS Opción de volúmenes oculta también proyectiles y zonas
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=30 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\display-checks\display.json
+SIDE_CHECK_PASS 16:9 conserva el diseño y la franja del 19 %
+SIDE_CHECK_PASS 4:3 extiende el lienzo hacia abajo en lugar de dejar bandas
+SIDE_CHECK_PASS 21:9 añade espacio lateral y mantiene la altura
+SIDE_CHECK_PASS Tarjetas y ayuda caben en 5 proporciones, de 1 a 5 jugadores y 3 tamaños de HUD
+SIDE_CHECK_PASS En 16:9 y 21:9 desde 720p el texto más pequeño no baja de 12 px reales
+SIDE_CHECK_PASS En 4:3 y 16:10 pequeños el texto más pequeño no baja de 10,5 px reales
+SIDE_CHECK_PASS HUD grande agranda las tarjetas mientras quepan y amplía la franja reservada
+SIDE_CHECK_PASS Tamaño de texto crece con la opción y tiene un tope para no romper paneles
+SIDE_CHECK_PASS Tamaños limitados a 100–130 %
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\display-checks\display.json
+SIDE_CHECK_PASS Tamaños de texto y HUD se guardan en formato versión 3
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\display-checks\v2.json
+SIDE_CHECK_PASS Archivo versión 2 se migra conservando ajustes de mando
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\display-checks\display.json
+SIDE_CHECK_PASS La cámara reserva exactamente la franja de las tarjetas
+SIDE_CHECK_PASS Clics sobre el panel del laboratorio se reconocen con el HUD agrandado
+SIDE_CHECK_PASS Capturas de menú, partida y pausa en 3 tamaños de ventana
+SIDE_CHECK_PASS En cada tamaño: texto legible, franja de cámara correcta y menú navegable
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.3\SideControls\player-options.json
+SIDE_RESULT True checks=127 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

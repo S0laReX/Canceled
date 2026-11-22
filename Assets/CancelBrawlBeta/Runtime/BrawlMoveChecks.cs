@@ -98,6 +98,11 @@ namespace CancelBrawl.Beta
                 check(Mathf.Abs(legacy.Velocity.x - (up.push + legacyDamage * settings.knockbackPerDamage)) < .001f && Mathf.Abs(legacy.Velocity.y - (up.lift + legacyDamage * .018f)) < .001f,
                     "Con el lanzamiento angular desactivado se recupera la fórmula histórica");
 
+                // ── D03: hitstun decay with repeated hits ──
+                check(Mathf.Approximately(settings.HitstunScale(1), 1) && Mathf.Approximately(settings.HitstunScale(2), .8f) &&
+                      Mathf.Approximately(settings.HitstunScale(3), .64f) && Mathf.Approximately(settings.HitstunScale(20), settings.hitstunMinScale),
+                    "D03: hitstun 100 %, 80 %, 64 %… con suelo del 40 %");
+
                 // ── Real rounds (CombatLab, 2.5D) ──
                 match.SelectedCharacter = 0; match.StartTraining(); match.ShowCombatVolumes = true;
                 yield return new WaitForSeconds(.3f);
@@ -146,6 +151,24 @@ namespace CancelBrawl.Beta
                     edge[side] = b.Damage > 0 && b.Velocity.y > 0;
                 }
                 check(edge[0] && edge[1], "Borde: el ascendente alcanza a un rival fuera del suelo en ambos bordes");
+
+                // D03 in a real round: the same hit, repeated by the same attacker, leaves less hitstun each time.
+                var heavySpec = settings.Attack(AttackKind.Heavy, BrawlRoster.Get(0), 0);
+                float[] stuns = new float[4]; float[] scales = new float[4];
+                Place(a, new Vector3(-3, .05f, 0)); Place(b, new Vector3(3, .05f, 0)); yield return new WaitForSeconds(.3f);
+                for (int i = 0; i < 4; i++)
+                {
+                    b.SetPracticeDamage(0);
+                    b.ReceiveHit(heavySpec, Vector3.right, a);
+                    stuns[i] = b.HitstunRemaining; scales[i] = b.LastHitstunScale;
+                    yield return new WaitForSeconds(.1f);
+                }
+                Place(a, new Vector3(-3, .05f, 0)); Place(b, new Vector3(3, .05f, 0)); yield return new WaitForSeconds(1.3f);
+                b.ReceiveHit(heavySpec, Vector3.right, a);
+                float freshScale = b.LastHitstunScale;
+                check(Mathf.Approximately(scales[0], 1) && Mathf.Approximately(scales[1], .8f) && Mathf.Approximately(scales[3], .512f) &&
+                      stuns[1] < stuns[0] && stuns[3] < stuns[2] && Mathf.Approximately(freshScale, 1),
+                    "D03 en partida: el hitstun baja con golpes repetidos y se reinicia al pasar la ventana de combo");
 
                 // CombatLab draws exactly the box that is tested.
                 Place(a, new Vector3(-2, .05f, 0)); Place(b, new Vector3(2, .05f, 0)); yield return new WaitForSeconds(.3f);

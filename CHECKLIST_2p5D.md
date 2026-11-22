@@ -1,10 +1,10 @@
 # Checklist activa de FUNADOS 2.5D (GDD 2.0)
 
-Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.2** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
+Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.3** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **29 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en 0.6.2). Ninguna en ⧗. Evidencia vigente 0.6.2 (`Evidence/Production-0.6.2`): power 32/32, moves 19/19, side-controls 127/127, side 205/205, controls 125/125, beta 208/208.
+Recuento: **30 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en 0.6.2 + 1 en 0.6.3). Ninguna en ⧗. Evidencia vigente 0.6.3 (`Evidence/Production-0.6.3`): power 32/32, moves 21/21, side-controls 127/127, side 207/207, controls 125/125, beta 208/208.
 
 ## Instrucciones para el siguiente agente
 
@@ -48,8 +48,8 @@ Recuento: **29 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en
   - 0.6.1: `BetaBalance.asset` → `sideMoves` (5 golpes direccionales: tiempos, daño, empuje, elevación, caja) y `kitTuning` (valores de los 5 kits), con rangos en el Inspector y `BrawlMoveData.Validate` (repetidos, faltantes, cajas vacías, rangos, orden del roster). Datos no válidos no se aplican y se avisa en el log. Pruebas: cambiar daño o caja en datos cambia el golpe real. Los nombres, estilos y modelos siguen en `BrawlRoster` (no son balance).
 - [x] Fórmula de lanzamiento con base, crecimiento y ángulo por golpe
   - 0.6.2: en 2.5D K = (B + G·P/100) / resistencia, lanzado al ángulo θ del golpe (`BrawlLaunch`). Los 5 golpes direccionales tienen `launchBase/launchGrowth/launchAngle` en datos; los del kit los derivan de su empuje/elevación editables. Por defecto cada golpe conserva su ángulo y fuerza de 0 %. **Cambio de balance a % alto** (tabla `Evidence/Production-0.6.2/Moves/launch-compare.csv`): ascendente a 100 % antes salía casi horizontal (11,6; 10,6) y ahora vertical (1,95; 15,6); el remate ya no se aplana (−15,5 frente a −9,2). La resistencia divide ahora también la vertical. Interruptor `angledLaunch` para volver a la fórmula histórica. Calibrar con personas.
-- [ ] Límite de combos: reducción de hitstun o tope (D03)
-  - Medido en 0.6.2 (`BrawlComboStudy`, `combo-study.json`): atacante con combo escalera guionizado contra defensor que escapa en cuanto puede actuar. Cadena verdadera máxima: Lola 3/3/3 y Coach 2/3/3 a 0/50/100 %; escapa siempre. Sin infinito con este guion. **Decisión de Santiago pendiente** (reducción de hitstun, tope o sin límite explícito).
+- [x] Límite de combos: reducción de hitstun o tope (D03)
+  - Medido en 0.6.2 (`BrawlComboStudy`, `combo-study.json`): atacante con combo escalera guionizado contra defensor que escapa en cuanto puede actuar. Cadena verdadera máxima: Lola 3/3/3 y Coach 2/3/3 a 0/50/100 %; escapa siempre. Sin infinito con este guion. **Decisión de Santiago (22/11/2026): reducir hitstun.** 0.6.3: cada golpe repetido del mismo atacante al mismo rival dentro de la ventana de combo (1,1 s) multiplica el hitstun por `hitstunDecay` (0,8) con suelo `hitstunMinScale` (40 %), editables y validados en `BetaBalance`. Pruebas: 100/80/64/51 % en partida y reinicio al pasar la ventana; el combo escalera de 3 golpes sigue funcionando (estudio re-medido igual). Ajuste fino de los valores: con personas (fila de calibración).
 - [ ] Calibrar ventanas, hitstun, knockback y escapes con personas (SYS-041/046/047/049/050)
 
 ## Poderes y supers

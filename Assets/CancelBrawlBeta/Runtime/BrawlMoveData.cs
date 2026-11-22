@@ -190,6 +190,8 @@ namespace CancelBrawl.Beta
                     problems.Add($"{m.id}: lanzamiento fuera de rango (base 0–30, crecimiento 0–40, ángulo ±90°)");
                 if (m.launchBase + m.launchGrowth <= .01f) problems.Add($"{m.id}: lanzamiento nulo");
             }
+            if (settings.hitstunDecay < .5f || settings.hitstunDecay > 1 || settings.hitstunMinScale < .2f || settings.hitstunMinScale > 1)
+                problems.Add("Límite de combos fuera de rango (factor 0,5–1, mínimo 0,2–1)");
             var kits = settings.kitTuning ?? Array.Empty<KitTuning>();
             if (kits.Length != BrawlRoster.Count) problems.Add($"Ajustes de kit: {kits.Length} de {BrawlRoster.Count}");
             for (int i = 0; i < kits.Length; i++)

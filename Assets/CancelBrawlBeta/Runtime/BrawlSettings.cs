@@ -46,6 +46,14 @@ namespace CancelBrawl.Beta
         public KitTuning[] kitTuning = BrawlMoveData.DefaultKits();
         [Tooltip("2.5D: lanzamiento K = (base + crecimiento·%/100) / resistencia con ángulo por golpe (GDD 2.0 §5). Desactivado = fórmula histórica.")]
         public bool angledLaunch = true;
+        [Header("Límite de combos (D03 · decisión: reducir hitstun)")]
+        [Tooltip("Multiplicador del hitstun por cada golpe repetido del mismo atacante al mismo rival dentro de la ventana de combo.")]
+        [Range(.5f, 1)] public float hitstunDecay = .8f;
+        [Tooltip("Fracción mínima del hitstun original, por muchos golpes que se repitan.")]
+        [Range(.2f, 1)] public float hitstunMinScale = .4f;
+
+        /// <summary>Hitstun scale for the n-th consecutive hit (1 = first) of one attacker on one target.</summary>
+        public float HitstunScale(int comboHit) => comboHit <= 1 ? 1 : Mathf.Max(hitstunMinScale, Mathf.Pow(hitstunDecay, comboHit - 1));
 
         /// <summary>Data for a directional move; falls back to the built-in default if the entry is missing.</summary>
         public MoveDef SideMoveDef(SideMove id)

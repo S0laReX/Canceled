@@ -45,6 +45,9 @@ namespace CancelBrawl.Beta
         public int ComboHits => match != null && match.SimTime - comboHitClock < 1.1f ? comboHitCount : 0;
         /// <summary>Cannot act yet: in hitstun or hit-stop (used by the combo-escape study, D03).</summary>
         public bool InHitstun => stun > 0 || hitPause > 0;
+        public float HitstunRemaining => stun;
+        /// <summary>Hitstun multiplier applied by the last hit received (D03 decay).</summary>
+        public float LastHitstunScale { get; private set; } = 1;
         private float comboHitClock, hitPause, dropRemaining, basicBuffer, heavyBuffer, jumpBuffer;
         private int comboHitCount, comboTarget = -1;
         private bool attackConnected;
@@ -523,7 +526,13 @@ namespace CancelBrawl.Beta
             Damage = result.Damage;
             if (result.Attacker != null) { LastAttacker = result.Attacker; lastHitClock = match.SimTime; }
             velocity = result.Velocity;
-            stun = result.Stun; Grounded = false; hoverTimer = 0;
+            // D03 (Santiago, 22/11/2026): repeated hits from the same attacker inside the combo window shorten hitstun.
+            int comboHit = 1;
+            if (match.IsSideView)
+                foreach (var hit in hits)
+                    if (hit.Source != null && hit.Source != this && hit.Source.comboTarget == PlayerIndex) comboHit = Mathf.Max(comboHit, hit.Source.comboHitCount);
+            LastHitstunScale = match.IsSideView ? settings.HitstunScale(comboHit) : 1;
+            stun = result.Stun * LastHitstunScale; Grounded = false; hoverTimer = 0;
             attacking = false; comboWindow = 0; dodgeRemaining = 0;
             BrawlFeedback.Burst(transform.position + Vector3.up * .9f, PlayerColor, 9 + 3 * (hits.Count - 1));
             BrawlFeedback.Sound("hit");

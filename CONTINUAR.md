@@ -2,6 +2,12 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.3 (D03: reducción de hitstun)
+
+- Decisión de Santiago: reducir hitstun. Golpes repetidos del mismo atacante al mismo rival dentro de 1,1 s: hitstun × 0,8 por golpe, mínimo 40 % (`BetaBalance.hitstunDecay` / `hitstunMinScale`). El combo escalera de 3 golpes sigue igual.
+- Suites 0.6.3: power 32, moves 21, side-controls 127, side 207, controls 125, beta 208; cero fallos. Checklist **30 de 63**.
+- **Siguiente (prioridad alta del GDD 2.0):** verificar especial, recuperación y super de cada kit en acierto, fallo, interrupción, pausa, plataforma y borde; después recuperación desde ambos bordes con los cinco kits (SYS-030–035).
+
 ## Relevo 0.6.2 (fórmula de lanzamiento y estudio de combos)
 
 - Lanzamiento GDD 2.0 §5 en 2.5D: K = (B + G·P/100) / resistencia al ángulo del golpe (`BrawlLaunch`, datos `launchBase/launchGrowth/launchAngle`, interruptor `BetaBalance.angledLaunch`). Cambia el balance a % alto: ver `Evidence/Production-0.6.2/Moves/launch-compare.csv`.
