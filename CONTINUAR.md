@@ -2,6 +2,14 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.1 (golpes como datos y cajas X/Y)
+
+- SYS-011: `BetaBalance.asset` contiene `sideMoves` (ascendente básico/fuerte, aéreo neutral, remate básico/fuerte) y `kitTuning` (números de los cinco kits). `BrawlMoveData.Validate` revisa repetidos, faltantes, cajas vacías y rangos; si falla, se mantienen los valores incorporados. Los valores por defecto son los de la 0.5.1.
+- SYS-042–048: en 2.5D el contacto cuerpo a cuerpo es caja de golpe contra hurtbox en X/Y, reflejada por orientación. Las cajas por defecto reproducen exactamente el alcance anterior, así que el balance no cambia. CombatLab dibuja ambas.
+- Corregido: con una tecla muerta pendiente en Windows (p. ej. ` en teclado español) las etiquetas salían como «`W» o «À»; `BrawlBindings.CleanKeyName` lo limpia y conserva Ñ y AZERTY.
+- Build 0.6.1: 0 errores, 485 avisos. Suites: power 32/32, moves 14/14 (nuevo `-moves-smoke`), side-controls 127/127, side 200/200, controls 125/125, beta 208/208. Checklist **28 de 63**.
+- **Siguiente:** límite de combos (D03) medido en CombatLab y fórmula de lanzamiento con base/crecimiento/ángulo por golpe, ambos sobre los datos nuevos.
+
 ## Relevo 0.6.0 (fusión verificada)
 
 La rama `claude/funados-implementation-continue-db5f40` llevaba en paralelo los controles 0.4.2–0.4.6 sobre la base 3D: remapeo con conflictos, opciones versionadas y recuperables, zonas muertas y vibración (corregida tras la prueba humana con un DualShock 4), impactos simultáneos imparciales (P0-03), navegación de menús con foco y texto/HUD escalables. En 0.6.0 se fusionó `main` (2.5D 0.5.1) en esa rama.

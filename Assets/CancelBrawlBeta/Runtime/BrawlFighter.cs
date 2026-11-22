@@ -47,6 +47,25 @@ namespace CancelBrawl.Beta
         private int comboHitCount, comboTarget = -1;
         private bool attackConnected;
 
+        /// <summary>Directional 2.5D move in progress (data from BrawlSettings.sideMoves), if any.</summary>
+        public SideMove? CurrentSideMove { get; private set; }
+        private MoveBox sideMoveBox;
+
+        /// <summary>
+        /// Side-view hit box of the current melee attack in local X/Y (SYS-042–048). Directional moves use their own
+        /// data box; kit moves derive one that reproduces the historical sweep. Shared by the hit check and CombatLab.
+        /// </summary>
+        public bool TryGetSideHitbox(out MoveBox box, out bool safeSectors)
+        {
+            box = default; safeSectors = false;
+            if (!match.IsSideView || !TryGetMeleeVolume(out _, out float height, out float minDot, out safeSectors)) return false;
+            box = CurrentSideMove.HasValue ? sideMoveBox : BrawlMoveData.SweepBox(attack.Range, -height, height, bothSides: minDot <= -.99f);
+            return true;
+        }
+
+        public Vector2 Root2D => new Vector2(transform.position.x, transform.position.y);
+        public float FacingSign => Facing.x < 0 ? -1 : 1;
+
         // The debug view and the actual sweep share these values.
         public bool TryGetMeleeVolume(out float range, out float height, out float minDot, out bool safeSectors)
         {
@@ -251,14 +270,18 @@ namespace CancelBrawl.Beta
             float vertical = Mathf.Abs(command.Move.y) > .5f ? command.Move.y : command.Aim.y;
             AttackVertical = match.IsSideView && (kind == AttackKind.Basic || kind == AttackKind.Heavy) && Mathf.Abs(vertical) > .5f ? (vertical > 0 ? 1 : -1) : 0;
             attackConnected = false; basicBuffer = heavyBuffer = 0;
+            CurrentSideMove = null;
             if (match.IsSideView && (kind == AttackKind.Basic || kind == AttackKind.Heavy))
             {
-                if (AttackVertical > 0)
-                    attack = new AttackSpec(kind, kind == AttackKind.Basic ? 4 : 10, .06f, .12f, .13f, 1.35f, 1.1f, kind == AttackKind.Basic ? 8.8f : 12, 2.6f);
-                else if (AttackAirborne && AttackVertical < 0)
-                    attack = new AttackSpec(kind, kind == AttackKind.Basic ? 7 : 12, .12f, .12f, .27f, 1.3f, 2.5f, -11, 2.3f);
-                else if (AttackAirborne && kind == AttackKind.Basic)
-                    attack = new AttackSpec(kind, 5, .05f, .12f, .15f, 2.1f, 3.5f, 5, 1.65f);
+                // Directional moves come from editable data (SYS-011) instead of literals.
+                if (AttackVertical > 0) CurrentSideMove = kind == AttackKind.Basic ? SideMove.UpBasic : SideMove.UpHeavy;
+                else if (AttackAirborne && AttackVertical < 0) CurrentSideMove = kind == AttackKind.Basic ? SideMove.AirDownBasic : SideMove.AirDownHeavy;
+                else if (AttackAirborne && kind == AttackKind.Basic) CurrentSideMove = SideMove.AirNeutral;
+                if (CurrentSideMove.HasValue)
+                {
+                    var def = settings.SideMoveDef(CurrentSideMove.Value);
+                    attack = def.ToSpec(kind); sideMoveBox = def.hitbox;
+                }
             }
             if (kind == AttackKind.Basic || kind == AttackKind.Heavy) AssistFacing(attack.Range);
             attackTime = 0; attacking = true; activeStarted = false; attackToken = new BrawlAttackToken(this, attack);
@@ -393,6 +416,7 @@ namespace CancelBrawl.Beta
         /// <summary>Volumetric melee/area check: horizontal reach, vertical reach, facing cone and line of sight.</summary>
         private void SweepCurrent()
         {
+            if (match.IsSideView) { SweepSideBox(); return; }
             if (!TryGetMeleeVolume(out float range, out float height, out float minDot, out bool safeSectors)) return;
             foreach (var target in match.Fighters)
             {
@@ -406,6 +430,24 @@ namespace CancelBrawl.Beta
                 if (safeSectors && (match.IsSideView ? Mathf.Abs(difference.x)<=SideSafeRadius : flat.sqrMagnitude > .2f && Mathf.Abs(Vector3.Angle(Facing, flat) - 90) < SafeHalfAngle)) continue;
                 if (Physics.Linecast(transform.position + Vector3.up * .85f, target.transform.position + Vector3.up * .85f, 1, QueryTriggerInteraction.Ignore)) continue;
                 attackToken.Hit(target, safeSectors && flat.sqrMagnitude > .01f ? flat.normalized : Facing);
+            }
+        }
+
+        /// <summary>Side view: hit box against each rival's hurtbox in X/Y, mirrored by facing (SYS-042–048).</summary>
+        private void SweepSideBox()
+        {
+            if (!TryGetSideHitbox(out MoveBox box, out bool safeSectors)) return;
+            Vector2 root = Root2D; float facing = FacingSign;
+            foreach (var target in match.Fighters)
+            {
+                if (target == this || target.Eliminated || target.IsRespawning) continue;
+                Vector2 other = target.Root2D;
+                if (!BrawlMoveData.Overlaps(box, root, facing, other)) continue;
+                // Tío Antena's super keeps its central refuge (±1.4 m) inside the box.
+                if (safeSectors && Mathf.Abs(other.x - root.x) <= SideSafeRadius) continue;
+                if (Physics.Linecast(transform.position + Vector3.up * .85f, target.transform.position + Vector3.up * .85f, 1, QueryTriggerInteraction.Ignore)) continue;
+                Vector3 away = new Vector3(other.x - root.x, 0, 0);
+                attackToken.Hit(target, safeSectors && away.sqrMagnitude > .0001f ? away.normalized : Facing);
             }
         }
 

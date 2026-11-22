@@ -1,10 +1,10 @@
 # Checklist activa de FUNADOS 2.5D (GDD 2.0)
 
-Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.0** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
+Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.1** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **26 de 63** marcadas (20 del GDD 2.0 + 6 verificadas en 0.6.0). Ninguna en ⧗. Evidencia 0.6.0 (`Evidence/Production-0.6.0`): power 32/32, side-controls 126/126, side 186/186, controls 124/124, beta 207/207.
+Recuento: **28 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1). Ninguna en ⧗. Evidencia vigente 0.6.1 (`Evidence/Production-0.6.1`): power 32/32, moves 14/14, side-controls 127/127, side 200/200, controls 125/125, beta 208/208.
 
 ## Instrucciones para el siguiente agente
 
@@ -42,8 +42,10 @@ Recuento: **26 de 63** marcadas (20 del GDD 2.0 + 6 verificadas en 0.6.0). Ningu
   - 0.4.4 añadió volúmenes de proyectiles, zonas, emisor y onda con las constantes reales de impacto.
 - [x] P0-03 · Impactos simultáneos imparciales (SYS-045) — siguiente tarea
   - Implementado (0.4.3, integrado en 0.6.0): ventana de impactos por paso (`BrawlMatch` −100 → `BrawlHitResolver` +100), vulnerabilidad al inicio del paso, `BrawlFighter.CombineHits` independiente del orden. En 0.6.0 se añadió la regla lateral (empuje solo en X con signo, contador de combo y hitstop por atacante) y se corrigió que un remate descendente (elevación negativa) conserve su signo al combinarse. Verificado en 2.5D (side-controls y side): intercambio espejo a lo largo de X en ambos órdenes golpea a los dos, combinación invertida idéntica, golpes opuestos, un solo golpe = fórmula anterior, poderes 32/32 sin daño duplicado. Falta con personas y KO simultáneo de última vida en partida real.
-- [ ] Hitboxes y hurtboxes separadas por movimiento, en altura, borde y espejo (SYS-042 a 048)
-- [ ] Golpes y kits como datos editables con validación (SYS-011)
+- [x] Hitboxes y hurtboxes separadas por movimiento, en altura, borde y espejo (SYS-042 a 048)
+  - 0.6.1: en 2.5D el cuerpo a cuerpo es un rectángulo de golpe por movimiento (X hacia donde mira, Y desde los pies) contra la hurtbox del rival (0,72 × 1,7 m), reflejado por orientación (`BrawlMoveData.Overlaps`). Golpes direccionales con caja propia en datos; los del kit la derivan de su alcance y altura. Valores por defecto equivalentes al barrido anterior (comprobado en 1.089 puntos por golpe). Pruebas: espejo geométrico y en partida, altura (ascendente/remate), ambos bordes con rival fuera del suelo, CombatLab dibuja la caja real y las hurtboxes (`lab-hitboxes.png`). Proyectiles, zonas y onda conservan sus volúmenes reales (0.4.4). Límite: la hurtbox es un rectángulo por luchador, no anatómica por animación; eso depende del rig real (D01).
+- [x] Golpes y kits como datos editables con validación (SYS-011)
+  - 0.6.1: `BetaBalance.asset` → `sideMoves` (5 golpes direccionales: tiempos, daño, empuje, elevación, caja) y `kitTuning` (valores de los 5 kits), con rangos en el Inspector y `BrawlMoveData.Validate` (repetidos, faltantes, cajas vacías, rangos, orden del roster). Datos no válidos no se aplican y se avisa en el log. Pruebas: cambiar daño o caja en datos cambia el golpe real. Los nombres, estilos y modelos siguen en `BrawlRoster` (no son balance).
 - [ ] Fórmula de lanzamiento con base, crecimiento y ángulo por golpe
 - [ ] Límite de combos: reducción de hitstun o tope (D03)
 - [ ] Calibrar ventanas, hitstun, knockback y escapes con personas (SYS-041/046/047/049/050)

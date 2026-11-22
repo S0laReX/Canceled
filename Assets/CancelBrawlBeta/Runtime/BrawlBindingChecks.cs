@@ -113,6 +113,9 @@ namespace CancelBrawl.Beta
                 // ── Real labels per device ──
                 check(b.Label(BindingScheme.Keyboard, BrawlAction.Jump) == "Espacio" && BrawlBindings.ControlLabel(BindingScheme.Keyboard, "Keyboard/l", keys, null) == "L" &&
                       b.Label(BindingScheme.Keyboard, BrawlAction.Basic) == "Clic izq.", "Etiquetas de teclado y ratón salen de la misma tabla");
+                check(BrawlBindings.CleanKeyName("`W", Key.W) == "W" && BrawlBindings.CleanKeyName("À", Key.A) == "A" && BrawlBindings.CleanKeyName("È", Key.E) == "E" &&
+                      BrawlBindings.CleanKeyName("Ñ", Key.Semicolon) == "Ñ" && BrawlBindings.CleanKeyName("A", Key.Q) == "A" && BrawlBindings.CleanKeyName("´", Key.Quote) == "´",
+                    "Nombres de tecla sin restos de teclas muertas; Ñ y AZERTY se conservan");
                 var ps = InputSystem.AddDevice<UnityEngine.InputSystem.DualShock.DualShock4GamepadHID>(); created.Add(ps);
                 check(BrawlBindings.PadFamily(ps) == "MANDO PLAYSTATION" && b.Label(BindingScheme.Gamepad, BrawlAction.Jump, ps) == "Cruz",
                     "Mando PlayStation muestra sus botones reales");

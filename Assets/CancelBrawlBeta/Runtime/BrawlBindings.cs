@@ -285,7 +285,7 @@ namespace CancelBrawl.Beta
                 // Real keyboards report the character printed by the active OS layout (AZERTY, QWERTZ…).
                 if (keys != null && key != Key.None)
                 {
-                    string shown = keys[key].displayName;
+                    string shown = CleanKeyName(keys[key].displayName, key);
                     if (!string.IsNullOrWhiteSpace(shown)) return shown.Length == 1 ? shown.ToUpperInvariant() : shown;
                 }
                 return key == Key.None ? path : key.ToString();
@@ -307,6 +307,35 @@ namespace CancelBrawl.Beta
                 case "leftStickPress": return "L3"; case "rightStickPress": return "R3"; case "start": return "Start"; case "select": return "Select";
                 default: return path;
             }
+        }
+
+        private const string DeadKeys = "`´^¨~'ˋˊˆ¨˜";
+
+        /// <summary>
+        /// The OS reports key names through the active layout; a pending dead key (e.g. ` on Spanish layouts) leaks
+        /// into them ("`W", "À" for A). Drop a leading dead key and an accent the key itself does not have, while
+        /// keeping real layout letters such as Ñ or AZERTY's A on the Q key.
+        /// </summary>
+        public static string CleanKeyName(string shown, Key key)
+        {
+            if (string.IsNullOrEmpty(shown)) return shown;
+            shown = shown.Trim();
+            if (shown.Length == 2 && DeadKeys.IndexOf(shown[0]) >= 0 && char.IsLetterOrDigit(shown[1])) shown = shown.Substring(1);
+            if (shown.Length == 1 && char.IsLetter(shown[0]))
+            {
+                string bare = StripAccents(shown);
+                if (bare.Length == 1 && bare != shown && key >= Key.A && key <= Key.Z && string.Equals(bare, key.ToString(), StringComparison.OrdinalIgnoreCase))
+                    shown = bare;
+            }
+            return shown;
+        }
+
+        private static string StripAccents(string text)
+        {
+            var builder = new System.Text.StringBuilder();
+            foreach (char c in text.Normalize(System.Text.NormalizationForm.FormD))
+                if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark) builder.Append(c);
+            return builder.ToString().Normalize(System.Text.NormalizationForm.FormC);
         }
 
         /// <summary>Family name shown beside gamepad labels (from the actual device, not a guess).</summary>

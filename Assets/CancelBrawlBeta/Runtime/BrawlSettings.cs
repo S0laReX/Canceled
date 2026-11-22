@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CancelBrawl.Beta
@@ -37,6 +38,42 @@ namespace CancelBrawl.Beta
         public BrawlCharacterArt characterArt;
         [Tooltip("Escenarios de producción, uno por cancha (mismo orden). Solo los usan las escenas de producción; un hueco vacío deja la cancha gris de la beta.")]
         public GameObject[] stagePrefabs;
+
+        [Header("Golpes y kits (SYS-011) · datos editables con validación")]
+        [Tooltip("Golpes direccionales 2.5D: tiempos, daño, empuje y caja de golpe local (X hacia donde mira, Y desde los pies).")]
+        public MoveDef[] sideMoves = BrawlMoveData.DefaultSideMoves();
+        [Tooltip("Valores numéricos de cada kit, en el orden del roster. Los nombres, estilos y arte siguen en BrawlRoster.")]
+        public KitTuning[] kitTuning = BrawlMoveData.DefaultKits();
+
+        /// <summary>Data for a directional move; falls back to the built-in default if the entry is missing.</summary>
+        public MoveDef SideMoveDef(SideMove id)
+        {
+            if (sideMoves != null) foreach (var move in sideMoves) if (move.id == id) return move;
+            foreach (var move in BrawlMoveData.DefaultSideMoves()) if (move.id == id) return move;
+            throw new System.ArgumentOutOfRangeException(nameof(id));
+        }
+
+        /// <summary>Copies the editable kit numbers onto the roster when the data is valid; otherwise keeps the built-in values.</summary>
+        public List<string> ApplyKitTuning()
+        {
+            var problems = BrawlMoveData.Validate(this);
+            if (problems.Count > 0) { Debug.LogWarning("FUNADOS: datos de golpes/kits no válidos, se usan los valores incorporados: " + string.Join("; ", problems)); return problems; }
+            for (int i = 0; i < kitTuning.Length; i++) kitTuning[i].ApplyTo(BrawlRoster.Kits[i]);
+            return problems;
+        }
+
+        private void OnValidate()
+        {
+            // Keep hit boxes non-empty while editing; the Range attributes bound every other number.
+            if (sideMoves == null) return;
+            for (int i = 0; i < sideMoves.Length; i++)
+            {
+                var box = sideMoves[i].hitbox;
+                if (box.front < box.back + .05f) box.front = box.back + .05f;
+                if (box.top < box.bottom + .05f) box.top = box.bottom + .05f;
+                sideMoves[i].hitbox = box;
+            }
+        }
 
         public AttackSpec Attack(AttackKind kind, int character, int combo) => Attack(kind, BrawlRoster.Get(character), combo);
 

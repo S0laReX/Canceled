@@ -18,6 +18,11 @@ namespace CancelBrawl.Beta
             reach = MakeLine("Volumen ofensivo", attackMaterial); target = MakeLine("Referencia del objetivo", targetMaterial);
         }
 
+        /// <summary>World rectangle drawn last frame for the current side-view hit box (null when none); for checks.</summary>
+        public Rect? LastHitbox { get; private set; }
+        // Slightly in front of the plane so the outline is not hidden inside the model.
+        private static Vector3 Corner(float x, float y) => new Vector3(x, y, -.6f);
+
         private LineRenderer MakeLine(string name, Material material)
         {
             var child = new GameObject(name); child.transform.SetParent(transform, false);
@@ -43,6 +48,27 @@ namespace CancelBrawl.Beta
             target.SetPosition(5, root); target.SetPosition(6, chest);
             target.SetPosition(7, chest - Vector3.right * .18f); target.SetPosition(8, chest + Vector3.right * .18f);
             target.SetPosition(9, chest); target.SetPosition(10, chest + Vector3.forward * .18f);
+            if (match.IsSideView)
+            {
+                // Side view (SYS-042–048): the hurtbox outline joins the reference cross; the hit box is a rectangle.
+                Rect hurt = BrawlMoveData.Hurtbox(fighter.Root2D);
+                target.positionCount = 16;
+                target.SetPosition(11, Corner(hurt.xMin, hurt.yMin)); target.SetPosition(12, Corner(hurt.xMax, hurt.yMin));
+                target.SetPosition(13, Corner(hurt.xMax, hurt.yMax)); target.SetPosition(14, Corner(hurt.xMin, hurt.yMax));
+                target.SetPosition(15, Corner(hurt.xMin, hurt.yMin));
+                LastHitbox = null;
+                if (!fighter.TryGetSideHitbox(out MoveBox box, out _)) return;
+                Rect hit = BrawlMoveData.World(box, fighter.Root2D, fighter.FacingSign);
+                LastHitbox = hit;
+                reach.positionCount = 5;
+                reach.SetPosition(0, Corner(hit.xMin, hit.yMin)); reach.SetPosition(1, Corner(hit.xMax, hit.yMin));
+                reach.SetPosition(2, Corner(hit.xMax, hit.yMax)); reach.SetPosition(3, Corner(hit.xMin, hit.yMax));
+                reach.SetPosition(4, Corner(hit.xMin, hit.yMin));
+                reach.startColor = reach.endColor = fighter.AttackIsActive ? new Color(1, .3f, .4f) : new Color(1, .85f, .2f);
+                attackMaterial.color = reach.startColor;
+                reach.enabled = true;
+                return;
+            }
             if (!fighter.TryGetMeleeVolume(out float range, out float height, out float dot, out bool safe)) return;
             // SafeSweep has two excluded sectors. Its existing telegraph draws these; avoid drawing an incorrect full disk.
             if (safe) return;
