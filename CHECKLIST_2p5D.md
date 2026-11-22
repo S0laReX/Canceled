@@ -1,15 +1,15 @@
 # Checklist activa de FUNADOS 2.5D (GDD 2.0)
 
-Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.0** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Editor Unity **6000.5.7f1**.
+Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.0** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **20 de 63** marcadas (las mismas que el GDD 2.0). **7** en ⧗ a la espera de las suites 0.6.0.
+Recuento: **26 de 63** marcadas (20 del GDD 2.0 + 6 verificadas en 0.6.0). Ninguna en ⧗. Evidencia 0.6.0 (`Evidence/Production-0.6.0`): power 32/32, side-controls 126/126, side 186/186, controls 124/124, beta 207/207.
 
 ## Instrucciones para el siguiente agente
 
 1. Leer esta lista, el GDD 2.0 y `CONTINUAR.md`; comprobar `git status` y `git log -4 --oneline`.
-2. Ejecutar las suites (ver «Rutas y comandos») **con los mandos físicos desconectados**. Si pasan, convertir cada ⧗ en `[x]` con su evidencia y actualizar también la copia marcada del GDD (`FUNADOS_GDD_2.0_checklist.docx`).
+2. Tras cada tarea: ejecutar las suites (ver «Rutas y comandos»), marcar aquí con su evidencia y regenerar la copia marcada del GDD con `python -I Docs/Produccion_2026-11-22/marcar_checklist_gdd.py` (`FUNADOS_GDD_2.0_checklist.docx`).
 3. Elegir la primera tarea pendiente de prioridad alta, implementarla, verificarla, marcarla aquí y en la copia del GDD, y crear un commit local. No publicar un remoto sin instrucción.
 
 ## Base del proyecto
@@ -40,8 +40,8 @@ Recuento: **20 de 63** marcadas (las mismas que el GDD 2.0). **7** en ⧗ a la e
 - [x] Salto tras básico confirmado, buffer de entradas, hitstop y contador de combo
 - [x] Modo Volúmenes en CombatLab para ver el alcance de los golpes
   - 0.4.4 añadió volúmenes de proyectiles, zonas, emisor y onda con las constantes reales de impacto.
-- [ ] ⧗ P0-03 · Impactos simultáneos imparciales (SYS-045) — siguiente tarea
-  - Implementado (0.4.3, integrado en 0.6.0): ventana de impactos por paso (`BrawlMatch` −100 → `BrawlHitResolver` +100), vulnerabilidad al inicio del paso, `BrawlFighter.CombineHits` independiente del orden. En 0.6.0 se añadió la regla lateral (empuje solo en X con signo, contador de combo y hitstop por atacante) y se corrigió que un remate descendente (elevación negativa) conserve su signo al combinarse. Pruebas: intercambio espejo en ambos órdenes, combinación invertida, golpes opuestos. **Pendiente ejecutarlas en 2.5D.**
+- [x] P0-03 · Impactos simultáneos imparciales (SYS-045) — siguiente tarea
+  - Implementado (0.4.3, integrado en 0.6.0): ventana de impactos por paso (`BrawlMatch` −100 → `BrawlHitResolver` +100), vulnerabilidad al inicio del paso, `BrawlFighter.CombineHits` independiente del orden. En 0.6.0 se añadió la regla lateral (empuje solo en X con signo, contador de combo y hitstop por atacante) y se corrigió que un remate descendente (elevación negativa) conserve su signo al combinarse. Verificado en 2.5D (side-controls y side): intercambio espejo a lo largo de X en ambos órdenes golpea a los dos, combinación invertida idéntica, golpes opuestos, un solo golpe = fórmula anterior, poderes 32/32 sin daño duplicado. Falta con personas y KO simultáneo de última vida en partida real.
 - [ ] Hitboxes y hurtboxes separadas por movimiento, en altura, borde y espejo (SYS-042 a 048)
 - [ ] Golpes y kits como datos editables con validación (SYS-011)
 - [ ] Fórmula de lanzamiento con base, crecimiento y ángulo por golpe
@@ -64,14 +64,14 @@ Recuento: **20 de 63** marcadas (las mismas que el GDD 2.0). **7** en ⧗ a la e
   - Prueba física parcial (0.4.5/0.4.6, DualShock 4 v2 por USB, modo 3D): reconocido como `DualShock4GamepadHID`, barra de luz y vibración funcionando; vibración corregida tras la prueba humana.
 - [ ] Probar con mandos físicos Xbox, DualShock 4 y DualSense, por USB y Bluetooth (QA-445)
   - Parcial: solo DualShock 4 por USB. Nota técnica: el Input System 1.20 no envía vibración al DualSense por Bluetooth (FIXME en `DualShockGamepadHID.cs`).
-- [ ] ⧗ Etiquetas de botones según el mando conectado (✕ □ △ ○ o A B X Y)
-  - Implementado (0.4.2): Cruz/Círculo/Cuadrado/Triángulo, L1/R1 desde la misma tabla de bindings; Xbox A/B/X/Y; genérico. Panel CONTROLES y barra inferior. Falta tutorial (no existe aún).
-- [ ] ⧗ P1-01 · Remapeo con detección de conflictos (SYS-025)
-  - Implementado (0.4.2): tabla única `BrawlBindings`, captura interactiva, intercambio con aviso, Esc/Start reservados, restaurar por dispositivo. En 0.6.0 las filas se rotulan para 2.5D («Arriba: dirección de golpe»).
-- [ ] ⧗ P1-02 · Opciones y controles guardados de forma recuperable (SYS-068/069)
-  - Implementado (0.4.2–0.4.5): `funados-options.json` versión 3, escritura temporal verificada + `.bak`, cuarentena de dañados, migración v1/v2, modo de entrada incluido. Pendiente además: la prueba humana de 0.4.5 no encontró archivo guardado; en 0.4.6 se añadió registro de carga/guardado y una reproducción en modo normal **sí** guardó. Confirmar con persona.
-- [ ] ⧗ Deadzones, sensibilidad y vibración ajustables (SYS-026/072)
-  - Implementado (0.4.3/0.4.6): pestaña MANDO; vibración con mínimo perceptible confirmada por persona con DualShock 4.
+- [x] Etiquetas de botones según el mando conectado (✕ □ △ ○ o A B X Y)
+  - Verificado en 2.5D: PlayStation (Cruz/Círculo/Cuadrado/Triángulo), Xbox (A/B/X/Y) y genérico, desde la misma tabla de bindings; panel CONTROLES y barra inferior. Se muestran como texto («Cruz»), no glifos. El tutorial aún no existe (SYS-076).
+- [x] P1-01 · Remapeo con detección de conflictos (SYS-025)
+  - Implementado (0.4.2): tabla única `BrawlBindings`, captura interactiva, intercambio con aviso, Esc/Start reservados, restaurar por dispositivo. En 0.6.0 las filas se rotulan para 2.5D («Arriba: dirección de golpe»). Verificado en 2.5D: asignación, conflicto con intercambio, reservados, captura con teclado y mando, el luchador usa el botón remapeado en partida.
+- [x] P1-02 · Opciones y controles guardados de forma recuperable (SYS-068/069)
+  - Implementado (0.4.2–0.4.5): `funados-options.json` versión 3, escritura temporal verificada + `.bak`, cuarentena de dañados, migración v1/v2, modo de entrada incluido. Pendiente además: la prueba humana de 0.4.5 no encontró archivo guardado; en 0.4.6 se añadió registro de carga/guardado y una reproducción en modo normal **sí** guardó. Verificado en 2.5D: guardado, reinicio, truncado/vacío/incompleto/ajeno, copia, temporal huérfano, migraciones v1→v3. Confirmar con persona el guardado en uso normal.
+- [x] Deadzones, sensibilidad y vibración ajustables (SYS-026/072)
+  - Implementado (0.4.3/0.4.6): pestaña MANDO; vibración con mínimo perceptible confirmada por persona con DualShock 4. Verificado en 2.5D con la regla por ejes. SYS-072 sigue abierta en sus demás partes (destellos/sacudida/fondo por separado).
 
 ## Escenarios
 
@@ -86,10 +86,10 @@ Recuento: **20 de 63** marcadas (las mismas que el GDD 2.0). **7** en ⧗ a la e
 - [x] Opción de reducir destellos y temblor, y volúmenes separados
 - [ ] Decidir el framework de interfaz y migrar desde IMGUI (D07)
 - [ ] HUD nuevo: porcentaje grande, vidas, escándalo, combo e indicadores fuera de pantalla
-- [ ] ⧗ Navegación completa con teclado y mando, con foco visible (SYS-070)
-  - Implementado (0.4.4) sobre IMGUI: foco espacial con borde blanco en menú, pausa y resultados; ✕/A confirma, ○/B vuelve de la pausa. Independiente de la decisión D07.
-- [ ] ⧗ Texto y HUD escalables, alto contraste y prueba de daltonismo (SYS-071)
-  - Implementado (0.4.5): pestaña PANTALLA (texto/HUD 100–130 %), mínimo legible por resolución, ajuste de texto a su rectángulo, HUD sin bandas en 4:3/16:10/21:9. **Faltan alto contraste y prueba de daltonismo**: aunque pasen las suites, esta casilla no se cierra hasta tenerlos.
+- [x] Navegación completa con teclado y mando, con foco visible (SYS-070)
+  - Implementado (0.4.4) sobre IMGUI: foco espacial con borde blanco en menú, pausa y resultados; ✕/A confirma, ○/B vuelve de la pausa. Independiente de la decisión D07. Verificado en 2.5D: 22 casos de navegación, pausa, resultados y mando sobrante.
+- [ ] Texto y HUD escalables, alto contraste y prueba de daltonismo (SYS-071)
+  - Implementado (0.4.5): pestaña PANTALLA (texto/HUD 100–130 %), mínimo legible por resolución, ajuste de texto a su rectángulo, HUD sin bandas en 4:3/16:10/21:9. Texto/HUD escalables verificados en 2.5D (15 casos, capturas a 960×720, 1280×800 y 1280×548). **Faltan alto contraste y prueba de daltonismo**: la casilla sigue abierta.
 - [ ] Tutorial de combo y recuperación sin límite de tiempo (SYS-076)
 - [ ] Retratos de personajes en la selección
 
@@ -131,4 +131,4 @@ Recuento: **20 de 63** marcadas (las mismas que el GDD 2.0). **7** en ⧗ a la e
   - `-side-smoke`: reglas 2.5D completas + poderes + las suites de controles.
   - `-controls-smoke` / `-beta-smoke`: regresión histórica 3D (no es el diseño actual).
 - Script de conveniencia usado en esta sesión: ejecutar las cinco suites en orden y resumir sus informes.
-- **Desconectar los mandos físicos**: las suites con mandos virtuales se niegan a ejecutarse con uno real. Pueden correr con la ventana sin foco.
+- **Mandos físicos**: desconectarlos, o añadir `-isolate-physical-pads` (los retira solo del proceso de prueba). Sin esa opción las suites se niegan con un mando real. Un DualShock emparejado por Bluetooth y apagado aparece en Windows como `BTHENUM` sin estar conectado. Pueden correr con la ventana sin foco.

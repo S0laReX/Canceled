@@ -27,6 +27,7 @@ namespace CancelBrawl.Beta
             // Automated runs last minutes; switching windows meanwhile must not disable the virtual pads under test.
             // Normal play keeps the default (reset and disable devices when the game loses focus).
             UnityEngine.InputSystem.InputSystem.settings.backgroundBehavior = UnityEngine.InputSystem.InputSettings.BackgroundBehavior.IgnoreFocus;
+            BrawlDeviceChecks.IsolatePhysicalPads();
             report.notes.Add("Entrada configurada para ignorar el foco de ventana durante la prueba automática.");
         }
         private void OnDestroy() => Application.logMessageReceived -= OnLog;

@@ -11,6 +11,23 @@ namespace CancelBrawl.Beta
     /// <summary>Explicit smoke-test path only; creates and removes virtual pads, never physical devices.</summary>
     public static class BrawlDeviceChecks
     {
+        /// <summary>
+        /// Opt-in (-isolate-physical-pads): removes real gamepads from this test process's Input System only, so the
+        /// virtual-pad suites can run while a controller stays plugged in. The hardware, the OS and other programs are
+        /// untouched; the devices come back the next time the game starts. Without the flag the suites still refuse.
+        /// </summary>
+        public static int IsolatePhysicalPads()
+        {
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-isolate-physical-pads") < 0) return 0;
+            var real = new List<Gamepad>(Gamepad.all);
+            foreach (var pad in real)
+            {
+                Debug.Log("FUNADOS_TEST mando físico aislado del proceso de prueba: " + pad.displayName + " (" + pad.layout + ")");
+                InputSystem.RemoveDevice(pad);
+            }
+            return real.Count;
+        }
+
         public static IEnumerator Run(BrawlMatch match, Action<bool, string> check, string output)
         {
             if (Gamepad.all.Count != 0)

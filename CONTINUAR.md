@@ -2,14 +2,16 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
-## Relevo 0.6.0 (fusión, verificación pendiente)
+## Relevo 0.6.0 (fusión verificada)
 
 La rama `claude/funados-implementation-continue-db5f40` llevaba en paralelo los controles 0.4.2–0.4.6 sobre la base 3D: remapeo con conflictos, opciones versionadas y recuperables, zonas muertas y vibración (corregida tras la prueba humana con un DualShock 4), impactos simultáneos imparciales (P0-03), navegación de menús con foco y texto/HUD escalables. En 0.6.0 se fusionó `main` (2.5D 0.5.1) en esa rama.
 
 - Resoluciones: la entrada usa la tabla única de bindings con la regla lateral por ejes; `CombineHits` aplica la dirección lateral, el contador de combo y el hitstop de `main`, y conserva el signo de los remates descendentes. El HUD une foco/escalado con los nombres de arena de producción y el contador de combo. La evidencia va a `Evidence/Production-<versión>` (convención de `main`).
 - Nuevo `-side-controls-smoke`: corre dispositivos, remapeo, ajustes de mando, menús y pantalla **en 2.5D**; `-side-smoke` también los incluye al final.
-- Build 0.6.0: Succeeded, 0 errores, 485 avisos. **Las suites aún no se ejecutaron**: el mando PlayStation estaba conectado y las suites se niegan con mandos reales. Las 7 tareas afectadas figuran como ⧗ en la checklist y no están marcadas.
-- **Siguiente paso exacto:** desconectar el mando, ejecutar las cinco suites (`-power-smoke`, `-side-controls-smoke`, `-side-smoke`, `-controls-smoke`, `-beta-smoke`), corregir lo que falle y convertir cada ⧗ en `[x]` aquí y en `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0_checklist.docx`. Después, la primera pendiente de prioridad alta del GDD 2.0.
+- Build 0.6.0: Succeeded, 0 errores, 485 avisos. Suites (sin mandos físicos): power **32/32**, side-controls **126/126**, side **186/186**, controls **124/124**, beta **207/207**. Única corrección durante la verificación: la prueba de navegación exigía el botón ENTRENAMIENTO también en el modo histórico, donde no existe.
+- Checklist: **26 de 63** (20 del GDD 2.0 + P0-03, etiquetas de mando, remapeo, opciones recuperables, zonas muertas/vibración y navegación SYS-070). SYS-071 sigue abierta (faltan alto contraste y daltonismo). Copia marcada del GDD: `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0_checklist.docx` (regenerar con `marcar_checklist_gdd.py`).
+- Nuevo `-isolate-physical-pads` (opcional): retira los mandos reales solo del proceso de prueba. Un DualShock emparejado por Bluetooth y apagado aparece en Windows como `BTHENUM` sin estar conectado.
+- **Siguiente:** primera pendiente de prioridad alta del GDD 2.0: hitboxes/hurtboxes por movimiento (SYS-042–048) y golpes como datos editables (SYS-011); luego límite de combos (D03).
 
 ## Relevo 0.5.1
 

@@ -1,0 +1,67 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.0/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.0/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.0/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.055 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 2.229800 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.0\Power\player-options.json
+SIDE_CHECK_PASS Don Decreto: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Don Decreto: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Lola Loop: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Lola Loop: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Coach Tóxico: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Coach Tóxico: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Cripto King: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Cripto King: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Tío Antena: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Tío Antena: refugio blanco coincide con el límite de protección central
+SIDE_CHECK_PASS Tío Antena: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=-0.8
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=0.8
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=-1.4
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=1.4
+SIDE_CHECK_PASS Tío Antena: zona izquierda peligrosa también golpea
+SIDE_CHECK_PASS Tío Antena: salir del alcance horizontal evita el super
+SIDE_CHECK_PASS Tío Antena: plataforma por encima del alcance vertical es segura
+SIDE_CHECK_PASS Tío Antena: caminar al centro durante el aviso permite escapar realmente
+SIDE_CHECK_PASS Pausa congela aviso y resolución del super
+SIDE_CHECK_PASS Reanudar conserva y resuelve el super anunciado
+SIDE_CHECK_PASS Interrumpir preparación elimina el aviso del super cancelado
+SIDE_CHECK_PASS Super interrumpido no produce daño fantasma
+SIDE_CHECK_PASS Efectos reducidos conservan el aviso esencial y el refugio
+SIDE_CHECK_PASS Volver al menú elimina todos los avisos laterales
+SIDE_CHECK_PASS Coach Tóxico: especial conservado conecta sobre el plano lateral
+SIDE_CHECK_PASS Cripto King: especial conservado conecta sobre el plano lateral
+SIDE_CHECK_PASS Tío Antena: especial conservado conecta sobre el plano lateral
+SIDE_CHECK_PASS Lola Loop: altura fuera del aviso evita el impacto
+SIDE_CHECK_PASS Coach Tóxico: altura fuera del aviso evita el impacto
+SIDE_CHECK_PASS Cripto King: rival fuera del círculo anunciado no recibe daño
+SIDE_CHECK_PASS Ataque fuerte orientado a la izquierda anuncia altura en XY
+SIDE_RESULT True checks=32 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

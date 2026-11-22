@@ -1,0 +1,178 @@
+﻿{
+    "version":  "0.6.0",
+    "date":  "2026-11-22",
+    "editor":  "6000.5.7f1",
+    "base":  "main 5b83073 (0.5.1) + branch e3297c5 (0.4.6)",
+    "suites":  {
+                   "Power":  {
+                                 "passed":  true,
+                                 "checks":  32,
+                                 "failures":  0
+                             },
+                   "SideControls":  {
+                                        "passed":  true,
+                                        "checks":  126,
+                                        "failures":  0
+                                    },
+                   "Side":  {
+                                "passed":  true,
+                                "checks":  186,
+                                "failures":  0
+                            },
+                   "Controls":  {
+                                    "passed":  true,
+                                    "checks":  124,
+                                    "failures":  0
+                                },
+                   "Full":  {
+                                "passed":  true,
+                                "checks":  207,
+                                "failures":  0
+                            }
+               },
+    "checklist":  "26/63 (GDD 2.0 sección 15)",
+    "physicalGamepadsTested":  "DualShock 4 USB en 0.4.6 (modo 3D); no en 2.5D",
+    "assemblySHA256":  "002AB974DACC97EA404DF5003AA5DBE18DECAEA733DB4723D850E242D7BF2407",
+    "sources":  [
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlArena.cs",
+                        "sha256":  "4EF5E129FBD8944D4721BDDAE664CDCD48D301B976F783B46C2120D3AAD5B887"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlAutoRig.cs",
+                        "sha256":  "B5C055A71A6BFE3A719EA1CAEC21BBCA32B14E2BF5C8C9882A4B3070393B48D7"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlBindingChecks.cs",
+                        "sha256":  "B97C852BC9F32F4F0AEA883B224C59289B402F2640EEE8E8663246CF280C38F3"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlBindings.cs",
+                        "sha256":  "B37792CD013AD25D6E5B604D085136B4A3C8C9AD4A35C3A1F0AB33CEE3B0C5CD"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlCamera.cs",
+                        "sha256":  "6FDED446A285C123AA858A570DD1E520D67088D2A36E20488896681B57FC755F"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlCharacterArt.cs",
+                        "sha256":  "05BC88B812B97D1A60E9E3766EAABC3FC319D6C53FA77B5BB66547AD78C62DEB"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlCombatVolumes.cs",
+                        "sha256":  "443D008EA3AF78AEF47151F1509DCC8B619E47D72396DBE3B3DA7747604961C6"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlDeviceChecks.cs",
+                        "sha256":  "805A1DFC49B778A91CD5AF9F05A7D434EC310F1EC7E75A0FBCA67CFA1EEAC3CE"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlDeviceSlots.cs",
+                        "sha256":  "E41E9D22BC684B4878C89602687FFC7118793C629C288DD7BE3CEED2DED508AB"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlDisplayChecks.cs",
+                        "sha256":  "0ECF466944D00621FAFCAE7C56BDE29C69213DE1CC11CD57C2334471D1CE44EA"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlFeedback.cs",
+                        "sha256":  "ED03B63983C09B2916EA2617CD71BE4D2C7D3F7FA8568EA50C357D07D7A6BF94"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlFighter.cs",
+                        "sha256":  "7DA9656543E9C3731A8D4D10DB0B635402FFEFE84460C43BBD0682BC74D288D7"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlFighterVisual.cs",
+                        "sha256":  "1E39A0440E6D1D0B7EC7B7073F36EC85F01D15CEB42277364165F18A5114692B"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlFighterVisual.Model.cs",
+                        "sha256":  "FFEFD650416015DD444ED9FFE9D480B75AC79A7766D812056EE78D15843F9A88"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHapticsProbe.cs",
+                        "sha256":  "41A42E317CBDBB46575C16CBE31193CBC4F3E6EA80BCF8B2B9097FA2D3CDB132"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHazards.cs",
+                        "sha256":  "706196FAA5812EDF4BC3AC0CD57C33D75B3F26F1211D2E607A91C131D2937D2F"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHazardVolumes.cs",
+                        "sha256":  "5C9A4597B34986AD11D4A0E89686A53160FDBB3FB1240A59513729288873F98F"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHitResolver.cs",
+                        "sha256":  "1BB32C32AC7B5704E1BEC445650C40F765ACC4AD86D1D0A2A09DE3C2D7B5515C"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHud.cs",
+                        "sha256":  "89AF39FF4C5B865C210A751313F35485765A7D24366A33849E52FF2EE550D6EE"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHud.Navigation.cs",
+                        "sha256":  "F028A7B31DEE28CBBADFAA7C65E677E05010C98962F854B362EC4245D5CDB788"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlHudLayout.cs",
+                        "sha256":  "3EED79E71F4B8E7C3482464CC4A10B6EC9F5D7A6F262F25976DC1A8024CC2F82"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlInputTuning.cs",
+                        "sha256":  "88138A1CF243EEC76AC45A31A7277D73AB330A67A6D9D2B0A0FDAF0D84D553FB"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlMatch.cs",
+                        "sha256":  "026E5524C43B0ED6670124284F63FC4C868099593A8A50B550E6006C0F8688FB"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlMenuChecks.cs",
+                        "sha256":  "8C4033BD4C11A3B1BDB271EBF4726C3D7A2018D47692B7A54A6941FE1888ABAB"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlOptionsStore.cs",
+                        "sha256":  "8A5472E0007A69C0A324BDF9C0CCB943313BEFA49CDACA9729216CFB42013C95"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlProjectile.cs",
+                        "sha256":  "87F7AF15B573E92999246C3A2076F36EB6B6A90728EBE7D38DD75FCFA3A9794A"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlRoster.cs",
+                        "sha256":  "3815B532E7E174FE4162D6843A184782F9DF1205005D8E51D6E65F11D7C19E34"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlSettings.cs",
+                        "sha256":  "0C2A06B85B1B0237B51B2361E0C88FED8F0DABDC1024F5B51A63BEC4E4CFAB02"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlSidePowerChecks.cs",
+                        "sha256":  "5C3549C1029C7F80531F969CC305DFA5CA5FBFF452AABB0B9E743BCE1D0417C9"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlSideSmokeProbe.cs",
+                        "sha256":  "11D10C1E90EF1CE4E07ECADC2678F30EADA110051045716BC4145F44C6929490"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlSideTelegraph.cs",
+                        "sha256":  "2F92083A5AC2B94FD67E995ABD4A27B698BED047E25232DBAFA74B884C735369"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlSmokeProbe.cs",
+                        "sha256":  "B24FB7F2436D8F1356EB682499CE5DCB61F3906265EB481B84F537A57A1F665E"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlTransient.cs",
+                        "sha256":  "632F42021FC1AF272432EBCC78D473ADBEEE063A07099A403376E14CD1EF2523"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Runtime/BrawlTuningChecks.cs",
+                        "sha256":  "B5BBE653CF7372C8E0BF9EB6809C6A56AB5115C186B4EAC08781BBF86C9844CD"
+                    },
+                    {
+                        "path":  "Assets/CancelBrawlBeta/Editor/FunadosProjectBuilder.cs",
+                        "sha256":  "2F26C7EE16D9A36C1853A34001F4F8D8CD29F50C24024C90DFC998CF8679921D"
+                    }
+                ]
+}

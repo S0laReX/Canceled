@@ -28,6 +28,7 @@ namespace CancelBrawl.Beta
             Directory.CreateDirectory(output); Application.logMessageReceived += OnLog;
             // Long runs: switching windows must not disable the virtual pads under test (normal play keeps the default).
             UnityEngine.InputSystem.InputSystem.settings.backgroundBehavior = UnityEngine.InputSystem.InputSettings.BackgroundBehavior.IgnoreFocus;
+            BrawlDeviceChecks.IsolatePhysicalPads();
         }
         private void OnDestroy() => Application.logMessageReceived -= OnLog;
         private void OnLog(string message, string stack, LogType type)
