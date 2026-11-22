@@ -20,7 +20,7 @@ namespace CancelBrawl.Beta
         public float moveDeadzone = .2f;
         public float aimDeadzone = .25f;
         public float stickResponse = 1f;
-        public float vibration = .5f;
+        public float vibration = .75f;
         // Version 3 (SYS-071).
         public float textScale = 1f;
         public float hudScale = 1f;
@@ -146,7 +146,7 @@ namespace CancelBrawl.Beta
             }
             data.sfx = Sanitize(data.sfx, .8f, ref repaired);
             data.music = Sanitize(data.music, .5f, ref repaired);
-            data.vibration = Sanitize(data.vibration, .5f, ref repaired);
+            data.vibration = Sanitize(data.vibration, .75f, ref repaired);
             data.moveDeadzone = SanitizeRange(data.moveDeadzone, .2f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);
             data.aimDeadzone = SanitizeRange(data.aimDeadzone, .25f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);
             data.stickResponse = SanitizeRange(data.stickResponse, 1f, BrawlInputTuning.MinResponse, BrawlInputTuning.MaxResponse, ref repaired);

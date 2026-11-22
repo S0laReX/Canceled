@@ -63,7 +63,7 @@ namespace CancelBrawl.Beta
 
                 match.SetStickTuning(.15f, .2f, 1.25f);
                 match.SetVibration(.75f);
-                yield return new WaitForSecondsRealtime(.35f); // let the preview pulse end
+                yield return new WaitForSecondsRealtime(.6f); // let the preview pulse end
                 check(match.HapticLevel(pad) == 0, "Vista previa de vibración termina sola");
                 match.UseOptionsFile(file);
                 check(match.OptionsStatus == OptionsLoadStatus.Loaded && Mathf.Approximately(match.MoveDeadzone, .15f) && Mathf.Approximately(match.AimDeadzone, .2f) &&
@@ -76,7 +76,7 @@ namespace CancelBrawl.Beta
                     "\"keyboard\":[{\"action\":\"Jump\",\"path\":\"Keyboard/k\"}],\"gamepad\":[]}");
                 match.UseOptionsFile(legacy);
                 check(match.OptionsStatus == OptionsLoadStatus.MigratedLegacy && match.Bindings.Get(BindingScheme.Keyboard, BrawlAction.Jump) == "Keyboard/k" &&
-                      Mathf.Approximately(BrawlFeedback.SfxVolume, .3f) && Mathf.Approximately(match.VibrationStrength, .5f) && Mathf.Approximately(match.MoveDeadzone, .2f),
+                      Mathf.Approximately(BrawlFeedback.SfxVolume, .3f) && Mathf.Approximately(match.VibrationStrength, new BrawlOptionsData().vibration) && Mathf.Approximately(match.MoveDeadzone, .2f),
                     "Archivo versión 1 se migra conservando controles y volúmenes");
                 check(BrawlOptionsStore.TryParse(File.ReadAllText(legacy), out var migrated, out _, out bool stillOld) && migrated.version == BrawlOptionsStore.CurrentVersion && !stillOld &&
                       File.ReadAllText(BrawlOptionsStore.BackupPath(legacy)).Contains("\"version\":1"), "Migración reescribe v2 y guarda la v1 como copia");
@@ -142,7 +142,9 @@ namespace CancelBrawl.Beta
                 match.Fighters[1].RespawnAt(new Vector3(6, .05f, -2), false);
                 match.Fighters[1].ReceiveHit(heavy, Vector3.left, match.Fighters[0]);
                 float hitLevel = match.HapticLevel(pad);
-                check(match.Devices.Pad(1) == pad && hitLevel > 0 && hitLevel <= .75f + .001f, "Golpe recibido vibra el mando dueño, escalado por la intensidad");
+                check(match.Devices.Pad(1) == pad && hitLevel >= BrawlMatch.HapticFloor * .6f && hitLevel <= 1, "Golpe recibido vibra el mando dueño con fuerza perceptible");
+                check(BrawlMatch.HapticOutput(.05f, .25f) >= .38f && BrawlMatch.HapticOutput(1, 1) == 1 && BrawlMatch.HapticOutput(1, 0) == 0 &&
+                      BrawlMatch.HapticOutput(.5f, 1) > BrawlMatch.HapticOutput(.5f, .25f), "Vibración nunca queda bajo el mínimo perceptible; 0 % la apaga");
                 match.TogglePause(); yield return null; yield return null;
                 check(match.HapticLevel(pad) == 0, "Pausa detiene la vibración");
                 match.TogglePause();
@@ -151,7 +153,7 @@ namespace CancelBrawl.Beta
                 match.Fighters[1].ReceiveHit(heavy, Vector3.left, match.Fighters[0]);
                 check(match.HapticLevel(pad) == 0, "Vibración apagada no hace vibrar");
                 match.SetVibration(.5f);
-                yield return new WaitForSecondsRealtime(.35f); // preview pulse on the panel's pad ends first
+                yield return new WaitForSecondsRealtime(.6f); // preview pulse on the panel's pad ends first
                 match.Fighters[0].RespawnAt(new Vector3(-6, .05f, -2), false);
                 match.Fighters[0].ReceiveHit(heavy, Vector3.right, match.Fighters[1]);
                 check(match.HapticLevel(pad) == 0, "Golpe a P1 con teclado no hace vibrar el mando de P2");

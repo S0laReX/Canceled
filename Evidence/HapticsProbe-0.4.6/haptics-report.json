@@ -1,0 +1,12 @@
+{
+    "version": "0.4.6",
+    "devices": [
+        "Wireless Controller | tipo=DualShock4GamepadHID | layout=DualShock4GamepadHID | interfaz=HID | producto=Wireless Controller | fabricante=Sony Interactive Entertainment | id=11 | activo=True"
+    ],
+    "steps": [
+        "1 luz rosa con SetLightBarColor (DualShockGamepad)",
+        "2 SetMotorSpeeds(1,1)",
+        "3 informe USB DualShock 4 id 5, resultado=1 (aceptado)",
+        "4 vista previa anterior: 25 % durante 0,25 s"
+    ]
+}

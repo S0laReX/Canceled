@@ -229,7 +229,7 @@ namespace CancelBrawl.Beta
             if (kind != AttackKind.Super) return;
             Meter = 0;
             BrawlFeedback.Sound("warning");
-            match.Haptic(PlayerIndex, .35f, .55f, .2f);
+            match.Haptic(PlayerIndex, .4f, .6f, .3f);
             switch (Kit.Super)
             {
                 case SuperStyle.Fan:
@@ -411,7 +411,7 @@ namespace CancelBrawl.Beta
             BrawlFeedback.Burst(transform.position + Vector3.up * .9f, PlayerColor, 9 + 3 * (hits.Count - 1));
             BrawlFeedback.Sound("hit");
             float strength = Mathf.Clamp01(result.Push / Mathf.Max(1, settings.maxKnockback));
-            match.Haptic(PlayerIndex, .25f + .55f * strength, .15f + .7f * strength, .1f + .15f * strength);
+            match.Haptic(PlayerIndex, .35f + .55f * strength, .2f + .6f * strength, .18f + .2f * strength);
         }
 
         public struct HitOutcome { public float Damage; public Vector3 Velocity; public float Push; public float Stun; public BrawlFighter Attacker; }
@@ -452,7 +452,7 @@ namespace CancelBrawl.Beta
             attacking = false; protection = 0; stun = 0; chainCharged = false; comboWindow = 0; hoverTimer = 0; recoveryTimer = 0;
             if (activeTrap) Destroy(activeTrap.gameObject);
             BrawlFeedback.Burst(transform.position + Vector3.up, PlayerColor, 20); BrawlFeedback.Sound("ko");
-            match.Haptic(PlayerIndex, .9f, .9f, .45f);
+            match.Haptic(PlayerIndex, .95f, .9f, .5f);
             controller.enabled = false;
             transform.position = match.SafeSpawnFor(this);
             if (Eliminated) gameObject.SetActive(false);

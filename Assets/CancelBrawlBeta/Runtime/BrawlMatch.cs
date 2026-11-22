@@ -19,7 +19,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.4.5";
+        public const string ProductionVersion = "0.4.6";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -171,7 +171,20 @@ namespace CancelBrawl.Beta
             RemainingTime = settings.matchSeconds;
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-beta-smoke") >= 0 || Array.IndexOf(Environment.GetCommandLineArgs(), "-controls-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
+            else if (Array.IndexOf(Environment.GetCommandLineArgs(), "-haptics-probe") >= 0)
+            { AutomatedTest = true; gameObject.AddComponent<BrawlHapticsProbe>(); }
+            // Support log: which pads the game sees and how, so field reports can be diagnosed from player.log.
+            foreach (var device in InputSystem.devices) if (device is Gamepad) Debug.Log("FUNADOS_INPUT presente " + BrawlHapticsProbe.Describe(device));
+            InputSystem.onDeviceChange += LogDeviceChange;
         }
+
+        private static void LogDeviceChange(InputDevice device, InputDeviceChange change)
+        {
+            if (device is Gamepad && change != InputDeviceChange.UsageChanged && change != InputDeviceChange.ConfigurationChanged)
+                Debug.Log("FUNADOS_INPUT " + change + " " + BrawlHapticsProbe.Describe(device));
+        }
+
+        private void OnDestroy() => InputSystem.onDeviceChange -= LogDeviceChange;
 
         private void BuildArena(int index)
         {
@@ -193,6 +206,14 @@ namespace CancelBrawl.Beta
         private void Start()
         {
             if (startInTraining && !AutomatedTest) StartTraining();
+            // Normal-mode reproduction of option saving (no automation flags): change one option, report, quit.
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-options-probe") >= 0)
+            {
+                SetVibration(VibrationStrength >= 1 ? .75f : VibrationStrength + .25f);
+                Debug.Log("FUNADOS_OPTIONS probe automated=" + AutomatedTest + " existe=" + System.IO.File.Exists(OptionsPath) + " ruta=" + OptionsPath +
+                          " persistent=" + Application.persistentDataPath);
+                Application.Quit();
+            }
         }
 
         public void StartTraining()
@@ -324,7 +345,16 @@ namespace CancelBrawl.Beta
         public float MoveDeadzone { get; private set; } = .2f;
         public float AimDeadzone { get; private set; } = .25f;
         public float StickResponse { get; private set; } = 1f;
-        public float VibrationStrength { get; private set; } = .5f;
+        public float VibrationStrength { get; private set; } = .75f;
+        /// <summary>
+        /// Lowest motor output used whenever vibration is on. Human test 0.4.5 (DualShock 4, USB): pulses of 25 % for
+        /// 0.25 s were not felt at all, while 100 % was; below this floor a pulse is effectively invisible.
+        /// </summary>
+        public const float HapticFloor = .55f, HapticMinSeconds = .18f;
+
+        /// <summary>Motor output for an event level (0–1) and the player's strength; zero only when either is zero.</summary>
+        public static float HapticOutput(float level, float strength) =>
+            strength <= 0 || level <= 0 ? 0 : Mathf.Clamp01(Mathf.Lerp(HapticFloor, 1f, Mathf.Clamp01(level)) * (.6f + .4f * Mathf.Clamp01(strength)));
         public BrawlHud Hud { get; private set; }
         public BrawlHazardVolumes HazardVolumes { get; private set; }
         /// <summary>Options panel page shown by the HUD (GENERAL / MANDO).</summary>
@@ -356,7 +386,7 @@ namespace CancelBrawl.Beta
             SaveOptions();
             // Immediate preview on the pad shown in the controls panel, so the change can be felt.
             var pad = LabelPad;
-            if (pad != null && VibrationStrength > 0) StartHaptic(pad, .5f, .5f, .25f, true);
+            if (pad != null && VibrationStrength > 0) StartHaptic(pad, .8f, .8f, .45f, true);
         }
 
         private static float Round(float value) => float.IsNaN(value) ? 0 : Mathf.Round(value * 100) / 100;
@@ -376,8 +406,8 @@ namespace CancelBrawl.Beta
 
         private void StartHaptic(Gamepad pad, float low, float high, float seconds, bool preview)
         {
-            float scale = VibrationStrength;
-            low = Mathf.Clamp01(low * scale); high = Mathf.Clamp01(high * scale);
+            low = HapticOutput(low, VibrationStrength); high = HapticOutput(high, VibrationStrength);
+            seconds = Mathf.Max(seconds, HapticMinSeconds);
             if (haptics.TryGetValue(pad, out var current) && current.Until > Time.unscaledTime)
             { low = Mathf.Max(low, current.Low); high = Mathf.Max(high, current.High); }
             haptics[pad] = new HapticPulse { Low = low, High = high, Until = Time.unscaledTime + seconds, Preview = preview };
@@ -705,6 +735,7 @@ namespace CancelBrawl.Beta
                 }
                 ApplyOptions(data, ref status);
                 OptionsStatus = status;
+                Debug.Log("FUNADOS_OPTIONS cargadas estado=" + status + " ruta=" + OptionsPath);
             }
             finally { loadingOptions = false; }
             // Rewrite a repaired/migrated/recovered file so the next start reads clean data.
@@ -742,8 +773,12 @@ namespace CancelBrawl.Beta
         private void SaveOptions()
         {
             // Automated runs never touch the player's own file; they point OptionsPath at their evidence folder.
-            if (loadingOptions || OptionsPath == null || (AutomatedTest && OptionsPath == BrawlOptionsStore.DefaultPath)) return;
-            try { BrawlOptionsStore.Save(OptionsPath, CaptureOptions()); }
+            if (loadingOptions || OptionsPath == null || (AutomatedTest && OptionsPath == BrawlOptionsStore.DefaultPath))
+            {
+                if (!AutomatedTest) Debug.Log("FUNADOS_OPTIONS guardado omitido cargando=" + loadingOptions + " ruta=" + OptionsPath);
+                return;
+            }
+            try { BrawlOptionsStore.Save(OptionsPath, CaptureOptions()); if (!AutomatedTest) Debug.Log("FUNADOS_OPTIONS guardadas ruta=" + OptionsPath); }
             catch (Exception error) { Debug.LogWarning("FUNADOS: no se pudieron guardar las opciones: " + error.Message); }
         }
 
