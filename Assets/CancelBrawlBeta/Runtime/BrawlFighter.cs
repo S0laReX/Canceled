@@ -46,6 +46,10 @@ namespace CancelBrawl.Beta
         /// <summary>Cannot act yet: in hitstun or hit-stop (used by the combo-escape study, D03).</summary>
         public bool InHitstun => stun > 0 || hitPause > 0;
         public float HitstunRemaining => stun;
+        private float airborneTime;
+        private bool coyoteEligible;
+        /// <summary>The last jump used the coyote window (for the measurement study).</summary>
+        public bool LastJumpWasCoyote { get; private set; }
         /// <summary>In the controlled part of the air recovery (SYS-032).</summary>
         public bool Recovering => recoveryTimer > 0 && !Grounded;
         public bool AirDodgeAvailable => !airDodgeUsed;
@@ -175,8 +179,13 @@ namespace CancelBrawl.Beta
             {
                 if (match.IsSideView && Grounded && transform.position.y > 1 && command.Move.y < -.5f && command.Jump)
                 { dropRemaining = .24f; command.Jump = false; jumpBuffer = 0; }
+                // Coyote time (Santiago, 22/11/2026: 3 ticks = 0.05 s): a late press right after walking off an edge still
+                // counts as the ground jump, keeping the air jump. Never after a jump, a hit or a platform drop.
+                if (command.Jump && settings.coyoteSeconds > 0 && coyoteEligible && !Grounded && jumps == 1 && airborneTime <= settings.coyoteSeconds + 1e-4f && dodgeRemaining <= 0)
+                { jumps = 0; LastJumpWasCoyote = true; }
+                else if (command.Jump) LastJumpWasCoyote = false;
                 if (command.Jump && jumps < 2 && dodgeRemaining <= 0)
-                { velocity.y = settings.jumpSpeed * (jumps == 1 ? .94f : 1); jumps++; jumpBuffer = 0; Grounded = false; hoverTimer = 0; BrawlFeedback.Sound("jump"); }
+                { velocity.y = settings.jumpSpeed * (jumps == 1 ? .94f : 1); jumps++; jumpBuffer = 0; Grounded = false; hoverTimer = 0; coyoteEligible = false; BrawlFeedback.Sound("jump"); }
                 if (command.Recovery && !Grounded && !recoveryUsed) Recover(move);
                 if (command.Dodge && dodgeCooldown <= 0 && (Grounded || !airDodgeUsed))
                 {
@@ -214,7 +223,13 @@ namespace CancelBrawl.Beta
             Grounded = (flags & CollisionFlags.Below) != 0 && velocity.y <= 0;
             if ((flags & CollisionFlags.Above) != 0 && velocity.y > 0) velocity.y = 0;
             if (Grounded) { jumps = 0; recoveryUsed = false; airDodgeUsed = false; recoveryTimer = 0; hoverTimer = 0; }
-            else if (jumps == 0) jumps = 1;
+            else
+            {
+                airborneTime += dt;
+                // Walked off a ledge: the ground jump is gone, but coyote time may still honour a slightly late press.
+                if (jumps == 0) { jumps = 1; coyoteEligible = stun <= 0 && dropRemaining <= 0; }
+            }
+            if (Grounded) { airborneTime = 0; coyoteEligible = false; }
             float drag = Mathf.Exp(-(Grounded ? 4.3f : 1.9f) * dt);
             velocity.x *= drag; velocity.z *= drag;
             transform.rotation = Quaternion.LookRotation(Facing);
@@ -538,7 +553,7 @@ namespace CancelBrawl.Beta
                 foreach (var hit in hits)
                     if (hit.Source != null && hit.Source != this && hit.Source.comboTarget == PlayerIndex) comboHit = Mathf.Max(comboHit, hit.Source.comboHitCount);
             LastHitstunScale = match.IsSideView ? settings.HitstunScale(comboHit) : 1;
-            stun = result.Stun * LastHitstunScale; Grounded = false; hoverTimer = 0;
+            stun = result.Stun * LastHitstunScale; Grounded = false; hoverTimer = 0; coyoteEligible = false;
             // An interrupted super never leaves its announced zone/bubble pending (GDD 2.0 §5: no hitbox survives an interruption).
             if (attacking && attack.Kind == AttackKind.Super && attackToken != null) BrawlZone.CancelFor(attackToken);
             attacking = false; comboWindow = 0; dodgeRemaining = 0;
@@ -611,6 +626,8 @@ namespace CancelBrawl.Beta
             IsRespawning = false; velocity = Vector3.zero; jumps = 0; recoveryUsed = false; airDodgeUsed = false;
             dodgeRemaining = 0; dodgeCooldown = 0; stun = 0; Grounded = false; hoverTimer = 0; recoveryTimer = 0;
             protection = grantProtection ? settings.protectionSeconds : 0;
+            // Appearing in the air is not walking off a ledge: no coyote window (airborne time already "expired").
+            airborneTime = 1; coyoteEligible = false;
             if (match.IsSideView)
             {
                 Facing = transform.position.x > 0 ? Vector3.left : Vector3.right;

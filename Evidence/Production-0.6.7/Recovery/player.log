@@ -1,0 +1,56 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.7/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.7/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.7/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.042 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.770100 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.7\Recovery\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS SYS-030: salto inicial, segundo salto al 94 % y sin tercer salto
+SIDE_CHECK_PASS SYS-030: abajo en el aire acelera la caída
+SIDE_CHECK_PASS SYS-030: recuperación y esquiva aérea se consumen una vez
+SIDE_CHECK_PASS SYS-031: aterrizar en suelo válido restaura saltos, recuperación y esquiva
+SIDE_CHECK_PASS SYS-031: rozar una pared no devuelve saltos ni recuperación
+SIDE_CHECK_PASS SYS-031: tocar un techo frena la subida y no devuelve el salto
+SIDE_CHECK_PASS SYS-032: una recuperación por fase aérea, vulnerable y con final; la segunda no hace nada
+SIDE_CHECK_PASS SYS-033: caída rápida a máxima velocidad aterriza sin atravesar el suelo
+SIDE_CHECK_PASS SYS-033: caída rápida aterriza sobre la plataforma atravesable
+SIDE_CHECK_PASS SYS-033: la esquiva rápida se detiene en una pared sin atravesarla
+SIDE_CHECK_PASS SYS-034: el indicador de apoyo marca la superficie bajo el luchador (plataforma o suelo)
+SIDE_CHECK_PASS SYS-035: el borde no tiene pared invisible; caminar fuera hace caer
+FUNADOS_REACH Don Promesio: a nivel der 8.8 izq 8.8 · 2 m abajo der 8.1 izq 8.1
+FUNADOS_REACH Lola Viral: a nivel der 11.8 izq 11.8 · 2 m abajo der 11.1 izq 11.1
+FUNADOS_REACH Coach Tóxico: a nivel der 8.3 izq 8.3 · 2 m abajo der 7.7 izq 7.7
+FUNADOS_REACH Cripto King: a nivel der 9.4 izq 9.4 · 2 m abajo der 8.6 izq 8.6
+FUNADOS_REACH Tío Antena: a nivel der 11.8 izq 11.8 · 2 m abajo der 11.8 izq 11.8
+SIDE_CHECK_PASS SYS-035: los cinco kits vuelven al menos desde 1,5 m fuera de cada borde
+SIDE_CHECK_PASS SYS-035: el alcance de vuelta es simétrico entre borde izquierdo y derecho
+SIDE_CHECK_PASS SYS-035: caer sigue siendo un riesgo; ningún kit vuelve desde cualquier distancia
+SIDE_RESULT True checks=16 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

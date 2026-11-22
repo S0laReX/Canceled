@@ -50,6 +50,11 @@ namespace CancelBrawl.Beta
             {
                 yield return BrawlSidePowerChecks.Run(match,Check,output); Finish(); yield break;
             }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-coyote-study")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlCoyoteStudy.Run(match,Check,output); Finish(); yield break;
+            }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-camera-smoke")>=0)
             {
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
@@ -154,6 +159,7 @@ namespace CancelBrawl.Beta
             yield return BrawlKitMatrixChecks.Run(match,Check,output);
             yield return BrawlRecoveryChecks.Run(match,Check,output);
             yield return BrawlCameraChecks.Run(match,Check,output);
+            yield return BrawlCoyoteStudy.Run(match,Check,output);
             // Controls, options, menus and display suites, run under the production 2.5D rules (GDD 2.0 §7, §10).
             yield return ControlChecks(skipDevices: true);
             Finish();

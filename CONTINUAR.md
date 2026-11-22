@@ -2,6 +2,12 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.7 (coyote time: 3 ticks)
+
+- Decisión de Santiago tras medir: coyote time de 3 ticks (0,05 s), `BetaBalance.coyoteSeconds`. Sin él, pulsar en el borde ya gastaba el salto aéreo. Bloqueado tras salto, golpe, bajada de plataforma y aparición en el aire.
+- Suites 0.6.7: power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, side-controls 127, side 330, controls 125, beta 208; cero fallos. Checklist **34 de 63**.
+- **Siguiente:** revisar límites y puntos de aparición por arena (ARENA-358/359).
+
 ## Relevo 0.6.6 (cámara y avisos, SYS-036–040)
 
 - `BrawlCamera.FrameSide` reserva la franja del HUD superior (`TopReserve`, calculada por el HUD) además de la inferior; zoom 5,5–16; rotación fija.

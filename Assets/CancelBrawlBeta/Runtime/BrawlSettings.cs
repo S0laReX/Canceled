@@ -46,6 +46,9 @@ namespace CancelBrawl.Beta
         public KitTuning[] kitTuning = BrawlMoveData.DefaultKits();
         [Tooltip("2.5D: lanzamiento K = (base + crecimiento·%/100) / resistencia con ángulo por golpe (GDD 2.0 §5). Desactivado = fórmula histórica.")]
         public bool angledLaunch = true;
+        [Header("Coyote time (decisión de Santiago 22/11/2026: 3 ticks)")]
+        [Tooltip("Segundos tras salir caminando de un borde en los que pulsar salto aún cuenta como salto de suelo. 0,05 s = 3 ticks.")]
+        [Range(0, .15f)] public float coyoteSeconds = .05f;
         [Header("Límite de combos (D03 · decisión: reducir hitstun)")]
         [Tooltip("Multiplicador del hitstun por cada golpe repetido del mismo atacante al mismo rival dentro de la ventana de combo.")]
         [Range(.5f, 1)] public float hitstunDecay = .8f;

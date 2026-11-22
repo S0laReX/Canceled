@@ -1,0 +1,61 @@
+{
+    "version": "0.6.7",
+    "attacker": "Don Promesio",
+    "angledLaunch": true,
+    "rows": [
+        {
+            "target": "Lola Viral",
+            "percent": 0,
+            "trueChain": 3,
+            "comboCounter": 3,
+            "hits": 3,
+            "damageDealt": 13.0,
+            "escaped": true
+        },
+        {
+            "target": "Lola Viral",
+            "percent": 50,
+            "trueChain": 3,
+            "comboCounter": 3,
+            "hits": 3,
+            "damageDealt": 13.0,
+            "escaped": true
+        },
+        {
+            "target": "Lola Viral",
+            "percent": 100,
+            "trueChain": 3,
+            "comboCounter": 3,
+            "hits": 3,
+            "damageDealt": 13.0,
+            "escaped": true
+        },
+        {
+            "target": "Coach Tóxico",
+            "percent": 0,
+            "trueChain": 2,
+            "comboCounter": 2,
+            "hits": 2,
+            "damageDealt": 9.0,
+            "escaped": true
+        },
+        {
+            "target": "Coach Tóxico",
+            "percent": 50,
+            "trueChain": 3,
+            "comboCounter": 3,
+            "hits": 3,
+            "damageDealt": 13.0,
+            "escaped": true
+        },
+        {
+            "target": "Coach Tóxico",
+            "percent": 100,
+            "trueChain": 3,
+            "comboCounter": 3,
+            "hits": 3,
+            "damageDealt": 13.0,
+            "escaped": true
+        }
+    ]
+}

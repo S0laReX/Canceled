@@ -1,0 +1,64 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.7/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.7/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.7/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.048 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.257200 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.7\Coyote\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+FUNADOS_COYOTE coyote=0 retraso=0 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=1 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=2 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=3 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=4 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=6 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=8 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=10 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=0 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=1 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=2 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=3 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=4 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=6 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=8 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=10 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=6 retraso=0 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=1 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=2 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=3 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=4 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=6 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=8 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=6 retraso=10 conserva=False velocidad=9.32 saltos_restantes=0
+SIDE_CHECK_PASS Coyote: con 0 no cambia nada (pulsar tarde gasta el salto aéreo)
+SIDE_CHECK_PASS Coyote: con 3 y 6 ticks la pulsación tardía cuenta como salto de suelo solo dentro de la ventana
+SIDE_CHECK_PASS Coyote: nunca tras un salto, un golpe, al bajar de una plataforma ni al aparecer en el aire
+SIDE_CHECK_PASS Coyote fijado en 3 ticks (0,05 s) por decisión de Santiago
+SIDE_RESULT True checks=5 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed
