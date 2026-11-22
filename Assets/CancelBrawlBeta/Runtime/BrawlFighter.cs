@@ -46,6 +46,11 @@ namespace CancelBrawl.Beta
         /// <summary>Cannot act yet: in hitstun or hit-stop (used by the combo-escape study, D03).</summary>
         public bool InHitstun => stun > 0 || hitPause > 0;
         public float HitstunRemaining => stun;
+        /// <summary>In the controlled part of the air recovery (SYS-032).</summary>
+        public bool Recovering => recoveryTimer > 0 && !Grounded;
+        public bool AirDodgeAvailable => !airDodgeUsed;
+        /// <summary>Ground projection that shows height and the likely landing spot (SYS-034).</summary>
+        public Transform LandingMarker => marker;
         /// <summary>Hitstun multiplier applied by the last hit received (D03 decay).</summary>
         public float LastHitstunScale { get; private set; } = 1;
         private float comboHitClock, hitPause, dropRemaining, basicBuffer, heavyBuffer, jumpBuffer;

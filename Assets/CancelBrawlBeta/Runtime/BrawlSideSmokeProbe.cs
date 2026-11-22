@@ -35,7 +35,7 @@ namespace CancelBrawl.Beta
         { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) report.failures.Add(message + "\n" + stack); }
         private void Check(bool value, string name)
         { (value ? report.checks : report.failures).Add(name); Debug.Log("SIDE_CHECK_" + (value ? "PASS " : "FAIL ") + name); }
-        private void Update() { if (!finished && Time.realtimeSinceStartup - started > 1500) { Check(false, "Tiempo máximo agotado"); Finish(); } }
+        private void Update() { if (!finished && Time.realtimeSinceStartup - started > 2400) { Check(false, "Tiempo máximo agotado"); Finish(); } }
         private void Finish()
         {
             finished = true; report.passed = report.failures.Count == 0;
@@ -49,6 +49,11 @@ namespace CancelBrawl.Beta
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-power-smoke")>=0)
             {
                 yield return BrawlSidePowerChecks.Run(match,Check,output); Finish(); yield break;
+            }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-recovery-smoke")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlRecoveryChecks.Run(match,Check,output); Finish(); yield break;
             }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-kits-smoke")>=0)
             {
@@ -142,6 +147,7 @@ namespace CancelBrawl.Beta
             yield return BrawlMoveChecks.Run(match,Check,output);
             yield return BrawlComboStudy.Run(match,Check,output);
             yield return BrawlKitMatrixChecks.Run(match,Check,output);
+            yield return BrawlRecoveryChecks.Run(match,Check,output);
             // Controls, options, menus and display suites, run under the production 2.5D rules (GDD 2.0 §7, §10).
             yield return ControlChecks(skipDevices: true);
             Finish();

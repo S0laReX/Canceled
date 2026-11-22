@@ -21,7 +21,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.6.4";
+        public const string ProductionVersion = "0.6.5";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -178,7 +178,7 @@ namespace CancelBrawl.Beta
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
             else if (Array.IndexOf(Environment.GetCommandLineArgs(), "-haptics-probe") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlHapticsProbe>(); }
-            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0)
+            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSideSmokeProbe>(); }
             // Support log: which pads the game sees and how, so field reports can be diagnosed from player.log.
             foreach (var device in InputSystem.devices) if (device is Gamepad) Debug.Log("FUNADOS_INPUT presente " + BrawlHapticsProbe.Describe(device));

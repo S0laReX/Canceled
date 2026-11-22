@@ -2,6 +2,13 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.5 (recuperación y bordes, SYS-030–035)
+
+- `BrawlRecoveryChecks` (`-recovery-smoke`): recursos aéreos, restauración solo en suelo válido, recuperación por fase, movimientos rápidos sin atravesar, indicador de apoyo y alcance de vuelta medido por kit y borde.
+- Alcance a nivel: Don 8,8 m · Lola 11,8 · Coach 8,3 (menor) · Cripto 9,4 · Tío 11,8; simétrico. Es generoso: candidato a calibración con personas.
+- Suites 0.6.5: power 32, moves 21, kits 91, recovery 16, side-controls 127, side 312, controls 125, beta 208; cero fallos. Checklist **32 de 63**.
+- **Siguiente:** cámara y avisos fuera de pantalla con cinco luchadores y alturas extremas (SYS-036–040); decidir coyote time.
+
 ## Relevo 0.6.4 (matriz de los cinco kits)
 
 - `BrawlKitMatrixChecks` (`-kits-smoke`): especial, recuperación y super de los 5 kits en acierto, fallo, interrupción, pausa, plataforma y borde (90 casos).
