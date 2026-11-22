@@ -1,10 +1,10 @@
 # Checklist activa de FUNADOS 2.5D (GDD 2.0)
 
-Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.1** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
+Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.2** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **28 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1). Ninguna en ⧗. Evidencia vigente 0.6.1 (`Evidence/Production-0.6.1`): power 32/32, moves 14/14, side-controls 127/127, side 200/200, controls 125/125, beta 208/208.
+Recuento: **29 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en 0.6.2). Ninguna en ⧗. Evidencia vigente 0.6.2 (`Evidence/Production-0.6.2`): power 32/32, moves 19/19, side-controls 127/127, side 205/205, controls 125/125, beta 208/208.
 
 ## Instrucciones para el siguiente agente
 
@@ -46,8 +46,10 @@ Recuento: **28 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1). Ning
   - 0.6.1: en 2.5D el cuerpo a cuerpo es un rectángulo de golpe por movimiento (X hacia donde mira, Y desde los pies) contra la hurtbox del rival (0,72 × 1,7 m), reflejado por orientación (`BrawlMoveData.Overlaps`). Golpes direccionales con caja propia en datos; los del kit la derivan de su alcance y altura. Valores por defecto equivalentes al barrido anterior (comprobado en 1.089 puntos por golpe). Pruebas: espejo geométrico y en partida, altura (ascendente/remate), ambos bordes con rival fuera del suelo, CombatLab dibuja la caja real y las hurtboxes (`lab-hitboxes.png`). Proyectiles, zonas y onda conservan sus volúmenes reales (0.4.4). Límite: la hurtbox es un rectángulo por luchador, no anatómica por animación; eso depende del rig real (D01).
 - [x] Golpes y kits como datos editables con validación (SYS-011)
   - 0.6.1: `BetaBalance.asset` → `sideMoves` (5 golpes direccionales: tiempos, daño, empuje, elevación, caja) y `kitTuning` (valores de los 5 kits), con rangos en el Inspector y `BrawlMoveData.Validate` (repetidos, faltantes, cajas vacías, rangos, orden del roster). Datos no válidos no se aplican y se avisa en el log. Pruebas: cambiar daño o caja en datos cambia el golpe real. Los nombres, estilos y modelos siguen en `BrawlRoster` (no son balance).
-- [ ] Fórmula de lanzamiento con base, crecimiento y ángulo por golpe
+- [x] Fórmula de lanzamiento con base, crecimiento y ángulo por golpe
+  - 0.6.2: en 2.5D K = (B + G·P/100) / resistencia, lanzado al ángulo θ del golpe (`BrawlLaunch`). Los 5 golpes direccionales tienen `launchBase/launchGrowth/launchAngle` en datos; los del kit los derivan de su empuje/elevación editables. Por defecto cada golpe conserva su ángulo y fuerza de 0 %. **Cambio de balance a % alto** (tabla `Evidence/Production-0.6.2/Moves/launch-compare.csv`): ascendente a 100 % antes salía casi horizontal (11,6; 10,6) y ahora vertical (1,95; 15,6); el remate ya no se aplana (−15,5 frente a −9,2). La resistencia divide ahora también la vertical. Interruptor `angledLaunch` para volver a la fórmula histórica. Calibrar con personas.
 - [ ] Límite de combos: reducción de hitstun o tope (D03)
+  - Medido en 0.6.2 (`BrawlComboStudy`, `combo-study.json`): atacante con combo escalera guionizado contra defensor que escapa en cuanto puede actuar. Cadena verdadera máxima: Lola 3/3/3 y Coach 2/3/3 a 0/50/100 %; escapa siempre. Sin infinito con este guion. **Decisión de Santiago pendiente** (reducción de hitstun, tope o sin límite explícito).
 - [ ] Calibrar ventanas, hitstun, knockback y escapes con personas (SYS-041/046/047/049/050)
 
 ## Poderes y supers

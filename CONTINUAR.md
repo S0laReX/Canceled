@@ -2,6 +2,13 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.2 (fórmula de lanzamiento y estudio de combos)
+
+- Lanzamiento GDD 2.0 §5 en 2.5D: K = (B + G·P/100) / resistencia al ángulo del golpe (`BrawlLaunch`, datos `launchBase/launchGrowth/launchAngle`, interruptor `BetaBalance.angledLaunch`). Cambia el balance a % alto: ver `Evidence/Production-0.6.2/Moves/launch-compare.csv`.
+- D03 medido con `BrawlComboStudy` (en `-moves-smoke` y `-side-smoke`): cadena verdadera máxima 3 golpes, el defensor escapa siempre. Falta la decisión de Santiago.
+- Prueba de remapeo endurecida: leía una pulsación de un solo fotograma y fallaba de forma intermitente en la suite larga; ahora comprueba el estado sostenido.
+- Suites 0.6.2: power 32, moves 19, side-controls 127, side 205, controls 125, beta 208; cero fallos. Checklist **29 de 63**.
+
 ## Relevo 0.6.1 (golpes como datos y cajas X/Y)
 
 - SYS-011: `BetaBalance.asset` contiene `sideMoves` (ascendente básico/fuerte, aéreo neutral, remate básico/fuerte) y `kitTuning` (números de los cinco kits). `BrawlMoveData.Validate` revisa repetidos, faltantes, cajas vacías y rangos; si falla, se mantienen los valores incorporados. Los valores por defecto son los de la 0.5.1.

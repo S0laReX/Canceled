@@ -53,7 +53,8 @@ namespace CancelBrawl.Beta
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-moves-smoke")>=0)
             {
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
-                yield return BrawlMoveChecks.Run(match,Check,output); Finish(); yield break;
+                yield return BrawlMoveChecks.Run(match,Check,output);
+                yield return BrawlComboStudy.Run(match,Check,output); Finish(); yield break;
             }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-side-controls-smoke")>=0)
             {
@@ -134,6 +135,7 @@ namespace CancelBrawl.Beta
             match.AutomatedTest=true;
             yield return BrawlSidePowerChecks.Run(match,Check,output);
             yield return BrawlMoveChecks.Run(match,Check,output);
+            yield return BrawlComboStudy.Run(match,Check,output);
             // Controls, options, menus and display suites, run under the production 2.5D rules (GDD 2.0 §7, §10).
             yield return ControlChecks(skipDevices: true);
             Finish();

@@ -43,6 +43,8 @@ namespace CancelBrawl.Beta
         public int AttackVertical { get; private set; }
         public bool AttackAirborne { get; private set; }
         public int ComboHits => match != null && match.SimTime - comboHitClock < 1.1f ? comboHitCount : 0;
+        /// <summary>Cannot act yet: in hitstun or hit-stop (used by the combo-escape study, D03).</summary>
+        public bool InHitstun => stun > 0 || hitPause > 0;
         private float comboHitClock, hitPause, dropRemaining, basicBuffer, heavyBuffer, jumpBuffer;
         private int comboHitCount, comboTarget = -1;
         private bool attackConnected;
@@ -547,9 +549,15 @@ namespace CancelBrawl.Beta
                 Vector3 direction = hit.Direction; direction.y = 0;
                 // Side view: knockback stays in X/Y; the horizontal part only keeps its left/right sign.
                 if (sideView) direction = Vector3.right * Mathf.Sign(direction.x == 0 ? (hit.Source ? hit.Source.Facing.x : 1) : direction.x);
+                float hitLift = Mathf.Min(16, hit.Spec.Lift + damage * .018f);
+                if (sideView && settings.angledLaunch)
+                {
+                    // GDD 2.0 §5: K = (B + G·P/100) / resistance at the move's angle.
+                    Vector2 launch = BrawlLaunch.Velocity(hit.Spec, settings, damage, resistance, direction.x);
+                    push = Mathf.Abs(launch.x); hitLift = launch.y;
+                }
                 horizontal += direction.normalized * push;
                 // Strongest vertical launch wins with its sign, so a downward finisher (negative lift) still spikes.
-                float hitLift = Mathf.Min(16, hit.Spec.Lift + damage * .018f);
                 if (!hasLift || Mathf.Abs(hitLift) > Mathf.Abs(lift)) { lift = hitLift; hasLift = true; }
                 stun = Mathf.Max(stun, Mathf.Min(.48f, .13f + push * .009f));
                 if (hit.Source == null || hit.Source == hit.Target) continue;

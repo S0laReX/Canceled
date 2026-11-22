@@ -67,6 +67,37 @@ namespace CancelBrawl.Beta
                       BrawlMoveData.Overlaps(down.hitbox, Vector2.zero, 1, new Vector2(.3f, -1.5f)) && !BrawlMoveData.Overlaps(down.hitbox, Vector2.zero, 1, new Vector2(.3f, 1.2f)),
                     "En altura: el ascendente alcanza arriba y no abajo; el remate, abajo y no arriba");
 
+                // ── Launch formula K = (B + G·P/100) / resistance at the move's angle (GDD 2.0 §5) ──
+                bool angleKept = true, upStays = true, downStays = true, grows = true;
+                var compare = new System.Text.StringBuilder("golpe;%;vx_anterior;vy_anterior;vx_nuevo;vy_nuevo" + System.Environment.NewLine);
+                foreach (var move in settings.sideMoves)
+                {
+                    var spec = move.ToSpec(AttackKind.Basic);
+                    angleKept &= Mathf.Abs(move.launchAngle - Mathf.Atan2(move.lift, move.push) * Mathf.Rad2Deg) < .5f;
+                    Vector2 previous = Vector2.zero;
+                    foreach (int percent in new[] { 0, 50, 100, 150 })
+                    {
+                        Vector2 v = BrawlLaunch.Velocity(spec, settings, percent, 1, 1);
+                        if (move.lift > 0) upStays &= v.y > 0; if (move.lift < 0) downStays &= v.y < 0;
+                        if (percent > 0) grows &= v.magnitude >= previous.magnitude - .001f;
+                        previous = v;
+                        float oldX = Mathf.Min(settings.maxKnockback, move.push + percent * settings.knockbackPerDamage), oldY = Mathf.Min(16, move.lift + percent * .018f);
+                        compare.AppendLine($"{move.id};{percent};{oldX:0.00};{oldY:0.00};{v.x:0.00};{v.y:0.00}");
+                    }
+                }
+                File.WriteAllText(Path.Combine(output, "launch-compare.csv"), compare.ToString());
+                check(angleKept, "Fórmula de lanzamiento: cada golpe conserva su ángulo de 0 %");
+                check(upStays && downStays && grows, "Lanzamiento: ascendentes suben y remates bajan a todo porcentaje; K crece con el daño");
+                var upSpec = up.ToSpec(AttackKind.Basic);
+                check(BrawlLaunch.Velocity(upSpec, settings, 50, .9f, 1).magnitude > BrawlLaunch.Velocity(upSpec, settings, 50, 1.12f, 1).magnitude &&
+                      BrawlLaunch.Velocity(upSpec, settings, 50, 1, -1).x < 0, "Resistencia divide el lanzamiento y la dirección se refleja");
+                settings.angledLaunch = false;
+                var legacy = BrawlFighter.CombineHits(30, 1, settings, new System.Collections.Generic.List<PendingHit> { new PendingHit(null, null, up.ToSpec(AttackKind.Basic), Vector3.right) }, true);
+                settings.angledLaunch = true;
+                float legacyDamage = 30 + up.damage;
+                check(Mathf.Abs(legacy.Velocity.x - (up.push + legacyDamage * settings.knockbackPerDamage)) < .001f && Mathf.Abs(legacy.Velocity.y - (up.lift + legacyDamage * .018f)) < .001f,
+                    "Con el lanzamiento angular desactivado se recupera la fórmula histórica");
+
                 // ── Real rounds (CombatLab, 2.5D) ──
                 match.SelectedCharacter = 0; match.StartTraining(); match.ShowCombatVolumes = true;
                 yield return new WaitForSeconds(.3f);
@@ -129,6 +160,7 @@ namespace CancelBrawl.Beta
             }
             finally
             {
+                settings.angledLaunch = true;
                 settings.sideMoves = savedMoves;
                 match.ReturnToMenu();
                 match.SelectedCharacter = oldCharacter;

@@ -44,13 +44,13 @@ namespace CancelBrawl.Beta
                 // ── Direct remap and conflict detection ──
                 var result = b.Rebind(BindingScheme.Keyboard, BrawlAction.Jump, "Keyboard/k");
                 check(result.Status == BindStatus.Assigned && b.Get(BindingScheme.Keyboard, BrawlAction.Jump) == "Keyboard/k", "Remapeo de teclado asigna la nueva tecla");
-                InputSystem.QueueStateEvent(keys, new KeyboardState(Key.K)); yield return null;
-                var read = match.ReadKeyboardButtons(keys, mouse, false);
+                // Held state, not a one-frame edge: robust to which frame the input update lands in.
+                InputSystem.QueueStateEvent(keys, new KeyboardState(Key.K)); yield return null; yield return null;
+                bool readNew = b.Held(BrawlAction.Jump, keys, mouse);
+                InputSystem.QueueStateEvent(keys, new KeyboardState(Key.Space)); yield return null; yield return null;
+                bool readOld = b.Held(BrawlAction.Jump, keys, mouse);
                 InputSystem.QueueStateEvent(keys, new KeyboardState()); yield return null;
-                InputSystem.QueueStateEvent(keys, new KeyboardState(Key.Space)); yield return null;
-                var oldKey = match.ReadKeyboardButtons(keys, mouse, false);
-                InputSystem.QueueStateEvent(keys, new KeyboardState()); yield return null;
-                check(read.Jump && !oldKey.Jump, "La partida lee el control remapeado y deja de leer el anterior");
+                check(readNew && !readOld, "La partida lee el control remapeado y deja de leer el anterior");
 
                 result = b.Rebind(BindingScheme.Keyboard, BrawlAction.Special, "Keyboard/k");
                 check(result.Status == BindStatus.Swapped && result.Conflict == BrawlAction.Jump &&

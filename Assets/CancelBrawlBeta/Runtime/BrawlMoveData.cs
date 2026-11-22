@@ -36,8 +36,12 @@ namespace CancelBrawl.Beta
         [Range(-20, 20)] public float lift;
         [Range(.2f, 6)] public float height;
         public MoveBox hitbox;
+        [Tooltip("Lanzamiento base K a 0 %.")] [Range(0, 30)] public float launchBase;
+        [Tooltip("Crecimiento de K por cada 100 % de daño.")] [Range(0, 40)] public float launchGrowth;
+        [Tooltip("Ángulo de lanzamiento en grados: 0 = horizontal hacia el golpe, 90 = vertical arriba, negativo = hacia abajo.")] [Range(-90, 90)] public float launchAngle;
 
-        public AttackSpec ToSpec(AttackKind kind) => new AttackSpec(kind, damage, windup, active, recovery, range, push, lift, height);
+        public AttackSpec ToSpec(AttackKind kind) =>
+            new AttackSpec(kind, damage, windup, active, recovery, range, push, lift, height).WithLaunch(launchBase, launchGrowth, launchAngle);
     }
 
     /// <summary>Editable per-kit numbers (names, styles and art stay in <see cref="BrawlRoster"/>).</summary>
@@ -129,10 +133,12 @@ namespace CancelBrawl.Beta
         {
             // Historical filters: vertical moves reach both sides; upward ignores targets more than 0.5 below, downward aerials more than 0.5 above.
             float dyMin = upward ? -.5f : -height, dyMax = downward ? .5f : height;
+            BrawlLaunch.Derive(push, lift, .105f, out float launchBase, out float growth, out float angle);
             return new MoveDef
             {
                 id = id, damage = damage, windup = windup, active = active, recovery = recovery, range = range, push = push, lift = lift, height = height,
-                hitbox = SweepBox(range, dyMin, dyMax, bothSides: upward || downward)
+                hitbox = SweepBox(range, dyMin, dyMax, bothSides: upward || downward),
+                launchBase = launchBase, launchGrowth = growth, launchAngle = angle
             };
         }
 
@@ -180,6 +186,9 @@ namespace CancelBrawl.Beta
                 if (m.windup + m.active + m.recovery > 2.5f) problems.Add($"{m.id}: duración total > 2,5 s");
                 if (m.hitbox.Width <= .05f || m.hitbox.HeightSpan <= .05f) problems.Add($"{m.id}: caja de golpe vacía");
                 if (Mathf.Abs(m.lift) > 20 || m.push < 0 || m.push > 30) problems.Add($"{m.id}: empuje/elevación fuera de rango");
+                if (m.launchBase < 0 || m.launchBase > 30 || m.launchGrowth < 0 || m.launchGrowth > 40 || Mathf.Abs(m.launchAngle) > 90)
+                    problems.Add($"{m.id}: lanzamiento fuera de rango (base 0–30, crecimiento 0–40, ángulo ±90°)");
+                if (m.launchBase + m.launchGrowth <= .01f) problems.Add($"{m.id}: lanzamiento nulo");
             }
             var kits = settings.kitTuning ?? Array.Empty<KitTuning>();
             if (kits.Length != BrawlRoster.Count) problems.Add($"Ajustes de kit: {kits.Length} de {BrawlRoster.Count}");
