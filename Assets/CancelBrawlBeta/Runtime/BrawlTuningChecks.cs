@@ -119,12 +119,13 @@ namespace CancelBrawl.Beta
                 for (int round = 0; round < 2; round++)
                 {
                     BrawlFighter south = match.Fighters[round], north = match.Fighters[1 - round];
-                    south.RespawnAt(new Vector3(-5, .05f, -2), false); north.RespawnAt(new Vector3(-5, .05f, -.55f), false);
+                    if (match.IsSideView) { south.RespawnAt(new Vector3(-5.7f, .05f, 0), false); north.RespawnAt(new Vector3(-4.3f, .05f, 0), false); }
+                    else { south.RespawnAt(new Vector3(-5, .05f, -2), false); north.RespawnAt(new Vector3(-5, .05f, -.55f), false); }
                     south.SetPracticeDamage(0); north.SetPracticeDamage(0);
                     yield return new WaitForSeconds(.3f);
                     yield return new WaitForFixedUpdate();
-                    south.Submit(new BrawlCommand { Aim = Vector2.up, Basic = true });
-                    north.Submit(new BrawlCommand { Aim = Vector2.down, Basic = true });
+                    south.Submit(new BrawlCommand { Aim = match.IsSideView ? Vector2.right : Vector2.up, Basic = true });
+                    north.Submit(new BrawlCommand { Aim = match.IsSideView ? Vector2.left : Vector2.down, Basic = true });
                     yield return new WaitForSeconds(.45f);
                     south.ClearInput(); north.ClearInput();
                     traded[round] = Mathf.Abs(south.Damage - settings.basicDamage) < .01f && Mathf.Abs(north.Damage - settings.basicDamage) < .01f &&

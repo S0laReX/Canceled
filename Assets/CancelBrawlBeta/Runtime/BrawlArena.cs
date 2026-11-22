@@ -22,12 +22,34 @@ namespace CancelBrawl.Beta
         private static readonly string[] Calls = { "¡A LA AZOTEA!", "¡AL MALL!", "¡AL CAMPUS!", "¡AL NÚCLEO!" };
         public static int Count => Names.Length;
 
+        // Production stages (FunadosProduction/Environments) that replace the greyboxes slot by slot.
+        public static readonly string[] StageNames = { "Azotea Influencer", "Torre Corporativa", "Estudio de Debate", "Plaza Colonial" };
+        public static readonly string[] StageDescriptions =
+        {
+            "Tarima central y dos plataformas flotantes.",
+            "Atrio ejecutivo con dos plataformas colgantes.",
+            "Plató central y dos plataformas simétricas.",
+            "Tarima de piedra entre dos balcones."
+        };
+        private static readonly string[] StageCalls = { "¡A LA AZOTEA!", "¡A LA TORRE!", "¡AL DEBATE!", "¡A LA PLAZA!" };
+        public static readonly Color DefaultBackdrop = new Color(0.025f, 0.045f, 0.085f);
+
+        public static string NameOf(int layout, bool stageArt) => (stageArt ? StageNames : Names)[layout];
+        public static string DescriptionOf(int layout, bool stageArt) => (stageArt ? StageDescriptions : Descriptions)[layout];
+
         private const string GeneratedName = "Arena geometry";
         private Vector3[] spawns = new Vector3[0];
 
         public int Layout { get; private set; }
-        public string DisplayName => Names[Layout];
-        public string StartCall => Calls[Layout];
+        public bool IsSideView { get; private set; }
+        public float UpperLimit => IsSideView ? 20 : float.PositiveInfinity;
+        public Collider[] OneWayPlatforms { get; private set; } = new Collider[0];
+        /// <summary>True when this court was built from a production stage prefab instead of greyboxes.</summary>
+        public bool UsesStageArt { get; private set; }
+        /// <summary>Clear colour the group camera should use behind this court.</summary>
+        public Color Backdrop { get; private set; } = DefaultBackdrop;
+        public string DisplayName => NameOf(Layout, UsesStageArt);
+        public string StartCall => (UsesStageArt ? StageCalls : Calls)[Layout];
         public Vector3[] SpawnPoints => spawns;
         /// <summary>Half extents (x, z) of the side elimination volumes.</summary>
         public Vector2 OuterLimits { get; private set; } = new Vector2(23, 19);
@@ -55,10 +77,14 @@ namespace CancelBrawl.Beta
         [ContextMenu("Build beta arena")]
         public void Build() => Build(Layout);
 
-        public void Build(int layout)
+        /// <param name="stage">Production stage prefab for this slot; null builds the beta greybox.</param>
+        public void Build(int layout, GameObject stage = null, bool sideView = false)
         {
+            IsSideView = sideView;
             Layout = Mathf.Clamp(layout, 0, Count - 1);
-            gameObject.name = DisplayName + " · beta";
+            UsesStageArt = stage != null;
+            Backdrop = DefaultBackdrop;
+            gameObject.name = UsesStageArt ? DisplayName : DisplayName + " · beta";
             Transform old = transform.Find(GeneratedName);
             if (old)
             {
@@ -69,12 +95,82 @@ namespace CancelBrawl.Beta
 
             Transform root = new GameObject(GeneratedName).transform;
             root.SetParent(transform, false);
+            if (UsesStageArt) { BuildStage(root, stage); if (sideView) AdaptSideStage(root); return; }
+            if (sideView) { BuildSideGreybox(root); return; }
             switch (Layout)
             {
                 case 1: BuildMall(root); break;
                 case 2: BuildCampus(root); break;
                 case 3: BuildCore(root); break;
                 default: BuildRooftop(root); break;
+            }
+        }
+
+        private void SideMetrics()
+        {
+            OuterLimits = new Vector2(22, 1); LowerLimit = -10; CameraClamp = new Vector2(19, 1);
+            spawns = new[] { P(-4, 0, 0), P(4, 0, 0), P(-6, 0, 0), P(6, 0, 0), P(0, 0, 0) };
+        }
+
+        private void BuildSideGreybox(Transform root)
+        {
+            SideMetrics(); Palette(new Color(.12f,.17f,.27f), new Color(.2f,.9f,1), new Color(1,.3f,.6f));
+            Platform(root, "Side main", Vector3.zero, new Vector3(16,.8f,3), surface, cyan);
+            Platform(root, "Side left", new Vector3(-4.8f,2.6f,0), new Vector3(3.8f,.3f,3), bridge, pink);
+            Platform(root, "Side right", new Vector3(4.8f,2.6f,0), new Vector3(3.8f,.3f,3), bridge, pink);
+            OneWayPlatforms = new[] { root.Find("Side left").GetComponent<Collider>(), root.Find("Side right").GetComponent<Collider>() };
+            AddLight(root, Color.white, new Color(.5f,.55f,.65f), DefaultBackdrop);
+        }
+
+        private void AdaptSideStage(Transform root)
+        {
+            SideMetrics(); var elevated = new List<Collider>();
+            foreach (var child in root.GetComponentsInChildren<Transform>())
+                if (child.name == "Back floor" || child.name == "Back floor trim") child.gameObject.SetActive(false);
+            // Preserve the source prefab: adapt only this runtime instance.
+            foreach (var collider in root.GetComponentsInChildren<Collider>())
+            {
+                bool combat = collider.transform.parent && collider.transform.parent.name == "Combat surfaces";
+                collider.enabled = combat;
+                if (!combat || collider.name == "Main platform") continue;
+                float top = collider.bounds.max.y;
+                Vector3 p = collider.transform.position;
+                collider.transform.position = new Vector3(p.x < 0 ? -4.8f : 4.8f, p.y + 2.6f - top, 0);
+                elevated.Add(collider);
+            }
+            OneWayPlatforms = elevated.ToArray();
+        }
+
+        // ───────────────────────── Production stages ─────────────────────────
+        /// <summary>
+        /// The four stage prefabs share one footprint: a 16 × 11 m main platform with its top at y = 0 and
+        /// two side platforms at x = ±11. Their solid surfaces carry their own box colliders. Behind the
+        /// main platform a solid floor one step lower ends in an invisible wall (z ≈ 7.5), so the back is
+        /// not a ledge: fighters only fall off the front and the sides. Scenery past that wall is visual.
+        /// </summary>
+        private void BuildStage(Transform root, GameObject stage)
+        {
+            Instantiate(stage, root, false).name = stage.name;
+            OuterLimits = new Vector2(23, 19); LowerLimit = -9; CameraClamp = new Vector2(14, 11);
+            spawns = new[] { P(-5, 0, -2), P(5, 0, -2), P(-3, 0, 3), P(3, 0, 3), P(0, 0, 0) };
+            switch (Layout)
+            {
+                case 1: // Torre Corporativa
+                    Backdrop = new Color(.16f, .12f, .2f);
+                    AddLight(root, new Color(1f, .95f, .88f), new Color(.5f, .46f, .52f), Backdrop);
+                    break;
+                case 2: // Estudio de Debate
+                    Backdrop = new Color(.05f, .06f, .12f);
+                    AddLight(root, new Color(.85f, .9f, 1f), new Color(.4f, .42f, .55f), Backdrop);
+                    break;
+                case 3: // Plaza Colonial: pale stone washes out under the default key light.
+                    Backdrop = new Color(.45f, .72f, .95f);
+                    AddLight(root, new Color(1f, .96f, .85f), new Color(.45f, .45f, .48f), Backdrop, 1.2f);
+                    break;
+                default: // Azotea Influencer
+                    Backdrop = new Color(.2f, .14f, .38f);
+                    AddLight(root, new Color(1f, .85f, .95f), new Color(.5f, .42f, .6f), Backdrop);
+                    break;
             }
         }
 
@@ -313,7 +409,7 @@ namespace CancelBrawl.Beta
             owned.Clear();
         }
 
-        private static void AddLight(Transform root, Color key, Color ambient, Color fog)
+        private static void AddLight(Transform root, Color key, Color ambient, Color fog, float intensity = 1.65f)
         {
             GameObject source = new GameObject("Beta key light");
             source.transform.SetParent(root, false);
@@ -321,7 +417,7 @@ namespace CancelBrawl.Beta
             Light light = source.AddComponent<Light>();
             light.type = LightType.Directional;
             light.color = key;
-            light.intensity = 1.65f;
+            light.intensity = intensity;
             light.shadows = LightShadows.Soft;
             RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.ambientLight = ambient;

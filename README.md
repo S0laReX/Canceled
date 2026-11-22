@@ -1,10 +1,10 @@
 # FUNADOS
 
-Juego local de lucha de plataformas 3D: movimiento X/Z, salto Y, porcentaje de daño y expulsiones. Proyecto de producción iniciado sobre Cancel Brawl 0.3, conservando sus cinco kits, cuatro arenas y once aspectos originales. Entrega actual: 0.4.5, tamaño de texto y HUD ajustables y HUD adaptado a otras proporciones de pantalla; incluye los menús navegables y volúmenes del laboratorio de 0.4.4, los ajustes de mando, vibración e impactos simultáneos de 0.4.3, incluye remapeo y opciones guardadas de 0.4.2, gestión de mandos de 0.4.1 y el laboratorio de 0.4.0.
+Juego local de lucha de plataformas **2.5D**: personajes 3D, movimiento lateral X, salto Y y profundidad bloqueada. Por instrucción del 16/11/2026, la referencia es el combo aéreo del video “The PERFECT Mario Ladder Combo”; la producción abandona el movimiento libre X/Z. Se conservan los cinco kits, cuatro escenarios de producción y once aspectos originales. Entrega actual: **0.5.1**, golpes direccionales, combos aéreos, poderes con avisos de alcance/altura y refugio central accesible frente al súper de Tío Antena.
 
 Abre `D:\Funados` desde Unity Hub con **Unity 6000.5.7f1**. Las versiones de paquetes están fijadas en `Packages/manifest.json` y `packages-lock.json`; no aceptes una actualización de Editor para reproducir esta entrega.
 
-Para continuar con otro agente, empezar por `CONTINUAR.md`: contiene los puntos de checklist, evidencia, archivos relevantes y siguiente implementación.
+Para continuar con otro agente, empezar por `CHECKLIST_2p5D.md` y `CONTINUAR.md`: contienen prioridades, criterios de aceptación, evidencia, archivos relevantes y siguiente implementación.
 
 ## Escenas y ejecución
 
@@ -14,7 +14,7 @@ Para continuar con otro agente, empezar por `CONTINUAR.md`: contiene los puntos 
 
 Menú del editor: **FUNADOS → Abrir juego local**, **Abrir CombatLab** y **Generar Windows**. La generación de escenas crea únicamente las que faltan; no sobrescribe escenas existentes. Guarda primero cualquier escena sin título modificada.
 
-El ejecutable nuevo se genera en `Builds/Funados/0.4.5/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte.
+El ejecutable nuevo se genera en `Builds/Funados/0.5.1/Windows/FUNADOS.exe`. Conserva toda la carpeta Windows junto al ejecutable. Las compilaciones anteriores se mantienen aparte. El cambio de diseño y sus límites están en `Docs/Produccion_2026-11-16/Combate_2p5D.md`.
 
 ## Mandos locales
 
@@ -22,25 +22,17 @@ Conecta los mandos antes de iniciar. Activa **Mandos locales** y selecciona **P1
 
 Cada mando queda reservado a un luchador durante la ronda. Si se pierde uno, la partida o cuenta atrás se pausa y muestra el puesto afectado. Reconectar el mismo dispositivo recupera su puesto; después hay que confirmar con **Continuar**, Esc o Start. Si el sistema reconoce el mando como uno nuevo, pulsa Start en él para reclamar el primer puesto perdido, o usa **Asignar mandos disponibles** en pausa. Repite para cada baja. La partida solo continúa cuando todos los puestos recuperan su mando. Los mandos sobrantes no controlan ni pausan la partida.
 
-Los nuevos mandos no sustituyen bots a mitad de ronda. Regresa al menú para cambiar participantes. En modo solo, P1 conserva teclado/ratón y puede usar el primer mando que estaba conectado al comenzar; desconectarlo también pausa y permite recuperarlo o regresar al menú.
+Los nuevos mandos no sustituyen bots a mitad de ronda. Regresa al menú para cambiar participantes. En modo solo, P1 conserva teclado/ratón y puede usar el primer mando que estaba conectado al comenzar; desconectarlo también pausa y permite recuperarlo o regresar al menú. La selección del modo de entrada todavía no se guarda entre ejecuciones.
 
-## Controles y opciones
+## Entrenamiento
 
-Los menús se manejan sin ratón: flechas (o las teclas de movimiento), cruceta o palanca para mover el foco, que se marca con un borde blanco; Enter, Espacio o A para elegir; izquierda/derecha para ajustar volúmenes, ajustes de mando o el aspecto de un rival; B para salir de la pausa. Start empieza la partida desde el menú.
+Usa **A/D** para moverte lateralmente, ratón para orientar izquierda/derecha, **W + clic** para un golpe ascendente y **S + clic en el aire** para un remate descendente. Espacio permite saltar dos veces, clic izquierdo/derecho ejecuta básico/fuerte, E especial, R recuperación aérea, Shift esquiva, Q super, S o Ctrl caída acelerada y Esc pausa. **S+Espacio** permite bajar de las plataformas elevadas. En mando, palanca/cruceta izquierda elige movimiento y dirección del ataque; también se puede orientar con la palanca derecha.
 
-Por defecto: WASD para moverse, ratón para orientar, Espacio para el doble salto, clic izquierdo/derecho para básico/fuerte, E especial, R recuperación aérea, Shift izquierdo esquiva, Q super, Ctrl izquierdo caída acelerada y Esc pausa. En mando: palanca izquierda o cruceta para moverse, palanca derecha para orientar, A salto, X básico, Y fuerte, B especial, RB recuperación, RT esquiva, LB super, LT caída y Start pausa.
-
-El panel **CONTROLES** del menú y de la pausa muestra las asignaciones con los nombres del teclado y del mando conectados. Haz clic en una celda y pulsa la tecla, botón del ratón o botón del mando nuevo. Si ese control ya lo usaba otra acción, las dos se intercambian y aparece un aviso. Esc y Start están reservados para la pausa y cancelan la captura. **Restaurar teclado** y **Restaurar mando** vuelven a los valores por defecto. Todos los mandos comparten el mismo perfil.
-
-La pestaña **MANDO** de OPCIONES ajusta la zona muerta para mover y para orientar, la respuesta de la palanca (fina, lineal o rápida) y la vibración; al cambiar la vibración, el mando vibra un instante como muestra. La cruceta no usa esos ajustes. Solo vibra el mando del luchador que recibe el golpe, pierde una vida o lanza su super.
-
-La pestaña **PANTALLA** ajusta el tamaño del texto y del HUD (100, 115 o 130 %). El HUD se adapta a pantallas 4:3, 16:10 y 21:9 sin bandas negras, y el texto pequeño nunca baja de un tamaño legible para la resolución.
-
-Volúmenes, efectos reducidos, modo de entrada, ajustes de mando, tamaños de pantalla y controles se guardan en `funados-options.json`, dentro de la carpeta de datos persistentes de Unity. Cada guardado conserva la versión anterior como `.bak`. Si el archivo se daña, se aparta con el sufijo `.danado-<fecha>`, se recupera la copia o se cargan valores seguros, y el panel OPCIONES lo indica.
+Para practicar un combo: acércate, mantén W y golpea con clic izquierdo; después del impacto pulsa Espacio y vuelve a golpear con W en el aire. El contador muestra impactos consecutivos sobre el mismo rival separados por menos de 1,1 segundos. El salto cancela un básico confirmado, mientras un golpe fallado conserva su recuperación. Hay una pequeña pausa de impacto y buffer de entrada. El remate descendente cambia el lanzamiento vertical hacia abajo. Los valores son provisionales y no reproducen cifras internas del juego de referencia.
 
 El objetivo no emite entradas; recibe daño y knockback normal. El laboratorio no agota tiempo ni stocks. Las caídas devuelven al luchador al punto de práctica. **−25/+25** modifica el daño inicial del objetivo entre 0 y 300; **Reiniciar** reconstruye la sesión, elimina proyectiles/zonas y restablece ese porcentaje. **Super listo** llena la barra de P1.
 
-**Volúmenes** muestra el alcance horizontal, cono y tolerancia vertical del cuerpo a cuerpo, y también la esfera de impacto de los proyectiles, las zonas de super, el emisor y la onda, usando las mismas constantes que las comprobaciones de impacto: amarillo cuando aún no golpea y rojo cuando está activo. La cruz baja marca la raíz (cuerpo a cuerpo, emisor) y la alta el pecho (proyectiles, burbuja). La geometría sólida sigue bloqueando impactos.
+**Volúmenes** muestra el alcance horizontal, cono y tolerancia vertical del cuerpo a cuerpo usando los mismos datos del golpe: amarillo durante preparación/final y rojo durante la ventana activa. La cruz marca la raíz que el barrido consulta. La geometría sólida sigue bloqueando impactos. Los proyectiles, zonas, onda y sectores seguros conservan sus avisos existentes; sus volúmenes de colisión completos aún no tienen un visualizador adicional.
 
 El entrenamiento respeta la arena, personajes y aspectos seleccionados en el menú. Volver al menú permite iniciar versus con el número de rivales elegido anteriormente. El modo no cambia el balance compartido ni los controles de la beta.
 
@@ -55,11 +47,11 @@ Genera Windows desde el menú FUNADOS. Para repetir las pruebas en una carpeta d
 ```powershell
 $proof = 'D:\Funados\Evidence\MiPrueba'
 New-Item -ItemType Directory -Force $proof | Out-Null
-$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.4.5\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-beta-smoke -evidence-path $proof -options-path $proof\player-options.json -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
+$game = Start-Process -FilePath 'D:\Funados\Builds\Funados\0.5.1\Windows\FUNADOS.exe' -WorkingDirectory 'D:\Funados' -ArgumentList "-side-smoke -evidence-path $proof -force-d3d11 -screen-width 1280 -screen-height 720 -screen-fullscreen 0 -logFile $proof\player.log" -PassThru -Wait
 $game.ExitCode
 ```
 
-La prueba recorre los cinco kits, las cuatro arenas, reglas de partida, laboratorio, dispositivos, remapeo y recuperación de opciones; `-options-path` mantiene las opciones de la prueba dentro de la evidencia; dura unos tres minutos y se cierra al terminar. Usa una ruta sin espacios en este comando o entrecomilla cada ruta en ArgumentList. Las capturas y `smoke-report.json` se guardan en esa carpeta. Desconecta mandos físicos antes de esta prueba: el último bloque crea dispositivos virtuales y se niega a manipular los reales. Para ejecutar solo ese bloque, cambia `-beta-smoke` por `-controls-smoke`. El informe identifica ahora la versión de presentación de la escena. Mandos físicos, pruebas con personas y aceptación del arte siguen pendientes.
+`-side-smoke` prueba las reglas nuevas: combo escalera, remate, los cinco supers, especiales, avisos XY, refugio de Tío Antena, plataformas, cuatro escenarios, bots y dispositivos. Genera `side-report.json` y capturas. `-power-smoke` ejecuta solo las 32 comprobaciones de poderes y avisos. `-beta-smoke` activa exclusivamente las reglas históricas 3D para regresión y genera `smoke-report.json`; no representa el diseño actual de producción. `-controls-smoke` ejecuta solo dispositivos bajo esas reglas históricas. Usa una carpeta de evidencia nueva y sin espacios o entrecomilla las rutas. Desconecta mandos físicos antes de las pruebas: se crean dispositivos virtuales y el bloque se niega a manipular los reales. Mandos físicos, pruebas con personas y aceptación del arte siguen pendientes.
 
 ## Git y restauración
 

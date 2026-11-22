@@ -14,6 +14,8 @@ namespace CancelBrawl.Beta
         [SerializeField] private float minimumDistance = 24f;
         [SerializeField] private float maximumDistance = 43f;
         [SerializeField] private float followSharpness = 4f;
+        /// <summary>Camera pitch and aim height used on production stages (frontal view).</summary>
+        private const float StageElevation = 12f, StageAimLift = 2.6f;
         private Transform[] targets = System.Array.Empty<Transform>();
         private Camera view;
         private bool initialized;
@@ -37,13 +39,15 @@ namespace CancelBrawl.Beta
             view.nearClipPlane = 0.2f;
             view.farClipPlane = 180f;
             view.clearFlags = CameraClearFlags.SolidColor;
-            view.backgroundColor = new Color(0.025f, 0.045f, 0.085f);
+            view.backgroundColor = BrawlArena.DefaultBackdrop;
         }
 
         public void Setup(BrawlArena court, Material occluderTemplate)
         {
             if (arena != court) RestoreAll();
             arena = court; fadeTemplate = occluderTemplate;
+            if (!view) Awake();
+            view.backgroundColor = court ? court.Backdrop : BrawlArena.DefaultBackdrop;
         }
 
         public void Configure(Transform[] participants)
@@ -70,6 +74,7 @@ namespace CancelBrawl.Beta
         private void Frame(float blend)
         {
             if (!view) return;
+            if (arena && arena.IsSideView) { FrameSide(blend); return; }
             Vector2 clamp = arena ? arena.CameraClamp : new Vector2(14f, 11f);
             Bounds bounds = new Bounds(new Vector3(0f, 0.5f, 0f), Vector3.zero);
             int count = 0;
@@ -90,7 +95,11 @@ namespace CancelBrawl.Beta
             center.z = Mathf.Clamp(center.z * 0.25f, -clamp.y * .15f, clamp.y * .15f);
             center.y = Mathf.Clamp(center.y * 0.25f, 0.4f, 2f);
 
-            Quaternion rotation = Quaternion.Euler(elevation, 0f, 0f);
+            // Production stages are framed from the front like a platform fighter: a low camera aimed
+            // above the floor, so the scenery behind the platforms fills the frame.
+            bool frontal = arena && arena.UsesStageArt;
+            if (frontal) center.y += StageAimLift;
+            Quaternion rotation = Quaternion.Euler(frontal ? StageElevation : elevation, 0f, 0f);
             float verticalHalfFov = view.fieldOfView * 0.5f * Mathf.Deg2Rad;
             float horizontalFit = (bounds.extents.x + 4.8f) / (Mathf.Tan(verticalHalfFov) * Mathf.Max(0.8f, view.aspect));
             float depthFit = (bounds.extents.z + 6f) / Mathf.Tan(verticalHalfFov);
@@ -109,6 +118,21 @@ namespace CancelBrawl.Beta
             }
             else shake = 0f;
             transform.position = basePosition + rotation * offset;
+        }
+
+        private void FrameSide(float blend)
+        {
+            Bounds bounds = new Bounds(new Vector3(0, 2.5f, 0), new Vector3(17, 6, 0));
+            foreach (var target in targets)
+                if (target && target.gameObject.activeInHierarchy)
+                    bounds.Encapsulate(new Vector3(Mathf.Clamp(target.position.x,-19,19), Mathf.Clamp(target.position.y,-4,18) + 1,0));
+            view.orthographic = true;
+            float size = Mathf.Clamp(Mathf.Max(bounds.extents.y + 2, (bounds.extents.x + 2) / Mathf.Max(.7f, view.aspect)), 5.5f, 16);
+            view.orthographicSize = initialized ? Mathf.Lerp(view.orthographicSize, size, blend) : size;
+            transform.rotation = Quaternion.identity;
+            Vector3 desired = new Vector3(bounds.center.x, bounds.center.y, -35);
+            basePosition = initialized ? Vector3.Lerp(basePosition, desired, blend) : desired;
+            transform.position = basePosition; initialized = true;
         }
 
         /// <summary>Fades any solid court piece between the camera and a fighter; restores it when clear.</summary>

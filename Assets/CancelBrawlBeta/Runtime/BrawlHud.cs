@@ -184,7 +184,7 @@ namespace CancelBrawl.Beta
         {
             Fill(new Rect(80, 46, 65, 5), Cyan);
             Label(new Rect(80, 58, 800, 86), match.Title, title, Paper);
-            Label(new Rect(84, 146, 820, 34), "El último en pie se queda con la cancha.", heading, Muted);
+            Label(new Rect(84, 146, 820, 34), match.IsSideView ? "Combos aéreos. Golpes y poderes. Fuera de la plataforma." : "El último en pie se queda con la cancha.", heading, Muted);
             Label(new Rect(1010, 70, 510, 26), "LOCAL  /  " + match.DisplayVersion, body, Cyan, TextAnchor.UpperRight);
             Label(new Rect(1010, 102, 510, 52), "Empuja a tus rivales fuera del escenario.\n100 % de daño no elimina por sí solo.", small, Paper, TextAnchor.UpperRight);
             bool menuEnabled = GUI.enabled;
@@ -222,8 +222,8 @@ namespace CancelBrawl.Beta
                 int arena = i;
                 if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.ArenaIndex = arena;
                 Nav("arena-" + i, rect, () => match.ArenaIndex = arena);
-                Label(new Rect(rect.x + 14, rect.y + 10, rect.width - 22, 24), BrawlArena.Names[i].ToUpperInvariant(), small, selected ? Cyan : Paper);
-                Label(new Rect(rect.x + 14, rect.y + 34, rect.width - 22, 40), BrawlArena.Descriptions[i], tiny, Muted);
+                Label(new Rect(rect.x + 14, rect.y + 10, rect.width - 22, 24), BrawlArena.NameOf(i, match.UsesStageArt(i)).ToUpperInvariant(), small, selected ? Cyan : Paper);
+                Label(new Rect(rect.x + 14, rect.y + 34, rect.width - 22, 40), BrawlArena.DescriptionOf(i, match.UsesStageArt(i)), tiny, Muted);
             }
 
             // 03 · rivals
@@ -273,7 +273,7 @@ namespace CancelBrawl.Beta
 
             GUI.enabled = match.CanStartMatch;
             Rect startRect = new Rect(80, 818, 900, 62);
-            if (Button(startRect, match.CanStartMatch ? $"ENTRAR A {BrawlArena.Names[match.ArenaIndex].ToUpperInvariant()}   /   ENTER · A" : "CONECTA DOS MANDOS PARA INICIAR", Cyan)) match.StartMatch();
+            if (Button(startRect, match.CanStartMatch ? $"ENTRAR A {BrawlArena.NameOf(match.ArenaIndex, match.UsesStageArt(match.ArenaIndex)).ToUpperInvariant()}   /   ENTER · A" : "CONECTA DOS MANDOS PARA INICIAR", Cyan)) match.StartMatch();
             Nav("start", startRect, match.StartMatch);
             GUI.enabled = menuEnabled;
             DrawControls(new Rect(1010, 196, 510, 470), true);
@@ -390,7 +390,9 @@ namespace CancelBrawl.Beta
             GUI.matrix = Layout.TopScaled(Vector2.zero);
             Panel(new Rect(25, 22, 360, 68));
             Label(new Rect(42, 31, 330, 28), match.Title, body, Paper);
-            Label(new Rect(42, 63, 330, 20), "BETA LOCAL  ·  " + match.Arena.DisplayName.ToUpperInvariant(), small, Cyan);
+            Label(new Rect(42, 63, 330, 20), (match.IsSideView ? "2.5D  ·  " : "BETA LOCAL  ·  ") + match.Arena.DisplayName.ToUpperInvariant(), small, Cyan);
+            if (match.IsSideView && match.Fighters.Length > 0 && match.Fighters[0].ComboHits >= 2)
+                Label(new Rect(45, 108, 330, 44), match.Fighters[0].ComboHits + " GOLPES", heading, Pink);
             GUI.matrix = Layout.TopScaled(new Vector2(Width * .5f, 0));
             Panel(new Rect(710, 18, 180, 72));
             int seconds = Mathf.CeilToInt(Mathf.Max(0, match.RemainingTime));
@@ -419,8 +421,12 @@ namespace CancelBrawl.Beta
             }
             GUI.matrix = Layout.Hint;
             Label(new Rect(25, 876, BrawlHudLayout.HintWidth, 22),
-                $"{MoveLabel()} mover   ·   RATÓN orientar   ·   {KeyLabel(BrawlAction.Jump)} doble salto   ·   {KeyLabel(BrawlAction.Basic)} / {KeyLabel(BrawlAction.Heavy)} básico / fuerte   ·   " +
-                $"{KeyLabel(BrawlAction.Special)} especial   ·   {KeyLabel(BrawlAction.Recovery)} recuperar   ·   {KeyLabel(BrawlAction.Dodge)} esquiva   ·   {KeyLabel(BrawlAction.Super)} super   ·   {KeyLabel(BrawlAction.FastFall)} caer",
+                match.IsSideView
+                    ? $"{KeyLabel(BrawlAction.MoveLeft)}/{KeyLabel(BrawlAction.MoveRight)} mover · {KeyLabel(BrawlAction.MoveUp)}/{KeyLabel(BrawlAction.MoveDown)} + golpe: arriba/abajo · {KeyLabel(BrawlAction.Jump)} doble salto · " +
+                      $"{KeyLabel(BrawlAction.MoveDown)}+{KeyLabel(BrawlAction.Jump)} bajar · {KeyLabel(BrawlAction.Basic)}/{KeyLabel(BrawlAction.Heavy)} básico/fuerte · {KeyLabel(BrawlAction.Special)} poder · " +
+                      $"{KeyLabel(BrawlAction.Recovery)} recuperar · {KeyLabel(BrawlAction.Dodge)} esquiva · {KeyLabel(BrawlAction.Super)} super"
+                    : $"{MoveLabel()} mover   ·   RATÓN orientar   ·   {KeyLabel(BrawlAction.Jump)} doble salto   ·   {KeyLabel(BrawlAction.Basic)} / {KeyLabel(BrawlAction.Heavy)} básico / fuerte   ·   " +
+                      $"{KeyLabel(BrawlAction.Special)} especial   ·   {KeyLabel(BrawlAction.Recovery)} recuperar   ·   {KeyLabel(BrawlAction.Dodge)} esquiva   ·   {KeyLabel(BrawlAction.Super)} super   ·   {KeyLabel(BrawlAction.FastFall)} caer",
                 small, Paper, TextAnchor.MiddleCenter);
             GUI.matrix = Layout.Top;
         }
@@ -544,7 +550,8 @@ namespace CancelBrawl.Beta
             float y = rect.y + 14;
             Label(new Rect(x, y, 214, 32), "CONTROLES", heading, Paper);
             Label(new Rect(x + 214, y, inner - 214, 48),
-                "Elige un control para cambiarlo.\nEsc / Start: pausa (reservados).\nOrientar: ratón / palanca der.", tiny, Muted);
+                "Elige un control para cambiarlo.\nEsc / Start: pausa (reservados).\n" +
+                (match.IsSideView ? "Arriba/abajo + golpe: dirección · abajo + salto: bajar." : "Orientar: ratón / palanca der."), tiny, Muted);
             bool previous = GUI.enabled;
             GUI.enabled = previous && match.CanRemap && !match.RemapListening;
             y += 48;
@@ -555,7 +562,7 @@ namespace CancelBrawl.Beta
             float row = Mathf.Floor((rect.yMax - 76 - y) / BrawlBindings.KeyboardActions.Length);
             foreach (BrawlAction action in BrawlBindings.KeyboardActions)
             {
-                Label(new Rect(x, y + 3, actionWidth - 6, row), BrawlBindings.ActionName(action), small, Muted);
+                Label(new Rect(x, y + 3, actionWidth - 6, row), BrawlBindings.ActionName(action, match.IsSideView), small, Muted);
                 BindingCell(new Rect(x + actionWidth, y, cellWidth, row - 3), BindingScheme.Keyboard, action, bindings.Label(BindingScheme.Keyboard, action));
                 Rect padCell = new Rect(x + actionWidth + cellWidth + 8, y, cellWidth, row - 3);
                 if (Array.IndexOf(BrawlBindings.GamepadActions, action) >= 0)

@@ -1,0 +1,141 @@
+{
+  "version": "0.5.1",
+  "date": "2026-11-16",
+  "parentCommit": "8e457e8af515441ab71944a19e45c1752fabe0b7",
+  "editor": "6000.5.7f1",
+  "design": "Combate lateral X/Y, Z=0; modelos originales",
+  "sources": [
+    {
+      "path": "Assets/CancelBrawlBeta/Editor/FunadosProjectBuilder.cs",
+      "sha256": "2F26C7EE16D9A36C1853A34001F4F8D8CD29F50C24024C90DFC998CF8679921D"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlArena.cs",
+      "sha256": "6F87A7A7D64DEA4ED77311D71378D3E0D454F00D38C6A90EA9111D43E3CB7602"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlAutoRig.cs",
+      "sha256": "8B17447D1B8D38364DB00DD6EE47D07460384336FE6698B1C0ABB86604D3AD01"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlCamera.cs",
+      "sha256": "45006AD0AA365875A9F7F166BDE616865E40AB4D99B4543E0967A80D3B8A1D38"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlCharacterArt.cs",
+      "sha256": "4C28E21412609EE9F5937EEFCB019654F335B7B946D2BBA069F776EA0C3DF7BE"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlCombatVolumes.cs",
+      "sha256": "2CAC22A2CFC19BB96FA5733F68084815E2AD7F47EB920DB42F806931E1A18B81"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlDeviceChecks.cs",
+      "sha256": "CDA176D87887CEE12BA99C5A44C56C29619F05D2503184E23E0B2C5FD2874687"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlDeviceSlots.cs",
+      "sha256": "A59F7CD7B526BECD13A7CEDB8D82B636B6E4490FB382E0D8770DB144465E1888"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlFeedback.cs",
+      "sha256": "AB7D3B52EF723E795998E1C4B801C6E94280176AC68E82ED89807B8F4D942FA9"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlFighter.cs",
+      "sha256": "EB4FB3E73B57F9DE7AACAF25121A755213BEF938684D82C4E0C61E298743954A"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlFighterVisual.cs",
+      "sha256": "1E39A0440E6D1D0B7EC7B7073F36EC85F01D15CEB42277364165F18A5114692B"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlFighterVisual.Model.cs",
+      "sha256": "FFEFD650416015DD444ED9FFE9D480B75AC79A7766D812056EE78D15843F9A88"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlHazards.cs",
+      "sha256": "65B47823DF405E69F714FEAEDE69500225DB5C1094E9C220E1D52195C4FFD550"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlHud.cs",
+      "sha256": "25A89294F5A5E3190646A570507B20B37D6B128F6A0256D42D555207352F483A"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlMatch.cs",
+      "sha256": "7C73410AD0963D4D1FBA52AACB1D3CDB5470063785A6C7B340CDAFF846770F57"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlProjectile.cs",
+      "sha256": "21FEFE431A6BC84ADA59D83FBD3B1D095583B79D5B6B43B3E16804299A68333B"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlRoster.cs",
+      "sha256": "3815B532E7E174FE4162D6843A184782F9DF1205005D8E51D6E65F11D7C19E34"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSettings.cs",
+      "sha256": "0C2A06B85B1B0237B51B2361E0C88FED8F0DABDC1024F5B51A63BEC4E4CFAB02"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSidePowerChecks.cs",
+      "sha256": "B6B3AD8B2A1A6F7D5D912BD6593F3C57E5453B5859C06CAD08D1EA8552449653"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSideSmokeProbe.cs",
+      "sha256": "85E1D268BF4DF9381003693FA93CB5F5E87AD80077AA4C13B469E6C049CE8D27"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSideTelegraph.cs",
+      "sha256": "41E696B9D589508C2D7A29E478F225E91BE8A00B9940F60C1F846AC15E4A32E6"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlSmokeProbe.cs",
+      "sha256": "6BA38479A6EB88CC95E4C5CA1025E4005637849C81442A3580916B08C7971EF1"
+    },
+    {
+      "path": "Assets/CancelBrawlBeta/Runtime/BrawlTransient.cs",
+      "sha256": "3F20E3CE47CE02CF2D1EA73E59EDAD009372C0B670C4622E73D2F8B268D7B3EF"
+    }
+  ],
+  "assemblySHA256": "53D7175ACC1D4F8B2B9F1D3419E2A4852B0195045F61E329C0B811B94F475670",
+  "executableSHA256": "D05C5848F7CC2EB32FF6016F54762EE3C666A69B862BE297DF2390830C1EA8CF",
+  "physicalGamepadsTested": false,
+  "unchangedCharacterFiles": 22,
+  "gitLfsFsck": "OK",
+  "verificationStatus": "Passed: final Windows build and three suites; visual captures inspected",
+  "suites": [
+    {
+      "passed": true,
+      "checks": 32,
+      "sha256": "E745002E4BD02C8307B0E158F228A580478EFC175F75E2DD81F5AE1B2838DFBF",
+      "failures": 0,
+      "path": "Evidence/Production-0.5.1/Focused/side-report.json"
+    },
+    {
+      "passed": true,
+      "checks": 88,
+      "sha256": "1F6EB2AF18207B7FD44194422BC932A7AB82D1947BE095D4B4097E552D58E3C9",
+      "failures": 0,
+      "path": "Evidence/Production-0.5.1/Side/side-report.json"
+    },
+    {
+      "passed": true,
+      "checks": 109,
+      "sha256": "E859B7212E53C079E2983A8C39814AB0014043BE2CD7222113064BBF8234B8FF",
+      "failures": 0,
+      "path": "Evidence/Production-0.5.1/Legacy/smoke-report.json"
+    }
+  ],
+  "visualReview": [
+    "Focused/tio-warning.png: white refuge and separated REFUGIO label",
+    "Focused/lola-warning.png: XY volume",
+    "Focused/cripto-warning.png: XY radius"
+  ],
+  "build": {
+    "warnings": 0,
+    "initialCleanBuildShaderWarnings": 485,
+    "result": "Succeeded",
+    "errors": 0
+  }
+}

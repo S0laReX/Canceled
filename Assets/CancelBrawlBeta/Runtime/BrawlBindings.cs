@@ -217,6 +217,14 @@ namespace CancelBrawl.Beta
         }
 
         // ───────────── Labels (real device names) ─────────────
+        /// <summary>Action name; in side view the vertical keys choose attack direction instead of moving in depth.</summary>
+        public static string ActionName(BrawlAction action, bool sideView)
+        {
+            if (sideView && action == BrawlAction.MoveUp) return "Arriba: dirección de golpe";
+            if (sideView && action == BrawlAction.MoveDown) return "Abajo: golpe, caer o bajar";
+            return ActionName(action);
+        }
+
         public static string ActionName(BrawlAction action)
         {
             switch (action)
