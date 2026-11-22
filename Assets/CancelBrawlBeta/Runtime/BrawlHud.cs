@@ -147,10 +147,13 @@ namespace CancelBrawl.Beta
             Rect field = new Rect(52 - Layout.PadX, 125 * Layout.HudScale, Width - 104 + 2 * Layout.PadX,
                 Layout.ViewHeight - Layout.StripHeight - 25 - 125 * Layout.HudScale);
             Matrix4x4 top = Layout.Top;
+            int offscreen = 0, danger = 0;
             foreach (BrawlFighter fighter in match.Fighters)
             {
                 if (fighter == null || fighter.Eliminated || fighter.IsRespawning ||
                     !fighter.gameObject.activeInHierarchy) continue;
+                // SYS-039: anticipate KO limits — near one, the badge turns pink and adds "!" (also when off-camera).
+                bool nearLimit = match.Arena != null && match.Arena.DistanceToKoLimit(fighter.transform.position) < KoWarningDistance;
                 Vector3 screen = markerCamera.WorldToScreenPoint(fighter.transform.position + Vector3.up * 2.25f);
                 Vector2 position = Layout.ScreenToCanvas(new Vector2(screen.x, Screen.height - screen.y)) - new Vector2(Layout.PadX, 0);
                 if (screen.z < 0)
@@ -167,17 +170,27 @@ namespace CancelBrawl.Beta
                     label = "P" + (fighter.PlayerIndex + 1) + "  " + arrow;
                     position.x = Mathf.Clamp(position.x, field.xMin, field.xMax);
                     position.y = Mathf.Clamp(position.y, field.yMin, field.yMax);
+                    offscreen++;
                 }
+                if (nearLimit) { label += " !"; danger++; }
 
                 GUI.matrix = top * BrawlHudLayout.About(position, Layout.HudScale);
                 Rect badge = new Rect(position.x - 39, position.y - 29, 78, 28);
-                Fill(badge, new Color(.025f, .035f, .065f, .94f));
+                Fill(badge, nearLimit ? new Color(.45f, .05f, .2f, .96f) : new Color(.025f, .035f, .065f, .94f));
+                if (nearLimit) Outline(badge, 2, Pink);
                 Fill(new Rect(badge.x, badge.yMax - 3, badge.width, 3), fighter.PlayerColor);
                 Label(new Rect(badge.x + 2, badge.y, badge.width - 4, badge.height - 3), label,
-                    markerText, fighter.PlayerColor);
+                    markerText, nearLimit ? Paper : fighter.PlayerColor);
             }
             GUI.matrix = top;
+            if (Event.current.type == EventType.Repaint) { OffscreenMarkers = offscreen; DangerMarkers = danger; }
         }
+
+        /// <summary>Badges warn when a fighter is closer than this to a KO limit (SYS-039).</summary>
+        public const float KoWarningDistance = 3f;
+        /// <summary>Fighter badges drawn at the screen edge / in KO-limit danger in the last frame (for checks).</summary>
+        public int OffscreenMarkers { get; private set; }
+        public int DangerMarkers { get; private set; }
 
         // ───────────────────────── Menu ─────────────────────────
         private void DrawMenu()

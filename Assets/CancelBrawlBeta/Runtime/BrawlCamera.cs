@@ -23,6 +23,11 @@ namespace CancelBrawl.Beta
         private Material fadeTemplate;
         private Vector3 basePosition;
         private float shake;
+        /// <summary>Fraction of the viewport covered by the top HUD (title, clock); side framing keeps fighters below it.</summary>
+        public float TopReserve { get; set; } = .14f;
+        /// <summary>Orthographic zoom limits of the side camera (SYS-036).</summary>
+        public const float MinSideSize = 5.5f, MaxSideSize = 16f;
+        public Camera View => view;
         private readonly Dictionary<Renderer, Material> faded = new Dictionary<Renderer, Material>();
         private readonly Dictionary<Material, Material> fadeCache = new Dictionary<Material, Material>();
         private readonly HashSet<Renderer> occluding = new HashSet<Renderer>();
@@ -120,17 +125,32 @@ namespace CancelBrawl.Beta
             transform.position = basePosition + rotation * offset;
         }
 
+        /// <summary>
+        /// Side framing (SYS-036): every active fighter, head and marker included, plus the main stage, inside the part
+        /// of the view not covered by the top HUD; zoom clamped; fixed rotation so aiming never changes reference.
+        /// </summary>
         private void FrameSide(float blend)
         {
-            Bounds bounds = new Bounds(new Vector3(0, 2.5f, 0), new Vector3(17, 6, 0));
+            float minX = -8.5f, maxX = 8.5f, minY = -.5f, maxY = 5.5f;
             foreach (var target in targets)
-                if (target && target.gameObject.activeInHierarchy)
-                    bounds.Encapsulate(new Vector3(Mathf.Clamp(target.position.x,-19,19), Mathf.Clamp(target.position.y,-4,18) + 1,0));
+            {
+                if (!target || !target.gameObject.activeInHierarchy) continue;
+                float x = Mathf.Clamp(target.position.x, -19, 19), y = Mathf.Clamp(target.position.y, -4, 18);
+                minX = Mathf.Min(minX, x); maxX = Mathf.Max(maxX, x);
+                minY = Mathf.Min(minY, y); maxY = Mathf.Max(maxY, y + 2.4f); // marker badge sits 2.25 above the feet
+            }
             view.orthographic = true;
-            float size = Mathf.Clamp(Mathf.Max(bounds.extents.y + 2, (bounds.extents.x + 2) / Mathf.Max(.7f, view.aspect)), 5.5f, 16);
+            const float marginX = 2f, marginBottom = 1f, marginTop = .8f;
+            float reserve = Mathf.Clamp(TopReserve, 0, .4f);
+            float bottom = minY - marginBottom, top = maxY + marginTop;
+            float sizeByHeight = (top - bottom) / (2 * (1 - reserve));
+            float sizeByWidth = (maxX - minX + 2 * marginX) * .5f / Mathf.Max(.7f, view.aspect);
+            float size = Mathf.Clamp(Mathf.Max(sizeByHeight, sizeByWidth), MinSideSize, MaxSideSize);
             view.orthographicSize = initialized ? Mathf.Lerp(view.orthographicSize, size, blend) : size;
             transform.rotation = Quaternion.identity;
-            Vector3 desired = new Vector3(bounds.center.x, bounds.center.y, -35);
+            // The usable band [centre − size, centre + size − 2·reserve·size] is centred on the content.
+            float centreY = (bottom + top) * .5f + reserve * size;
+            Vector3 desired = new Vector3((minX + maxX) * .5f, centreY, -35);
             basePosition = initialized ? Vector3.Lerp(basePosition, desired, blend) : desired;
             transform.position = basePosition; initialized = true;
         }

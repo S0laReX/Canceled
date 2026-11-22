@@ -43,6 +43,14 @@ namespace CancelBrawl.Beta
         public int Layout { get; private set; }
         public bool IsSideView { get; private set; }
         public float UpperLimit => IsSideView ? 20 : float.PositiveInfinity;
+
+        /// <summary>Distance from a position to the nearest KO limit (left/right, bottom, top in 2.5D) (SYS-039).</summary>
+        public float DistanceToKoLimit(Vector3 p)
+        {
+            float side = OuterLimits.x - Mathf.Abs(p.x), below = p.y - LowerLimit;
+            float above = IsSideView ? UpperLimit - p.y : float.PositiveInfinity;
+            return Mathf.Min(side, Mathf.Min(below, above));
+        }
         public Collider[] OneWayPlatforms { get; private set; } = new Collider[0];
         /// <summary>True when this court was built from a production stage prefab instead of greyboxes.</summary>
         public bool UsesStageArt { get; private set; }

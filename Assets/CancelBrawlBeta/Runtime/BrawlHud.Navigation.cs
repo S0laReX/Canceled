@@ -77,9 +77,13 @@ namespace CancelBrawl.Beta
             if (markerCamera == null) markerCamera = Camera.main;
             if (markerCamera == null) return;
             int cards = match.Phase == MatchPhase.Menu || match.Fighters == null ? 0 : match.Fighters.Length;
-            float strip = BrawlHudLayout.Compute(Screen.width, Screen.height, match.HudScale, cards).StripFraction;
+            var layout = BrawlHudLayout.Compute(Screen.width, Screen.height, match.HudScale, cards);
+            float strip = layout.StripFraction;
             var wanted = new Rect(0, strip, 1, 1 - strip);
             if (markerCamera.rect != wanted) markerCamera.rect = wanted;
+            // The top HUD (title, clock) covers this share of the 3D view; side framing keeps fighters below it.
+            var group = markerCamera.GetComponent<BrawlCamera>();
+            if (group != null) group.TopReserve = 125 * layout.HudScale / Mathf.Max(1, layout.ViewHeight - layout.StripHeight);
         }
 
         private int IndexOf(string id) { for (int i = 0; i < navItems.Count; i++) if (navItems[i].Id == id) return i; return -1; }

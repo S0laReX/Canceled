@@ -1,10 +1,10 @@
 # Checklist activa de FUNADOS 2.5D (GDD 2.0)
 
-Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.5** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
+Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.6** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **32 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en 0.6.2 + 1 en 0.6.3 + 1 en 0.6.4 + 1 en 0.6.5). Ninguna en ⧗. Evidencia vigente 0.6.5 (`Evidence/Production-0.6.5`): power 32/32, moves 21/21, kits 91/91, recovery 16/16, side-controls 127/127, side 312/312, controls 125/125, beta 208/208.
+Recuento: **33 de 63** marcadas (20 del GDD 2.0 + 13 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.6.6 (`Evidence/Production-0.6.6`): power 32/32, moves 21/21, kits 91/91, recovery 16/16, camera 15/15, side-controls 127/127, side 326/326, controls 125/125, beta 208/208.
 
 ## Instrucciones para el siguiente agente
 
@@ -31,8 +31,8 @@ Recuento: **32 de 63** marcadas (20 del GDD 2.0 + 6 en 0.6.0 + 2 en 0.6.1 + 1 en
   - 0.6.0 conserva la regla por ejes también con teclado remapeado y con la palanca tras zona muerta/curva (`BrawlMatch.ReadKeyboardButtons` / `ReadGamepad`).
 - [x] Recuperación desde ambos bordes con los cinco kits (SYS-030 a 035)
   - 0.6.5 (`BrawlRecoveryChecks`, `-recovery-smoke`): SYS-030 salto, segundo salto al 94 %, sin tercer salto, caída acelerada y recursos aéreos consumidos una vez; SYS-031 aterrizar restaura y rozar pared o techo no; SYS-032 una recuperación por fase, vulnerable y con final; SYS-033 caída a máxima velocidad sobre suelo y plataforma y esquiva contra pared sin atravesar; SYS-034 indicador de apoyo sobre plataforma y suelo; SYS-035 sin pared invisible en el borde y alcance medido por búsqueda binaria, simétrico entre bordes. Alcance de vuelta desde fuera del borde (a nivel / 2 m abajo): Don Promesio 8,8/8,1 m, Lola Viral 11,8/11,1, Coach Tóxico 8,3/7,7 (el menor, ARENA-357), Cripto King 9,4/8,6, Tío Antena 11,8/11,8 (`recovery-reach.json`). **Para calibrar:** el alcance es muy generoso (Lola y Tío casi en el tope medido) y el indicador de apoyo se ve fino en cámara lateral.
-- [ ] Cámara y avisos fuera de pantalla con cinco luchadores y alturas extremas (SYS-036 a 040)
-  - Parcial (0.4.5): la cámara reserva exactamente la franja del HUD en 4:3, 16:10 y 21:9 (`BrawlHudLayout`). Falta el caso lateral con cinco luchadores separados y alturas extremas.
+- [x] Cámara y avisos fuera de pantalla con cinco luchadores y alturas extremas (SYS-036 a 040)
+  - 0.6.6 (`BrawlCameraChecks`, `-camera-smoke`): la cámara lateral encuadra a todos (cabeza y marcador incluidos) **por debajo del HUD superior**, con zoom entre 5,5 y 16; antes podía dejar a un luchador alto bajo el reloj. Rotación fija: apuntar nunca cambia de referencia. Oclusores atenuados sin tocar el suelo jugable. Nuevo aviso de límite (SYS-039): a menos de 3 m de un límite de expulsión el marcador se vuelve rosa con «!», también en el borde de pantalla. Probado en las cuatro arenas con cinco luchadores separados, extremos (lateral y superior) y juntos (`camera-*.png`). La reserva de la franja inferior y otras proporciones ya se probaron en 0.4.5/0.6.0.
 - [ ] Decidir y, si se aprueba, añadir coyote time
 
 ## Combate
