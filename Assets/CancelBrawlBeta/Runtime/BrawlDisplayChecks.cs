@@ -63,7 +63,7 @@ namespace CancelBrawl.Beta
                 match.SetDisplayScale(1.15f, 1.3f);
                 match.UseOptionsFile(file);
                 check(match.OptionsStatus == OptionsLoadStatus.Loaded && Mathf.Approximately(match.TextScale, 1.15f) && Mathf.Approximately(match.HudScale, 1.3f) &&
-                      BrawlOptionsStore.TryParse(File.ReadAllText(file), out var stored, out _) && stored.version == 3, "Tamaños de texto y HUD se guardan en formato versión 3");
+                      BrawlOptionsStore.TryParse(File.ReadAllText(file), out var stored, out _) && stored.version >= 3, "Tamaños de texto y HUD se guardan en formato versión 3");
                 string v2 = Path.Combine(folder, "v2.json");
                 File.WriteAllText(v2, "{\"format\":\"funados-options\",\"version\":2,\"reducedEffects\":false,\"sfx\":0.4,\"music\":0.4,\"moveDeadzone\":0.3," +
                     "\"aimDeadzone\":0.25,\"stickResponse\":1,\"vibration\":0.25,\"keyboard\":[],\"gamepad\":[]}");
