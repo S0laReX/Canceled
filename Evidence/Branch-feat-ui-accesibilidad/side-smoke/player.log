@@ -1,0 +1,538 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/ui-accesibilidad-998ecf/Builds/Funados/0.7.0/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/ui-accesibilidad-998ecf/Builds/Funados/0.7.0/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/ui-accesibilidad-998ecf/Builds/Funados/0.7.0/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.049 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.172000 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS Personajes originales conservados
+SIDE_CHECK_PASS Arriba no desplaza al personaje en profundidad
+SIDE_CHECK_PASS Movimiento horizontal sobre plano fijo
+SIDE_CHECK_PASS Reaparición corrige profundidad fuera del plano
+SIDE_CHECK_PASS Golpe ascendente conecta una vez y eleva al rival
+SIDE_CHECK_PASS Salto tras golpe confirmado permite perseguir
+SIDE_CHECK_PASS Combo escalera conecta segundo golpe en el aire
+SIDE_CHECK_PASS Ataque aéreo descendente golpea hacia abajo
+SIDE_CHECK_PASS Fuerte horizontal lanza al rival lateralmente
+SIDE_CHECK_PASS Doble salto atraviesa plataforma desde abajo
+SIDE_CHECK_PASS Caída aterriza sobre plataforma elevada
+SIDE_CHECK_PASS Abajo y salto permiten bajar de la plataforma
+SIDE_CHECK_PASS Tras bajar se recupera colisión con el suelo principal
+SIDE_CHECK_PASS Poder de Don Promesio conecta sin empuje en profundidad
+SIDE_CHECK_PASS Super consume barra y conecta en 2.5D
+SIDE_CHECK_PASS Poder de Lola Viral conecta en el plano lateral
+SIDE_CHECK_PASS Arena 0: cinco participantes sobre el plano y dos plataformas atravesables
+SIDE_CHECK_PASS Arena 0: cámara lateral sin inclinación
+SIDE_CHECK_PASS Arena 1: cinco participantes sobre el plano y dos plataformas atravesables
+SIDE_CHECK_PASS Arena 1: cámara lateral sin inclinación
+SIDE_CHECK_PASS Arena 2: cinco participantes sobre el plano y dos plataformas atravesables
+SIDE_CHECK_PASS Arena 2: cámara lateral sin inclinación
+SIDE_CHECK_PASS Arena 3: cinco participantes sobre el plano y dos plataformas atravesables
+SIDE_CHECK_PASS Arena 3: cámara lateral sin inclinación
+SIDE_CHECK_PASS Cruzar límite superior descuenta una vida
+SIDE_CHECK_PASS Reaparición protegida conserva plano lateral
+SIDE_CHECK_PASS Pausa mantiene reloj
+SIDE_CHECK_PASS Dos mandos: impide iniciar sin dispositivos suficientes
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=11 | activo=True
+SIDE_CHECK_PASS Dos mandos: un solo mando no crea un rival humano ficticio
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=12 | activo=True
+SIDE_CHECK_PASS Teclado y mandos: asignaciones P1/P2/P3 exclusivas
+SIDE_CHECK_PASS Entrada real del Input System mueve solo el puesto dueño
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=11 | activo=True
+SIDE_CHECK_PASS Desconectar P2 pausa e identifica el puesto perdido
+SIDE_CHECK_PASS Reordenar Gamepad.all no transfiere P3 a P2
+SIDE_CHECK_PASS No permite reanudar mientras falta un mando
+SIDE_CHECK_PASS Desconexión conserva reloj, posición, stocks y porcentaje
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=11 | activo=True
+SIDE_CHECK_PASS Reconectar el mismo dispositivo recupera P2 sin reanudación automática
+SIDE_CHECK_PASS Confirmación explícita reanuda después de reconectar
+FUNADOS_INPUT HardReset Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=12 | activo=False
+FUNADOS_INPUT Disabled Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=12 | activo=False
+SIDE_CHECK_PASS Dispositivo deshabilitado también bloquea la partida
+FUNADOS_INPUT HardReset Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=12 | activo=False
+FUNADOS_INPUT Enabled Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=12 | activo=True
+SIDE_CHECK_PASS Dispositivo rehabilitado conserva su puesto
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=11 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=12 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=13 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=14 | activo=True
+SIDE_CHECK_PASS Dos bajas simultáneas: los nuevos mandos no ocupan puestos solos
+SIDE_CHECK_PASS No se puede asignar un mando ausente
+SIDE_CHECK_PASS Reemplazo explícito reclama un solo puesto sin duplicarlo
+SIDE_CHECK_PASS Asignar disponibles rellena el otro puesto sin robar el recuperado
+SIDE_CHECK_PASS Dos mandos: P1 y P2 humanos con dispositivos diferentes
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=13 | activo=True
+SIDE_CHECK_PASS Desconexión durante cuenta atrás congela la cuenta
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=13 | activo=True
+SIDE_CHECK_PASS Reconectar en cuenta atrás vuelve a esa fase y preserva P2
+SIDE_CHECK_PASS Dos mandos: entrada de P1 no mueve P2
+SIDE_CHECK_PASS Cruceta digital admite diagonales normalizadas
+SIDE_CHECK_PASS Orientar un golpe hacia arriba no reduce la velocidad horizontal de la cruceta
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=15 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+SIDE_CHECK_PASS Cinco jugadores con mandos únicos; el sexto queda fuera
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+SIDE_CHECK_PASS Desconectar un mando sobrante no pausa la partida
+SIDE_CHECK_PASS Número de mandos sobrantes respeta los puestos elegidos
+SIDE_CHECK_PASS Entrenamiento conserva mando de P1 y objetivo sin entradas
+SIDE_CHECK_PASS Volver al menú libera reservas y aviso de desconexión
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=13 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=14 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=15 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+SIDE_CHECK_PASS Partida normal con cinco luchadores: bots combaten y conservan plano lateral
+SIDE_CHECK_PASS Don Decreto: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Don Decreto: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Lola Loop: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Lola Loop: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Coach Tóxico: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Coach Tóxico: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Cripto King: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Cripto King: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Tío Antena: super anuncia alcance y altura en XY
+SIDE_CHECK_PASS Tío Antena: refugio blanco coincide con el límite de protección central
+SIDE_CHECK_PASS Tío Antena: super conecta una vez y consume barra en 2.5D
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=-0.8
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=0.8
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=-1.4
+SIDE_CHECK_PASS Tío Antena: centro accesible protege al rival en X=1.4
+SIDE_CHECK_PASS Tío Antena: zona izquierda peligrosa también golpea
+SIDE_CHECK_PASS Tío Antena: salir del alcance horizontal evita el super
+SIDE_CHECK_PASS Tío Antena: plataforma por encima del alcance vertical es segura
+SIDE_CHECK_PASS Tío Antena: caminar al centro durante el aviso permite escapar realmente
+SIDE_CHECK_PASS Pausa congela aviso y resolución del super
+SIDE_CHECK_PASS Reanudar conserva y resuelve el super anunciado
+SIDE_CHECK_PASS Interrumpir preparación elimina el aviso del super cancelado
+SIDE_CHECK_PASS Super interrumpido no produce daño fantasma
+SIDE_CHECK_PASS Efectos reducidos conservan el aviso esencial y el refugio
+SIDE_CHECK_PASS Volver al menú elimina todos los avisos laterales
+SIDE_CHECK_PASS Coach Tóxico: especial conservado conecta sobre el plano lateral
+SIDE_CHECK_PASS Cripto King: especial conservado conecta sobre el plano lateral
+SIDE_CHECK_PASS Tío Antena: especial conservado conecta sobre el plano lateral
+SIDE_CHECK_PASS Lola Loop: altura fuera del aviso evita el impacto
+SIDE_CHECK_PASS Coach Tóxico: altura fuera del aviso evita el impacto
+SIDE_CHECK_PASS Cripto King: rival fuera del círculo anunciado no recibe daño
+SIDE_CHECK_PASS Ataque fuerte orientado a la izquierda anuncia altura en XY
+SIDE_CHECK_PASS Datos de golpes y kits válidos por defecto
+SIDE_CHECK_PASS Valores por defecto iguales a la tabla del GDD 2.0
+SIDE_CHECK_PASS Ajustes de los cinco kits presentes y aplicados al roster
+SIDE_CHECK_PASS Validación detecta repetidos, faltantes, cajas vacías y kits fuera de rango
+FUNADOS: datos de golpes/kits no válidos, se usan los valores incorporados: Golpe UpBasic repetido; Falta el golpe UpHeavy; Falta el golpe AirDownBasic; Falta el golpe AirDownHeavy; AirNeutral: caja de golpe vacía; Lola Loop: resistencia fuera de 0,5–2
+SIDE_CHECK_PASS Datos no válidos no se aplican: el kit conserva sus valores
+SIDE_CHECK_PASS Cajas por defecto reproducen exactamente el alcance anterior (cuadrícula de 1.089 puntos por golpe)
+SIDE_CHECK_PASS Cajas en espejo: mirar a la izquierda equivale a mirar a la derecha reflejado
+SIDE_CHECK_PASS En altura: el ascendente alcanza arriba y no abajo; el remate, abajo y no arriba
+SIDE_CHECK_PASS Fórmula de lanzamiento: cada golpe conserva su ángulo de 0 %
+SIDE_CHECK_PASS Lanzamiento: ascendentes suben y remates bajan a todo porcentaje; K crece con el daño
+SIDE_CHECK_PASS Resistencia divide el lanzamiento y la dirección se refleja
+SIDE_CHECK_PASS Con el lanzamiento angular desactivado se recupera la fórmula histórica
+SIDE_CHECK_PASS D03: hitstun 100 %, 80 %, 64 %… con suelo del 40 %
+SIDE_CHECK_PASS Cambiar el daño en los datos cambia el golpe real
+SIDE_CHECK_PASS La caja de golpe de los datos decide el contacto real
+SIDE_CHECK_PASS Espejo en partida: el mismo golpe conecta igual a izquierda y derecha
+SIDE_CHECK_PASS Borde: el ascendente alcanza a un rival fuera del suelo en ambos bordes
+SIDE_CHECK_PASS D03 en partida: el hitstun baja con golpes repetidos y se reinicia al pasar la ventana de combo
+SIDE_CHECK_PASS CombatLab dibuja la caja de golpe que usa el contacto y la hurtbox de cada luchador
+FUNADOS_COMBO Lola Viral 0%: cadena verdadera 3, contador 3, golpes 3, escapó True
+FUNADOS_COMBO Lola Viral 50%: cadena verdadera 3, contador 3, golpes 3, escapó True
+FUNADOS_COMBO Lola Viral 100%: cadena verdadera 3, contador 3, golpes 3, escapó True
+FUNADOS_COMBO Coach Tóxico 0%: cadena verdadera 2, contador 2, golpes 2, escapó True
+FUNADOS_COMBO Coach Tóxico 50%: cadena verdadera 3, contador 3, golpes 3, escapó True
+FUNADOS_COMBO Coach Tóxico 100%: cadena verdadera 3, contador 3, golpes 3, escapó True
+SIDE_CHECK_PASS Estudio de combos D03 completado: 6 pruebas con impactos registrados
+SIDE_CHECK_PASS Don Promesio · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Don Promesio · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Don Promesio · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Don Promesio · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Don Promesio · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Don Promesio · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Don Promesio · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Don Promesio · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Don Promesio · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Don Promesio · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Don Promesio · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Don Promesio · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Don Promesio · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Don Promesio · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Don Promesio · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Don Promesio · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Don Promesio · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Don Promesio · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Lola Viral · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Lola Viral · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Lola Viral · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Lola Viral · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Lola Viral · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Lola Viral · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Lola Viral · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Lola Viral · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Lola Viral · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Lola Viral · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Lola Viral · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Lola Viral · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Lola Viral · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Lola Viral · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Lola Viral · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Lola Viral · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Lola Viral · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Lola Viral · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Coach Tóxico · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Coach Tóxico · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Coach Tóxico · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Coach Tóxico · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Coach Tóxico · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Coach Tóxico · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Coach Tóxico · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Coach Tóxico · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Coach Tóxico · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Coach Tóxico · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Coach Tóxico · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Coach Tóxico · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Coach Tóxico · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Coach Tóxico · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Coach Tóxico · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Coach Tóxico · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Coach Tóxico · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Coach Tóxico · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Cripto King · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Cripto King · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Cripto King · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Cripto King · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Cripto King · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Cripto King · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Cripto King · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Cripto King · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Cripto King · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Cripto King · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Cripto King · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Cripto King · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Cripto King · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Cripto King · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Cripto King · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Cripto King · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Cripto King · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Cripto King · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Tío Antena · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Tío Antena · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Tío Antena · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Tío Antena · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Tío Antena · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Tío Antena · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Tío Antena · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Tío Antena · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Tío Antena · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Tío Antena · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Tío Antena · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Tío Antena · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Tío Antena · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Tío Antena · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Tío Antena · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Tío Antena · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Tío Antena · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Tío Antena · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS SYS-030: salto inicial, segundo salto al 94 % y sin tercer salto
+SIDE_CHECK_PASS SYS-030: abajo en el aire acelera la caída
+SIDE_CHECK_PASS SYS-030: recuperación y esquiva aérea se consumen una vez
+SIDE_CHECK_PASS SYS-031: aterrizar en suelo válido restaura saltos, recuperación y esquiva
+SIDE_CHECK_PASS SYS-031: rozar una pared no devuelve saltos ni recuperación
+SIDE_CHECK_PASS SYS-031: tocar un techo frena la subida y no devuelve el salto
+SIDE_CHECK_PASS SYS-032: una recuperación por fase aérea, vulnerable y con final; la segunda no hace nada
+SIDE_CHECK_PASS SYS-033: caída rápida a máxima velocidad aterriza sin atravesar el suelo
+SIDE_CHECK_PASS SYS-033: caída rápida aterriza sobre la plataforma atravesable
+SIDE_CHECK_PASS SYS-033: la esquiva rápida se detiene en una pared sin atravesarla
+SIDE_CHECK_PASS SYS-034: el indicador de apoyo marca la superficie bajo el luchador (plataforma o suelo)
+SIDE_CHECK_PASS SYS-035: el borde no tiene pared invisible; caminar fuera hace caer
+FUNADOS_REACH Don Promesio: a nivel der 8.8 izq 8.8 · 2 m abajo der 8.1 izq 8.1
+FUNADOS_REACH Lola Viral: a nivel der 11.8 izq 11.8 · 2 m abajo der 11.1 izq 11.1
+FUNADOS_REACH Coach Tóxico: a nivel der 8.3 izq 8.3 · 2 m abajo der 7.7 izq 7.7
+FUNADOS_REACH Cripto King: a nivel der 9.4 izq 9.4 · 2 m abajo der 8.6 izq 8.6
+FUNADOS_REACH Tío Antena: a nivel der 11.8 izq 11.8 · 2 m abajo der 11.8 izq 11.8
+SIDE_CHECK_PASS SYS-035: los cinco kits vuelven al menos desde 1,5 m fuera de cada borde
+SIDE_CHECK_PASS SYS-035: el alcance de vuelta es simétrico entre borde izquierdo y derecho
+SIDE_CHECK_PASS SYS-035: caer sigue siendo un riesgo; ningún kit vuelve desde cualquier distancia
+SIDE_CHECK_PASS Azotea Influencer: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.0)
+SIDE_CHECK_PASS Azotea Influencer: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo
+SIDE_CHECK_PASS Azotea Influencer: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar
+SIDE_CHECK_PASS Torre Corporativa: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.0)
+SIDE_CHECK_PASS Torre Corporativa: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo
+SIDE_CHECK_PASS Torre Corporativa: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar
+SIDE_CHECK_PASS Estudio de Debate: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.0)
+SIDE_CHECK_PASS Estudio de Debate: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo
+SIDE_CHECK_PASS Estudio de Debate: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar
+SIDE_CHECK_PASS Plaza Colonial: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.1)
+SIDE_CHECK_PASS Plaza Colonial: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo
+SIDE_CHECK_PASS Plaza Colonial: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar
+SIDE_CHECK_PASS Luchador fuera de cámara: indicador en el borde y aviso de límite
+SIDE_CHECK_PASS Oclusión: un bloque delante del luchador se atenúa y el suelo jugable sigue visible
+FUNADOS_COYOTE coyote=0 retraso=0 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=1 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=2 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=3 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=4 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=6 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=8 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=0 retraso=10 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=0 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=1 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=2 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=3 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=3 retraso=4 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=6 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=8 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=3 retraso=10 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=6 retraso=0 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=1 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=2 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=3 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=4 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=6 conserva=True velocidad=9.97 saltos_restantes=1
+FUNADOS_COYOTE coyote=6 retraso=8 conserva=False velocidad=9.32 saltos_restantes=0
+FUNADOS_COYOTE coyote=6 retraso=10 conserva=False velocidad=9.32 saltos_restantes=0
+SIDE_CHECK_PASS Coyote: con 0 no cambia nada (pulsar tarde gasta el salto aéreo)
+SIDE_CHECK_PASS Coyote: con 3 y 6 ticks la pulsación tardía cuenta como salto de suelo solo dentro de la ventana
+SIDE_CHECK_PASS Coyote: nunca tras un salto, un golpe, al bajar de una plataforma ni al aparecer en el aire
+SIDE_CHECK_PASS Coyote fijado en 3 ticks (0,05 s) por decisión de Santiago
+SIDE_CHECK_PASS Azotea Influencer: KO exacto a izquierda, derecha, abajo y arriba; sin KO en profundidad
+SIDE_CHECK_PASS Azotea Influencer: cruzar cada uno de los cuatro límites descuenta exactamente una vida
+SIDE_CHECK_PASS Azotea Influencer: límites coherentes con la arena: más allá del encuadre lateral, ±22 m, -10 m abajo y 20 m arriba
+SIDE_CHECK_PASS Azotea Influencer: 5 puntos de aparición en el plano, separados al menos 2.0 m
+SIDE_CHECK_PASS Azotea Influencer: cada aparición está sobre suelo real y no se solapa con la geometría
+SIDE_CHECK_PASS Azotea Influencer: plataformas atravesables finas en su sitio (±4.8 m, cara a 2.6 m); bajo ellas nada invisible bloquea golpes ni proyectiles
+SIDE_CHECK_PASS Azotea Influencer: la cámara muestra las dos plataformas aunque estén vacías
+SIDE_CHECK_PASS Azotea Influencer: el kit de peor alcance sube a ambas plataformas con doble salto
+SIDE_CHECK_PASS Azotea Influencer: bajar de la plataforma lleva al suelo principal
+SIDE_CHECK_PASS Azotea Influencer: cinco luchadores empiezan apoyados en sus apariciones
+SIDE_CHECK_PASS Azotea Influencer: la reaparición evita los puntos ocupados por trampas activas
+SIDE_CHECK_PASS Torre Corporativa: KO exacto a izquierda, derecha, abajo y arriba; sin KO en profundidad
+SIDE_CHECK_PASS Torre Corporativa: cruzar cada uno de los cuatro límites descuenta exactamente una vida
+SIDE_CHECK_PASS Torre Corporativa: límites coherentes con la arena: más allá del encuadre lateral, ±22 m, -10 m abajo y 20 m arriba
+SIDE_CHECK_PASS Torre Corporativa: 5 puntos de aparición en el plano, separados al menos 2.0 m
+SIDE_CHECK_PASS Torre Corporativa: cada aparición está sobre suelo real y no se solapa con la geometría
+SIDE_CHECK_PASS Torre Corporativa: plataformas atravesables finas en su sitio (±6 m, cara a 3.6 m); bajo ellas nada invisible bloquea golpes ni proyectiles
+SIDE_CHECK_PASS Torre Corporativa: la cámara muestra las dos plataformas aunque estén vacías
+SIDE_CHECK_PASS Torre Corporativa: el kit de peor alcance sube a ambas plataformas con doble salto
+SIDE_CHECK_PASS Torre Corporativa: bajar de la plataforma lleva al suelo principal
+SIDE_CHECK_PASS Torre Corporativa: cinco luchadores empiezan apoyados en sus apariciones
+SIDE_CHECK_PASS Torre Corporativa: la reaparición evita los puntos ocupados por trampas activas
+SIDE_CHECK_PASS Estudio de Debate: KO exacto a izquierda, derecha, abajo y arriba; sin KO en profundidad
+SIDE_CHECK_PASS Estudio de Debate: cruzar cada uno de los cuatro límites descuenta exactamente una vida
+SIDE_CHECK_PASS Estudio de Debate: límites coherentes con la arena: más allá del encuadre lateral, ±22 m, -10 m abajo y 20 m arriba
+SIDE_CHECK_PASS Estudio de Debate: 5 puntos de aparición en el plano, separados al menos 2.0 m
+SIDE_CHECK_PASS Estudio de Debate: cada aparición está sobre suelo real y no se solapa con la geometría
+SIDE_CHECK_PASS Estudio de Debate: plataformas atravesables finas en su sitio (±5.6 m, cara a 2.1 m); bajo ellas nada invisible bloquea golpes ni proyectiles
+SIDE_CHECK_PASS Estudio de Debate: la cámara muestra las dos plataformas aunque estén vacías
+SIDE_CHECK_PASS Estudio de Debate: el kit de peor alcance sube a ambas plataformas con doble salto
+SIDE_CHECK_PASS Estudio de Debate: bajar de la plataforma lleva al suelo principal
+SIDE_CHECK_PASS Estudio de Debate: cinco luchadores empiezan apoyados en sus apariciones
+SIDE_CHECK_PASS Estudio de Debate: la reaparición evita los puntos ocupados por trampas activas
+SIDE_CHECK_PASS Plaza Colonial: KO exacto a izquierda, derecha, abajo y arriba; sin KO en profundidad
+SIDE_CHECK_PASS Plaza Colonial: cruzar cada uno de los cuatro límites descuenta exactamente una vida
+SIDE_CHECK_PASS Plaza Colonial: límites coherentes con la arena: más allá del encuadre lateral, ±22 m, -10 m abajo y 20 m arriba
+SIDE_CHECK_PASS Plaza Colonial: 5 puntos de aparición en el plano, separados al menos 2.0 m
+SIDE_CHECK_PASS Plaza Colonial: cada aparición está sobre suelo real y no se solapa con la geometría
+SIDE_CHECK_PASS Plaza Colonial: plataformas atravesables finas en su sitio (±10 m, cara a 2.2 m); bajo ellas nada invisible bloquea golpes ni proyectiles
+SIDE_CHECK_PASS Plaza Colonial: la cámara muestra las dos plataformas aunque estén vacías
+SIDE_CHECK_PASS Plaza Colonial: el kit de peor alcance sube a ambas plataformas con doble salto
+SIDE_CHECK_PASS Plaza Colonial: bajar del balcón lleva al vacío (riesgo real de caída)
+SIDE_CHECK_PASS Plaza Colonial: cinco luchadores empiezan apoyados en sus apariciones
+SIDE_CHECK_PASS Plaza Colonial: la reaparición evita los puntos ocupados por trampas activas
+SIDE_CHECK_PASS Las cuatro arenas tienen distribuciones distintas (cada par difiere al menos 0,8 m en posición o altura)
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\options-checks\live.json
+SIDE_CHECK_PASS Sin archivo de opciones se usan controles por defecto
+SIDE_CHECK_PASS Controles por defecto sin conflictos
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=21 | activo=True
+SIDE_CHECK_PASS Remapeo de teclado asigna la nueva tecla
+SIDE_CHECK_PASS La partida lee el control remapeado y deja de leer el anterior
+SIDE_CHECK_PASS Tecla en conflicto se detecta e intercambia sin duplicados
+SIDE_CHECK_PASS Vista previa de conflicto identifica la acción ocupante
+SIDE_CHECK_PASS Esc reservado para pausa no se asigna
+SIDE_CHECK_PASS Controles inexistentes, reservados o no remapeables se rechazan
+SIDE_CHECK_PASS Conflicto de mando intercambia salto y fuerte
+SIDE_CHECK_PASS Mando lee la asignación remapeada en ambos botones
+SIDE_CHECK_PASS Botón de ratón remapeable; bloqueado sobre el panel del laboratorio
+SIDE_CHECK_PASS Captura interactiva asigna la tecla pulsada
+SIDE_CHECK_PASS Esc cancela la captura sin cambiar controles
+SIDE_CHECK_PASS Captura en conflicto avisa e intercambia
+SIDE_CHECK_PASS Captura de mando asigna el botón pulsado
+SIDE_CHECK_PASS Start cancela la captura de mando
+SIDE_CHECK_PASS Etiquetas de teclado y ratón salen de la misma tabla
+SIDE_CHECK_PASS Nombres de tecla sin restos de teclas muertas; Ñ y AZERTY se conservan
+FUNADOS_INPUT Added PlayStation Controller | tipo=DualShock4GamepadHID | layout=DualShock4GamepadHID | interfaz= | producto= | fabricante= | id=22 | activo=True
+SIDE_CHECK_PASS Mando PlayStation muestra sus botones reales
+FUNADOS_INPUT Added Xbox Controller | tipo=XInputControllerWindows | layout=XInputControllerWindows | interfaz= | producto= | fabricante= | id=23 | activo=True
+SIDE_CHECK_PASS Mando Xbox muestra sus botones reales
+FUNADOS_INPUT Removed Xbox Controller | tipo=XInputControllerWindows | layout=XInputControllerWindows | interfaz= | producto= | fabricante= | id=23 | activo=True
+FUNADOS_INPUT Removed PlayStation Controller | tipo=DualShock4GamepadHID | layout=DualShock4GamepadHID | interfaz= | producto= | fabricante= | id=22 | activo=True
+SIDE_CHECK_PASS Sin mando conectado las etiquetas siguen definidas
+SIDE_CHECK_PASS Luchador salta con el botón remapeado durante la partida
+SIDE_CHECK_PASS Remapeo disponible en pausa
+SIDE_CHECK_PASS Remapeo y modo se guardan en archivo versionado
+SIDE_CHECK_PASS Escritura deja copia válida y ningún temporal
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\options-checks\live.json
+SIDE_CHECK_PASS Reinicio restaura controles guardados
+FUNADOS_OPTIONS cargadas estado=RecoveredBackup ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\options-checks\live.json
+SIDE_CHECK_PASS Archivo truncado: se recupera la copia y se aparta el dañado
+SIDE_CHECK_PASS La recuperación se comunica en opciones
+SIDE_CHECK_PASS Archivo dañado sin copia restaura valores seguros
+SIDE_CHECK_PASS Archivo vacío se trata como dañado
+SIDE_CHECK_PASS Archivo incompleto no se acepta a medias
+SIDE_CHECK_PASS Formato ajeno se rechaza
+SIDE_CHECK_PASS Valores fuera de rango se corrigen
+SIDE_CHECK_PASS Versión futura conserva campos conocidos
+FUNADOS_OPTIONS cargadas estado=RepairedFields ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\options-checks\live.json
+SIDE_CHECK_PASS Controles duplicados, reservados o desconocidos vuelven a valores seguros
+SIDE_CHECK_PASS El archivo reparado se reescribe limpio
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\options-checks\live.json
+SIDE_CHECK_PASS Escritura interrumpida (temporal huérfano) no afecta al archivo válido
+FUNADOS_OPTIONS cargadas estado=RecoveredBackup ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\options-checks\live.json
+SIDE_CHECK_PASS Sin archivo principal se recupera la copia
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=21 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\tuning-checks\tuning.json
+SIDE_CHECK_PASS Zona muerta ignora deriva de la palanca
+SIDE_CHECK_PASS Fuera de la zona muerta la escala recorre 0–1 sin saltos
+SIDE_CHECK_PASS Respuesta rápida y fina cambian la curva
+SIDE_CHECK_PASS Diagonal conserva dirección y magnitud máxima 1
+SIDE_CHECK_PASS Ajustes de palanca limitados a rangos seguros
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=24 | activo=True
+SIDE_CHECK_PASS Zonas muertas de mover y orientar se aplican al mando real
+SIDE_CHECK_PASS Cruceta sigue siendo alternativa digital completa
+SIDE_CHECK_PASS Vista previa de vibración termina sola
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\tuning-checks\tuning.json
+SIDE_CHECK_PASS Ajustes de mando se guardan en el formato actual
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\tuning-checks\v1.json
+SIDE_CHECK_PASS Archivo versión 1 se migra conservando controles y volúmenes
+SIDE_CHECK_PASS Migración reescribe v2 y guarda la v1 como copia
+SIDE_CHECK_PASS Archivo v2 sin campos de mando se trata como incompleto
+SIDE_CHECK_PASS Ajustes de mando fuera de rango se corrigen
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\tuning-checks\tuning.json
+SIDE_CHECK_PASS Golpes simultáneos al mismo objetivo no dependen del orden de jugadores
+SIDE_CHECK_PASS Un solo golpe conserva la fórmula de empuje anterior
+SIDE_CHECK_PASS Golpes opuestos suman daño y anulan el empuje horizontal
+SIDE_CHECK_PASS Intercambio simultáneo: ambos reciben el golpe (P1 al sur)
+SIDE_CHECK_PASS Intercambio simultáneo: mismo resultado con los puestos invertidos
+SIDE_CHECK_PASS La ventana de impactos se cierra al final de cada paso
+SIDE_CHECK_PASS Golpe recibido vibra el mando dueño con fuerza perceptible
+SIDE_CHECK_PASS Vibración nunca queda bajo el mínimo perceptible; 0 % la apaga
+SIDE_CHECK_PASS Pausa detiene la vibración
+SIDE_CHECK_PASS Vibración apagada no hace vibrar
+SIDE_CHECK_PASS Golpe a P1 con teclado no hace vibrar el mando de P2
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=24 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\menu-checks\menu.json
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=26 | activo=True
+SIDE_CHECK_PASS Menú abre con el foco en ENTRAR
+SIDE_CHECK_PASS Todos los controles del menú son alcanzables con foco
+SIDE_CHECK_PASS Cruceta mueve el foco a la cancha de la derecha
+SIDE_CHECK_PASS A elige la cancha enfocada
+SIDE_CHECK_PASS Flecha arriba lleva al luchador alineado encima
+SIDE_CHECK_PASS Enter elige el luchador enfocado sin iniciar la partida
+SIDE_CHECK_PASS Elegir de nuevo cambia el aspecto, como con el ratón
+SIDE_CHECK_PASS Izquierda/derecha ajustan el valor sin perder el foco
+SIDE_CHECK_PASS Derecha en un rival cambia su aspecto
+SIDE_CHECK_PASS Pestaña MANDO navegable sin perder el foco
+SIDE_CHECK_PASS Palanca mantenida repite el movimiento del foco
+SIDE_CHECK_PASS Remapeo accesible con el mando desde el foco
+SIDE_CHECK_PASS Enter sobre ENTRAR inicia la partida como antes
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=27 | activo=True
+SIDE_CHECK_PASS Pausa abre con el foco en CONTINUAR
+SIDE_CHECK_PASS Mando sobrante no mueve el foco de la pausa
+SIDE_CHECK_PASS Mando del jugador navega la pausa
+SIDE_CHECK_PASS B reanuda desde la pausa
+SIDE_CHECK_PASS Resultados abren con el foco en REVANCHA
+SIDE_CHECK_PASS Enter en resultados inicia la revancha
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=27 | activo=True
+SIDE_CHECK_PASS Volumen de proyectil coincide con su distancia real de impacto
+SIDE_CHECK_PASS Zonas y emisor se dibujan con su volumen real
+SIDE_CHECK_PASS Opción de volúmenes oculta también proyectiles y zonas
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=26 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\display-checks\display.json
+SIDE_CHECK_PASS 16:9 conserva el diseño y la franja del 19 %
+SIDE_CHECK_PASS 4:3 extiende el lienzo hacia abajo en lugar de dejar bandas
+SIDE_CHECK_PASS 21:9 añade espacio lateral y mantiene la altura
+SIDE_CHECK_PASS Tarjetas y ayuda caben en 5 proporciones, de 1 a 5 jugadores y 3 tamaños de HUD
+SIDE_CHECK_PASS En 16:9 y 21:9 desde 720p el texto más pequeño no baja de 12 px reales
+SIDE_CHECK_PASS En 4:3 y 16:10 pequeños el texto más pequeño no baja de 10,5 px reales
+SIDE_CHECK_PASS HUD grande agranda las tarjetas mientras quepan y amplía la franja reservada
+SIDE_CHECK_PASS Tamaño de texto crece con la opción y tiene un tope para no romper paneles
+SIDE_CHECK_PASS Tamaños limitados a 100–130 %
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\display-checks\display.json
+SIDE_CHECK_PASS Tamaños de texto y HUD se guardan en formato versión 3
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\display-checks\v2.json
+SIDE_CHECK_PASS Archivo versión 2 se migra conservando ajustes de mando
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\display-checks\display.json
+SIDE_CHECK_PASS La cámara reserva exactamente la franja de las tarjetas
+SIDE_CHECK_PASS Clics sobre el panel del laboratorio se reconocen con el HUD agrandado
+SIDE_CHECK_PASS Capturas de menú, partida y pausa en 3 tamaños de ventana
+SIDE_CHECK_PASS En cada tamaño: texto legible, franja de cámara correcta y menú navegable
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\ui-checks\ui-options.json
+SIDE_CHECK_PASS Alto contraste y daltonismo empiezan desactivados
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\ui-checks\ui-options.json
+SIDE_CHECK_PASS Alto contraste y daltonismo se guardan y se recuperan sin cambiar el formato
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\ui-checks\v1.json
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\ui-checks\v2.json
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\ui-checks\v3.json
+SIDE_CHECK_PASS Archivos v1, v2 y v3 sin los campos nuevos cargan como antes, con las opciones nuevas desactivadas
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\ui-checks\ui-options.json
+SIDE_CHECK_PASS Paleta de daltonismo: los cinco colores de jugador se distinguen (ΔE ≥ 25) con visión normal, protanopía, deuteranopía y tritanopía; mínimo 42.7
+SIDE_CHECK_PASS La paleta habitual baja a ΔE 13.5 con daltonismo; la nueva lo mejora (42.7)
+SIDE_CHECK_PASS Cada color de jugador de la paleta de daltonismo se lee sobre el panel (≥ 4,5:1) en las cuatro visiones
+SIDE_CHECK_PASS Con DALTONISMO los avisos se distinguen del texto normal, apagado y de acento (ΔE ≥ 20) en las cuatro visiones
+SIDE_CHECK_PASS El marcador de peligro de KO se distingue del normal por color de fondo y por un borde de ≥ 3:1, además de «!»
+SIDE_CHECK_PASS Avisos de super: rojo de peligro y blanco de refugio se distinguen (ΔE ≥ 30) en las cuatro visiones
+SIDE_CHECK_PASS Texto normal, apagado, acento y avisos ≥ 4.5:1 sobre paneles y tarjetas (también simulando daltonismo)
+SIDE_CHECK_PASS ALTO CONTRASTE: todos los textos ≥ 7:1 y ninguno empeora
+SIDE_CHECK_PASS Capturas de partida, pausa (pestaña PANTALLA) y menú a 100, 115 y 130 %: texto legible, crece con la opción y la cámara respeta la franja
+SIDE_CHECK_PASS Con las opciones activas el HUD usa alto contraste y los luchadores la paleta de daltonismo
+SIDE_CHECK_PASS Marcador de peligro visible con alto contraste y daltonismo
+SIDE_CHECK_PASS Pestaña PANTALLA: tamaño de texto, de HUD, alto contraste y daltonismo navegables con teclado y mando
+SIDE_CHECK_PASS El menú ofrece el tutorial con foco navegable
+SIDE_CHECK_PASS El tutorial abre el laboratorio en el primer paso
+SIDE_CHECK_PASS Sin límite de tiempo: 6 s sin hacer nada no avanzan, no fallan y no corre ningún reloj
+SIDE_CHECK_PASS Un golpe que no es ascendente no cuenta y lo explica
+SIDE_CHECK_PASS Golpe ascendente reconocido
+SIDE_CHECK_PASS Si el combo se corta, el paso se repite sin penalización
+SIDE_CHECK_PASS Salto tras el golpe reconocido
+SIDE_CHECK_PASS Golpe aéreo en combo reconocido (combo ≥ 2)
+SIDE_CHECK_PASS La pausa congela el tutorial y ofrece salir de él con el mando
+SIDE_CHECK_PASS Remate reconocido; la segunda parte coloca al jugador fuera del borde
+SIDE_CHECK_PASS Caer fuera no termina el tutorial: se vuelve a colocar al jugador para intentarlo
+SIDE_CHECK_PASS Doble salto fuera del borde reconocido
+SIDE_CHECK_PASS Recuperación reconocida
+SIDE_CHECK_PASS Volver al escenario completa el tutorial
+SIDE_CHECK_PASS Volver al menú cierra el tutorial
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\ui-accesibilidad-998ecf\Evidence\Branch-feat-ui-accesibilidad\side-smoke\player-options.json
+SIDE_RESULT True checks=405 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

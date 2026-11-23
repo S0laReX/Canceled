@@ -4,11 +4,13 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+
 ## Relevo chore/restauracion-licencias
 
 - **Restauración limpia (SYS-004/006, QA-441): pasa.** `Tools/restaurar_limpio.ps1 -Destino <carpeta nueva>` clona, ejecuta `git lfs pull`, comprueba los punteros, importa en batchmode sin `Library`, genera la build y ejecuta `-arena-smoke` y `-side-smoke`, con tiempos en `_restauracion/resumen.json`. Resultado sobre `main` 0.7.0: 40,5 min en total (LFS 562 MB en 62 s, importación 20 min, build 6 min, arena 46/0, side 375/0). Informe: `Docs/Restauracion/Restauracion_limpia_0.7.0.md`. No clonar más de una vez al mes sin motivo: es 1 GB de LFS gratuito al mes en GitHub y cada clon gasta unos 560 MB. El guion reutiliza un clon existente.
 - **Licencias (SYS-017, D04): inventario hecho, casilla abierta.** `Docs/Licencias/Procedencia_y_licencias.md` + `inventario_activos.csv` (119 archivos con SHA256) + `inventario_paquetes.csv` (68 paquetes), regenerables con `python -I Tools/inventario_licencias.py --package-cache <proyecto>/Library/PackageCache`. Todo confirmado salvo los 110 archivos de Meshy (personajes, escenarios y conceptos), que dependen del plan de la cuenta al generarlos y de si los personajes salieron de la comunidad. Esa es la decisión D04 de Santiago; los pasos para cerrarla están al final del documento.
 - Sin cambios en el código del juego ni en la versión. Tras importar, Unity reescribe 10 YAML/JSON con LF: con `core.autocrlf` Git los marca como modificados, sin cambios de contenido.
+
 
 ## Relevo perf/rendimiento (QA-435–440 y sesión de 30 minutos)
 
@@ -19,7 +21,7 @@
 - Umbrales propuestos (el GDD solo fija 60 FPS y 13,5 ms con mediana, p95 y picos): FPS medio ≥58, 1 % bajo ≥45, frame <100 ms, carga <2 s, menú <0,5 s, gestionada <256 MB, proceso <2 GB; en 30 min: ningún frame >250 ms, ≤5 GameObjects y ≤20 objetos de más en la misma arena, gestionada <16 MB y proceso <128 MB de crecimiento. Las partidas de la sesión duran 90 s de reloj para encadenar revanchas.
 - Límites: los efectos son los actuales (sin el shader toon ni los VFX finales del GDD); volver a medir cuando lleguen el arte y las animaciones. El pico de 630 ms de CPU en `soak-session.json` es el frame del censo de objetos de la propia prueba, fuera de la partida.
 - Suites en la rama (`Evidence/Branch-perf-rendimiento`): perf 35, soak 6, power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, arena-stress 25; cero fallos. Sin cambio de versión ni de recuento; al juntar, `-perf-smoke` y `-soak-session` van en la misma línea de opciones de `BrawlMatch` que `-audio-smoke`.
-=======
+
 ## Relevo feat/audio-buses (AUDIO-428 a 434)
 
 - `BrawlAudio` (nuevo): buses Master, Música, SFX, Voces y UI. Una `AudioSource` por bus bajo la raíz de la partida (`Bus Música`, `Bus SFX`, …); volumen = `BusGain` × Master × bus. No se usa un asset `AudioMixer` porque sus grupos no se pueden crear desde código sin API interna; si llega audio final, basta asignar `outputAudioMixerGroup` a cada fuente.
@@ -28,7 +30,18 @@
 - HUD (cambio mínimo en `BrawlHud.DrawOptions`): cuarta pestaña **AUDIO** (`tab-audio`, filas `audio-master/music/sfx/voice/ui`); las pestañas pasan a 76 px y el título OPCIONES se encoge si no cabe. GENERAL conserva Efectos y Música.
 - `-audio-smoke` (registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 25/25, unos 35 s. Mide la salida real con `AudioListener.GetOutputData`, así que necesita un dispositivo de audio.
 - Suites en la rama (`Evidence/Branch-feat-audio-buses`, build 0 errores): power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, audio 25; cero fallos. No se volvió a ejecutar `-arena-stress` (25 min; no toca audio). Copia del GDD marcada sin regenerar (se hace al juntar en `main`).
->>>>>>> origin/feat/audio-buses
+
+## Relevo feat/ui-accesibilidad (SYS-071 alto contraste y daltonismo, SYS-076 tutorial)
+
+- Pestaña PANTALLA: botones ALTO CONTRASTE y DALTONISMO (`BrawlMatch.SetAccessibility`). Todos los colores del HUD salen de `BrawlHudPalette` (normal/alto contraste × normal/daltonismo); los colores de jugador también (`BrawlHudPalette.Player`). El HUD cambia al instante; los efectos del mundo, desde la ronda siguiente.
+- `BrawlOptionsStore`: `highContrast` y `colorBlindPalette` como campos **opcionales**, sin subir la versión 3 (los archivos v1/v2/v3 cargan igual y quedan «Loaded»). Si `feat/audio-buses` sube a v4, el merge es sumar líneas; ojo con `stored.version == 3` en `BrawlDisplayChecks`.
+- Prueba de daltonismo automática (protanopía/deuteranopía/tritanopía, Machado 2009, ΔE76): paleta habitual mínima 13,5; paleta de daltonismo 42,7. Contraste de texto ≥ 4,5:1 normal y ≥ 7:1 en alto contraste, también simulando daltonismo.
+- Tutorial (`BrawlHud.Tutorial.cs`, clase `BrawlTutorial`) en el laboratorio, sin reloj: combo escalera y recuperación. Se abre desde el menú, el panel del laboratorio o la pausa; ocupa el sitio del panel del laboratorio mientras dura.
+- Suite nueva `-ui-smoke` (31 comprobaciones; registrada en `BrawlMatch` y `BrawlSideSmokeProbe`, también al final de `-side-controls-smoke` y `-side-smoke`), capturas a 100/115/130 % y con ambas opciones.
+- Build de la rama: 0 errores, 489 avisos (igual que `main` 0.7.0). Suites (`Evidence/Branch-feat-ui-accesibilidad`, resumen en `suites.txt`): ui 31, power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 157, side 405, controls 125, beta 208, arena-stress 25; cero fallos.
+- Casillas SYS-071 y SYS-076 marcadas (sin tocar el recuento). **Con personas:** jugadores daltónicos reales y claridad de los textos del tutorial. No se regeneró `FUNADOS_GDD_2.0_checklist.docx` (se hace al juntar en `main`). Migración de framework D07 no tocada.
+
+
 
 ## Relevo 0.7.0 (juntada feat/arena-ko-stress, ARENA-366)
 
@@ -36,6 +49,7 @@
 - Observación: casi todas las partidas acaban por tiempo; revisar la agresividad de los bots o la duración y las vidas por defecto cuando se calibre con personas.
 - Suites en la rama (`Evidence/Branch-feat-arena-ko-stress`): power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, arena-stress 25; cero fallos.
 - Juntada en `main` como 0.7.0. Checklist **37 de 63**. Primera rama de `PARALELO.md` integrada; siguen abiertas `feat/audio-buses`, `feat/ui-accesibilidad`, `chore/restauracion-licencias` y `perf/rendimiento` (rebasarlas sobre `main`).
+
 
 ## Relevo 0.6.9 (distribuciones por arena, ARENA-350–367)
 
@@ -45,6 +59,7 @@
 - Suites 0.6.9: power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208; cero fallos. Checklist **36 de 63**.
 - **Siguiente técnico:** cien KO con reaparición y veinte partidas por arena (ARENA-366).
 
+
 ## Relevo 0.6.8 (límites y apariciones, ARENA-358/359)
 
 - KO solo izquierda/derecha/abajo/arriba en 2.5D (retirado el criterio de profundidad). Apariciones validadas en las cuatro arenas.
@@ -52,11 +67,13 @@
 - Suites 0.6.8: power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 33, side-controls 127, side 362, controls 125, beta 208; cero fallos. Checklist **35 de 63**.
 - **Siguiente técnico:** distribuciones jugables distintas por arena (ARENA-350–367, propuestas del GDD §9), luego cien KO/veinte partidas por arena (ARENA-366).
 
+
 ## Relevo 0.6.7 (coyote time: 3 ticks)
 
 - Decisión de Santiago tras medir: coyote time de 3 ticks (0,05 s), `BetaBalance.coyoteSeconds`. Sin él, pulsar en el borde ya gastaba el salto aéreo. Bloqueado tras salto, golpe, bajada de plataforma y aparición en el aire.
 - Suites 0.6.7: power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, side-controls 127, side 330, controls 125, beta 208; cero fallos. Checklist **34 de 63**.
 - **Siguiente:** revisar límites y puntos de aparición por arena (ARENA-358/359).
+
 
 ## Relevo 0.6.6 (cámara y avisos, SYS-036–040)
 
@@ -65,12 +82,14 @@
 - Suites 0.6.6: power 32, moves 21, kits 91, recovery 16, camera 15, side-controls 127, side 326, controls 125, beta 208; cero fallos. Checklist **33 de 63**.
 - **Siguiente:** decidir coyote time (decisión de Santiago, con medición previa) y revisar límites y puntos de aparición por arena (ARENA-358/359).
 
+
 ## Relevo 0.6.5 (recuperación y bordes, SYS-030–035)
 
 - `BrawlRecoveryChecks` (`-recovery-smoke`): recursos aéreos, restauración solo en suelo válido, recuperación por fase, movimientos rápidos sin atravesar, indicador de apoyo y alcance de vuelta medido por kit y borde.
 - Alcance a nivel: Don 8,8 m · Lola 11,8 · Coach 8,3 (menor) · Cripto 9,4 · Tío 11,8; simétrico. Es generoso: candidato a calibración con personas.
 - Suites 0.6.5: power 32, moves 21, kits 91, recovery 16, side-controls 127, side 312, controls 125, beta 208; cero fallos. Checklist **32 de 63**.
 - **Siguiente:** cámara y avisos fuera de pantalla con cinco luchadores y alturas extremas (SYS-036–040); decidir coyote time.
+
 
 ## Relevo 0.6.4 (matriz de los cinco kits)
 
@@ -79,11 +98,13 @@
 - Suites 0.6.4: power 32, moves 21, kits 91, side-controls 127, side 297, controls 125, beta 208; cero fallos. Checklist **31 de 63**.
 - **Siguiente:** recuperación desde ambos bordes con los cinco kits midiendo el alcance máximo (SYS-030–035); luego cámara y avisos fuera de pantalla (SYS-036–040).
 
+
 ## Relevo 0.6.3 (D03: reducción de hitstun)
 
 - Decisión de Santiago: reducir hitstun. Golpes repetidos del mismo atacante al mismo rival dentro de 1,1 s: hitstun × 0,8 por golpe, mínimo 40 % (`BetaBalance.hitstunDecay` / `hitstunMinScale`). El combo escalera de 3 golpes sigue igual.
 - Suites 0.6.3: power 32, moves 21, side-controls 127, side 207, controls 125, beta 208; cero fallos. Checklist **30 de 63**.
 - **Siguiente (prioridad alta del GDD 2.0):** verificar especial, recuperación y super de cada kit en acierto, fallo, interrupción, pausa, plataforma y borde; después recuperación desde ambos bordes con los cinco kits (SYS-030–035).
+
 
 ## Relevo 0.6.2 (fórmula de lanzamiento y estudio de combos)
 
@@ -92,6 +113,7 @@
 - Prueba de remapeo endurecida: leía una pulsación de un solo fotograma y fallaba de forma intermitente en la suite larga; ahora comprueba el estado sostenido.
 - Suites 0.6.2: power 32, moves 19, side-controls 127, side 205, controls 125, beta 208; cero fallos. Checklist **29 de 63**.
 
+
 ## Relevo 0.6.1 (golpes como datos y cajas X/Y)
 
 - SYS-011: `BetaBalance.asset` contiene `sideMoves` (ascendente básico/fuerte, aéreo neutral, remate básico/fuerte) y `kitTuning` (números de los cinco kits). `BrawlMoveData.Validate` revisa repetidos, faltantes, cajas vacías y rangos; si falla, se mantienen los valores incorporados. Los valores por defecto son los de la 0.5.1.
@@ -99,6 +121,7 @@
 - Corregido: con una tecla muerta pendiente en Windows (p. ej. ` en teclado español) las etiquetas salían como «`W» o «À»; `BrawlBindings.CleanKeyName` lo limpia y conserva Ñ y AZERTY.
 - Build 0.6.1: 0 errores, 485 avisos. Suites: power 32/32, moves 14/14 (nuevo `-moves-smoke`), side-controls 127/127, side 200/200, controls 125/125, beta 208/208. Checklist **28 de 63**.
 - **Siguiente:** límite de combos (D03) medido en CombatLab y fórmula de lanzamiento con base/crecimiento/ángulo por golpe, ambos sobre los datos nuevos.
+
 
 ## Relevo 0.6.0 (fusión verificada)
 
@@ -110,6 +133,7 @@ La rama `claude/funados-implementation-continue-db5f40` llevaba en paralelo los 
 - Checklist: **26 de 63** (20 del GDD 2.0 + P0-03, etiquetas de mando, remapeo, opciones recuperables, zonas muertas/vibración y navegación SYS-070). SYS-071 sigue abierta (faltan alto contraste y daltonismo). Copia marcada del GDD: `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0_checklist.docx` (regenerar con `marcar_checklist_gdd.py`).
 - Nuevo `-isolate-physical-pads` (opcional): retira los mandos reales solo del proceso de prueba. Un DualShock emparejado por Bluetooth y apagado aparece en Windows como `BTHENUM` sin estar conectado.
 - **Siguiente:** primera pendiente de prioridad alta del GDD 2.0: hitboxes/hurtboxes por movimiento (SYS-042–048) y golpes como datos editables (SYS-011); luego límite de combos (D03).
+
 
 ## Relevo 0.5.1
 

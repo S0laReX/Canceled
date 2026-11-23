@@ -147,7 +147,7 @@ namespace CancelBrawl.Beta
         private string announcement;
         private float announcementTime;
         private readonly List<BrawlFighter> finalLosses = new List<BrawlFighter>();
-        private readonly Color[] colors = { new Color(.18f,.95f,1), new Color(1,.3f,.6f), new Color(1,.77f,.2f), new Color(.5f,1,.42f), new Color(.66f,.5f,1) };
+        // Player colours come from the HUD palette (SYS-071: normal or colour-blind set).
 
         private void Awake()
         {
@@ -178,7 +178,7 @@ namespace CancelBrawl.Beta
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
             else if (Array.IndexOf(Environment.GetCommandLineArgs(), "-haptics-probe") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlHapticsProbe>(); }
-            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0 || Array.IndexOf(args, "-perf-smoke") >= 0 || Array.IndexOf(args, "-soak-session") >= 0 || Array.IndexOf(args, "-audio-smoke") >= 0)
+            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0 || Array.IndexOf(args, "-perf-smoke") >= 0 || Array.IndexOf(args, "-soak-session") >= 0 || Array.IndexOf(args, "-audio-smoke") >= 0 || Array.IndexOf(args, "-ui-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSideSmokeProbe>(); }
             // Support log: which pads the game sees and how, so field reports can be diagnosed from player.log.
             foreach (var device in InputSystem.devices) if (device is Gamepad) Debug.Log("FUNADOS_INPUT presente " + BrawlHapticsProbe.Describe(device));
@@ -271,7 +271,7 @@ namespace CancelBrawl.Beta
                 fighterObject.transform.position = spawns[i % spawns.Length];
                 var fighter = fighterObject.AddComponent<BrawlFighter>();
                 resolvedSkins[i] = ResolveSkin(i, count);
-                fighter.Configure(this, settings, i, SlotCharacters[i], resolvedSkins[i], !IsTraining && !Devices.IsHuman(i), colors[i]);
+                fighter.Configure(this, settings, i, SlotCharacters[i], resolvedSkins[i], !IsTraining && !Devices.IsHuman(i), BrawlHudPalette.Player(i, ColorBlindPalette));
                 Fighters[i] = fighter; targets[i] = fighter.transform;
             }
             RemainingTime = settings.matchSeconds; CountdownRemaining = 3; SimTime = 0;
@@ -379,6 +379,10 @@ namespace CancelBrawl.Beta
         /// <summary>SYS-071: text size (1–1.3) for menus and HUD, and HUD element size (1–1.3) during play.</summary>
         public float TextScale { get; private set; } = 1f;
         public float HudScale { get; private set; } = 1f;
+        /// <summary>SYS-071: opaque panels and brighter text; colour-blind player/warning palette (HUD at once, world effects next round).</summary>
+        public bool HighContrast { get; private set; }
+        public bool ColorBlindPalette { get; private set; }
+        public void SetAccessibility(bool highContrast, bool colorBlind) { HighContrast = highContrast; ColorBlindPalette = colorBlind; SaveOptions(); }
 
         public void SetDisplayScale(float text, float hud)
         {
@@ -781,6 +785,7 @@ namespace CancelBrawl.Beta
             localCoop = data.localCoop; p1UsesGamepad = data.p1UsesGamepad;
             MoveDeadzone = data.moveDeadzone; AimDeadzone = data.aimDeadzone; StickResponse = data.stickResponse; VibrationStrength = data.vibration;
             TextScale = data.textScale; HudScale = data.hudScale;
+            HighContrast = data.highContrast; ColorBlindPalette = data.colorBlindPalette;
             bool keyboardClean = Bindings.TryLoad(BindingScheme.Keyboard, data.keyboard);
             bool gamepadClean = Bindings.TryLoad(BindingScheme.Gamepad, data.gamepad);
             if ((status == OptionsLoadStatus.Loaded || status == OptionsLoadStatus.MigratedLegacy) && (!keyboardClean || !gamepadClean))
@@ -799,7 +804,7 @@ namespace CancelBrawl.Beta
             master = BrawlAudio.Volume(BrawlAudioBus.Master), voice = BrawlAudio.Volume(BrawlAudioBus.Voice), ui = BrawlAudio.Volume(BrawlAudioBus.Ui),
             localCoop = localCoop, p1UsesGamepad = p1UsesGamepad,
             moveDeadzone = MoveDeadzone, aimDeadzone = AimDeadzone, stickResponse = StickResponse, vibration = VibrationStrength,
-            textScale = TextScale, hudScale = HudScale,
+            textScale = TextScale, hudScale = HudScale, highContrast = HighContrast, colorBlindPalette = ColorBlindPalette,
             keyboard = Bindings.Export(BindingScheme.Keyboard), gamepad = Bindings.Export(BindingScheme.Gamepad)
         };
 

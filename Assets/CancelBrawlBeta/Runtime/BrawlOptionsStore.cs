@@ -28,6 +28,9 @@ namespace CancelBrawl.Beta
         public float master = 1f;
         public float voice = .8f;
         public float ui = .7f;
+        // Optional since SYS-071 accessibility (no format bump): files without them load as before and keep these defaults.
+        public bool highContrast;
+        public bool colorBlindPalette;
         public List<BrawlBindingEntry> keyboard = new List<BrawlBindingEntry>();
         public List<BrawlBindingEntry> gamepad = new List<BrawlBindingEntry>();
     }
@@ -46,6 +49,8 @@ namespace CancelBrawl.Beta
         private static readonly string[] FieldsV2 = { "\"moveDeadzone\"", "\"aimDeadzone\"", "\"stickResponse\"", "\"vibration\"" };
         private static readonly string[] FieldsV3 = { "\"textScale\"", "\"hudScale\"" };
         private static readonly string[] FieldsV4 = { "\"master\"", "\"voice\"", "\"ui\"" };
+        // Not in the required lists on purpose: a v1-v4 file without them loads as before (v4 "Loaded"; v1-v3 migrate).
+        public static readonly string[] OptionalFields = { "\"highContrast\"", "\"colorBlindPalette\"" };
         public const string FileName = "funados-options.json";
 
         public static string DefaultPath => Path.Combine(Application.persistentDataPath, FileName);

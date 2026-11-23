@@ -91,6 +91,7 @@ namespace CancelBrawl.Beta
         private void Update()
         {
             if (match == null) return;
+            TickTutorial();
             bool menuScreen = match.Phase == MatchPhase.Menu || match.Phase == MatchPhase.Paused || match.Phase == MatchPhase.Results;
             // A new screen starts on its main action.
             if (match.Phase != navPhase || match.DevicePause != navDevicePause || match.OptionsPage != navPage)
