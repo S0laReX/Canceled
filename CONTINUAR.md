@@ -4,6 +4,16 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo feat/ui-accesibilidad (SYS-071 alto contraste y daltonismo, SYS-076 tutorial)
+
+- Pestaña PANTALLA: botones ALTO CONTRASTE y DALTONISMO (`BrawlMatch.SetAccessibility`). Todos los colores del HUD salen de `BrawlHudPalette` (normal/alto contraste × normal/daltonismo); los colores de jugador también (`BrawlHudPalette.Player`). El HUD cambia al instante; los efectos del mundo, desde la ronda siguiente.
+- `BrawlOptionsStore`: `highContrast` y `colorBlindPalette` como campos **opcionales**, sin subir la versión 3 (los archivos v1/v2/v3 cargan igual y quedan «Loaded»). Si `feat/audio-buses` sube a v4, el merge es sumar líneas; ojo con `stored.version == 3` en `BrawlDisplayChecks`.
+- Prueba de daltonismo automática (protanopía/deuteranopía/tritanopía, Machado 2009, ΔE76): paleta habitual mínima 13,5; paleta de daltonismo 42,7. Contraste de texto ≥ 4,5:1 normal y ≥ 7:1 en alto contraste, también simulando daltonismo.
+- Tutorial (`BrawlHud.Tutorial.cs`, clase `BrawlTutorial`) en el laboratorio, sin reloj: combo escalera y recuperación. Se abre desde el menú, el panel del laboratorio o la pausa; ocupa el sitio del panel del laboratorio mientras dura.
+- Suite nueva `-ui-smoke` (31 comprobaciones; registrada en `BrawlMatch` y `BrawlSideSmokeProbe`, también al final de `-side-controls-smoke` y `-side-smoke`), capturas a 100/115/130 % y con ambas opciones.
+- Build de la rama: 0 errores, 489 avisos (igual que `main` 0.7.0). Suites (`Evidence/Branch-feat-ui-accesibilidad`, resumen en `suites.txt`): ui 31, power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 157, side 405, controls 125, beta 208, arena-stress 25; cero fallos.
+- Casillas SYS-071 y SYS-076 marcadas (sin tocar el recuento). **Con personas:** jugadores daltónicos reales y claridad de los textos del tutorial. No se regeneró `FUNADOS_GDD_2.0_checklist.docx` (se hace al juntar en `main`). Migración de framework D07 no tocada.
+
 ## Relevo 0.7.0 (juntada feat/arena-ko-stress, ARENA-366)
 
 - `BrawlArenaStress` (`-arena-stress`, registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 20 partidas de cinco bots por arena con auditoría de cada KO y reaparición, más comprobación de fugas. 25/25; unos 25 min.
