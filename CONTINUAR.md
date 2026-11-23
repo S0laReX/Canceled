@@ -4,6 +4,16 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo perf/rendimiento (QA-435–440 y sesión de 30 minutos)
+
+- `BrawlPerfSuite` (registrada en `BrawlMatch` y `BrawlSideSmokeProbe`): `-perf-smoke` (≈5 min) mide en la build, a velocidad real y con efectos completos, cinco bots por arena: FPS medio, 1 % bajo, tiempo de frame, CPU principal/render y GPU (mediana, p95, pico, con `FrameTimingManager`), memoria gestionada, nativa y del proceso, carga de arena, vuelta al menú y un censo de objetos tras cinco ciclos de arenas. `-soak-session` (≈32 min) encadena revanchas y vueltas al menú durante 30 min y comprueba bloqueos, errores, tirones y crecimiento de objetos y memoria (`-soak-seconds N` para una prueba corta; el límite del probe sube a 3300 s solo con esta opción). JSON en `perf-smoke.json` y `soak-session.json`.
+- `ProjectSettings`: `enableFrameTimingStats: 1` para que la build de release mida CPU y GPU por frame (coste despreciable). Prueba: `BrawlFighter.MakeBotForTest` hace bot también a P1; durante estas suites se desactivan teclado y ratón (el probe lee la entrada en segundo plano y un Esc ajeno pausaba la partida; así se bloqueó una medición, `Perf-lockup-before-isolation`).
+- Resultado en RTX 4050 Laptop (el equipo de referencia del GDD), máquina libre: 60,0 FPS, 1 % bajo ≥57,5, CPU p95 ≤4,1 ms y GPU p95 ≤5,1 ms (presupuesto 13,5 ms), picos 7,4/8,2 ms; carga 3–5 ms; 30 min: 20 partidas, 0 errores, 0 frames >100 ms, memoria plana. Hay margen de sobra: el cuello de botella no es el rendimiento.
+- **Corregido**: el anillo y la flecha de cada luchador clonaban su material (`LineRenderer.material`) y lo perdían: 5 materiales por partida. Ahora `sharedMaterial` (`BrawlFighter.cs`, sin cambio visual).
+- Umbrales propuestos (el GDD solo fija 60 FPS y 13,5 ms con mediana, p95 y picos): FPS medio ≥58, 1 % bajo ≥45, frame <100 ms, carga <2 s, menú <0,5 s, gestionada <256 MB, proceso <2 GB; en 30 min: ningún frame >250 ms, ≤5 GameObjects y ≤20 objetos de más en la misma arena, gestionada <16 MB y proceso <128 MB de crecimiento. Las partidas de la sesión duran 90 s de reloj para encadenar revanchas.
+- Límites: los efectos son los actuales (sin el shader toon ni los VFX finales del GDD); volver a medir cuando lleguen el arte y las animaciones. El pico de 630 ms de CPU en `soak-session.json` es el frame del censo de objetos de la propia prueba, fuera de la partida.
+- Suites en la rama (`Evidence/Branch-perf-rendimiento`): perf 35, soak 6, power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, arena-stress 25; cero fallos. Sin cambio de versión ni de recuento; al juntar, `-perf-smoke` y `-soak-session` van en la misma línea de opciones de `BrawlMatch` que `-audio-smoke`.
+
 ## Relevo 0.7.0 (juntada feat/arena-ko-stress, ARENA-366)
 
 - `BrawlArenaStress` (`-arena-stress`, registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 20 partidas de cinco bots por arena con auditoría de cada KO y reaparición, más comprobación de fugas. 25/25; unos 25 min.
