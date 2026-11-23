@@ -1,5 +1,7 @@
 # Continuación de FUNADOS
 
+**Trabajo en paralelo:** ver `PARALELO.md` (ramas abiertas en `origin`, reglas y orden de merge).
+
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
 ## Relevo 0.6.9 (distribuciones por arena, ARENA-350–367)

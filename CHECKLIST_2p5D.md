@@ -10,7 +10,7 @@ Recuento: **36 de 63** marcadas (20 del GDD 2.0 + 16 desde 0.6.0). Ninguna en �
 
 1. Leer esta lista, el GDD 2.0 y `CONTINUAR.md`; comprobar `git status` y `git log -4 --oneline`.
 2. Tras cada tarea: ejecutar las suites (ver «Rutas y comandos»), marcar aquí con su evidencia y regenerar la copia marcada del GDD con `python -I Docs/Produccion_2026-11-22/marcar_checklist_gdd.py` (`FUNADOS_GDD_2.0_checklist.docx`).
-3. Elegir la primera tarea pendiente de prioridad alta, implementarla, verificarla, marcarla aquí y en la copia del GDD, y crear un commit local. No publicar un remoto sin instrucción.
+3. Elegir la primera tarea pendiente de prioridad alta, implementarla, verificarla, marcarla aquí y en la copia del GDD, y crear un commit. Remoto: `origin` (GitHub). Para trabajo en paralelo, seguir `PARALELO.md` (una rama por área, PR a `main`, sin push directo a `main`).
 
 ## Base del proyecto
 
