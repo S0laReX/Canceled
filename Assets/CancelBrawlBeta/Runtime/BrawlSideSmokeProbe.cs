@@ -55,6 +55,11 @@ namespace CancelBrawl.Beta
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
                 yield return BrawlArenaChecks.Run(match,Check,output); Finish(); yield break;
             }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-arena-stress")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlArenaStress.Run(match,Check,output); Finish(); yield break;
+            }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-coyote-study")>=0)
             {
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");

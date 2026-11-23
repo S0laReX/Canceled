@@ -1,0 +1,32 @@
+{
+    "version": "0.6.9",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Azotea Influencer: 20 partidas completas de cinco luchadores con resultados válidos (0 por vidas, 20 por tiempo)",
+        "Azotea Influencer: 219 KO reales (≥100); cada uno descuenta una vida y se atribuye (219 KO, 0 autodestrucciones)",
+        "Azotea Influencer: 164 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas",
+        "Azotea Influencer: tras reaparecer se aterriza en suelo real (máx. 1.02 s en el aire) y nadie cae de nuevo protegido",
+        "Azotea Influencer: ninguna posición inválida ni fuera del plano lateral en 20 partidas",
+        "Azotea Influencer: sin fugas entre partidas (0 objetos, +0.2 MB tras 19 partidas)",
+        "Torre Corporativa: 20 partidas completas de cinco luchadores con resultados válidos (0 por vidas, 20 por tiempo)",
+        "Torre Corporativa: 217 KO reales (≥100); cada uno descuenta una vida y se atribuye (217 KO, 0 autodestrucciones)",
+        "Torre Corporativa: 162 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas",
+        "Torre Corporativa: tras reaparecer se aterriza en suelo real (máx. 0.83 s en el aire) y nadie cae de nuevo protegido",
+        "Torre Corporativa: ninguna posición inválida ni fuera del plano lateral en 20 partidas",
+        "Torre Corporativa: sin fugas entre partidas (0 objetos, +0.1 MB tras 19 partidas)",
+        "Estudio de Debate: 20 partidas completas de cinco luchadores con resultados válidos (1 por vidas, 19 por tiempo)",
+        "Estudio de Debate: 220 KO reales (≥100); cada uno descuenta una vida y se atribuye (221 KO, 0 autodestrucciones)",
+        "Estudio de Debate: 165 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas",
+        "Estudio de Debate: tras reaparecer se aterriza en suelo real (máx. 0.47 s en el aire) y nadie cae de nuevo protegido",
+        "Estudio de Debate: ninguna posición inválida ni fuera del plano lateral en 20 partidas",
+        "Estudio de Debate: sin fugas entre partidas (0 objetos, +0.3 MB tras 19 partidas)",
+        "Plaza Colonial: 20 partidas completas de cinco luchadores con resultados válidos (1 por vidas, 19 por tiempo)",
+        "Plaza Colonial: 200 KO reales (≥100); cada uno descuenta una vida y se atribuye (201 KO, 0 autodestrucciones)",
+        "Plaza Colonial: 152 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas",
+        "Plaza Colonial: tras reaparecer se aterriza en suelo real (máx. 0.58 s en el aire) y nadie cae de nuevo protegido",
+        "Plaza Colonial: ninguna posición inválida ni fuera del plano lateral en 20 partidas",
+        "Plaza Colonial: sin fugas entre partidas (0 objetos, +0.3 MB tras 19 partidas)"
+    ],
+    "failures": []
+}
