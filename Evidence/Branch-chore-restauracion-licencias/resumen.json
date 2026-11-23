@@ -1,0 +1,76 @@
+﻿{
+    "requisitos":  {
+                       "git":  "git version 2.53.0.windows.1",
+                       "gitlfs":  "git-lfs/3.7.1 (GitHub; windows amd64; go 1.25.1; git b84b3384)",
+                       "maquina":  "SANTIAGOPC",
+                       "fecha":  "2026-11-23T00:56:48",
+                       "destino":  "D:\\FunadosRestore",
+                       "rama":  "main",
+                       "unityVersion":  "6000.5.7f1",
+                       "unity":  "C:\\Program Files\\Unity\\Hub\\Editor\\6000.5.7f1\\Editor\\Unity.exe"
+                   },
+    "clonar":  {
+                   "resultado":  "ok",
+                   "segundos":  69.4,
+                   "detalle":  {
+                                   "reutilizado":  false,
+                                   "commit":  "130a3c6d5658e806f5dbd534eb80783158d59098",
+                                   "segundosClone":  5.6,
+                                   "segundosLfs":  62.3,
+                                   "mbLfs":  562.1,
+                                   "mbGitSinLfs":  1.5
+                               }
+               },
+    "punteros":  {
+                     "resultado":  "ok",
+                     "segundos":  4.4,
+                     "detalle":  {
+                                     "archivosLfs":  1403,
+                                     "punteros":  0,
+                                     "fsck":  "Git LFS fsck OK"
+                                 }
+                 },
+    "importar":  {
+                     "resultado":  "ok",
+                     "segundos":  1225.2,
+                     "detalle":  {
+                                     "salida":  0,
+                                     "errores":  0,
+                                     "avisosCompilacionUnicos":  4,
+                                     "log":  "D:\\FunadosRestore\\_restauracion\\unity-import.log"
+                                 }
+                 },
+    "build":  {
+                  "resultado":  "ok",
+                  "segundos":  350.6,
+                  "detalle":  {
+                                  "salida":  0,
+                                  "version":  "0.7.0",
+                                  "exe":  "D:\\FunadosRestore\\Builds\\Funados\\0.7.0\\Windows\\FUNADOS.exe",
+                                  "buildTxt":  "result=Succeeded; errors=0; warnings=489; bytes=265124099; seconds=278.4414595",
+                                  "mbCarpeta":  253.4
+                              }
+              },
+    "suites":  {
+                   "resultado":  "ok",
+                   "segundos":  781.2,
+                   "detalle":  {
+                                   "arena-smoke":  {
+                                                       "pasa":  true,
+                                                       "salida":  0,
+                                                       "segundos":  125.4,
+                                                       "comprobaciones":  46,
+                                                       "fallos":  0,
+                                                       "informe":  "D:\\FunadosRestore\\_restauracion\\suite-arena-smoke\\side-report.json"
+                                                   },
+                                   "side-smoke":  {
+                                                      "pasa":  true,
+                                                      "salida":  0,
+                                                      "segundos":  655.7,
+                                                      "comprobaciones":  375,
+                                                      "fallos":  0,
+                                                      "informe":  "D:\\FunadosRestore\\_restauracion\\suite-side-smoke\\side-report.json"
+                                                  }
+                               }
+               }
+}

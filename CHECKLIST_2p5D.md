@@ -18,9 +18,10 @@ Recuento: **37 de 63** marcadas (20 del GDD 2.0 + 17 desde 0.6.0). Ninguna en �
 - [x] Cinco kits, once aspectos y cuatro escenarios conservados, con ID y GUID
 - [x] Escenas Funados y CombatLab; beta y pruebas históricas preservadas
 - [x] Git + Git LFS; editor y paquetes fijados (SYS-005/006/007/009)
-- [ ] Restaurar desde Git/LFS en un entorno limpio (SYS-004/006, QA-441)
-  - Parcial: cada worktree nuevo se ha restaurado con `git lfs checkout` e importación completa de Library en batchmode (0.4.2 y 0.6.0). Falta una máquina/cuenta limpia.
+- [x] Restaurar desde Git/LFS en un entorno limpio (SYS-004/006, QA-441)
+  - 23/11/2026, rama `chore/restauracion-licencias` (`Tools/restaurar_limpio.ps1`, informe `Docs/Restauracion/Restauracion_limpia_0.7.0.md`, evidencia `Evidence/Branch-chore-restauracion-licencias`). Se clonó `main` 0.7.0 (`130a3c6`) desde GitHub en una carpeta nueva y se ejecutó `git lfs pull`: 562 MB en 62 s y 0 punteros en 1.403 archivos LFS. La importación desde cero tardó 20 min, con 0 errores. La build salió en 6 min (Succeeded, 489 avisos). Sobre esa build, `-arena-smoke` 46/0 y `-side-smoke` 375/0. Total: 40,5 min. Límite: mismo equipo, cuenta de Windows y Unity instalado; en una máquina virgen hay que instalar además Hub, el editor y Git LFS.
 - [ ] Procedencia y licencias de modelos, escenarios, audio y dependencias (SYS-017, D04)
+  - 23/11/2026: inventario en `Docs/Licencias/Procedencia_y_licencias.md` y los CSV, que se regeneran con `python -I Tools/inventario_licencias.py`. Quedan **confirmados** los 68 paquetes (Unity Companion / Package Distribution / MIT / ToS de Unity), el shader, el audio (sintetizado por código), las fuentes (las del motor), el cubo de validación, las capturas y la plantilla URP. **Pendientes del usuario (D04):** los 110 archivos de Meshy (22 de personajes, 56 de modelos y texturas de escenarios y 32 conceptos, estos con XMP de Meshy `nano-banana-pro` y su ContentID). Falta saber con qué plan de Meshy se generaron cada lote (Free = CC BY 4.0 con atribución), si los personajes los generó el usuario o salieron de la comunidad, y si las imágenes de referencia tenían permiso. Avisos: `com.unity.ai.assistant` (pre) y `com.unity.pipeline` (exp) son del Editor; conviene quitarlos antes de publicar.
 
 ## Movimiento, cámara y plano 2.5D
 
