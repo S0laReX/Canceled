@@ -1,0 +1,75 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.0/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.0/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.0/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.045 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.912800 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\rendimiento-095c80\Evidence\Branch-perf-rendimiento\Perf\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+FUNADOS_PERF Azotea Influencer: 60.0 fps (1 % bajo 57.7), frame máx. 27.8 ms, CPU 2.77/3.83/7.23 ms, GPU 2.09/3.90/4.95 ms, carga 0.003 s, menú 0.017 s, KO 3, supers 66
+SIDE_CHECK_PASS Azotea Influencer: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (3 KO, 66 supers, efectos completos)
+SIDE_CHECK_PASS Azotea Influencer: 60.0 FPS medios (≥58), 1 % bajo 57.7 (≥45); frame mediana 16.67 ms, p95 16.71 ms
+SIDE_CHECK_PASS Azotea Influencer: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)
+SIDE_CHECK_PASS Azotea Influencer: CPU principal mediana 2.77 ms, p95 3.83 ms (<13.5), pico 7.23 ms; hilo de render p95 1.30 ms
+SIDE_CHECK_PASS Azotea Influencer: GPU mediana 2.09 ms, p95 3.90 ms (<13.5), pico 4.95 ms
+SIDE_CHECK_PASS Azotea Influencer: pico de frame 27.8 ms (<100); 1 frames >20 ms y 0 >33 ms de 3599
+SIDE_CHECK_PASS Azotea Influencer: carga de arena con cinco luchadores 3 ms (<2 s), primer frame 17 ms; vuelta al menú 17 ms (<0.5 s)
+SIDE_CHECK_PASS Azotea Influencer: memoria gestionada pico 6.5 MB (<256), nativa Unity 199 MB, proceso 713 MB (<2048); asignación GC mediana 0.0 KB/frame
+FUNADOS_PERF Torre Corporativa: 60.0 fps (1 % bajo 57.5), frame máx. 30.3 ms, CPU 2.81/3.83/7.38 ms, GPU 2.55/5.07/6.30 ms, carga 0.004 s, menú 0.020 s, KO 3, supers 68
+SIDE_CHECK_PASS Torre Corporativa: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (3 KO, 68 supers, efectos completos)
+SIDE_CHECK_PASS Torre Corporativa: 60.0 FPS medios (≥58), 1 % bajo 57.5 (≥45); frame mediana 16.67 ms, p95 16.71 ms
+SIDE_CHECK_PASS Torre Corporativa: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)
+SIDE_CHECK_PASS Torre Corporativa: CPU principal mediana 2.81 ms, p95 3.83 ms (<13.5), pico 7.38 ms; hilo de render p95 1.36 ms
+SIDE_CHECK_PASS Torre Corporativa: GPU mediana 2.55 ms, p95 5.07 ms (<13.5), pico 6.30 ms
+SIDE_CHECK_PASS Torre Corporativa: pico de frame 30.3 ms (<100); 1 frames >20 ms y 0 >33 ms de 3599
+SIDE_CHECK_PASS Torre Corporativa: carga de arena con cinco luchadores 4 ms (<2 s), primer frame 17 ms; vuelta al menú 20 ms (<0.5 s)
+SIDE_CHECK_PASS Torre Corporativa: memoria gestionada pico 4.4 MB (<256), nativa Unity 197 MB, proceso 688 MB (<2048); asignación GC mediana 0.0 KB/frame
+FUNADOS_PERF Estudio de Debate: 60.0 fps (1 % bajo 59.2), frame máx. 17.1 ms, CPU 3.04/4.09/7.11 ms, GPU 2.82/4.68/6.78 ms, carga 0.005 s, menú 0.021 s, KO 3, supers 75
+SIDE_CHECK_PASS Estudio de Debate: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (3 KO, 75 supers, efectos completos)
+SIDE_CHECK_PASS Estudio de Debate: 60.0 FPS medios (≥58), 1 % bajo 59.2 (≥45); frame mediana 16.67 ms, p95 16.70 ms
+SIDE_CHECK_PASS Estudio de Debate: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)
+SIDE_CHECK_PASS Estudio de Debate: CPU principal mediana 3.04 ms, p95 4.09 ms (<13.5), pico 7.11 ms; hilo de render p95 1.40 ms
+SIDE_CHECK_PASS Estudio de Debate: GPU mediana 2.82 ms, p95 4.68 ms (<13.5), pico 6.78 ms
+SIDE_CHECK_PASS Estudio de Debate: pico de frame 17.1 ms (<100); 0 frames >20 ms y 0 >33 ms de 3599
+SIDE_CHECK_PASS Estudio de Debate: carga de arena con cinco luchadores 5 ms (<2 s), primer frame 17 ms; vuelta al menú 21 ms (<0.5 s)
+SIDE_CHECK_PASS Estudio de Debate: memoria gestionada pico 4.6 MB (<256), nativa Unity 198 MB, proceso 690 MB (<2048); asignación GC mediana 0.0 KB/frame
+FUNADOS_PERF Plaza Colonial: 60.0 fps (1 % bajo 58.2), frame máx. 24.6 ms, CPU 2.73/3.76/6.60 ms, GPU 2.68/5.01/8.25 ms, carga 0.005 s, menú 0.016 s, KO 3, supers 72
+SIDE_CHECK_PASS Plaza Colonial: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (3 KO, 72 supers, efectos completos)
+SIDE_CHECK_PASS Plaza Colonial: 60.0 FPS medios (≥58), 1 % bajo 58.2 (≥45); frame mediana 16.67 ms, p95 16.72 ms
+SIDE_CHECK_PASS Plaza Colonial: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)
+SIDE_CHECK_PASS Plaza Colonial: CPU principal mediana 2.73 ms, p95 3.76 ms (<13.5), pico 6.60 ms; hilo de render p95 1.30 ms
+SIDE_CHECK_PASS Plaza Colonial: GPU mediana 2.68 ms, p95 5.01 ms (<13.5), pico 8.25 ms
+SIDE_CHECK_PASS Plaza Colonial: pico de frame 24.6 ms (<100); 1 frames >20 ms y 0 >33 ms de 3599
+SIDE_CHECK_PASS Plaza Colonial: carga de arena con cinco luchadores 5 ms (<2 s), primer frame 17 ms; vuelta al menú 16 ms (<0.5 s)
+SIDE_CHECK_PASS Plaza Colonial: memoria gestionada pico 4.6 MB (<256), nativa Unity 198 MB, proceso 691 MB (<2048); asignación GC mediana 0.0 KB/frame
+FUNADOS_PERF ciclos de arena: objetos 4169 → 4169 → 4169 → 4169 → 4169; crecimiento ninguno
+SIDE_CHECK_PASS Cambiar de arena no deja objetos atrás: 5 ciclos por las 4 arenas, 0 objetos de Unity tras 3 ciclos (ninguno)
+SIDE_CHECK_PASS Rendimiento medido en las 4 arenas sin acelerar el tiempo y con efectos completos: 60.0 FPS medios, 1 % bajo 58.2, CPU p95 3.87 ms, GPU p95 4.16 ms (NVIDIA GeForce RTX 4050 Laptop GPU)
+SIDE_RESULT True checks=35 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

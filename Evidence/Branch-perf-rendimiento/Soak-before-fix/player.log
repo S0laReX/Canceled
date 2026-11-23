@@ -1,0 +1,64 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.0/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.0/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.0/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.069 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.122400 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\rendimiento-095c80\Evidence\Branch-perf-rendimiento\Soak\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+FUNADOS_SOAK partida 1 (inicio, Azotea Influencer): 90 s de juego, KO 10, real 94 s, objetos 147/4375, gestionada 3.7 MB, proceso 677 MB, errores 0
+FUNADOS_SOAK partida 2 (revancha, Azotea Influencer): 90 s de juego, KO 6, real 187 s, objetos 149/4390, gestionada 4.0 MB, proceso 677 MB, errores 0
+FUNADOS_SOAK partida 3 (revancha, Azotea Influencer): 90 s de juego, KO 8, real 281 s, objetos 147/4389, gestionada 4.3 MB, proceso 678 MB, errores 0
+FUNADOS_SOAK partida 4 (menú, Torre Corporativa): 90 s de juego, KO 3, real 375 s, objetos 155/4431, gestionada 4.3 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 5 (revancha, Torre Corporativa): 90 s de juego, KO 6, real 468 s, objetos 154/4431, gestionada 4.3 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 6 (revancha, Torre Corporativa): 90 s de juego, KO 7, real 562 s, objetos 155/4439, gestionada 4.8 MB, proceso 680 MB, errores 0
+FUNADOS_SOAK partida 7 (menú, Estudio de Debate): 90 s de juego, KO 8, real 656 s, objetos 133/4377, gestionada 4.8 MB, proceso 680 MB, errores 0
+FUNADOS_SOAK partida 8 (revancha, Estudio de Debate): 90 s de juego, KO 6, real 749 s, objetos 134/4385, gestionada 4.8 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 9 (revancha, Estudio de Debate): 90 s de juego, KO 10, real 843 s, objetos 134/4390, gestionada 4.8 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 10 (menú, Plaza Colonial): 90 s de juego, KO 5, real 937 s, objetos 139/4403, gestionada 4.9 MB, proceso 680 MB, errores 0
+FUNADOS_SOAK partida 11 (revancha, Plaza Colonial): 90 s de juego, KO 6, real 1030 s, objetos 138/4405, gestionada 4.8 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 12 (revancha, Plaza Colonial): 90 s de juego, KO 6, real 1124 s, objetos 138/4410, gestionada 5.8 MB, proceso 680 MB, errores 0
+FUNADOS_SOAK partida 13 (menú, Azotea Influencer): 90 s de juego, KO 6, real 1218 s, objetos 149/4445, gestionada 5.8 MB, proceso 680 MB, errores 0
+FUNADOS_SOAK partida 14 (revancha, Azotea Influencer): 90 s de juego, KO 8, real 1311 s, objetos 147/4444, gestionada 5.8 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 15 (revancha, Azotea Influencer): 90 s de juego, KO 7, real 1405 s, objetos 150/4462, gestionada 5.8 MB, proceso 680 MB, errores 0
+FUNADOS_SOAK partida 16 (menú, Torre Corporativa): 90 s de juego, KO 5, real 1499 s, objetos 154/4486, gestionada 5.8 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 17 (revancha, Torre Corporativa): 90 s de juego, KO 8, real 1593 s, objetos 154/4491, gestionada 5.8 MB, proceso 680 MB, errores 0
+FUNADOS_SOAK partida 18 (revancha, Torre Corporativa): 90 s de juego, KO 7, real 1687 s, objetos 154/4496, gestionada 5.8 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 19 (menú, Estudio de Debate): 90 s de juego, KO 7, real 1781 s, objetos 134/4440, gestionada 5.9 MB, proceso 679 MB, errores 0
+FUNADOS_SOAK partida 20 (revancha, Estudio de Debate): 90 s de juego, KO 5, real 1874 s, objetos 134/4445, gestionada 5.8 MB, proceso 679 MB, errores 0
+SIDE_CHECK_PASS Sesión de 31.2 min a velocidad real: 20 partidas de cinco luchadores (13 revanchas encadenadas, 6 vueltas al menú, 134 KO), sin bloqueos
+SIDE_CHECK_PASS Sesión sin errores ni excepciones en el registro (0)
+SIDE_CHECK_FAIL Sesión fluida: 60.0 FPS medios, 1 % bajo 53.6, frame máx. 731 ms (3 >100 ms, 2 >250 ms); CPU p95 3.78 ms, GPU p95 3.70 ms
+SIDE_CHECK_FAIL Sin crecimiento de entidades entre revanchas: +1 GameObjects y +72 objetos de Unity como máximo en la misma arena
+SIDE_CHECK_PASS Sin fugas de memoria: gestionada +1.0 MB (+0.65 MB/10 min), proceso -1 MB (0 MB/10 min)
+FUNADOS_SOAK tirón 1542.8 s, partida 17, Playing, juego 40.7 s: 195 ms
+FUNADOS_SOAK tirón 1543.7 s, partida 17, Playing, juego 41.2 s: 731 ms
+FUNADOS_SOAK tirón 1633.7 s, partida 18, Playing, juego 37.7 s: 293 ms
+SIDE_RESULT False checks=4 failures=2
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

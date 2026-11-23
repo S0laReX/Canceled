@@ -1,0 +1,14 @@
+{
+    "version": "0.7.0",
+    "passed": false,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Sesión de 31.2 min a velocidad real: 20 partidas de cinco luchadores (13 revanchas encadenadas, 6 vueltas al menú, 134 KO), sin bloqueos",
+        "Sesión sin errores ni excepciones en el registro (0)",
+        "Sin fugas de memoria: gestionada +1.0 MB (+0.65 MB/10 min), proceso -1 MB (0 MB/10 min)"
+    ],
+    "failures": [
+        "Sesión fluida: 60.0 FPS medios, 1 % bajo 53.6, frame máx. 731 ms (3 >100 ms, 2 >250 ms); CPU p95 3.78 ms, GPU p95 3.70 ms",
+        "Sin crecimiento de entidades entre revanchas: +1 GameObjects y +72 objetos de Unity como máximo en la misma arena"
+    ]
+}
