@@ -6,35 +6,26 @@ namespace CancelBrawl.Beta
     /// <summary>Presentation only: particles, warnings and generated audio. Never decides combat results.</summary>
     public static class BrawlFeedback
     {
-        private static AudioSource audio, music;
-        private static readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
         private static readonly Dictionary<Color, Material> materials = new Dictionary<Color, Material>();
-        private static AudioClip musicClip;
 
         /// <summary>Accessibility: fewer particles, no blinking and no camera shake.</summary>
         public static bool ReducedEffects { get; set; }
-        public static float SfxVolume { get; private set; } = .8f;
-        public static float MusicVolume { get; private set; } = .5f;
+        /// <summary>SFX bus volume (see <see cref="BrawlAudio"/>).</summary>
+        public static float SfxVolume => BrawlAudio.Volume(BrawlAudioBus.Sfx);
+        /// <summary>Music bus volume (see <see cref="BrawlAudio"/>).</summary>
+        public static float MusicVolume => BrawlAudio.Volume(BrawlAudioBus.Music);
 
         public static void Initialize(Transform root)
         {
             foreach (var material in materials.Values) if (material) Object.Destroy(material);
             materials.Clear();
-            foreach (var clip in clips.Values) if (clip) Object.Destroy(clip);
-            clips.Clear();
-            if (musicClip) Object.Destroy(musicClip);
-            audio = root.gameObject.AddComponent<AudioSource>(); audio.spatialBlend = 0; audio.playOnAwake = false;
-            music = root.gameObject.AddComponent<AudioSource>(); music.spatialBlend = 0; music.loop = true; music.playOnAwake = false;
-            musicClip = BuildMusic(); music.clip = musicClip;
-            SetVolumes(SfxVolume, MusicVolume);
-            music.Play();
+            BrawlAudio.Initialize(root);
         }
 
+        /// <summary>Sets the SFX and Music buses; Master, Voices and UI keep their values.</summary>
         public static void SetVolumes(float sfx, float musicLevel)
         {
-            SfxVolume = Mathf.Clamp01(sfx); MusicVolume = Mathf.Clamp01(musicLevel);
-            if (audio) audio.volume = .2f * SfxVolume;
-            if (music) music.volume = .12f * MusicVolume;
+            BrawlAudio.SetVolume(BrawlAudioBus.Sfx, sfx); BrawlAudio.SetVolume(BrawlAudioBus.Music, musicLevel);
         }
 
         public static Material Material(Color color)
@@ -45,47 +36,8 @@ namespace CancelBrawl.Beta
             materials[color] = material; return material;
         }
 
-        public static void Sound(string kind)
-        {
-            if (!audio) return;
-            if (!clips.TryGetValue(kind, out AudioClip clip))
-            {
-                float frequency = kind == "jump" ? 530 : kind == "hit" ? 120 : kind == "ko" ? 85 : kind == "ready" ? 880 :
-                    kind == "super" ? 180 : kind == "warning" ? 420 : kind == "bounce" ? 700 : kind == "trap" ? 300 : 230;
-                float duration = kind == "ko" ? .4f : kind == "warning" ? .25f : kind == "bounce" ? .06f : .12f;
-                int count = Mathf.CeilToInt(22050 * duration); var data = new float[count];
-                for (int i = 0; i < count; i++)
-                {
-                    float t = i / 22050f; float u = (float)i / count;
-                    data[i] = Mathf.Sin(t * frequency * (kind == "jump" ? 1 + u : 1 - u * .35f) * Mathf.PI * 2) * (1 - u) * Mathf.Min(1, u * 25) * .6f;
-                }
-                clip = AudioClip.Create(kind, count, 1, 22050, false); clip.SetData(data, 0); clips[kind] = clip;
-            }
-            audio.PlayOneShot(clip);
-        }
-
-        /// <summary>Short procedural loop (bass + pulse) so music and effects can be balanced separately.</summary>
-        private static AudioClip BuildMusic()
-        {
-            const int rate = 22050; const float bpm = 112; float beat = 60f / bpm;
-            int count = Mathf.CeilToInt(rate * beat * 16);
-            var data = new float[count];
-            float[] roots = { 55f, 55f, 65.4f, 49f };
-            for (int i = 0; i < count; i++)
-            {
-                float t = i / (float)rate;
-                int step = Mathf.FloorToInt(t / beat);
-                float local = t - step * beat;
-                float root = roots[(step / 4) % roots.Length];
-                float bass = Mathf.Sin(2 * Mathf.PI * root * t) * Mathf.Exp(-local * 3.2f) * .55f;
-                float off = Mathf.Repeat(t + beat * .5f, beat);
-                float pulse = (Mathf.PerlinNoise(i * .37f, 0) - .5f) * Mathf.Exp(-off * 40f) * .25f;
-                float pad = Mathf.Sin(2 * Mathf.PI * root * 4 * t) * .05f * (.6f + .4f * Mathf.Sin(t * .8f));
-                data[i] = bass + pulse + pad;
-            }
-            var clip = AudioClip.Create("Beta loop", count, 1, rate, false); clip.SetData(data, 0);
-            return clip;
-        }
+        /// <summary>Plays a sound through its bus (<see cref="BrawlAudio.Route"/>).</summary>
+        public static void Sound(string kind) => BrawlAudio.Play(kind);
 
         public static void Burst(Vector3 position, Color color, int count)
         {

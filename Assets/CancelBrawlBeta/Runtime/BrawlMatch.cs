@@ -178,7 +178,7 @@ namespace CancelBrawl.Beta
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
             else if (Array.IndexOf(Environment.GetCommandLineArgs(), "-haptics-probe") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlHapticsProbe>(); }
-            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0)
+            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0 || Array.IndexOf(args, "-audio-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSideSmokeProbe>(); }
             // Support log: which pads the game sees and how, so field reports can be diagnosed from player.log.
             foreach (var device in InputSystem.devices) if (device is Gamepad) Debug.Log("FUNADOS_INPUT presente " + BrawlHapticsProbe.Describe(device));
@@ -683,9 +683,9 @@ namespace CancelBrawl.Beta
         public void TogglePause()
         {
             if (Phase == MatchPhase.Playing || Phase == MatchPhase.Countdown)
-            { resumePhase = Phase; Phase = MatchPhase.Paused; ClearInputs(); }
+            { resumePhase = Phase; Phase = MatchPhase.Paused; ClearInputs(); BrawlAudio.Play("ui-pause"); }
             else if (Phase == MatchPhase.Paused && MissingDeviceMask == 0)
-            { Phase = resumePhase; DevicePause = false; ClearInputs(); }
+            { Phase = resumePhase; DevicePause = false; ClearInputs(); BrawlAudio.Play("ui-confirm"); }
         }
 
         public void PollDevices()
@@ -728,6 +728,12 @@ namespace CancelBrawl.Beta
         // ───────────── Options (per device; GDD §12 accessibility) ─────────────
         public void SetReducedEffects(bool value) { BrawlFeedback.ReducedEffects = value; SaveOptions(); }
         public void SetVolumes(float sfx, float music) { BrawlFeedback.SetVolumes(sfx, music); SaveOptions(); }
+        /// <summary>AUDIO-428 to 434: one bus volume, saved; a short UI click previews the new level.</summary>
+        public void SetBusVolume(BrawlAudioBus bus, float value)
+        {
+            BrawlAudio.SetVolume(bus, value); SaveOptions();
+            BrawlAudio.Play(bus == BrawlAudioBus.Voice ? "voice-super" : bus == BrawlAudioBus.Sfx ? "hit" : "ui-move");
+        }
 
         private static string ResolveOptionsPath()
         {
@@ -771,7 +777,7 @@ namespace CancelBrawl.Beta
         private void ApplyOptions(BrawlOptionsData data, ref OptionsLoadStatus status)
         {
             BrawlFeedback.ReducedEffects = data.reducedEffects;
-            BrawlFeedback.SetVolumes(data.sfx, data.music);
+            BrawlAudio.SetVolumes(data.master, data.music, data.sfx, data.voice, data.ui);
             localCoop = data.localCoop; p1UsesGamepad = data.p1UsesGamepad;
             MoveDeadzone = data.moveDeadzone; AimDeadzone = data.aimDeadzone; StickResponse = data.stickResponse; VibrationStrength = data.vibration;
             TextScale = data.textScale; HudScale = data.hudScale;
@@ -790,6 +796,7 @@ namespace CancelBrawl.Beta
         internal BrawlOptionsData CaptureOptions() => new BrawlOptionsData
         {
             reducedEffects = BrawlFeedback.ReducedEffects, sfx = BrawlFeedback.SfxVolume, music = BrawlFeedback.MusicVolume,
+            master = BrawlAudio.Volume(BrawlAudioBus.Master), voice = BrawlAudio.Volume(BrawlAudioBus.Voice), ui = BrawlAudio.Volume(BrawlAudioBus.Ui),
             localCoop = localCoop, p1UsesGamepad = p1UsesGamepad,
             moveDeadzone = MoveDeadzone, aimDeadzone = AimDeadzone, stickResponse = StickResponse, vibration = VibrationStrength,
             textScale = TextScale, hudScale = HudScale,
