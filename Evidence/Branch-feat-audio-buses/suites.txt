@@ -1,0 +1,13 @@
+arena-smoke/ SIDE_RESULT True checks=46 failures=0
+audio-smoke/ SIDE_RESULT True checks=25 failures=0
+beta-smoke/ BETA_SMOKE_RESULT PASS checks=208 failures=0
+camera-smoke/ SIDE_RESULT True checks=15 failures=0
+controls-smoke/ BETA_SMOKE_RESULT PASS checks=125 failures=0
+coyote-study/ SIDE_RESULT True checks=5 failures=0
+kits-smoke/ SIDE_RESULT True checks=91 failures=0
+moves-smoke/ SIDE_RESULT True checks=21 failures=0
+power-smoke/ SIDE_RESULT True checks=32 failures=0
+recovery-smoke/ SIDE_RESULT True checks=16 failures=0
+side-controls-smoke/ SIDE_RESULT True checks=127 failures=0
+side-smoke/ SIDE_RESULT True checks=375 failures=0
+

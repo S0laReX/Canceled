@@ -75,6 +75,11 @@ namespace CancelBrawl.Beta
                     System.Globalization.CultureInfo.InvariantCulture, out float parsed) ? parsed : BrawlPerfSuite.SoakSeconds;
                 yield return BrawlPerfSuite.RunSoak(match,Check,output,soakSeconds); Finish(); yield break;
             }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-audio-smoke")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlAudioChecks.Run(match,Check,output); Finish(); yield break;
+            }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-coyote-study")>=0)
             {
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");

@@ -19,6 +19,16 @@
 - Umbrales propuestos (el GDD solo fija 60 FPS y 13,5 ms con mediana, p95 y picos): FPS medio ≥58, 1 % bajo ≥45, frame <100 ms, carga <2 s, menú <0,5 s, gestionada <256 MB, proceso <2 GB; en 30 min: ningún frame >250 ms, ≤5 GameObjects y ≤20 objetos de más en la misma arena, gestionada <16 MB y proceso <128 MB de crecimiento. Las partidas de la sesión duran 90 s de reloj para encadenar revanchas.
 - Límites: los efectos son los actuales (sin el shader toon ni los VFX finales del GDD); volver a medir cuando lleguen el arte y las animaciones. El pico de 630 ms de CPU en `soak-session.json` es el frame del censo de objetos de la propia prueba, fuera de la partida.
 - Suites en la rama (`Evidence/Branch-perf-rendimiento`): perf 35, soak 6, power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, arena-stress 25; cero fallos. Sin cambio de versión ni de recuento; al juntar, `-perf-smoke` y `-soak-session` van en la misma línea de opciones de `BrawlMatch` que `-audio-smoke`.
+=======
+## Relevo feat/audio-buses (AUDIO-428 a 434)
+
+- `BrawlAudio` (nuevo): buses Master, Música, SFX, Voces y UI. Una `AudioSource` por bus bajo la raíz de la partida (`Bus Música`, `Bus SFX`, …); volumen = `BusGain` × Master × bus. No se usa un asset `AudioMixer` porque sus grupos no se pueden crear desde código sin API interna; si llega audio final, basta asignar `outputAudioMixerGroup` a cada fuente.
+- `BrawlFeedback.Sound` delega en `BrawlAudio.Play`: el bus sale del nombre (`ui-*` → UI, `voice-*` → Voces, el resto → SFX). El KO y el super añaden una frase provisional en Voces; una frase a la vez y el KO tiene prioridad. Pausa/reanudar suenan en UI. `BrawlFeedback.SfxVolume/MusicVolume/SetVolumes` siguen igual (son los buses SFX y Música).
+- Opciones: formato **versión 4** (`master`, `voice`, `ui`); v1/v2/v3 migran. **Al juntar con `feat/ui-accesibilidad`**: si esa rama también sube el formato, usar la v5 encima de esta o fusionar ambas en la v4. Se ajustaron dos comprobaciones antiguas que fijaban la versión 3 (`BrawlDisplayChecks`) o no tenían los campos v4 (`BrawlBindingChecks`, archivo de versión futura).
+- HUD (cambio mínimo en `BrawlHud.DrawOptions`): cuarta pestaña **AUDIO** (`tab-audio`, filas `audio-master/music/sfx/voice/ui`); las pestañas pasan a 76 px y el título OPCIONES se encoge si no cabe. GENERAL conserva Efectos y Música.
+- `-audio-smoke` (registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 25/25, unos 35 s. Mide la salida real con `AudioListener.GetOutputData`, así que necesita un dispositivo de audio.
+- Suites en la rama (`Evidence/Branch-feat-audio-buses`, build 0 errores): power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, audio 25; cero fallos. No se volvió a ejecutar `-arena-stress` (25 min; no toca audio). Copia del GDD marcada sin regenerar (se hace al juntar en `main`).
+>>>>>>> origin/feat/audio-buses
 
 ## Relevo 0.7.0 (juntada feat/arena-ko-stress, ARENA-366)
 

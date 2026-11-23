@@ -24,6 +24,10 @@ namespace CancelBrawl.Beta
         // Version 3 (SYS-071).
         public float textScale = 1f;
         public float hudScale = 1f;
+        // Version 4 (AUDIO-428 to 434): buses Master, Voces and UI. sfx and music above are the SFX and Música buses.
+        public float master = 1f;
+        public float voice = .8f;
+        public float ui = .7f;
         public List<BrawlBindingEntry> keyboard = new List<BrawlBindingEntry>();
         public List<BrawlBindingEntry> gamepad = new List<BrawlBindingEntry>();
     }
@@ -37,10 +41,11 @@ namespace CancelBrawl.Beta
     public static class BrawlOptionsStore
     {
         public const string Format = "funados-options";
-        public const int CurrentVersion = 3;
+        public const int CurrentVersion = 4;
         private static readonly string[] FieldsV1 = { "\"format\"", "\"version\"", "\"reducedEffects\"", "\"sfx\"", "\"music\"", "\"keyboard\"", "\"gamepad\"" };
         private static readonly string[] FieldsV2 = { "\"moveDeadzone\"", "\"aimDeadzone\"", "\"stickResponse\"", "\"vibration\"" };
         private static readonly string[] FieldsV3 = { "\"textScale\"", "\"hudScale\"" };
+        private static readonly string[] FieldsV4 = { "\"master\"", "\"voice\"", "\"ui\"" };
         public const string FileName = "funados-options.json";
 
         public static string DefaultPath => Path.Combine(Application.persistentDataPath, FileName);
@@ -144,8 +149,22 @@ namespace CancelBrawl.Beta
                 data.textScale = defaults.textScale; data.hudScale = defaults.hudScale;
                 migrated = true;
             }
+            if (data.version >= 4)
+            {
+                foreach (string field in FieldsV4)
+                    if (trimmed.IndexOf(field, StringComparison.Ordinal) < 0) { data = null; return false; }
+            }
+            else
+            {
+                // Version 3 → 4: only SFX and Música existed; the new buses start at their defaults.
+                data.master = defaults.master; data.voice = defaults.voice; data.ui = defaults.ui;
+                migrated = true;
+            }
             data.sfx = Sanitize(data.sfx, .8f, ref repaired);
             data.music = Sanitize(data.music, .5f, ref repaired);
+            data.master = Sanitize(data.master, defaults.master, ref repaired);
+            data.voice = Sanitize(data.voice, defaults.voice, ref repaired);
+            data.ui = Sanitize(data.ui, defaults.ui, ref repaired);
             data.vibration = Sanitize(data.vibration, .75f, ref repaired);
             data.moveDeadzone = SanitizeRange(data.moveDeadzone, .2f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);
             data.aimDeadzone = SanitizeRange(data.aimDeadzone, .25f, BrawlInputTuning.MinDeadzone, BrawlInputTuning.MaxDeadzone, ref repaired);

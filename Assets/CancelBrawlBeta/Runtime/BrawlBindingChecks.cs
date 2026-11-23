@@ -184,7 +184,7 @@ namespace CancelBrawl.Beta
                 File.WriteAllText(lone, "{\"format\":\"funados-options\",\"version\":1,\"reducedEffects\":true,\"sfx\":7,\"music\":-3,\"keyboard\":[],\"gamepad\":[]}");
                 data = BrawlOptionsStore.Load(lone, out status, out _);
                 check(status == OptionsLoadStatus.RepairedFields && data.sfx == 1 && data.music == 0 && data.reducedEffects, "Valores fuera de rango se corrigen");
-                File.WriteAllText(lone, "{\"format\":\"funados-options\",\"version\":99,\"reducedEffects\":true,\"sfx\":0.4,\"music\":0.2,\"moveDeadzone\":0.3,\"aimDeadzone\":0.3,\"stickResponse\":1,\"vibration\":0.2,\"textScale\":1,\"hudScale\":1,\"keyboard\":[],\"gamepad\":[],\"nuevo\":1}");
+                File.WriteAllText(lone, "{\"format\":\"funados-options\",\"version\":99,\"reducedEffects\":true,\"sfx\":0.4,\"music\":0.2,\"moveDeadzone\":0.3,\"aimDeadzone\":0.3,\"stickResponse\":1,\"vibration\":0.2,\"textScale\":1,\"hudScale\":1,\"master\":1,\"voice\":0.8,\"ui\":0.7,\"keyboard\":[],\"gamepad\":[],\"nuevo\":1}");
                 data = BrawlOptionsStore.Load(lone, out status, out _);
                 check(status == OptionsLoadStatus.RepairedFields && Mathf.Approximately(data.sfx, .4f), "Versión futura conserva campos conocidos");
 
