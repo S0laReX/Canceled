@@ -35,7 +35,9 @@ namespace CancelBrawl.Beta
         { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) report.failures.Add(message + "\n" + stack); }
         private void Check(bool value, string name)
         { (value ? report.checks : report.failures).Add(name); Debug.Log("SIDE_CHECK_" + (value ? "PASS " : "FAIL ") + name); }
-        private void Update() { if (!finished && Time.realtimeSinceStartup - started > 2400) { Check(false, "Tiempo máximo agotado"); Finish(); } }
+        // The 30-minute session needs more than the usual 40-minute ceiling once startup and its last match are added.
+        private static readonly float TimeLimit = Array.IndexOf(Environment.GetCommandLineArgs(), "-soak-session") >= 0 ? BrawlPerfSuite.SoakSeconds + 1500 : 2400;
+        private void Update() { if (!finished && Time.realtimeSinceStartup - started > TimeLimit) { Check(false, "Tiempo máximo agotado"); Finish(); } }
         private void Finish()
         {
             finished = true; report.passed = report.failures.Count == 0;
@@ -59,6 +61,19 @@ namespace CancelBrawl.Beta
             {
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
                 yield return BrawlArenaStress.Run(match,Check,output); Finish(); yield break;
+            }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-perf-smoke")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlPerfSuite.RunPerf(match,Check,output); Finish(); yield break;
+            }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-soak-session")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                var soakArgs = Environment.GetCommandLineArgs(); int soakAt = Array.IndexOf(soakArgs,"-soak-seconds");
+                float soakSeconds = soakAt >= 0 && soakAt + 1 < soakArgs.Length && float.TryParse(soakArgs[soakAt + 1], System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out float parsed) ? parsed : BrawlPerfSuite.SoakSeconds;
+                yield return BrawlPerfSuite.RunSoak(match,Check,output,soakSeconds); Finish(); yield break;
             }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-coyote-study")>=0)
             {

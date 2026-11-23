@@ -121,8 +121,11 @@ Recuento: **37 de 63** marcadas (20 del GDD 2.0 + 17 desde 0.6.0). Ninguna en �
 ## Calidad y cierre
 
 - [x] Regresión histórica de 109 casos conservada (CIERRE-459)
-- [ ] Medir rendimiento en build con cinco luchadores (QA-435 a 440)
-- [ ] Sesión de 30 minutos con revanchas sin bloqueos ni fugas
+- [x] Medir rendimiento en build con cinco luchadores (QA-435 a 440)
+  - Rama `perf/rendimiento`: `BrawlPerfSuite` (`-perf-smoke`), build Windows con RTX 4050 Laptop (el equipo de referencia del GDD), D3D11 a 1280×720, velocidad real (timeScale 1, 60 Hz) y efectos completos: cinco bots por arena, 60 s de juego medido cada una, super cada 4 s y daño ≥130 % para que haya lanzamientos y KO. Las cuatro arenas: **60,0 FPS medios, 1 % bajo 57,5–59,2, frame máximo 17–30 ms; CPU principal mediana 2,7–3,0 ms, p95 3,8–4,1 ms, pico 7,4 ms; GPU mediana 2,1–2,8 ms, p95 3,9–5,1 ms, pico 8,2 ms** (objetivo GDD: <13,5 ms), simulación 60,0 Hz. Carga de arena con cinco luchadores 3–5 ms; vuelta al menú 16–21 ms. Memoria pico: gestionada 4–6,5 MB, nativa de Unity 197–199 MB, proceso 688–713 MB. Cinco ciclos por las cuatro arenas: 4169 objetos de Unity constantes. Máquina libre durante la medición (CPU media 5 %, ningún otro Unity ni FUNADOS). Umbrales propuestos donde el GDD no fija cifra: FPS medio ≥58, 1 % bajo ≥45, frame <100 ms, carga <2 s, menú <0,5 s. 35/35, `Evidence/Branch-perf-rendimiento/Perf/perf-smoke.json`.
+- [x] Sesión de 30 minutos con revanchas sin bloqueos ni fugas
+  - `-soak-session` (misma suite): 31,2 min a velocidad real, **20 partidas de cinco bots (13 revanchas encadenadas con REVANCHA y 6 vueltas al menú con cambio de arena y personaje), 88 KO, 0 bloqueos, 0 errores; 60,0 FPS medios, 1 % bajo 58,0, ningún frame >100 ms**; GameObjects +4 y objetos de Unity +13 como máximo frente a la primera revancha de la misma arena (avisos de super vivos al acabar, que se destruyen con su luchador); gestionada +2,0 MB y proceso +4 MB tras calentarse (estable en ~7,8 MB y ~696 MB). Partidas de 90 s de reloj para poder encadenar revanchas (con 300 s los bots acaban por tiempo). 6/6, `Evidence/Branch-perf-rendimiento/Soak/soak-session.json`.
+  - Corregido gracias a esta prueba: el anillo y la flecha de cada luchador leían `LineRenderer.material`, que clona el material y no se destruía: **5 materiales perdidos por partida** (+72 objetos en 30 min, `Soak-before-fix`). Ahora usan `sharedMaterial`; sin cambio visual.
 - [ ] Playtests con personas según el protocolo (combo escalera y recuperación)
 - [ ] Aceptar Don Promesio, Lola Viral, una arena, dos dispositivos, resultados y accesibilidad (CIERRE-455 a 458)
 
@@ -141,5 +144,6 @@ Recuento: **37 de 63** marcadas (20 del GDD 2.0 + 17 desde 0.6.0). Ninguna en �
   - `-side-controls-smoke`: dispositivos, remapeo, ajustes de mando, menús y pantalla **en 2.5D** (nuevo en 0.6.0).
   - `-side-smoke`: reglas 2.5D completas + poderes + las suites de controles.
   - `-controls-smoke` / `-beta-smoke`: regresión histórica 3D (no es el diseño actual).
+  - `-perf-smoke` (≈5 min): rendimiento con cinco bots por arena a velocidad real (`perf-smoke.json`). `-soak-session` (≈32 min): sesión de 30 min con revanchas (`soak-session.json`); `-soak-seconds N` acorta la sesión para probar. Medir con la máquina libre: otra build o un Unity compilando falsean las cifras.
 - Script de conveniencia usado en esta sesión: ejecutar las cinco suites en orden y resumir sus informes.
 - **Mandos físicos**: desconectarlos, o añadir `-isolate-physical-pads` (los retira solo del proceso de prueba). Sin esa opción las suites se niegan con un mando real. Un DualShock emparejado por Bluetooth y apagado aparece en Windows como `BTHENUM` sin estar conectado. Pueden correr con la ventana sin foco.

@@ -126,10 +126,10 @@ namespace CancelBrawl.Beta
             marker = markerObject.transform; marker.SetParent(transform, false);
             var ring = markerObject.AddComponent<LineRenderer>();
             ring.useWorldSpace = false; ring.loop = true; ring.positionCount = 32; ring.widthMultiplier = .055f;
-            ring.material = BrawlFeedback.Material(color);
+            ring.sharedMaterial = BrawlFeedback.Material(color); // shared per colour: reading .material would clone it and leak one per fighter
             for (int i = 0; i < 32; i++) { float a = i * Mathf.PI / 16; ring.SetPosition(i, new Vector3(Mathf.Cos(a) * .56f, .02f, Mathf.Sin(a) * .56f)); }
             var arrow = new GameObject("Orientación del ataque"); arrow.transform.SetParent(transform, false);
-            facingLine = arrow.AddComponent<LineRenderer>(); facingLine.material = ring.material;
+            facingLine = arrow.AddComponent<LineRenderer>(); facingLine.sharedMaterial = ring.sharedMaterial;
             facingLine.widthMultiplier = .07f; facingLine.positionCount = 5;
             RespawnAt(transform.position, false);
         }
@@ -650,6 +650,8 @@ namespace CancelBrawl.Beta
 
         /// <summary>Test hook used only by the standalone smoke probe.</summary>
         internal void SetMeterForTest(float value) => Meter = Mathf.Clamp(value, 0, 100);
+        /// <summary>Performance suites: P1 is driven by the same bot as the others, so all five fighters play.</summary>
+        internal void MakeBotForTest() => IsBot = true;
 
         internal void SetPracticeDamage(float value) => Damage = Mathf.Clamp(value, 0, 300);
 

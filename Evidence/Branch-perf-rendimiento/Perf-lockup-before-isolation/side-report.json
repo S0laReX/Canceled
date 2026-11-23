@@ -1,0 +1,26 @@
+{
+    "version": "0.7.0",
+    "passed": false,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Azotea Influencer: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (3 KO, 59 supers, efectos completos)",
+        "Azotea Influencer: 60.0 FPS medios (≥58), 1 % bajo 56.8 (≥45); frame mediana 16.67 ms, p95 16.67 ms",
+        "Azotea Influencer: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)",
+        "Azotea Influencer: CPU principal mediana 2.35 ms, p95 3.54 ms (<13.5), pico 11.89 ms; hilo de render p95 1.29 ms",
+        "Azotea Influencer: GPU mediana 2.91 ms, p95 3.54 ms (<13.5), pico 4.20 ms",
+        "Azotea Influencer: pico de frame 26.5 ms (<100); 3 frames >20 ms y 0 >33 ms de 3599",
+        "Azotea Influencer: carga de arena con cinco luchadores 3 ms (<2 s), primer frame 17 ms; vuelta al menú 21 ms (<0.5 s)",
+        "Azotea Influencer: memoria gestionada pico 7.2 MB (<256), nativa Unity 200 MB, proceso 708 MB (<2048); asignación GC mediana 0.0 KB/frame",
+        "Torre Corporativa: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (3 KO, 61 supers, efectos completos)",
+        "Torre Corporativa: 60.0 FPS medios (≥58), 1 % bajo 59.0 (≥45); frame mediana 16.67 ms, p95 16.67 ms",
+        "Torre Corporativa: FrameTimingManager mide CPU y GPU en la build (3600 muestras de CPU, 3600 de GPU)",
+        "Torre Corporativa: CPU principal mediana 2.36 ms, p95 3.59 ms (<13.5), pico 6.76 ms; hilo de render p95 1.31 ms",
+        "Torre Corporativa: GPU mediana 2.57 ms, p95 4.84 ms (<13.5), pico 5.37 ms",
+        "Torre Corporativa: pico de frame 19.8 ms (<100); 0 frames >20 ms y 0 >33 ms de 3600",
+        "Torre Corporativa: carga de arena con cinco luchadores 5 ms (<2 s), primer frame 17 ms; vuelta al menú 20 ms (<0.5 s)",
+        "Torre Corporativa: memoria gestionada pico 4.7 MB (<256), nativa Unity 198 MB, proceso 681 MB (<2048); asignación GC mediana 0.0 KB/frame"
+    ],
+    "failures": [
+        "Tiempo máximo agotado"
+    ]
+}
