@@ -8,12 +8,18 @@ namespace CancelBrawl.Beta
     {
         private const float Width = 1600f;
         private const float Height = 900f;
-        private static readonly Color Ink = new Color(.035f, .047f, .085f, .96f);
-        private static readonly Color Card = new Color(.075f, .09f, .14f);
-        private static readonly Color Paper = new Color(.94f, .96f, 1f);
-        private static readonly Color Muted = new Color(.59f, .66f, .77f);
-        private static readonly Color Cyan = new Color(.22f, .93f, .93f);
-        private static readonly Color Pink = new Color(1f, .33f, .65f);
+        // SYS-071: every colour comes from the active palette (normal / high contrast × normal / colour-blind).
+        private BrawlHudPalette palette = BrawlHudPalette.For(false, false);
+        public BrawlHudPalette Palette => palette;
+        private Color Ink => palette.Ink;
+        private Color Card => palette.Card;
+        private Color Paper => palette.Paper;
+        private Color Muted => palette.Muted;
+        private Color Cyan => palette.Accent;
+        private Color Pink => palette.Warning;
+        private Color Track => palette.Track;
+        /// <summary>HUD colour of a fighter; follows the colour-blind option at once (world effects take it next round).</summary>
+        private Color PlayerTint(BrawlFighter fighter) => BrawlHudPalette.Player(fighter.PlayerIndex, match.ColorBlindPalette);
         private BrawlMatch match;
         private Camera markerCamera;
         private Texture2D pixel;
@@ -73,6 +79,7 @@ namespace CancelBrawl.Beta
         }
 
         /// <summary>Real pixel height of the smallest text style at the current resolution (legibility check).</summary>
+        public int BodyFontSize => stylesReady ? body.fontSize : 0;
         public float SmallestTextPixels => stylesReady ? Mathf.Min(tiny.fontSize, small.fontSize) * Layout.Scale : 0;
 
         /// <summary>Whether a screen point (Input System coordinates, origin bottom-left) is over the lab panel.</summary>
@@ -82,10 +89,10 @@ namespace CancelBrawl.Beta
             Vector2 canvas = layout.ScreenToCanvas(new Vector2(screenPoint.x, Screen.height - screenPoint.y));
             Vector2 top = new Vector2(canvas.x - layout.PadX, canvas.y);
             Vector2 local = new Vector2(Width + (top.x - Width) / layout.HudScale, top.y / layout.HudScale);
-            return TrainingRect.Contains(local);
+            return Tutorial.Active ? PointerOverTutorial(local) : TrainingRect.Contains(local);
         }
 
-        private static readonly Rect TrainingRect = new Rect(1000, 106, 570, 178);
+        private static readonly Rect TrainingRect = new Rect(1000, 106, 570, 222);
 
         private static GUIStyle TextStyle(int size, FontStyle weight = FontStyle.Normal,
             TextAnchor alignment = TextAnchor.UpperLeft)
@@ -106,6 +113,7 @@ namespace CancelBrawl.Beta
         {
             if (match == null) return;
             EnsureStyles();
+            palette = BrawlHudPalette.For(match.HighContrast, match.ColorBlindPalette);
             Matrix4x4 oldMatrix = GUI.matrix;
             Color oldColor = GUI.color;
             int cards = match.Phase == MatchPhase.Menu || match.Fighters == null ? 0 : match.Fighters.Length;
@@ -114,10 +122,10 @@ namespace CancelBrawl.Beta
             Rect screen = new Rect(0, 0, Layout.ViewWidth, Layout.ViewHeight);
             GUI.matrix = Layout.Canvas;
             // The camera reserves exactly this strip (see LateUpdate); repaint it edge to edge every frame.
-            Fill(new Rect(0, Layout.ViewHeight - Layout.StripHeight, Layout.ViewWidth, Layout.StripHeight), new Color(.02f, .03f, .06f, 1f));
+            Fill(new Rect(0, Layout.ViewHeight - Layout.StripHeight, Layout.ViewWidth, Layout.StripHeight), palette.Strip);
             if (match.Phase == MatchPhase.Menu)
             {
-                Fill(screen, new Color(.02f, .03f, .065f, .9f));
+                Fill(screen, new Color(.02f, .03f, .065f, palette.HighContrast ? .97f : .9f));
                 GUI.matrix = Layout.Centre; DrawMenu();
             }
             else
@@ -125,7 +133,7 @@ namespace CancelBrawl.Beta
                 GUI.matrix = Layout.Top; DrawWorldMarkers();
                 DrawMatch();
                 if (match.Phase != MatchPhase.Playing && match.Phase != MatchPhase.Countdown)
-                { GUI.matrix = Layout.Canvas; Fill(screen, new Color(.015f, .022f, .045f, match.Phase == MatchPhase.Results ? .9f : .87f)); }
+                { GUI.matrix = Layout.Canvas; Fill(screen, new Color(.015f, .022f, .045f, palette.HighContrast ? .97f : match.Phase == MatchPhase.Results ? .9f : .87f)); }
                 GUI.matrix = Layout.Centre;
                 if (match.Phase == MatchPhase.Countdown) DrawCountdown();
                 else if (match.Phase == MatchPhase.Paused) DrawPause();
@@ -176,11 +184,13 @@ namespace CancelBrawl.Beta
 
                 GUI.matrix = top * BrawlHudLayout.About(position, Layout.HudScale);
                 Rect badge = new Rect(position.x - 39, position.y - 29, 78, 28);
-                Fill(badge, nearLimit ? new Color(.45f, .05f, .2f, .96f) : new Color(.025f, .035f, .065f, .94f));
+                Color tint = PlayerTint(fighter);
+                Fill(badge, nearLimit ? palette.DangerFill : palette.BadgeFill);
                 if (nearLimit) Outline(badge, 2, Pink);
-                Fill(new Rect(badge.x, badge.yMax - 3, badge.width, 3), fighter.PlayerColor);
+                else if (palette.HighContrast) Border(badge, 2, tint);
+                Fill(new Rect(badge.x, badge.yMax - 3, badge.width, 3), tint);
                 Label(new Rect(badge.x + 2, badge.y, badge.width - 4, badge.height - 3), label,
-                    markerText, nearLimit ? Paper : fighter.PlayerColor);
+                    markerText, nearLimit ? Paper : tint);
             }
             GUI.matrix = top;
             if (Event.current.type == EventType.Repaint) { OffscreenMarkers = offscreen; DangerMarkers = danger; }
@@ -202,11 +212,14 @@ namespace CancelBrawl.Beta
             Label(new Rect(1010, 102, 510, 52), "Empuja a tus rivales fuera del escenario.\n100 % de daño no elimina por sí solo.", small, Paper, TextAnchor.UpperRight);
             bool menuEnabled = GUI.enabled;
             GUI.enabled = match.CanStartTraining;
-            Rect trainingRect = new Rect(1010, 158, 510, 32);
+            Rect trainingRect = new Rect(1010, 158, 316, 32), tutorialRect = new Rect(1334, 158, 186, 32);
             if (match.IsProduction)
             {
                 if (Button(trainingRect, "ENTRENAMIENTO / COMBAT LAB", Cyan)) match.StartTraining();
                 Nav("training", trainingRect, match.StartTraining);
+                // SYS-076: combo and recovery tutorial inside the lab, without a clock.
+                if (Button(tutorialRect, "TUTORIAL", Cyan)) StartTutorial();
+                Nav("tutorial-menu", tutorialRect, StartTutorial);
             }
             GUI.enabled = menuEnabled;
 
@@ -232,6 +245,7 @@ namespace CancelBrawl.Beta
                 bool selected = match.ArenaIndex == i;
                 Fill(rect, selected ? new Color(Cyan.r * .16f, Cyan.g * .16f, Cyan.b * .16f, 1f) : Card);
                 Fill(new Rect(rect.x, rect.y, 4, rect.height), selected ? Cyan : Muted * .5f);
+                if (selected && palette.HighContrast) Border(rect, 2, Cyan);
                 int arena = i;
                 if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.ArenaIndex = arena;
                 Nav("arena-" + i, rect, () => match.ArenaIndex = arena);
@@ -348,10 +362,20 @@ namespace CancelBrawl.Beta
             StepRow("display-hud", new Rect(x, y, width, row - 4), "Tamaño del HUD", $"{Mathf.RoundToInt(match.HudScale * 100)} %",
                 Mathf.InverseLerp(BrawlHudLayout.MinScaleOption, BrawlHudLayout.MaxScaleOption, match.HudScale),
                 d => match.SetDisplayScale(match.TextScale, match.HudScale + d * .15f));
-            y += row + 4;
-            Label(new Rect(x, y, width, 44),
-                $"Pantalla {Screen.width}×{Screen.height}. Texto más pequeño: {Mathf.RoundToInt(SmallestTextPixels)} px reales. " +
-                "Las tarjetas de jugador crecen mientras quepan.", tiny, Muted);
+            y += row;
+            // SYS-071: high contrast and colour-blind palette, one toggle each on a shared row.
+            float half = (width - 8) * .5f;
+            Rect contrastRect = new Rect(x, y, half, row - 4), colourRect = new Rect(x + half + 8, y, half, row - 4);
+            if (SmallButton(contrastRect, "ALTO CONTRASTE: " + (match.HighContrast ? "SÍ" : "NO"), match.HighContrast ? Cyan : Muted))
+                match.SetAccessibility(!match.HighContrast, match.ColorBlindPalette);
+            Nav("display-contrast", contrastRect, () => match.SetAccessibility(!match.HighContrast, match.ColorBlindPalette));
+            if (SmallButton(colourRect, "DALTONISMO: " + (match.ColorBlindPalette ? "SÍ" : "NO"), match.ColorBlindPalette ? Cyan : Muted))
+                match.SetAccessibility(match.HighContrast, !match.ColorBlindPalette);
+            Nav("display-colorblind", colourRect, () => match.SetAccessibility(match.HighContrast, !match.ColorBlindPalette));
+            y += row;
+            Label(new Rect(x, y, width, 30),
+                $"Pantalla {Screen.width}×{Screen.height} · texto mínimo {Mathf.RoundToInt(SmallestTextPixels)} px reales · " +
+                "paleta para daltonismo probada con protanopía, deuteranopía y tritanopía.", tiny, Muted);
         }
 
         /// <summary>SYS-026: stick deadzones, response curve and vibration; the d-pad stays a digital alternative.</summary>
@@ -382,7 +406,7 @@ namespace CancelBrawl.Beta
             Label(new Rect(rect.x, rect.y + 6, 170, 24), name, small, Muted);
             Label(new Rect(rect.x + 168, rect.y + 6, 92, 24), value, tiny, Paper);
             if (Button(new Rect(rect.xMax - 200, rect.y, 38, rect.height), "–", Muted)) step(-1);
-            Fill(new Rect(rect.xMax - 154, rect.y + rect.height * .5f - 4, 108, 8), new Color(.18f, .22f, .30f));
+            Fill(new Rect(rect.xMax - 154, rect.y + rect.height * .5f - 4, 108, 8), Track);
             Fill(new Rect(rect.xMax - 154, rect.y + rect.height * .5f - 4, 108 * Mathf.Clamp01(fraction), 8), Cyan);
             if (Button(new Rect(rect.xMax - 38, rect.y, 38, rect.height), "+", Muted)) step(1);
         }
@@ -392,7 +416,7 @@ namespace CancelBrawl.Beta
             Nav(id, new Rect(rect.xMax - 236, rect.y, 236, rect.height), null, d => apply(Mathf.Round((value + d * .1f) * 10) / 10));
             Label(new Rect(rect.x, rect.y + 8, 140, 26), name, small, Muted);
             if (Button(new Rect(rect.xMax - 236, rect.y, 44, rect.height), "–", Muted)) apply(Mathf.Round((value - .1f) * 10) / 10);
-            Fill(new Rect(rect.xMax - 184, rect.y + 14, 132, 8), new Color(.18f, .22f, .30f));
+            Fill(new Rect(rect.xMax - 184, rect.y + 14, 132, 8), Track);
             Fill(new Rect(rect.xMax - 184, rect.y + 14, 132 * value, 8), Cyan);
             if (Button(new Rect(rect.xMax - 44, rect.y, 44, rect.height), "+", Muted)) apply(Mathf.Round((value + .1f) * 10) / 10);
         }
@@ -413,7 +437,8 @@ namespace CancelBrawl.Beta
                 seconds <= 30 ? Pink : Paper, TextAnchor.MiddleCenter);
             GUI.matrix = Layout.TopScaled(new Vector2(Width, 0));
             Label(new Rect(1190, 30, 380, 34), "ESC · START  /  PAUSA", small, Muted, TextAnchor.UpperRight);
-            if (match.IsTraining) DrawTraining();
+            if (match.IsTraining && Tutorial.Active) DrawTutorial();
+            else if (match.IsTraining) DrawTraining();
             if (!string.IsNullOrEmpty(match.Announcement) && match.Phase == MatchPhase.Playing)
             {
                 GUI.matrix = Layout.TopScaled(new Vector2(Width * .5f, 112));
@@ -446,7 +471,7 @@ namespace CancelBrawl.Beta
 
         private void DrawFighter(Rect rect, BrawlFighter fighter)
         {
-            Color accent = fighter.Eliminated ? Muted : fighter.PlayerColor;
+            Color accent = fighter.Eliminated ? Muted : PlayerTint(fighter);
             Panel(rect);
             Fill(new Rect(rect.x, rect.y, rect.width, 4), accent);
             Label(new Rect(rect.x + 14, rect.y + 13, rect.width - 28, 24),
@@ -460,7 +485,7 @@ namespace CancelBrawl.Beta
             Label(new Rect(rect.x + 164, rect.y + 41, rect.width - 176, 22),
                 $"{fighter.Stocks} VIDAS", small, Paper);
             Label(new Rect(rect.x + 164, rect.y + 67, rect.width - 176, 24), status, small, Muted);
-            Fill(new Rect(rect.x + 14, rect.y + 103, rect.width - 28, 6), new Color(.18f, .22f, .30f));
+            Fill(new Rect(rect.x + 14, rect.y + 103, rect.width - 28, 6), Track);
             Fill(new Rect(rect.x + 14, rect.y + 103, (rect.width - 28) * Mathf.Clamp01(fighter.Meter / 100f), 6),
                 fighter.Meter >= 100f ? Pink : accent);
             if (fighter.Meter >= 100f && !fighter.Eliminated)
@@ -480,8 +505,10 @@ namespace CancelBrawl.Beta
             if (Button(new Rect(1016, 190, 258, 34), match.ShowCombatVolumes ? "VOLÚMENES: SÍ" : "VOLÚMENES: NO", Muted))
                 match.ShowCombatVolumes = !match.ShowCombatVolumes;
             if (Button(new Rect(1286, 190, 264, 34), "SUPER LISTO", Pink)) match.FillTrainingMeter();
+            Rect tutorialRect = new Rect(1016, 234, 534, 34);
+            if (Button(tutorialRect, Tutorial.Active ? "TUTORIAL: SALIR" : "TUTORIAL DE COMBO Y RECUPERACIÓN", Cyan)) ToggleTutorial();
             GUI.enabled = oldEnabled;
-            Label(new Rect(1016, 234, 530, 42), "Amarillo: aún no golpea · rojo: activo. Melee, proyectiles, zonas,\nemisor y onda; paredes bloquean. Cruz baja: raíz · alta: pecho.", small, Muted);
+            Label(new Rect(1016, 278, 530, 42), "Amarillo: aún no golpea · rojo: activo. Melee, proyectiles, zonas,\nemisor y onda; paredes bloquean. Cruz baja: raíz · alta: pecho.", small, Muted);
         }
 
         private void DrawCountdown()
@@ -513,6 +540,11 @@ namespace CancelBrawl.Beta
                 if (Button(assignRect, "ASIGNAR MANDOS DISPONIBLES", Cyan)) match.ReassignMissingDevices();
                 Nav("assign", assignRect, match.ReassignMissingDevices);
             }
+            else if (match.IsTraining)
+            {
+                if (Button(assignRect, Tutorial.Active ? "SALIR DEL TUTORIAL" : "TUTORIAL DE COMBO Y RECUPERACIÓN", Cyan)) ToggleTutorial();
+                Nav("tutorial", assignRect, ToggleTutorial);
+            }
             if (Button(menuRect, "VOLVER AL MENÚ", Muted)) match.ReturnToMenu();
             Nav("menu", menuRect, match.ReturnToMenu);
             DrawOptions(new Rect(130, 616, 530, 198));
@@ -535,7 +567,7 @@ namespace CancelBrawl.Beta
                 Color accent = fighter.Place == 1 ? Cyan : Muted;
                 Fill(new Rect(300, y, 1000, 72), Card);
                 Label(new Rect(320, y + 14, 82, 44), $"#{fighter.Place}", heading, accent);
-                Label(new Rect(411, y + 10, 440, 30), $"P{fighter.PlayerIndex + 1}  {match.CharacterName(fighter.CharacterIndex)}", heading, fighter.PlayerColor);
+                Label(new Rect(411, y + 10, 440, 30), $"P{fighter.PlayerIndex + 1}  {match.CharacterName(fighter.CharacterIndex)}", heading, PlayerTint(fighter));
                 Label(new Rect(415, y + 44, 440, 20), fighter.IsBot ? "RIVAL IA" : "JUGADOR LOCAL", small, Muted);
                 Label(new Rect(850, y + 10, 430, 28), $"{fighter.Stocks} vidas  ·  {Mathf.RoundToInt(fighter.Damage)}%", body, Paper, TextAnchor.MiddleRight);
                 Label(new Rect(850, y + 42, 430, 22),
@@ -619,7 +651,20 @@ namespace CancelBrawl.Beta
 
         private string KeyLabel(BrawlAction action) => match.Bindings.Label(BindingScheme.Keyboard, action).ToUpperInvariant();
 
-        private void Panel(Rect rect) => Fill(rect, Ink);
+        private void Panel(Rect rect)
+        {
+            Fill(rect, Ink);
+            if (palette.HighContrast) Border(rect, 1.5f, palette.Muted);
+        }
+
+        /// <summary>Border drawn on the rect's own edge (Outline draws outside it, for the focus).</summary>
+        private void Border(Rect rect, float thickness, Color color)
+        {
+            Fill(new Rect(rect.x, rect.y, rect.width, thickness), color);
+            Fill(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), color);
+            Fill(new Rect(rect.x, rect.y, thickness, rect.height), color);
+            Fill(new Rect(rect.xMax - thickness, rect.y, thickness, rect.height), color);
+        }
 
         private void Fill(Rect rect, Color color)
         {
