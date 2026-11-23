@@ -4,6 +4,16 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo feat/audio-buses (AUDIO-428 a 434)
+
+- `BrawlAudio` (nuevo): buses Master, Música, SFX, Voces y UI. Una `AudioSource` por bus bajo la raíz de la partida (`Bus Música`, `Bus SFX`, …); volumen = `BusGain` × Master × bus. No se usa un asset `AudioMixer` porque sus grupos no se pueden crear desde código sin API interna; si llega audio final, basta asignar `outputAudioMixerGroup` a cada fuente.
+- `BrawlFeedback.Sound` delega en `BrawlAudio.Play`: el bus sale del nombre (`ui-*` → UI, `voice-*` → Voces, el resto → SFX). El KO y el super añaden una frase provisional en Voces; una frase a la vez y el KO tiene prioridad. Pausa/reanudar suenan en UI. `BrawlFeedback.SfxVolume/MusicVolume/SetVolumes` siguen igual (son los buses SFX y Música).
+- Opciones: formato **versión 4** (`master`, `voice`, `ui`); v1/v2/v3 migran. **Al juntar con `feat/ui-accesibilidad`**: si esa rama también sube el formato, usar la v5 encima de esta o fusionar ambas en la v4. Se ajustaron dos comprobaciones antiguas que fijaban la versión 3 (`BrawlDisplayChecks`) o no tenían los campos v4 (`BrawlBindingChecks`, archivo de versión futura).
+- HUD (cambio mínimo en `BrawlHud.DrawOptions`): cuarta pestaña **AUDIO** (`tab-audio`, filas `audio-master/music/sfx/voice/ui`); las pestañas pasan a 76 px y el título OPCIONES se encoge si no cabe. GENERAL conserva Efectos y Música.
+- `-audio-smoke` (registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 25/25, unos 35 s. Mide la salida real con `AudioListener.GetOutputData`, así que necesita un dispositivo de audio.
+- Suites en la rama (`Evidence/Branch-feat-audio-buses`, build 0 errores): power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, audio 25; cero fallos. No se volvió a ejecutar `-arena-stress` (25 min; no toca audio). Copia del GDD marcada sin regenerar (se hace al juntar en `main`).
+- **Siguiente de Audio:** efectos finales por capa (ligero, fuerte, remate, esquiva, lanzamiento, recuperación, KO, tono que sube con el combo) y aceptación con personas.
+
 ## Relevo 0.7.0 (juntada feat/arena-ko-stress, ARENA-366)
 
 - `BrawlArenaStress` (`-arena-stress`, registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 20 partidas de cinco bots por arena con auditoría de cada KO y reaparición, más comprobación de fugas. 25/25; unos 25 min.

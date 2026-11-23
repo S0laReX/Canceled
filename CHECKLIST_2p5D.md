@@ -113,7 +113,8 @@ Recuento: **37 de 63** marcadas (20 del GDD 2.0 + 17 desde 0.6.0). Ninguna en �
 
 ## Audio
 
-- [ ] Buses Master, Música, SFX, Voces y UI (AUDIO-428 a 434)
+- [x] Buses Master, Música, SFX, Voces y UI (AUDIO-428 a 434)
+  - Rama `feat/audio-buses` (`BrawlAudio`, `-audio-smoke`): mezclador por código con una fuente por bus (Música, SFX, Voces, UI); volumen = ganancia × Master × bus, 0 % silencia. Todo sonido pasa por `BrawlFeedback.Sound` → `BrawlAudio.Play`, que elige el bus por nombre (`ui-*` UI, `voice-*` Voces, el resto SFX). Voces: una frase a la vez, el KO interrumpe al super (frases provisionales generadas, sin voces grabadas ni clonadas). Opciones formato **v4** (`master`, `voice`, `ui`; v1/v2/v3 migran conservando SFX y Música) y pestaña **AUDIO** en Opciones. Suite 25/25: ruteo de los 9 efectos, 3 de interfaz y 2 voces; salida real del oyente (cada bus suena solo y calla al 0 %, Master 0 % calla todo); guardar/recargar; migración v1–v3; foco en la pestaña (`Evidence/Branch-feat-audio-buses/audio-smoke`, `audio-report.json`, `audio-options.png`). Las 11 suites existentes pasan con los mismos recuentos. **Falta:** la aceptación del GDD con personas (música 100 % y voces 0 % distinguen impacto, esquiva y KO) y las capas finales de efectos y voces (tareas siguientes de Audio).
 - [ ] Efectos finales de golpes, remate, esquiva, recuperación y KO
 - [ ] Música por arena, voces de personajes, subtítulos y créditos
 
