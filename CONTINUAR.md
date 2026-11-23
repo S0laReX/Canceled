@@ -4,6 +4,12 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo chore/restauracion-licencias
+
+- **Restauración limpia (SYS-004/006, QA-441): pasa.** `Tools/restaurar_limpio.ps1 -Destino <carpeta nueva>` clona, ejecuta `git lfs pull`, comprueba los punteros, importa en batchmode sin `Library`, genera la build y ejecuta `-arena-smoke` y `-side-smoke`, con tiempos en `_restauracion/resumen.json`. Resultado sobre `main` 0.7.0: 40,5 min en total (LFS 562 MB en 62 s, importación 20 min, build 6 min, arena 46/0, side 375/0). Informe: `Docs/Restauracion/Restauracion_limpia_0.7.0.md`. No clonar más de una vez al mes sin motivo: es 1 GB de LFS gratuito al mes en GitHub y cada clon gasta unos 560 MB. El guion reutiliza un clon existente.
+- **Licencias (SYS-017, D04): inventario hecho, casilla abierta.** `Docs/Licencias/Procedencia_y_licencias.md` + `inventario_activos.csv` (119 archivos con SHA256) + `inventario_paquetes.csv` (68 paquetes), regenerables con `python -I Tools/inventario_licencias.py --package-cache <proyecto>/Library/PackageCache`. Todo confirmado salvo los 110 archivos de Meshy (personajes, escenarios y conceptos), que dependen del plan de la cuenta al generarlos y de si los personajes salieron de la comunidad. Esa es la decisión D04 de Santiago; los pasos para cerrarla están al final del documento.
+- Sin cambios en el código del juego ni en la versión. Tras importar, Unity reescribe 10 YAML/JSON con LF: con `core.autocrlf` Git los marca como modificados, sin cambios de contenido.
+
 ## Relevo 0.7.0 (juntada feat/arena-ko-stress, ARENA-366)
 
 - `BrawlArenaStress` (`-arena-stress`, registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 20 partidas de cinco bots por arena con auditoría de cada KO y reaparición, más comprobación de fugas. 25/25; unos 25 min.
