@@ -264,6 +264,8 @@ namespace CancelBrawl.Beta
             {
                 if (IsRespawning || Eliminated) return false;
                 Vector3 p = transform.position; BrawlArena arena = match.Arena;
+                // 2.5D (GDD 2.0): KO only left, right, bottom and top; the historical front/back (depth) KO is retired.
+                if (arena.IsSideView) return p.y < arena.LowerLimit || p.y > arena.UpperLimit || Mathf.Abs(p.x) > arena.OuterLimits.x;
                 return p.y < arena.LowerLimit || p.y > arena.UpperLimit || Mathf.Abs(p.x) > arena.OuterLimits.x || Mathf.Abs(p.z) > arena.OuterLimits.y;
             }
         }

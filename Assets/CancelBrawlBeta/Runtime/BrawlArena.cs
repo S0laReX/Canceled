@@ -144,9 +144,24 @@ namespace CancelBrawl.Beta
                 float top = collider.bounds.max.y;
                 Vector3 p = collider.transform.position;
                 collider.transform.position = new Vector3(p.x < 0 ? -4.8f : 4.8f, p.y + 2.6f - top, 0);
+                // One-way platforms only need their top surface. A thick body (Plaza Colonial's balcony reached down to
+                // 0.4 m) would act as an invisible wall for line-of-sight and projectile checks of fighters below it.
+                if (collider is BoxCollider box) ThinToTop(box, OneWayThickness);
                 elevated.Add(collider);
             }
             OneWayPlatforms = elevated.ToArray();
+        }
+
+        /// <summary>Collision thickness of a one-way platform in 2.5D (its top stays where it was).</summary>
+        public const float OneWayThickness = .3f;
+
+        private static void ThinToTop(BoxCollider box, float worldThickness)
+        {
+            float scale = Mathf.Max(1e-4f, Mathf.Abs(box.transform.lossyScale.y));
+            float localTop = box.center.y + box.size.y * .5f;
+            float localHeight = Mathf.Min(box.size.y, worldThickness / scale);
+            box.size = new Vector3(box.size.x, localHeight, box.size.z);
+            box.center = new Vector3(box.center.x, localTop - localHeight * .5f, box.center.z);
         }
 
         // ───────────────────────── Production stages ─────────────────────────

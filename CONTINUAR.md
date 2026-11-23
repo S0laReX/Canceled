@@ -2,6 +2,13 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.8 (límites y apariciones, ARENA-358/359)
+
+- KO solo izquierda/derecha/abajo/arriba en 2.5D (retirado el criterio de profundidad). Apariciones validadas en las cuatro arenas.
+- Corregido: plataformas atravesables gruesas en Torre, Estudio y Plaza (pared invisible para golpes/proyectiles bajo ellas) → losas de 0,3 m (`BrawlArena.ThinToTop`, solo en la instancia).
+- Suites 0.6.8: power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 33, side-controls 127, side 362, controls 125, beta 208; cero fallos. Checklist **35 de 63**.
+- **Siguiente técnico:** distribuciones jugables distintas por arena (ARENA-350–367, propuestas del GDD §9), luego cien KO/veinte partidas por arena (ARENA-366).
+
 ## Relevo 0.6.7 (coyote time: 3 ticks)
 
 - Decisión de Santiago tras medir: coyote time de 3 ticks (0,05 s), `BetaBalance.coyoteSeconds`. Sin él, pulsar en el borde ya gastaba el salto aéreo. Bloqueado tras salto, golpe, bajada de plataforma y aparición en el aire.

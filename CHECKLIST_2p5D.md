@@ -1,10 +1,10 @@
 # Checklist activa de FUNADOS 2.5D (GDD 2.0)
 
-Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.7** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
+Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`. Esta lista sigue sus 63 tareas con el mismo orden y redacción; las notas de evidencia van debajo de cada una. Estado de trabajo: **0.6.8** (base lateral 0.5.1 de `main` + controles 0.4.2–0.4.6 de la rama `claude/funados-implementation-continue-db5f40`). Última actualización: 22/11/2026. Editor Unity **6000.5.7f1**.
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **34 de 63** marcadas (20 del GDD 2.0 + 14 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.6.7 (`Evidence/Production-0.6.7`): power 32/32, moves 21/21, kits 91/91, recovery 16/16, camera 15/15, coyote 5/5, side-controls 127/127, side 330/330, controls 125/125, beta 208/208.
+Recuento: **35 de 63** marcadas (20 del GDD 2.0 + 15 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.6.8 (`Evidence/Production-0.6.8`): power 32/32, moves 21/21, kits 91/91, recovery 16/16, camera 15/15, coyote 5/5, arena 33/33, side-controls 127/127, side 362/362, controls 125/125, beta 208/208.
 
 ## Instrucciones para el siguiente agente
 
@@ -84,7 +84,8 @@ Recuento: **34 de 63** marcadas (20 del GDD 2.0 + 14 desde 0.6.0). Ninguna en �
 
 - [x] Cuatro arenas de producción con arte y adaptación lateral
 - [ ] Distribuciones jugables distintas por arena (ARENA-350 a 367)
-- [ ] Revisar límites y puntos de aparición de cada arena (ARENA-358/359)
+- [x] Revisar límites y puntos de aparición de cada arena (ARENA-358/359)
+  - 0.6.8 (`BrawlArenaChecks`, `-arena-smoke`), en las cuatro arenas: KO exacto a izquierda/derecha (±22 m), abajo (−10) y arriba (+20), una vida por límite cruzado, más allá del encuadre lateral (±19); retirado el KO en profundidad que aún existía en el código. Cinco apariciones en el plano, separadas ≥2 m, sobre suelo real y sin solaparse con geometría; cinco luchadores empiezan apoyados; la reaparición evita trampas activas. **Fallo real corregido:** en Torre Corporativa, Estudio de Debate y Plaza Colonial las plataformas atravesables conservaban el grosor del prefab (el balcón de Plaza Colonial bajaba hasta 0,4 m) y actuaban como pared invisible para golpes y proyectiles de quien estaba debajo; ahora son losas de 0,3 m con la cara superior en 2,6 m (solo la instancia 2.5D, el prefab y el arte no cambian). Límites en `arena-limits.json`; son iguales en las cuatro arenas porque comparten geometría hasta que se diferencien (ARENA-350–367).
 - [ ] Cien KO con reaparición reales y veinte partidas por arena (ARENA-366)
 - [ ] Diseñar las cuatro arenas restantes del catálogo (CIERRE-460/461)
 

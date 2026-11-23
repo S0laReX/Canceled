@@ -1,0 +1,45 @@
+{
+    "version": "0.6.8",
+    "arenas": [
+        {
+            "arena": "Azotea Influencer",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        },
+        {
+            "arena": "Torre Corporativa",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        },
+        {
+            "arena": "Estudio de Debate",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        },
+        {
+            "arena": "Plaza Colonial",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+    "version": "0.6.8",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Coyote: con 0 no cambia nada (pulsar tarde gasta el salto aéreo)",
+        "Coyote: con 3 y 6 ticks la pulsación tardía cuenta como salto de suelo solo dentro de la ventana",
+        "Coyote: nunca tras un salto, un golpe, al bajar de una plataforma ni al aparecer en el aire",
+        "Coyote fijado en 3 ticks (0,05 s) por decisión de Santiago"
+    ],
+    "failures": []
+}

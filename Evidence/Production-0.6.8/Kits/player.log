@@ -1,0 +1,126 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.8/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.8/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.6.8/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.040 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.902700 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.6.8\Kits\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS Don Promesio · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Don Promesio · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Don Promesio · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Don Promesio · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Don Promesio · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Don Promesio · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Don Promesio · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Don Promesio · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Don Promesio · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Don Promesio · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Don Promesio · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Don Promesio · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Don Promesio · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Don Promesio · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Don Promesio · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Don Promesio · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Don Promesio · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Don Promesio · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Lola Viral · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Lola Viral · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Lola Viral · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Lola Viral · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Lola Viral · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Lola Viral · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Lola Viral · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Lola Viral · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Lola Viral · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Lola Viral · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Lola Viral · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Lola Viral · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Lola Viral · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Lola Viral · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Lola Viral · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Lola Viral · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Lola Viral · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Lola Viral · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Coach Tóxico · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Coach Tóxico · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Coach Tóxico · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Coach Tóxico · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Coach Tóxico · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Coach Tóxico · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Coach Tóxico · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Coach Tóxico · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Coach Tóxico · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Coach Tóxico · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Coach Tóxico · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Coach Tóxico · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Coach Tóxico · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Coach Tóxico · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Coach Tóxico · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Coach Tóxico · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Coach Tóxico · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Coach Tóxico · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Cripto King · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Cripto King · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Cripto King · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Cripto King · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Cripto King · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Cripto King · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Cripto King · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Cripto King · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Cripto King · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Cripto King · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Cripto King · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Cripto King · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Cripto King · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Cripto King · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Cripto King · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Cripto King · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Cripto King · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Cripto King · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_CHECK_PASS Tío Antena · especial · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Tío Antena · especial · fallo: sin daño, termina y deja actuar
+SIDE_CHECK_PASS Tío Antena · especial · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Tío Antena · especial · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Tío Antena · especial · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Tío Antena · especial · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Tío Antena · super · acierto: conecta, termina y consume lo que debe
+SIDE_CHECK_PASS Tío Antena · super · fallo: sin daño, termina y consume la barra
+SIDE_CHECK_PASS Tío Antena · super · interrupción: el golpe cancela y no queda daño pendiente
+SIDE_CHECK_PASS Tío Antena · super · pausa: se congela y al reanudar conecta
+SIDE_CHECK_PASS Tío Antena · super · plataforma: conecta y el lanzador sigue sobre ella
+SIDE_CHECK_PASS Tío Antena · super · borde: conecta y el lanzador sigue en el escenario
+SIDE_CHECK_PASS Tío Antena · recuperación · acierto: vuelve al escenario desde fuera del borde derecho
+SIDE_CHECK_PASS Tío Antena · recuperación · borde: vuelve también desde el borde izquierdo
+SIDE_CHECK_PASS Tío Antena · recuperación · fallo: en el suelo no se gasta ni despega
+SIDE_CHECK_PASS Tío Antena · recuperación · interrupción: el golpe no devuelve recuperación ni saltos
+SIDE_CHECK_PASS Tío Antena · recuperación · pausa: se congela y continúa al reanudar
+SIDE_CHECK_PASS Tío Antena · recuperación · plataforma: atraviesa la plataforma desde abajo y aterriza
+SIDE_RESULT True checks=91 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed
