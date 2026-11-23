@@ -4,12 +4,12 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
-## Relevo feat/arena-ko-stress (ARENA-366)
+## Relevo 0.7.0 (juntada feat/arena-ko-stress, ARENA-366)
 
 - `BrawlArenaStress` (`-arena-stress`, registrado en `BrawlMatch` y `BrawlSideSmokeProbe`): 20 partidas de cinco bots por arena con auditoría de cada KO y reaparición, más comprobación de fugas. 25/25; unos 25 min.
 - Observación: casi todas las partidas acaban por tiempo; revisar la agresividad de los bots o la duración y las vidas por defecto cuando se calibre con personas.
 - Suites en la rama (`Evidence/Branch-feat-arena-ko-stress`): power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, arena-stress 25; cero fallos.
-- Sin cambio de versión (se asigna al juntar en `main`). La línea «Recuento» de la checklist no se ha tocado: al juntar pasa a **37 de 63**.
+- Juntada en `main` como 0.7.0. Checklist **37 de 63**. Primera rama de `PARALELO.md` integrada; siguen abiertas `feat/audio-buses`, `feat/ui-accesibilidad`, `chore/restauracion-licencias` y `perf/rendimiento` (rebasarlas sobre `main`).
 
 ## Relevo 0.6.9 (distribuciones por arena, ARENA-350–367)
 
