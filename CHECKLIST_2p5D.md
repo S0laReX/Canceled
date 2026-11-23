@@ -4,7 +4,7 @@ Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_202
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **35 de 63** marcadas (20 del GDD 2.0 + 15 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.6.8 (`Evidence/Production-0.6.8`): power 32/32, moves 21/21, kits 91/91, recovery 16/16, camera 15/15, coyote 5/5, arena 33/33, side-controls 127/127, side 362/362, controls 125/125, beta 208/208.
+Recuento: **36 de 63** marcadas (20 del GDD 2.0 + 16 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.6.9 (`Evidence/Production-0.6.9`): power 32/32, moves 21/21, kits 91/91, recovery 16/16, camera 15/15, coyote 5/5, arena 46/46, side-controls 127/127, side 375/375, controls 125/125, beta 208/208.
 
 ## Instrucciones para el siguiente agente
 
@@ -83,7 +83,8 @@ Recuento: **35 de 63** marcadas (20 del GDD 2.0 + 15 desde 0.6.0). Ninguna en �
 ## Escenarios
 
 - [x] Cuatro arenas de producción con arte y adaptación lateral
-- [ ] Distribuciones jugables distintas por arena (ARENA-350 a 367)
+- [x] Distribuciones jugables distintas por arena (ARENA-350 a 367)
+  - 0.6.9 (`BrawlArena.SideLayouts`, solo la instancia 2.5D; prefabs y arte intactos). Las dos plataformas existentes de cada arena se reubican: **Azotea Influencer** ±4,8 m a 2,6 m (neutral, referencia de torneo y balance); **Torre Corporativa** ±6,0 m a 3,6 m (vertical, solo con doble salto, el KO superior llega antes); **Estudio de Debate** ±5,6 m a 2,1 m (atriles bajos, basta un salto, se pelea cerca del suelo y de los bordes); **Plaza Colonial** ±10 m a 2,2 m (balcones sobre el vacío, recuperaciones arriesgadas). La cámara encuadra siempre toda la distribución (`PlayBounds`), aunque las plataformas estén vacías. Verificado en `-arena-smoke` (46 comprobaciones): las plataformas están en su sitio y son finas; la cámara muestra ambas; Coach, el kit de menor alcance, sube a las dos con doble salto; al bajarse se llega al suelo principal (en Plaza, al vacío); cada par de arenas difiere en al menos 0,8 m. Los límites de KO siguen iguales en las cuatro (±22, −10, +20). Falta calibrar la dificultad con personas.
 - [x] Revisar límites y puntos de aparición de cada arena (ARENA-358/359)
   - 0.6.8 (`BrawlArenaChecks`, `-arena-smoke`), en las cuatro arenas: KO exacto a izquierda/derecha (±22 m), abajo (−10) y arriba (+20), una vida por límite cruzado, más allá del encuadre lateral (±19); retirado el KO en profundidad que aún existía en el código. Cinco apariciones en el plano, separadas ≥2 m, sobre suelo real y sin solaparse con geometría; cinco luchadores empiezan apoyados; la reaparición evita trampas activas. **Fallo real corregido:** en Torre Corporativa, Estudio de Debate y Plaza Colonial las plataformas atravesables conservaban el grosor del prefab (el balcón de Plaza Colonial bajaba hasta 0,4 m) y actuaban como pared invisible para golpes y proyectiles de quien estaba debajo; ahora son losas de 0,3 m con la cara superior en 2,6 m (solo la instancia 2.5D, el prefab y el arte no cambian). Límites en `arena-limits.json`; son iguales en las cuatro arenas porque comparten geometría hasta que se diferencien (ARENA-350–367).
 - [ ] Cien KO con reaparición reales y veinte partidas por arena (ARENA-366)

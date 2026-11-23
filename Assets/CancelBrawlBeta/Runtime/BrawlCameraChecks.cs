@@ -43,9 +43,10 @@ namespace CancelBrawl.Beta
 
                     // Together: minimum zoom, fixed rotation and aiming reference.
                     yield return Pose(match, arena, Together);
-                    check(Mathf.Abs(group.View.orthographicSize - BrawlCamera.MinSideSize) < .05f && group.transform.rotation == Quaternion.identity &&
+                    // Together zooms in as far as the whole layout allows (Plaza's balconies over the void need a bit more).
+                    check(group.View.orthographicSize < size - .5f && group.View.orthographicSize >= BrawlCamera.MinSideSize - .01f && group.transform.rotation == Quaternion.identity &&
                           match.CameraDirection(Vector2.right) == Vector3.right && match.CameraDirection(Vector2.left) == Vector3.left,
-                        $"{name}: juntos usa el zoom mínimo; la cámara no gira y derecha sigue siendo derecha al apuntar");
+                        $"{name}: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar");
                 }
 
                 // Off-camera badge: a fighter beyond the framed area still has an edge indicator.

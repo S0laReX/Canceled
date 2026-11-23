@@ -131,7 +131,9 @@ namespace CancelBrawl.Beta
         /// </summary>
         private void FrameSide(float blend)
         {
-            float minX = -8.5f, maxX = 8.5f, minY = -.5f, maxY = 5.5f;
+            // Always keep the whole playable layout in view (empty raised platforms included).
+            Rect play = arena ? arena.PlayBounds : Rect.MinMaxRect(-8f, -.5f, 8f, 5.5f);
+            float minX = play.xMin - .5f, maxX = play.xMax + .5f, minY = play.yMin, maxY = play.yMax;
             foreach (var target in targets)
             {
                 if (!target || !target.gameObject.activeInHierarchy) continue;

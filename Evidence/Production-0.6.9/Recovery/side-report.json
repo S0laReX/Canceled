@@ -1,0 +1,23 @@
+{
+    "version": "0.6.9",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "SYS-030: salto inicial, segundo salto al 94 % y sin tercer salto",
+        "SYS-030: abajo en el aire acelera la caída",
+        "SYS-030: recuperación y esquiva aérea se consumen una vez",
+        "SYS-031: aterrizar en suelo válido restaura saltos, recuperación y esquiva",
+        "SYS-031: rozar una pared no devuelve saltos ni recuperación",
+        "SYS-031: tocar un techo frena la subida y no devuelve el salto",
+        "SYS-032: una recuperación por fase aérea, vulnerable y con final; la segunda no hace nada",
+        "SYS-033: caída rápida a máxima velocidad aterriza sin atravesar el suelo",
+        "SYS-033: caída rápida aterriza sobre la plataforma atravesable",
+        "SYS-033: la esquiva rápida se detiene en una pared sin atravesarla",
+        "SYS-034: el indicador de apoyo marca la superficie bajo el luchador (plataforma o suelo)",
+        "SYS-035: el borde no tiene pared invisible; caminar fuera hace caer",
+        "SYS-035: los cinco kits vuelven al menos desde 1,5 m fuera de cada borde",
+        "SYS-035: el alcance de vuelta es simétrico entre borde izquierdo y derecho",
+        "SYS-035: caer sigue siendo un riesgo; ningún kit vuelve desde cualquier distancia"
+    ],
+    "failures": []
+}

@@ -2,6 +2,14 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.6.9 (distribuciones por arena, ARENA-350–367)
+
+- `BrawlArena.SideLayouts`: Azotea ±4,8/2,6 (neutral) · Torre ±6,0/3,6 (vertical) · Estudio ±5,6/2,1 (atriles bajos) · Plaza ±10/2,2 (balcones sobre el vacío). Solo se mueve la instancia; prefabs y arte intactos.
+- `BrawlArena.PlayBounds` → `BrawlCamera.FrameSide` encuadra siempre la distribución completa. La comprobación de cámara «juntos» ya no exige el zoom mínimo exacto (Plaza necesita más).
+- `-arena-smoke` añade: plataformas visibles, subida con doble salto del kit de menor alcance (Coach), bajada al suelo o al vacío, y distribuciones distintas por pares.
+- Suites 0.6.9: power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208; cero fallos. Checklist **36 de 63**.
+- **Siguiente técnico:** cien KO con reaparición y veinte partidas por arena (ARENA-366).
+
 ## Relevo 0.6.8 (límites y apariciones, ARENA-358/359)
 
 - KO solo izquierda/derecha/abajo/arriba en 2.5D (retirado el criterio de profundidad). Apariciones validadas en las cuatro arenas.

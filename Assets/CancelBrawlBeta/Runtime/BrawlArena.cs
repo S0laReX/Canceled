@@ -38,6 +38,37 @@ namespace CancelBrawl.Beta
         public static string DescriptionOf(int layout, bool stageArt) => (stageArt ? StageDescriptions : Descriptions)[layout];
 
         private const string GeneratedName = "Arena geometry";
+
+        /// <summary>
+        /// Playable 2.5D layout of each arena (GDD 2.0 §9): where its two existing raised platforms sit. Only the runtime
+        /// instance moves them; prefabs and art are untouched. The main floor (16 m, top at y = 0) is shared.
+        /// </summary>
+        public readonly struct SideLayout
+        {
+            public readonly float PlatformX, PlatformTop; public readonly string Decision;
+            public SideLayout(float x, float top, string decision) { PlatformX = x; PlatformTop = top; Decision = decision; }
+        }
+
+        public static readonly SideLayout[] SideLayouts =
+        {
+            new SideLayout(4.8f, 2.6f, "Neutral: arena de referencia para torneos y balance."),
+            new SideLayout(6.0f, 3.6f, "Vertical: plataformas altas y separadas, solo con doble salto; los combos llegan antes al KO superior."),
+            new SideLayout(5.6f, 2.1f, "Atriles bajos: un solo salto basta; se pelea cerca del suelo y de los bordes."),
+            new SideLayout(10.0f, 2.2f, "Balcones sobre el vacío: recuperaciones arriesgadas y el control del borde pesa más."),
+        };
+        public SideLayout CurrentSideLayout => SideLayouts[Mathf.Clamp(Layout, 0, SideLayouts.Length - 1)];
+        public const float MainFloorHalfWidth = 8f;
+
+        /// <summary>Area the camera always keeps in view in 2.5D: main floor plus every raised platform, even empty.</summary>
+        public Rect PlayBounds
+        {
+            get
+            {
+                var layout = CurrentSideLayout;
+                float half = Mathf.Max(MainFloorHalfWidth, layout.PlatformX + 2.3f);
+                return Rect.MinMaxRect(-half, -.5f, half, Mathf.Max(5.5f, layout.PlatformTop + 2.4f));
+            }
+        }
         private Vector3[] spawns = new Vector3[0];
 
         public int Layout { get; private set; }
@@ -124,8 +155,9 @@ namespace CancelBrawl.Beta
         {
             SideMetrics(); Palette(new Color(.12f,.17f,.27f), new Color(.2f,.9f,1), new Color(1,.3f,.6f));
             Platform(root, "Side main", Vector3.zero, new Vector3(16,.8f,3), surface, cyan);
-            Platform(root, "Side left", new Vector3(-4.8f,2.6f,0), new Vector3(3.8f,.3f,3), bridge, pink);
-            Platform(root, "Side right", new Vector3(4.8f,2.6f,0), new Vector3(3.8f,.3f,3), bridge, pink);
+            var layout = CurrentSideLayout;
+            Platform(root, "Side left", new Vector3(-layout.PlatformX, layout.PlatformTop - .15f, 0), new Vector3(3.8f,.3f,3), bridge, pink);
+            Platform(root, "Side right", new Vector3(layout.PlatformX, layout.PlatformTop - .15f, 0), new Vector3(3.8f,.3f,3), bridge, pink);
             OneWayPlatforms = new[] { root.Find("Side left").GetComponent<Collider>(), root.Find("Side right").GetComponent<Collider>() };
             AddLight(root, Color.white, new Color(.5f,.55f,.65f), DefaultBackdrop);
         }
@@ -143,7 +175,8 @@ namespace CancelBrawl.Beta
                 if (!combat || collider.name == "Main platform") continue;
                 float top = collider.bounds.max.y;
                 Vector3 p = collider.transform.position;
-                collider.transform.position = new Vector3(p.x < 0 ? -4.8f : 4.8f, p.y + 2.6f - top, 0);
+                var layout = CurrentSideLayout;
+                collider.transform.position = new Vector3(p.x < 0 ? -layout.PlatformX : layout.PlatformX, p.y + layout.PlatformTop - top, 0);
                 // One-way platforms only need their top surface. A thick body (Plaza Colonial's balcony reached down to
                 // 0.4 m) would act as an invisible wall for line-of-sight and projectile checks of fighters below it.
                 if (collider is BoxCollider box) ThinToTop(box, OneWayThickness);
