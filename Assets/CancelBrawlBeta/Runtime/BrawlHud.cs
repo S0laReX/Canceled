@@ -314,18 +314,19 @@ namespace CancelBrawl.Beta
         {
             Panel(rect);
             float x = rect.x + 24, y = rect.y + 16;
-            Label(new Rect(x, y, rect.width - 48, 30), "OPCIONES", heading, Paper);
-            string[] tabNames = { "GENERAL", "MANDO", "PANTALLA" }, tabIds = { "tab-general", "tab-pad", "tab-display" };
-            for (int i = 0; i < 3; i++)
+            string[] tabNames = { "GENERAL", "MANDO", "PANTALLA", "AUDIO" }, tabIds = { "tab-general", "tab-pad", "tab-display", "tab-audio" };
+            Label(new Rect(x, y, rect.width - 48 - tabNames.Length * 80 - 6, 30), "OPCIONES", heading, Paper);
+            for (int i = 0; i < tabNames.Length; i++)
             {
                 int page = i;
-                Rect tab = new Rect(rect.xMax - 24 - (3 - i) * 92, y + 2, 88, 26);
+                Rect tab = new Rect(rect.xMax - 24 - (tabNames.Length - i) * 80, y + 2, 76, 26);
                 if (SmallButton(tab, tabNames[i], match.OptionsPage == i ? Cyan : Muted)) match.OptionsPage = page;
                 Nav(tabIds[i], tab, () => match.OptionsPage = page);
             }
             y += 40;
             if (match.OptionsPage == 1) { DrawPadOptions(x, y, rect.width - 48); return; }
             if (match.OptionsPage == 2) { DrawDisplayOptions(x, y, rect.width - 48); return; }
+            if (match.OptionsPage == 3) { DrawAudioOptions(x, y, rect.width - 48); return; }
             Label(new Rect(x, y + 8, 250, 26), "Reducir destellos y temblor", small, Muted);
             Rect reducedRect = new Rect(rect.xMax - 150, y, 126, 36);
             if (Button(reducedRect, BrawlFeedback.ReducedEffects ? "SÍ" : "NO", BrawlFeedback.ReducedEffects ? Cyan : Muted))
@@ -335,6 +336,20 @@ namespace CancelBrawl.Beta
             VolumeRow("opt-sfx", new Rect(x, y, rect.width - 48, 36), "Efectos", BrawlFeedback.SfxVolume, v => match.SetVolumes(v, BrawlFeedback.MusicVolume));
             y += 46;
             VolumeRow("opt-music", new Rect(x, y, rect.width - 48, 36), "Música", BrawlFeedback.MusicVolume, v => match.SetVolumes(BrawlFeedback.SfxVolume, v));
+        }
+
+        /// <summary>AUDIO-428 to 434: one row per bus; Master scales the other four, 0 % silences a bus.</summary>
+        private void DrawAudioOptions(float x, float y, float width)
+        {
+            string[] ids = { "audio-master", "audio-music", "audio-sfx", "audio-voice", "audio-ui" };
+            for (int i = 0; i < BrawlAudio.BusCount; i++)
+            {
+                var bus = (BrawlAudioBus)i;
+                float value = BrawlAudio.Volume(bus);
+                StepRow(ids[i], new Rect(x, y, width, 25), BrawlAudio.BusNames[i], value <= 0 ? "silencio" : $"{Mathf.RoundToInt(value * 100)} %",
+                    value, d => match.SetBusVolume(bus, Mathf.Round((value + d * .1f) * 10) / 10));
+                y += 28;
+            }
         }
 
         /// <summary>SYS-071: text and HUD size. Text never renders below a legible pixel size, whatever the resolution.</summary>
