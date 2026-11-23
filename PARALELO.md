@@ -2,7 +2,11 @@
 
 Remoto: `origin` = `https://github.com/S0laReX/Canceled.git`. Rama integradora: **`main`** (0.6.9 al abrir las ramas; checklist 36/63).
 
-## Ramas abiertas
+## Estado
+
+Las cinco ramas están juntadas en `main`: `feat/arena-ko-stress` en 0.7.0 y las otras cuatro en 0.7.1 (checklist 43/63). Para una tanda nueva, abrir ramas desde `main` 0.7.1 con las mismas reglas.
+
+## Ramas de la primera tanda (juntadas)
 
 Cada rama sale de `main` 0.6.9 y cubre tareas de `CHECKLIST_2p5D.md` que no se pisan entre sí. Un agente por rama.
 

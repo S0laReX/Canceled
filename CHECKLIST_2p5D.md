@@ -4,7 +4,7 @@ Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_202
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **37 de 63** marcadas (20 del GDD 2.0 + 17 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.7.0 (`Evidence/Production-0.7.0`): beta 208/208; arena-stress 25/25 (`Evidence/Branch-feat-arena-ko-stress`).
+Recuento: **43 de 63** marcadas (20 del GDD 2.0 + 23 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.7.1 (`Evidence/Production-0.7.1`, ramas juntadas: restauración, rendimiento, audio y UI): 16 suites, ver `Evidence/Production-0.7.1/suites.txt`.
 
 ## Instrucciones para el siguiente agente
 

@@ -5,6 +5,13 @@
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
 
+## Relevo 0.7.1 (juntadas restauración, rendimiento, audio y UI)
+
+- Juntadas en `main`, en el orden de `PARALELO.md`: `chore/restauracion-licencias`, `perf/rendimiento`, `feat/audio-buses` y `feat/ui-accesibilidad`. Checklist **43 de 63**.
+- Conflictos resueltos: las opciones `-perf-smoke`, `-soak-session`, `-audio-smoke` y `-ui-smoke` van juntas en `BrawlMatch` y en `BrawlSideSmokeProbe`. Opciones: formato **v4** (audio) con `highContrast` y `colorBlindPalette` como campos opcionales (UI). Los archivos v1–v3 se migran, así que `-ui-smoke` ahora espera `MigratedLegacy` para v3.
+- Evidencia en `Evidence/Production-0.7.1` (`suites.txt`): las 11 suites de siempre más audio, ui, perf, una sesión corta (`-soak-session -soak-seconds 120`) y arena-stress.
+- Pendiente de personas o de Santiago: licencias de Meshy (D04), jugadores daltónicos reales, claridad del tutorial, efectos finales de audio y volver a medir el rendimiento cuando llegue el arte final.
+
 ## Relevo chore/restauracion-licencias
 
 - **Restauración limpia (SYS-004/006, QA-441): pasa.** `Tools/restaurar_limpio.ps1 -Destino <carpeta nueva>` clona, ejecuta `git lfs pull`, comprueba los punteros, importa en batchmode sin `Library`, genera la build y ejecuta `-arena-smoke` y `-side-smoke`, con tiempos en `_restauracion/resumen.json`. Resultado sobre `main` 0.7.0: 40,5 min en total (LFS 562 MB en 62 s, importación 20 min, build 6 min, arena 46/0, side 375/0). Informe: `Docs/Restauracion/Restauracion_limpia_0.7.0.md`. No clonar más de una vez al mes sin motivo: es 1 GB de LFS gratuito al mes en GitHub y cada clon gasta unos 560 MB. El guion reutiliza un clon existente.
