@@ -25,7 +25,7 @@ namespace CancelBrawl.Beta
         public const float MinAvgFps = 58, MinLowFps = 45, MaxPlayFrameMs = 100, MaxArenaLoadSeconds = 2, MaxMenuSeconds = .5f;
         public const float MaxManagedMb = 256, MaxProcessMb = 2048;
         public const float PerfSecondsPerArena = 60, SoakSeconds = 1800;
-        public const int SoakMatchesPerArena = 3;
+        public const int SoakMatchesPerArena = 3, ArenaCycles = 5;
         /// <summary>Soak match clock: bots rarely finish 300 s matches by stocks, so the session plays 90 s matches to chain many rematches.</summary>
         public const float SoakMatchSeconds = 90;
         private const float HeldDamage = 130, MeterEvery = 4, WarmupSeconds = 1.5f;
@@ -43,6 +43,7 @@ namespace CancelBrawl.Beta
             public float avgFps, low1Fps, maxFrameMs; public int framesOver20ms, framesOver33ms;
             public Dist frameMs, cpuMainMs, cpuRenderMs, gpuMs, gcAllocKbPerFrame;
             public float simRatio, fixedStepsPerSecond; public int kos, supers, rematches;
+            public List<string> hitches = new List<string>(), pauses = new List<string>(); public bool lockup;
             public float arenaLoadSeconds, firstFrameMs, menuReturnSeconds;
             public Memory memoryPeak, memoryAfterMenu;
         }
@@ -55,11 +56,12 @@ namespace CancelBrawl.Beta
                                        $"carga de arena <{MaxArenaLoadSeconds} s; vuelta al menú <{MaxMenuSeconds} s; gestionada <{MaxManagedMb} MB; proceso <{MaxProcessMb} MB";
             public List<PerfRow> arenas = new List<PerfRow>();
             public Dist allFrameMs, allCpuMainMs, allGpuMs; public float allAvgFps, allLow1Fps;
+            public List<int> arenaCycleObjects = new List<int>(); public string arenaCycleGrowth;
         }
         [Serializable] public sealed class SoakSample
         {
             public int match; public string arena; public string kind; public float realSeconds, matchGameSeconds; public bool finishedByStocks; public int kos;
-            public Memory memory;
+            public Memory memory; public string growth;
         }
         [Serializable] public sealed class SoakReport
         {
@@ -67,7 +69,7 @@ namespace CancelBrawl.Beta
             public int matches, rematches, menuReturns, arenaChanges, kos, errors, hitchesOver100ms, hitchesOver250ms, lockups;
             public float avgFps, low1Fps, maxFrameMs, longestMatchGameSeconds;
             public Dist frameMs, cpuMainMs, gpuMs;
-            public float matchSeconds = SoakMatchSeconds; public List<string> hitches = new List<string>();
+            public float matchSeconds = SoakMatchSeconds; public List<string> hitches = new List<string>(), pauses = new List<string>();
             public int maxGameObjectGrowth, maxAllObjectGrowth; public float managedGrowthMb, processGrowthMb, managedSlopeMbPer10Min, processSlopeMbPer10Min;
             public List<string> problems = new List<string>();
             public List<SoakSample> samples = new List<SoakSample>();
@@ -168,6 +170,27 @@ namespace CancelBrawl.Beta
             catch (Exception) { }
 #endif
         }
+        /// <summary>Census of every loaded Unity object by type and name, to name what grows when the count does.</summary>
+        public static Dictionary<string, int> Census()
+        {
+            var counts = new Dictionary<string, int>();
+            foreach (var o in Resources.FindObjectsOfTypeAll<UnityEngine.Object>())
+            {
+                if (o == null) continue;
+                string key = o.GetType().Name + " «" + o.name + "»";
+                counts.TryGetValue(key, out int n); counts[key] = n + 1;
+            }
+            return counts;
+        }
+        public static string CensusGrowth(Dictionary<string, int> before, Dictionary<string, int> after, int top = 12)
+        {
+            var growth = new List<KeyValuePair<string, int>>();
+            foreach (var pair in after) { before.TryGetValue(pair.Key, out int b); if (pair.Value > b) growth.Add(new KeyValuePair<string, int>(pair.Key, pair.Value - b)); }
+            growth.Sort((x, y) => y.Value.CompareTo(x.Value));
+            var parts = new List<string>();
+            for (int i = 0; i < Mathf.Min(top, growth.Count); i++) parts.Add($"{growth[i].Key} +{growth[i].Value}");
+            return growth.Count == 0 ? "ninguno" : string.Join("; ", parts);
+        }
         private static Memory Max(Memory a, Memory b)
         {
             if (a == null) return b;
@@ -196,6 +219,29 @@ namespace CancelBrawl.Beta
         }
         private static int CountKos(BrawlMatch match) { int k = 0; foreach (var f in match.Fighters) if (f != null) k += f.KOs + f.SelfDestructs; return k; }
 
+        /// <summary>
+        /// Real keyboard and mouse are disabled for the run (the probe reads input in the background, so a stray Esc
+        /// elsewhere on the machine would pause the match) and every fighter, P1 included, is a bot.
+        /// </summary>
+        private static void IsolateInput(bool isolate)
+        {
+            foreach (var device in UnityEngine.InputSystem.InputSystem.devices)
+                if (device is UnityEngine.InputSystem.Keyboard || device is UnityEngine.InputSystem.Mouse)
+                {
+                    if (isolate && device.enabled) UnityEngine.InputSystem.InputSystem.DisableDevice(device);
+                    else if (!isolate && !device.enabled) UnityEngine.InputSystem.InputSystem.EnableDevice(device);
+                }
+        }
+        private static void AllBots(BrawlMatch match) { foreach (var f in match.Fighters) if (f != null) f.MakeBotForTest(); }
+        /// <summary>An unexpected pause is resumed and logged; returns false while it cannot be resumed.</summary>
+        private static bool ResumeIfPaused(BrawlMatch match, List<string> log)
+        {
+            if (match.Phase != MatchPhase.Paused) return true;
+            if (log.Count < 20) log.Add($"{DateTime.Now:HH:mm:ss} pausa imprevista (dispositivo={match.DevicePause}, faltan={match.MissingDeviceNames})");
+            match.TogglePause();
+            return match.Phase != MatchPhase.Paused;
+        }
+
         // ───────────── QA-435–440: per-arena measurement ─────────────
         public static IEnumerator RunPerf(BrawlMatch match, Action<bool, string> check, string output)
         {
@@ -212,7 +258,7 @@ namespace CancelBrawl.Beta
             var all = new Sampler();
             try
             {
-                BrawlFeedback.ReducedEffects = false; Time.timeScale = 1;
+                BrawlFeedback.ReducedEffects = false; Time.timeScale = 1; IsolateInput(true);
                 report.reducedEffects = BrawlFeedback.ReducedEffects; report.timeScale = Time.timeScale;
                 // Warm the arenas once (shaders, prefabs) so a first-load spike in one arena does not mask the others.
                 for (int index = 0; index < BrawlArena.Count; index++)
@@ -236,28 +282,37 @@ namespace CancelBrawl.Beta
                     yield return new WaitForEndOfFrame();
                     row.arenaLoadSeconds = (float)clock.Elapsed.TotalSeconds;
                     yield return null; row.firstFrameMs = Time.unscaledDeltaTime * 1000f;
-                    row.fighters = match.Fighters.Length;
+                    row.fighters = match.Fighters.Length; AllBots(match);
                     match.AutomatedTest = false; // bots play; the probe isolates physical pads and P1 receives no input
 
-                    while (match.Phase == MatchPhase.Countdown) yield return null;
+                    while (match.Phase == MatchPhase.Countdown || match.Phase == MatchPhase.Paused) { ResumeIfPaused(match, row.pauses); yield return null; }
                     float warm = Time.realtimeSinceStartup + WarmupSeconds; float nextMeter = 0;
                     while (Time.realtimeSinceStartup < warm) { Stoke(match, ref nextMeter); yield return null; }
 
                     // Only frames of live play are measured; a match won by stocks chains a rematch (its load is not a play frame).
                     sampler.Clear();
                     float playReal = 0, playSim = 0, lastSim = match.SimTime; int kosBefore = 0, kos0 = CountKos(match);
-                    Memory peak = null; float nextMemory = 0;
+                    Memory peak = null; float nextMemory = 0; int gcSeen = GC.CollectionCount(0);
+                    float lastProgress = Time.realtimeSinceStartup;
                     while (playReal < PerfSecondsPerArena)
                     {
                         yield return null;
+                        if (Time.realtimeSinceStartup - lastProgress > 30) { row.lockup = true; Debug.Log($"FUNADOS_PERF {name}: sin avance 30 s en fase {match.Phase}"); break; }
+                        if (!ResumeIfPaused(match, row.pauses)) continue;
                         if (match.Phase == MatchPhase.Results)
                         {
                             kosBefore += CountKos(match) - kos0; row.rematches++;
-                            match.StartMatch(); kos0 = 0; lastSim = -1; continue;
+                            match.StartMatch(); AllBots(match); kos0 = 0; lastSim = -1; continue;
                         }
+                        if (match.Phase == MatchPhase.Countdown) lastProgress = Time.realtimeSinceStartup;
                         if (match.Phase != MatchPhase.Playing) { lastSim = -1; continue; }
                         if (lastSim < 0) { lastSim = match.SimTime; continue; }
                         sampler.Sample(); all.Sample();
+                        int gcNow = GC.CollectionCount(0);
+                        if (Time.unscaledDeltaTime > .05f && row.hitches.Count < 20)
+                            row.hitches.Add($"{DateTime.Now:HH:mm:ss.fff} juego {match.SimTime:0.00} s: {Time.unscaledDeltaTime * 1000:0} ms{(gcNow != gcSeen ? ", con GC" : ", sin GC")}");
+                        gcSeen = gcNow;
+                        lastProgress = Time.realtimeSinceStartup;
                         playReal += Time.unscaledDeltaTime; playSim += match.SimTime - lastSim; lastSim = match.SimTime;
                         row.supers += Stoke(match, ref nextMeter);
                         if (Time.realtimeSinceStartup >= nextMemory) { nextMemory = Time.realtimeSinceStartup + 5; peak = Max(peak, Snapshot(false)); }
@@ -281,10 +336,12 @@ namespace CancelBrawl.Beta
                     yield return null; GC.Collect(); yield return null;
                     row.memoryAfterMenu = Snapshot(true);
                     report.arenas.Add(row);
+                    foreach (var hitch in row.hitches) Debug.Log($"FUNADOS_PERF tirón {name}: {hitch}");
                     Debug.Log($"FUNADOS_PERF {name}: {row.avgFps:0.0} fps (1 % bajo {row.low1Fps:0.0}), frame máx. {row.maxFrameMs:0.0} ms, CPU {row.cpuMainMs.median:0.00}/{row.cpuMainMs.p95:0.00}/{row.cpuMainMs.max:0.00} ms, " +
                               $"GPU {row.gpuMs.median:0.00}/{row.gpuMs.p95:0.00}/{row.gpuMs.max:0.00} ms, carga {row.arenaLoadSeconds:0.000} s, menú {row.menuReturnSeconds:0.000} s, KO {row.kos}, supers {row.supers}");
 
-                    check(row.fighters == BrawlMatch.MaxPlayers && row.seconds >= PerfSecondsPerArena - .5f && row.kos > 0 && Mathf.Abs(row.simRatio - 1) < .02f,
+                    foreach (var pause in row.pauses) Debug.Log($"FUNADOS_PERF {name}: {pause}");
+                    check(!row.lockup && row.fighters == BrawlMatch.MaxPlayers && row.seconds >= PerfSecondsPerArena - .5f && row.kos > 0 && Mathf.Abs(row.simRatio - 1) < .02f,
                         $"{name}: {row.fighters} luchadores bot a velocidad real {row.seconds:0} s, simulación {row.fixedStepsPerSecond:0.0} Hz ({row.kos} KO, {row.supers} supers, efectos completos)");
                     check(row.avgFps >= MinAvgFps && row.low1Fps >= MinLowFps,
                         $"{name}: {row.avgFps:0.0} FPS medios (≥{MinAvgFps}), 1 % bajo {row.low1Fps:0.0} (≥{MinLowFps}); frame mediana {row.frameMs.median:0.00} ms, p95 {row.frameMs.p95:0.00} ms");
@@ -302,6 +359,33 @@ namespace CancelBrawl.Beta
                         $"{name}: memoria gestionada pico {row.memoryPeak.managedMb:0.0} MB (<{MaxManagedMb}), nativa Unity {row.memoryPeak.unityTotalUsedMb:0} MB, proceso {row.memoryPeak.processPrivateMb:0} MB (<{MaxProcessMb}); " +
                         $"asignación GC mediana {row.gcAllocKbPerFrame.median:0.0} KB/frame");
                 }
+                // Arena changes must not leave objects behind: several full cycles through the four arenas, census after each.
+                {
+                    match.AutomatedTest = true;
+                    var counts = new List<int>(); Dictionary<string, int> firstCensus = null, lastCensus = null;
+                    for (int cycle = 0; cycle < ArenaCycles; cycle++)
+                    {
+                        for (int index = 0; index < BrawlArena.Count; index++)
+                        {
+                            match.ArenaIndex = index; match.OpponentCount = BrawlMatch.MaxPlayers - 1; match.SelectedCharacter = (index + cycle) % BrawlRoster.Count;
+                            match.StartMatch(); AllBots(match); match.AutomatedTest = false;
+                            for (int k = 0; k < 90; k++) yield return null; // into play: countdown, first hits
+                            match.AutomatedTest = true; match.ReturnToMenu(); yield return null;
+                        }
+                        match.ArenaIndex = 0; match.StartMatch(); yield return null; match.ReturnToMenu(); // same resting arena for every census
+                        yield return null; yield return null; GC.Collect(); yield return null;
+                        var census = Census(); int total = 0; foreach (int v in census.Values) total += v;
+                        counts.Add(total);
+                        if (cycle == 1) firstCensus = census; // cycle 0 warms caches
+                        lastCensus = census;
+                    }
+                    report.arenaCycleObjects = counts;
+                    report.arenaCycleGrowth = firstCensus != null ? CensusGrowth(firstCensus, lastCensus) : "";
+                    int growth = counts.Count > 1 ? counts[counts.Count - 1] - counts[1] : 0;
+                    Debug.Log($"FUNADOS_PERF ciclos de arena: objetos {string.Join(" → ", counts)}; crecimiento {report.arenaCycleGrowth}");
+                    check(counts.Count == ArenaCycles && growth <= 2,
+                        $"Cambiar de arena no deja objetos atrás: {ArenaCycles} ciclos por las {BrawlArena.Count} arenas, {growth:+0;-0;0} objetos de Unity tras {ArenaCycles - 2} ciclos ({report.arenaCycleGrowth})");
+                }
                 report.gpuTimingAvailable = all.gpuSeen;
                 report.allFrameMs = Distribution(all.frame); report.allCpuMainMs = Distribution(all.cpuMain); report.allGpuMs = Distribution(all.gpu);
                 report.allAvgFps = AvgFps(all.frame); report.allLow1Fps = LowFps(all.frame);
@@ -312,7 +396,7 @@ namespace CancelBrawl.Beta
             }
             finally
             {
-                sampler.Dispose(); all.Dispose();
+                sampler.Dispose(); all.Dispose(); IsolateInput(false);
                 Time.timeScale = oldScale; match.AutomatedTest = oldAutomated; BrawlFeedback.ReducedEffects = oldReduced;
                 match.ReturnToMenu(); match.ArenaIndex = oldArena; match.OpponentCount = oldOpponents; match.SelectedCharacter = oldCharacter;
             }
@@ -324,16 +408,16 @@ namespace CancelBrawl.Beta
             int oldArena = match.ArenaIndex, oldOpponents = match.OpponentCount, oldCharacter = match.SelectedCharacter;
             bool oldAutomated = match.AutomatedTest, oldReduced = BrawlFeedback.ReducedEffects; float oldScale = Time.timeScale;
             var report = new SoakReport { targetSeconds = seconds, startedUtc = DateTime.UtcNow.ToString("o") };
-            int errors = 0;
+            int errors = 0, gcSeen = GC.CollectionCount(0);
             Application.LogCallback onLog = (message, stack, type) => { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors++; };
             Application.logMessageReceived += onLog;
             var sampler = new Sampler();
-            var firstByArena = new Dictionary<int, Memory>();
+            var firstByArena = new Dictionary<int, Memory>(); var censusByArena = new Dictionary<int, Dictionary<string, int>>();
             float oldMatchSeconds = match.Settings.matchSeconds;
             float limit = SoakMatchSeconds + 3 + 20; // countdown + margin, in game seconds
             try
             {
-                BrawlFeedback.ReducedEffects = false; Time.timeScale = 1; match.Settings.matchSeconds = SoakMatchSeconds;
+                BrawlFeedback.ReducedEffects = false; Time.timeScale = 1; match.Settings.matchSeconds = SoakMatchSeconds; IsolateInput(true);
                 float start = Time.realtimeSinceStartup;
                 int arena = 0, character = 0;
                 match.AutomatedTest = true; match.ReturnToMenu(); yield return null;
@@ -357,7 +441,7 @@ namespace CancelBrawl.Beta
                         match.ArenaIndex = arena; match.OpponentCount = BrawlMatch.MaxPlayers - 1; match.SelectedCharacter = character;
                     }
                     // Rematch from the results screen is the same call as the HUD's REVANCHA button.
-                    match.StartMatch();
+                    match.StartMatch(); AllBots(match);
                     match.AutomatedTest = false;
                     float matchStartSim = match.SimTime, lastSim = -1, stalledSince = Time.realtimeSinceStartup, nextMeter = 0;
                     int kos0 = 0; bool locked = false;
@@ -370,8 +454,12 @@ namespace CancelBrawl.Beta
                         float dt = Time.unscaledDeltaTime * 1000f;
                         if (dt > 100) report.hitchesOver100ms++;
                         if (dt > 250) report.hitchesOver250ms++;
+                        int gcNow = GC.CollectionCount(0);
                         if (dt > 100 && report.hitches.Count < 50)
-                            report.hitches.Add($"{Time.realtimeSinceStartup - start:0.0} s, partida {m + 1}, {match.Phase}, juego {match.SimTime:0.0} s: {dt:0} ms");
+                            report.hitches.Add($"{Time.realtimeSinceStartup - start:0.0} s, partida {m + 1}, {match.Phase}, juego {match.SimTime:0.0} s: {dt:0} ms" +
+                                               $"{(gcNow != gcSeen ? ", con recolección GC" : ", sin GC")}, ventana {(Application.isFocused ? "con" : "sin")} foco");
+                        gcSeen = gcNow;
+                        if (match.Phase == MatchPhase.Paused) ResumeIfPaused(match, report.pauses);
                         if (match.Phase == MatchPhase.Playing) Stoke(match, ref nextMeter);
                         // Lock-up: the simulation stops advancing for two real seconds, or the match outlives its clock.
                         float progress = match.SimTime - match.CountdownRemaining; // advances in countdown and in play
@@ -398,14 +486,15 @@ namespace CancelBrawl.Beta
                     };
                     report.samples.Add(sample);
                     // The first match of each arena warms caches; compare later visits with the second sample of that arena.
-                    if (kind == "revancha" && !firstByArena.ContainsKey(arena)) firstByArena[arena] = memory;
+                    if (kind == "revancha" && !firstByArena.ContainsKey(arena)) { firstByArena[arena] = memory; censusByArena[arena] = Census(); }
                     else if (firstByArena.TryGetValue(arena, out var first))
                     {
+                        if (memory.allObjects > first.allObjects) sample.growth = CensusGrowth(censusByArena[arena], Census(), 6);
                         report.maxGameObjectGrowth = Mathf.Max(report.maxGameObjectGrowth, memory.gameObjects - first.gameObjects);
                         report.maxAllObjectGrowth = Mathf.Max(report.maxAllObjectGrowth, memory.allObjects - first.allObjects);
                     }
                     Debug.Log($"FUNADOS_SOAK partida {report.matches} ({kind}, {sample.arena}): {gameSeconds:0} s de juego, KO {kos}, real {sample.realSeconds:0} s, " +
-                              $"objetos {memory.gameObjects}/{memory.allObjects}, gestionada {memory.managedMb:0.0} MB, proceso {memory.processPrivateMb:0} MB, errores {errors}");
+                              $"objetos {memory.gameObjects}/{memory.allObjects}{(string.IsNullOrEmpty(sample.growth) ? "" : " (crece: " + sample.growth + ")")}, gestionada {memory.managedMb:0.0} MB, proceso {memory.processPrivateMb:0} MB, errores {errors}");
                 }
                 report.realSeconds = Time.realtimeSinceStartup - start;
                 report.errors = errors;
@@ -435,10 +524,11 @@ namespace CancelBrawl.Beta
                     $"Sin fugas de memoria: gestionada {report.managedGrowthMb:+0.0;-0.0;0} MB ({report.managedSlopeMbPer10Min:+0.00;-0.00;0} MB/10 min), proceso {report.processGrowthMb:+0;-0;0} MB ({report.processSlopeMbPer10Min:+0.0;-0.0;0} MB/10 min)");
                 foreach (var problem in report.problems) Debug.Log("FUNADOS_SOAK " + problem);
                 foreach (var hitch in report.hitches) Debug.Log("FUNADOS_SOAK tirón " + hitch);
+                foreach (var pause in report.pauses) Debug.Log("FUNADOS_SOAK " + pause);
             }
             finally
             {
-                Application.logMessageReceived -= onLog; sampler.Dispose(); match.Settings.matchSeconds = oldMatchSeconds;
+                Application.logMessageReceived -= onLog; sampler.Dispose(); IsolateInput(false); match.Settings.matchSeconds = oldMatchSeconds;
                 Time.timeScale = oldScale; match.AutomatedTest = oldAutomated; BrawlFeedback.ReducedEffects = oldReduced;
                 match.ReturnToMenu(); match.ArenaIndex = oldArena; match.OpponentCount = oldOpponents; match.SelectedCharacter = oldCharacter;
             }
