@@ -70,3 +70,8 @@ Thumbs.db
 # Local editor integrations and generated solution
 /.claude/
 /*.slnx
+
+# Other IDEs and Blender autosaves
+/.idea/
+/.vscode/
+*.blend1
