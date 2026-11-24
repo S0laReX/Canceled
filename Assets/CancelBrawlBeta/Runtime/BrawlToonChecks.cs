@@ -49,7 +49,11 @@ namespace CancelBrawl.Beta
                     shadows &= renderer.shadowCastingMode != UnityEngine.Rendering.ShadowCastingMode.Off;
             check(shadows, "Los luchadores toon siguen proyectando sombra");
 
-            // Hit flash still tints the toon material.
+            // Hit flash still tints the toon material (lab: no countdown or spawn protection).
+            match.SelectedCharacter = 0; match.StartTraining();
+            match.Fighters[0].ResetPractice(new Vector3(0, .05f, 0), 0);
+            match.Fighters[1].ResetPractice(new Vector3(1.4f, .05f, 0), 0);
+            yield return new WaitForSeconds(.3f);
             var target = match.Fighters[1];
             var material = target.GetComponentInChildren<SkinnedMeshRenderer>() ? target.GetComponentInChildren<SkinnedMeshRenderer>().sharedMaterial : null;
             Color before = material ? material.color : Color.white;
@@ -95,7 +99,8 @@ namespace CancelBrawl.Beta
             root.transform.rotation = Quaternion.LookRotation(new Vector3(-.5f, 0, -.87f));
             root.AddComponent<BrawlFighterVisual>().Build(character, skin, BrawlRoster.Get(character).Accent, art);
             foreach (var renderer in root.GetComponentsInChildren<Renderer>(true)) renderer.gameObject.layer = Layer;
-            var texture = new RenderTexture(160, 240, 16, RenderTextureFormat.ARGB32); texture.Create();
+            // 720 px tall like the game at 720p: the outline width is a share of the screen height.
+            var texture = new RenderTexture(480, 720, 16, RenderTextureFormat.ARGB32); texture.Create();
             var cameraObject = new GameObject("Cámara silueta"); var camera = cameraObject.AddComponent<Camera>();
             camera.orthographic = true; camera.orthographicSize = 1.15f;
             camera.transform.position = root.transform.position + new Vector3(0, .95f, -6);
@@ -128,7 +133,7 @@ namespace CancelBrawl.Beta
             bool Body(int x, int y) { Color p = pixels[y * w + x]; return Mathf.Abs(p.r - background.r) + Mathf.Abs(p.g - background.g) + Mathf.Abs(p.b - background.b) > .1f; }
             float L(int x, int y) { Color p = pixels[y * w + x]; return .2126f * p.r + .7152f * p.g + .0722f * p.b; }
             double edgeSum = 0, innerSum = 0; int edges = 0, inners = 0;
-            for (int y = 8; y < h - 8; y += 2)
+            for (int y = 8; y < h - 8; y += 4)
                 for (int x = 1; x < w - 6; x++)
                     if (!Body(x - 1, y) && Body(x, y))
                     {

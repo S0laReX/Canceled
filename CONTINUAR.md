@@ -36,6 +36,14 @@
 - Límites: los efectos son los actuales (sin el shader toon ni los VFX finales del GDD); volver a medir cuando lleguen el arte y las animaciones. El pico de 630 ms de CPU en `soak-session.json` es el frame del censo de objetos de la propia prueba, fuera de la partida.
 - Suites en la rama (`Evidence/Branch-perf-rendimiento`): perf 35, soak 6, power 32, moves 21, kits 91, recovery 16, camera 15, coyote 5, arena 46, side-controls 127, side 375, controls 125, beta 208, arena-stress 25; cero fallos. Sin cambio de versión ni de recuento; al juntar, `-perf-smoke` y `-soak-session` van en la misma línea de opciones de `BrawlMatch` que `-audio-smoke`.
 
+## Relevo perf/rendimiento: efectos de impacto y supers (Arte y animación)
+
+- `BrawlImpactFx` (creado por `BrawlMatch` junto a la cámara; `BrawlImpactFx.Instance`): niveles `Light`, `Strong`, `Spike`, `Ko` y `Super`. `BrawlFighter.ApplyHits` elige el nivel (`ImpactTierFor`: lanzamiento hacia abajo = remate; fuerte, especial o empuje >45 % = fuerte) con el color del atacante; `LoseStock` dibuja el KO dentro de `PlayBounds`; el super al activarse; zonas y emisor en `BrawlHazards`. `BrawlFeedback.Burst` (saltos, esquivas, golpes al aire) ya no crea cubos: usa el sistema `Polvo`.
+- Bloom: un `Volume` global de peso 0 que sube un instante en golpes fuertes, KO y supers; la cámara activa el posproceso (el perfil por defecto no tiene overrides, así que no cambia nada más). `GraphicsSettings` incluye el shader `Universal Render Pipeline/Particles/Unlit` (lo añade también `BetaProjectBuilder`). La textura lleva el degradado en el color además del alfa, para que el aditivo quede suave aunque la build no tenga la variante transparente.
+- Efectos reducidos: anillo y estelas sí; destello, bloom y 2/3 de las chispas no. La pausa congela las partículas; volver al menú las borra.
+- `-fx-smoke` 32/32 (`Evidence/Branch-perf-rendimiento/Fx`), `-perf-smoke` con efectos 35/35 (`Perf-fx`), y las demás suites sin fallos.
+- Pendiente para arte: el shader toon y el contorno, y sustituir chispas y anillos por VFX dibujados. Mantener el modo reducido y que nada tape a un luchador.
+
 ## Relevo feat/audio-buses (AUDIO-428 a 434)
 
 - `BrawlAudio` (nuevo): buses Master, Música, SFX, Voces y UI. Una `AudioSource` por bus bajo la raíz de la partida (`Bus Música`, `Bus SFX`, …); volumen = `BusGain` × Master × bus. No se usa un asset `AudioMixer` porque sus grupos no se pueden crear desde código sin API interna; si llega audio final, basta asignar `outputAudioMixerGroup` a cada fuente.

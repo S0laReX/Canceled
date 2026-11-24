@@ -113,7 +113,8 @@ Recuento: **45 de 63** marcadas (20 del GDD 2.0 + 25 desde 0.6.0). Ninguna en �
 - [ ] Rig real para un personaje de referencia (Don Promesio) y decidir la herramienta (D01)
 - [ ] Animaciones de perfil mínimas para los cinco kits (lista en la sección 11)
 - [ ] Shader toon y contorno únicos en URP
-- [ ] Efectos de impacto y supers con versión de efectos reducidos
+- [x] Efectos de impacto y supers con versión de efectos reducidos
+  - Rama `perf/rendimiento`: `BrawlImpactFx` dibuja los impactos por nivel (ligero, fuerte, remate hacia abajo, KO y super) con cinco sistemas de partículas reutilizados y un pulso corto de bloom de URP. Los efectos quedan 0,35 m detrás del luchador visto desde la cámara lateral (nunca lo tapan) y el KO se dibuja dentro del área de juego con estelas hacia donde salió el luchador. **Efectos reducidos**: conservan anillos y estelas de dirección; quitan el destello, el bloom y dos tercios de las chispas (golpe fuerte 18 → 6 chispas; super 8 → 2 rayos). Las chispas ya no son cubos sueltos: 120 efectos seguidos no crean objetos y cuestan 3,2 ms. `-fx-smoke` 32/32 con capturas `fx-full.png` y `fx-reduced.png`. Con todos los efectos y el bloom, `-perf-smoke` 35/35: 60,0 FPS, 1 % bajo 58,0–58,7, frame máximo 21 ms, CPU principal mediana 2,9–3,1 ms y p95 3,9–4,4 ms, 0 KB asignados por frame (máquina compartida, CPU media 55 %). Pendiente con el arte final: shader toon y VFX dibujados a mano.
 - [ ] Revisar lectura del neón, el contraste y los accesorios en cámara lateral
 
 ## Audio
@@ -149,6 +150,6 @@ Recuento: **45 de 63** marcadas (20 del GDD 2.0 + 25 desde 0.6.0). Ninguna en �
   - `-side-controls-smoke`: dispositivos, remapeo, ajustes de mando, menús y pantalla **en 2.5D** (nuevo en 0.6.0).
   - `-side-smoke`: reglas 2.5D completas + poderes + las suites de controles.
   - `-controls-smoke` / `-beta-smoke`: regresión histórica 3D (no es el diseño actual).
-  - `-perf-smoke` (≈5 min): rendimiento con cinco bots por arena a velocidad real (`perf-smoke.json`). `-soak-session` (≈32 min): sesión de 30 min con revanchas (`soak-session.json`); `-soak-seconds N` acorta la sesión para probar. Medir con la máquina libre: otra build o un Unity compilando falsean las cifras.
+  - `-perf-smoke` (≈5 min): rendimiento con cinco bots por arena a velocidad real (`perf-smoke.json`). `-soak-session` (≈32 min): sesión de 30 min con revanchas (`soak-session.json`); `-soak-seconds N` acorta la sesión para probar. `-fx-smoke` (≈15 s): efectos de impacto y super en modo completo y reducido (`fx-smoke.json`, `fx-full.png`, `fx-reduced.png`). Medir con la máquina libre: otra build o un Unity compilando falsean las cifras.
 - Script de conveniencia usado en esta sesión: ejecutar las cinco suites en orden y resumir sus informes.
 - **Mandos físicos**: desconectarlos, o añadir `-isolate-physical-pads` (los retira solo del proceso de prueba). Sin esa opción las suites se niegan con un mando real. Un DualShock emparejado por Bluetooth y apagado aparece en Windows como `BTHENUM` sin estar conectado. Pueden correr con la ventana sin foco.

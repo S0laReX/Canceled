@@ -8,11 +8,11 @@ Shader "FUNADOS/Toon"
     {
         [MainTexture] _BaseMap ("Textura", 2D) = "white" {}
         [MainColor] _BaseColor ("Color", Color) = (1, 1, 1, 1)
-        _ShadeColor ("Tinte de sombra", Color) = (0.56, 0.5, 0.74, 1)
+        _ShadeColor ("Tinte de sombra", Color) = (0.7, 0.66, 0.86, 1)
         _Bands ("Bandas de luz", Range(2, 5)) = 3
         _RimColor ("Luz de borde (alfa = fuerza)", Color) = (1, 1, 1, 0.3)
         _OutlineColor ("Contorno", Color) = (0.05, 0.035, 0.09, 1)
-        _OutlineWidth ("Grosor del contorno (fracción de pantalla)", Range(0, 0.02)) = 0.0055
+        _OutlineWidth ("Grosor del contorno (fracción de pantalla)", Range(0, 0.02)) = 0.0025
         // Read by the URP Lit passes reused below.
         [HideInInspector] _Cutoff ("Alpha cutoff", Float) = 0.5
     }
@@ -72,7 +72,7 @@ Shader "FUNADOS/Toon"
                 half scaled = lit * bands;
                 half band = (floor(scaled) + smoothstep(0.42, 0.58, frac(scaled))) / bands;
                 half3 diffuse = lerp(_ShadeColor.rgb, half3(1, 1, 1), band) * light.color;
-                half3 ambient = SampleSH(normal) * 0.35;
+                half3 ambient = SampleSH(normal) * 0.45;
                 half3 view = GetWorldSpaceNormalizeViewDir(input.positionWS);
                 half rim = smoothstep(0.68, 0.76, 1 - saturate(dot(normal, view))) * _RimColor.a * (0.35 + 0.65 * band);
                 return half4(albedo.rgb * (diffuse + ambient) + rim * _RimColor.rgb, 1);
@@ -86,6 +86,8 @@ Shader "FUNADOS/Toon"
             Tags { "LightMode" = "SRPDefaultUnlit" }
             Cull Front
             ZWrite On
+            // Pushed slightly back so the hull never shows through the body where the mesh has split normals.
+            Offset 4, 4
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
