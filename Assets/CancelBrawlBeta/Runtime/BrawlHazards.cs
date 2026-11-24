@@ -88,7 +88,7 @@ namespace CancelBrawl.Beta
                                      : flat.magnitude <= HitRadius && dy > -BelowTolerance && dy < height;
                 if (inside) token.Hit(fighter, flat.sqrMagnitude > .01f ? flat.normalized : Owner.Facing);
             }
-            BrawlFeedback.Burst(transform.position + Vector3.up * .6f, Owner.PlayerColor, 20);
+            if (BrawlImpactFx.Instance) BrawlImpactFx.Instance.Impact(transform.position + Vector3.up * .6f, Owner.PlayerColor, ImpactTier.Super, Vector3.up);
             BrawlFeedback.Sound("super");
             match.Shake(.35f);
             Destroy(gameObject);
@@ -142,7 +142,7 @@ namespace CancelBrawl.Beta
                 float dy = fighter.transform.position.y - transform.position.y;
                 if (flat.magnitude > TriggerRadius || dy < -BelowReach || dy > AboveReach) continue;
                 if (!token.Hit(fighter, flat.sqrMagnitude > .01f ? flat.normalized : Owner.Facing)) continue;
-                BrawlFeedback.Burst(transform.position + Vector3.up, Owner.PlayerColor, 12);
+                if (BrawlImpactFx.Instance) BrawlImpactFx.Instance.Impact(transform.position + Vector3.up, Owner.PlayerColor, ImpactTier.Strong, Vector3.up);
                 Destroy(gameObject);
                 return;
             }

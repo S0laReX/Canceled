@@ -192,7 +192,7 @@ namespace CancelBrawl.Beta
                     dodgeCooldown = settings.dodgeCooldown; dodgeRemaining = .23f;
                     dashDirection = move.sqrMagnitude > .1f ? move.normalized : Facing;
                     if (!Grounded) { airDodgeUsed = true; velocity.y *= .35f; }
-                    BrawlFeedback.Burst(transform.position + Vector3.up * .5f, PlayerColor, 4);
+                    BrawlFeedback.Burst(transform.position + Vector3.up * .5f, PlayerColor, 4); BrawlFeedback.Sound("dodge");
                 }
                 if (dodgeRemaining <= 0)
                 {
@@ -255,7 +255,7 @@ namespace CancelBrawl.Beta
             Vector3 direction = move.sqrMagnitude > .04f ? move.normalized : Facing;
             velocity = direction * Kit.RecoveryHorizontal + Vector3.up * settings.recoverySpeed * Kit.RecoveryVertical;
             recoveryTimer = .6f; hoverTimer = Kit.RecoveryHover;
-            BrawlFeedback.Burst(transform.position + Vector3.up * .5f, PlayerColor, 9); BrawlFeedback.Sound("jump");
+            BrawlFeedback.Burst(transform.position + Vector3.up * .5f, PlayerColor, 9); BrawlFeedback.Sound("recovery");
         }
 
         public bool OutsideArena
@@ -436,7 +436,8 @@ namespace CancelBrawl.Beta
                 else BrawlFeedback.Pulse(transform.position, attack.Range, attack.Active, PlayerColor);
             }
             if (super && (Kit.Super == SuperStyle.Zone || Kit.Super == SuperStyle.Bubble)) return; // resolved by the zone
-            BrawlFeedback.Burst(transform.position + Vector3.up * .9f + Facing * (super ? .5f : 1), PlayerColor, super ? 18 : 5);
+            if (super && BrawlImpactFx.Instance) BrawlImpactFx.Instance.Super(transform.position + Vector3.up * .9f + Facing * .5f, PlayerColor);
+            else BrawlFeedback.Burst(transform.position + Vector3.up * .9f + Facing, PlayerColor, 5);
             BrawlFeedback.Sound(super ? "super" : "swing");
             if (super) match.Shake(.3f);
         }
@@ -559,10 +560,24 @@ namespace CancelBrawl.Beta
             // An interrupted super never leaves its announced zone/bubble pending (GDD 2.0 §5: no hitbox survives an interruption).
             if (attacking && attack.Kind == AttackKind.Super && attackToken != null) BrawlZone.CancelFor(attackToken);
             attacking = false; comboWindow = 0; dodgeRemaining = 0;
-            BrawlFeedback.Burst(transform.position + Vector3.up * .9f, PlayerColor, 9 + 3 * (hits.Count - 1));
-            BrawlFeedback.Sound("hit");
             float strength = Mathf.Clamp01(result.Push / Mathf.Max(1, settings.maxKnockback));
+            ImpactTier tier = ImpactTierFor(hits, result, strength);
+            // GDD §10: one layer per kind of hit, one semitone higher per combo hit, and a whoosh when it launches.
+            BrawlAudio.PlayHit(tier, comboHit - 1, strength > .6f);
+            if (BrawlImpactFx.Instance)
+                BrawlImpactFx.Instance.Impact(transform.position + Vector3.up * .9f, result.Attacker ? result.Attacker.PlayerColor : PlayerColor,
+                    tier, result.Velocity);
             match.Haptic(PlayerIndex, .35f + .55f * strength, .2f + .6f * strength, .18f + .2f * strength);
+        }
+
+        /// <summary>Presentation tier of a hit: downward launch reads as a finisher, heavy moves or strong pushes as strong.</summary>
+        internal static ImpactTier ImpactTierFor(List<PendingHit> hits, HitOutcome result, float strength)
+        {
+            if (result.Velocity.y < -2f) return ImpactTier.Spike;
+            if (strength > .45f) return ImpactTier.Strong;
+            foreach (var hit in hits)
+                if (hit.Spec.Kind != AttackKind.Basic) return ImpactTier.Strong;
+            return ImpactTier.Light;
         }
 
         public struct HitOutcome { public float Damage; public Vector3 Velocity; public float Push; public float Stun; public BrawlFighter Attacker; }
@@ -603,6 +618,17 @@ namespace CancelBrawl.Beta
             return new HitOutcome { Damage = damage, Velocity = horizontal + Vector3.up * lift, Push = horizontal.magnitude, Stun = stun, Attacker = attacker };
         }
 
+        /// <summary>KO burst kept inside the visible play area, with streaks pointing the way the fighter left.</summary>
+        private void KoEffect()
+        {
+            if (!BrawlImpactFx.Instance) return;
+            Vector3 p = transform.position + Vector3.up;
+            Rect bounds = match.Arena.PlayBounds;
+            Vector3 inside = new Vector3(Mathf.Clamp(p.x, bounds.xMin + .5f, bounds.xMax - .5f), Mathf.Clamp(p.y, bounds.yMin + .5f, bounds.yMax - .5f), p.z);
+            Vector3 outward = p - inside; if (outward.sqrMagnitude < .01f) outward = Vector3.up;
+            BrawlImpactFx.Instance.Impact(inside, PlayerColor, ImpactTier.Ko, outward);
+        }
+
         /// <returns>The fighter credited with this expulsion, or null for a self-destruct.</returns>
         internal BrawlFighter LoseStock()
         {
@@ -612,7 +638,7 @@ namespace CancelBrawl.Beta
             Stocks--; Damage = 0; Meter = 0; command = default; velocity = Vector3.zero;
             attacking = false; protection = 0; stun = 0; chainCharged = false; comboWindow = 0; hoverTimer = 0; recoveryTimer = 0;
             if (activeTrap) Destroy(activeTrap.gameObject);
-            BrawlFeedback.Burst(transform.position + Vector3.up, PlayerColor, 20); BrawlFeedback.Sound("ko");
+            KoEffect(); BrawlFeedback.Sound("ko");
             match.Haptic(PlayerIndex, .95f, .9f, .5f);
             controller.enabled = false;
             transform.position = match.SafeSpawnFor(this);
