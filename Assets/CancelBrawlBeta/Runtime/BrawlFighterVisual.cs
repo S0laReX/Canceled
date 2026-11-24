@@ -236,9 +236,18 @@ namespace CancelBrawl.Beta
                     new Vector3(0.17f, 0.065f, 0.012f), accent);
         }
 
+        public const string ToonShaderName = "FUNADOS/Toon";
+        private static Shader toon;
+        /// <summary>The fighters' toon shader (outline included), or null when the build lacks it.</summary>
+        public static Shader ToonShader
+        {
+            get { if (toon == null) { toon = Shader.Find(ToonShaderName); if (toon != null && !toon.isSupported) toon = null; } return toon; }
+        }
+
         private Material MakeMaterial(string label, Color color)
         {
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            Shader shader = ToonShader;
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null) shader = Shader.Find("Standard");
             if (shader == null) shader = Shader.Find("Hidden/Internal-Colored");
             Material material = new Material(shader) { name = "Beta " + label, color = color };

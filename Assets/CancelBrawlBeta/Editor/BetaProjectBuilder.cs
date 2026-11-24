@@ -112,7 +112,7 @@ namespace CancelBrawl.Beta.Editor
             Object graphics = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/GraphicsSettings.asset").First();
             var serialized = new SerializedObject(graphics);
             var included = serialized.FindProperty("m_AlwaysIncludedShaders");
-            foreach (string name in new[] { "Universal Render Pipeline/Lit", "Universal Render Pipeline/Unlit", BrawlImpactFx.ParticleShader })
+            foreach (string name in new[] { "Universal Render Pipeline/Lit", "Universal Render Pipeline/Unlit", BrawlImpactFx.ParticleShader, BrawlFighterVisual.ToonShaderName })
             {
                 Shader shader = Shader.Find(name);
                 if (shader == null) throw new System.InvalidOperationException("Falta shader " + name);

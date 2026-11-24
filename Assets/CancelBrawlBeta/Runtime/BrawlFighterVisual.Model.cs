@@ -65,7 +65,9 @@ namespace CancelBrawl.Beta
             skinned.localBounds = local0;
             skinned.updateWhenOffscreen = false;
 
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            // GDD §11: one toon material with its outline for every fighter; URP Lit only if the toon shader is missing.
+            Shader shader = BrawlFighterVisual.ToonShader;
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null) shader = Shader.Find("Standard");
             var material = new Material(shader) { name = "Fighter " + SkinName, color = Color.white };
             if (entry.albedo != null)
