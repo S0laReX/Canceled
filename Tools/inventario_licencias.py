@@ -25,8 +25,8 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 OUT = os.path.join(ROOT, "Docs", "Licencias")
 
-MESHY_PENDING = ("Términos de Meshy según el plan de la cuenta al generar (Free: CC BY 4.0 con "
-                 "atribución a Meshy; de pago: según sus términos) o del autor si se bajó de la comunidad")
+MESHY_PENDING = ("Meshy: Free = CC BY 4.0 con atribución (cubierta en CREDITOS.md); de pago = propiedad "
+                 "privada; comunidad = CC0. Falta confirmar derechos de las imágenes de referencia")
 
 
 def sha256(path):

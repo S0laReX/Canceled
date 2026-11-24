@@ -57,13 +57,38 @@ Licencia tomada del `LICENSE.md` de cada paquete en la importación limpia (`D:\
 
 Ningún paquete viene de Asset Store, Git ni carpeta local: todos son `registry` o `builtin` (`packages-lock.json`). Las licencias Unity Companion y Package Distribution permiten usar los paquetes en proyectos hechos con Unity, así que **los paquetes quedan confirmados**. Avisos sin bloqueo: `ai.assistant` (pre) y `pipeline` (exp) son herramientas del Editor y conviene quitarlas o estabilizarlas antes de una versión pública (lo mismo dice `Docs/Produccion_2026-11-10/FUNADOS_Compatibilidad.md`).
 
+## Términos de Meshy (consultados el 24/11/2026)
+
+Esto dicen las fuentes oficiales de Meshy:
+
+| Caso | Licencia del resultado | Qué exige |
+|---|---|---|
+| Generado con el plan **Free** | **CC BY 4.0**: uso comercial permitido | Atribuir a Meshy, por ejemplo con «Model created with Meshy – CC BY 4.0 License» |
+| Generado con un plan **de pago** | **Propiedad privada** del usuario, sin atribución | No haberlo publicado en la comunidad de Meshy |
+| Modelo **publicado en la comunidad** de Meshy | **CC0** según los términos de servicio | CC0 no cubre personajes ni marcas de terceros |
+| Cambio de plan | Cada modelo conserva los derechos del plan con el que se generó | — |
+| **Imágenes de referencia** subidas | En cualquier plan, el uso comercial depende de tener derechos sobre la imagen de origen | — |
+
+Fuentes:
+- [Propiedad de los modelos generados](https://help.meshy.ai/en/articles/10137554-what-is-the-ownership-of-the-generated-models)
+- [Uso comercial](https://help.meshy.ai/en/articles/16102098-can-i-use-meshy-assets-commercially)
+- [Precios y planes](https://docs.meshy.ai/en/webapp/pricing)
+- [Venta en marketplaces](https://help.meshy.ai/en/articles/16102951-can-you-publish-or-sell-meshy-models-on-marketplaces)
+
+Un artículo del Help Center (el de marketplaces) contradice a los demás: dice que lo del plan Free es en general solo para uso personal. Lo prudente es pedir a Meshy que lo aclare antes de vender el juego con modelos del plan Free.
+
+**Conclusión:** sea cual sea el plan, el uso actual (juego local, sin venta) está permitido. **Añadir la atribución cubre el peor caso** (plan Free), así que el texto de [`CREDITOS.md`](CREDITOS.md) ya está preparado. Lo que de verdad queda abierto son las imágenes de referencia y la contradicción para la venta comercial.
+
 ## Lo que falta para cerrar D04 (decisión del usuario)
 
-Los 110 archivos pendientes son todos de Meshy. Hacen falta datos de la cuenta que no se pueden sacar del repositorio:
+Los 110 archivos de Meshy siguen como `pendiente-usuario` hasta que Santiago confirme lo siguiente:
 
-1. **Plan de Meshy con el que se generó cada lote**: personajes (antes del 11/11/2026, beta 0.3) y escenarios y conceptos (16/11/2026). Según el Help Center citado en `FUNADOS_Compatibilidad.md`, lo generado con el plan Free es **CC BY 4.0**: permite uso comercial pero exige atribuir a Meshy (créditos del juego). Los planes de pago tienen otras condiciones, que hay que revisar en los términos vigentes. La cuenta conectada hoy tiene 25 créditos permanentes y 0 mensuales, sin suscripción activa. Eso no dice qué plan había en noviembre.
-2. **Personajes de la comunidad**: nombres como `Commander_Vex`, `Neon_Rebel` o `Tin_Foil_Fred` no siguen la convención del proyecto. Hay que confirmar que los generó el usuario y que no se bajaron de la galería pública de Meshy, porque en ese caso la licencia es la del autor. La API de Meshy solo devuelve las tareas creadas por API (hay una, de imagen a imagen, que no corresponde a ningún archivo del repo). Las tareas de la web hay que mirarlas en meshy.ai → *My Assets*.
-3. **Imágenes de referencia** usadas en imagen a imagen y en imagen a 3D: hay que confirmar que eran propias o tenían permiso.
-4. **Decisión D04**: aceptar CC BY 4.0 con atribución, pasar a un plan de pago y regenerar, o sustituir los modelos. Si se acepta la atribución, añadir el crédito «Modelos 3D y arte conceptual generados con Meshy (meshy.ai)» a los créditos y al README.
+1. **Imágenes de referencia.** Hay que confirmar que las imágenes subidas para imagen a imagen y para imagen a 3D eran propias o tenían permiso. Es lo único que ningún plan cubre. Los conceptos de escenarios son de imagen a imagen (`nano-banana-pro/edit`), así que partieron de alguna imagen.
+2. **Origen de los personajes.** Nombres como `Commander_Vex`, `Neon_Rebel` o `Tin_Foil_Fred` no siguen la convención del proyecto. Hay que confirmar si los generó Santiago o si salieron de la comunidad (CC0). En ese segundo caso, también hay que confirmar que no imitan personajes ni marcas de terceros.
+3. **Plan de cada lote.** Los personajes son de antes del 11/11/2026 y los escenarios y conceptos del 16/11/2026. Hoy la cuenta tiene 25 créditos permanentes y 0 mensuales, sin suscripción, pero eso no prueba qué plan había en noviembre. Se puede ver en meshy.ai → *Settings → Billing* y en *My Assets*. Mirarlo requiere iniciar sesión: en el navegador integrado no había sesión.
+4. **Decisión D04:** aceptar la atribución (recomendado: `CREDITOS.md` ya está escrito) o regenerar o sustituir los modelos.
 
-Cuando el usuario lo confirme, cambiar el estado en `Tools/inventario_licencias.py` (constante `MESHY_PENDING` y estado de `classify`), regenerar los CSV y marcar la casilla.
+Cuando estén confirmados los puntos 1 y 2 y aceptada la atribución, hay que hacer tres cosas:
+- en `Tools/inventario_licencias.py`, cambiar a `confirmado` el estado de `personaje`, `escenario-modelo` y `escenario-concepto`;
+- regenerar los CSV;
+- marcar la casilla.

@@ -12,6 +12,12 @@
 - Evidencia en `Evidence/Production-0.7.1` (`suites.txt`): las 11 suites de siempre más audio, ui, perf, una sesión corta (`-soak-session -soak-seconds 120`) y arena-stress.
 - Pendiente de personas o de Santiago: licencias de Meshy (D04), jugadores daltónicos reales, claridad del tutorial, efectos finales de audio y volver a medir el rendimiento cuando llegue el arte final.
 
+## Relevo chore/licencias-d04
+
+- Términos de Meshy consultados (fuentes en `Docs/Licencias/Procedencia_y_licencias.md`): Free = CC BY 4.0 con atribución, de pago = propiedad privada, comunidad = CC0, y cada modelo conserva los derechos de su plan. Las imágenes de referencia necesitan derechos en cualquier plan. Un artículo de marketplaces contradice el uso comercial del plan Free: aclararlo con Meshy antes de vender.
+- `Docs/Licencias/CREDITOS.md` con la atribución «Model created with Meshy – CC BY 4.0 License», que cubre el peor caso. La casilla SYS-017 sigue abierta hasta que Santiago confirme las imágenes de referencia y el origen de los personajes, y acepte la atribución (D04). En el navegador integrado no había sesión de Meshy para ver el plan y los assets.
+- Solo documentación; sin cambios de código, versión ni recuento.
+
 ## Relevo chore/restauracion-licencias
 
 - **Restauración limpia (SYS-004/006, QA-441): pasa.** `Tools/restaurar_limpio.ps1 -Destino <carpeta nueva>` clona, ejecuta `git lfs pull`, comprueba los punteros, importa en batchmode sin `Library`, genera la build y ejecuta `-arena-smoke` y `-side-smoke`, con tiempos en `_restauracion/resumen.json`. Resultado sobre `main` 0.7.0: 40,5 min en total (LFS 562 MB en 62 s, importación 20 min, build 6 min, arena 46/0, side 375/0). Informe: `Docs/Restauracion/Restauracion_limpia_0.7.0.md`. No clonar más de una vez al mes sin motivo: es 1 GB de LFS gratuito al mes en GitHub y cada clon gasta unos 560 MB. El guion reutiliza un clon existente.
