@@ -1,0 +1,69 @@
+{
+    "portraits": [
+        {
+            "look": "Don Promesio / The Dapper Tycoon",
+            "coverage": 0.2814788818359375,
+            "mean": "211E28"
+        },
+        {
+            "look": "Don Promesio / Victoria Vexley",
+            "coverage": 0.236480712890625,
+            "mean": "1B1A27"
+        },
+        {
+            "look": "Lola Viral / Pink Pop Princess",
+            "coverage": 0.454437255859375,
+            "mean": "452838"
+        },
+        {
+            "look": "Lola Viral / Ruby Starlight",
+            "coverage": 0.3686370849609375,
+            "mean": "30242C"
+        },
+        {
+            "look": "Lola Viral / Neon Rebel",
+            "coverage": 0.3206024169921875,
+            "mean": "221F2E"
+        },
+        {
+            "look": "Coach Tóxico / Turbo Max",
+            "coverage": 0.409271240234375,
+            "mean": "2A2931"
+        },
+        {
+            "look": "Coach Tóxico / Commander Vex",
+            "coverage": 0.308380126953125,
+            "mean": "231E28"
+        },
+        {
+            "look": "Cripto King / Smirking Tycoon",
+            "coverage": 0.3500518798828125,
+            "mean": "27222C"
+        },
+        {
+            "look": "Cripto King / The Regal Duelist",
+            "coverage": 0.3813323974609375,
+            "mean": "251F26"
+        },
+        {
+            "look": "Tío Antena / Tin Foil Fred",
+            "coverage": 0.2748565673828125,
+            "mean": "201E28"
+        },
+        {
+            "look": "Tío Antena / Neon Mischief",
+            "coverage": 0.343597412109375,
+            "mean": "25202C"
+        }
+    ],
+    "heat": [
+        "normal: contraste mínimo 5.2:1",
+        "normal + daltonismo: contraste mínimo 6.3:1",
+        "alto contraste: contraste mínimo 8.3:1",
+        "alto contraste + daltonismo: contraste mínimo 8.4:1"
+    ],
+    "notes": [
+        "diferencia mínima entre retratos de personajes distintos: 0.050",
+        "combo P3: 2 golpes tras 3.4 s"
+    ]
+}

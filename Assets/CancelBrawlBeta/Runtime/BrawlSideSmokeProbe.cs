@@ -80,6 +80,11 @@ namespace CancelBrawl.Beta
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
                 yield return BrawlAudioChecks.Run(match,Check,output); Finish(); yield break;
             }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-hud-smoke")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlHudCombatChecks.Run(match,Check,output); Finish(); yield break;
+            }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-ui-smoke")>=0)
             {
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");

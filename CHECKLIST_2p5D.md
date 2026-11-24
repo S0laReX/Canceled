@@ -4,7 +4,7 @@ Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_202
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **43 de 63** marcadas (20 del GDD 2.0 + 23 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.7.1 (`Evidence/Production-0.7.1`, ramas juntadas: restauración, rendimiento, audio y UI): 16 suites, ver `Evidence/Production-0.7.1/suites.txt`.
+Recuento: **45 de 63** marcadas (20 del GDD 2.0 + 25 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.7.2 (`Evidence/Production-0.7.2`): 17 suites, ver `Evidence/Production-0.7.2/suites.txt`.
 
 ## Instrucciones para el siguiente agente
 
@@ -96,7 +96,8 @@ Recuento: **43 de 63** marcadas (20 del GDD 2.0 + 23 desde 0.6.0). Ninguna en �
 
 - [x] Opción de reducir destellos y temblor, y volúmenes separados
 - [ ] Decidir el framework de interfaz y migrar desde IMGUI (D07)
-- [ ] HUD nuevo: porcentaje grande, vidas, escándalo, combo e indicadores fuera de pantalla
+- [x] HUD nuevo: porcentaje grande, vidas, escándalo, combo e indicadores fuera de pantalla
+  - 0.7.2 (`BrawlHud.Combat.cs`, sobre IMGUI hasta decidir D07; `-hud-smoke`, evidencia `Evidence/Production-0.7.2/Hud`). Tarjeta por luchador: retrato, forma y puesto P1–P5 (círculo, cuadrado, triángulo, rombo, estrella), nombre, porcentaje grande que se calienta (blanco → amarillo 60 % → naranja 100 % → rojo 150 %) y crece al recibir daño (×1,22 durante 0,28 s, sin animación con efectos reducidos), vidas como formas, estado (IA, humano, volviendo, SIN MANDO) y barra de ESCÁNDALO con su valor o SUPER LISTO. El contador de combo va bajo el marcador del atacante, para cualquier jugador (antes solo P1). Fuera de cámara: marcador en el borde con número, flecha y forma. Contraste del porcentaje ≥ 5,2:1 a cualquier daño (≥ 7:1 con alto contraste) también simulando daltonismo; capturas a 1280×720 con cinco luchadores.
 - [x] Navegación completa con teclado y mando, con foco visible (SYS-070)
   - Implementado (0.4.4) sobre IMGUI: foco espacial con borde blanco en menú, pausa y resultados; ✕/A confirma, ○/B vuelve de la pausa. Independiente de la decisión D07. Verificado en 2.5D: 22 casos de navegación, pausa, resultados y mando sobrante.
 - [x] Texto y HUD escalables, alto contraste y prueba de daltonismo (SYS-071)
@@ -104,7 +105,8 @@ Recuento: **43 de 63** marcadas (20 del GDD 2.0 + 23 desde 0.6.0). Ninguna en �
   - Rama `feat/ui-accesibilidad` (`BrawlHudPalette`, `BrawlHudAccessibilityChecks`, `-ui-smoke` 31/31; evidencia `Evidence/Branch-feat-ui-accesibilidad/ui-smoke`): pestaña PANTALLA con **ALTO CONTRASTE** (paneles opacos con borde, texto más claro; todos los textos ≥ 7:1, antes ≥ 4,5:1) y **DALTONISMO** (paleta de jugadores verde azulado/coral/menta/violeta/ámbar y avisos naranjas). Se guardan como campos opcionales de `funados-options.json` sin cambiar la versión 3; los archivos v1/v2/v3 cargan igual. **Prueba de daltonismo automática:** simulación de protanopía, deuteranopía y tritanopía (Machado 2009) y ΔE76 en CIELAB: los colores de jugador habituales bajan a ΔE 13,5 (tritanopía, P1–P4) y 16,3 (protanopía, P3–P4); la paleta nueva no baja de 42,7 en ninguna visión (`ui-colour.json`). Avisos frente a texto ≥ 71 ΔE, marcador de peligro (además de «!» y borde ≥ 3:1) y rojo/blanco de los supers ≥ 64 ΔE. Capturas a 100/115/130 % y con ambas opciones (`ui-*.png`). **Con personas:** confirmar la lectura con jugadores daltónicos reales y en pantallas reales; la simulación no sustituye esa prueba.
 - [x] Tutorial de combo y recuperación sin límite de tiempo (SYS-076)
   - Rama `feat/ui-accesibilidad` (`BrawlHud.Tutorial.cs`, en `-ui-smoke`): dentro del laboratorio, accesible desde el menú (TUTORIAL), el panel del laboratorio y la pausa (con mando). Combo escalera: golpe ascendente → salto → golpe aéreo en combo → remate; recuperación: fuera del borde, doble salto → recuperación → aterrizar. Etiquetas de teclado y mando desde los bindings. Sin reloj: 6 s quieto no avanza ni falla; un combo cortado o una caída repiten el paso; la pausa lo congela; REPETIR / SIGUIENTE PARTE / SALIR. Probado paso a paso con entradas simuladas (`tutorial-*.png`). **Con personas:** claridad de los textos y si el remate debe exigir el combo completo (hoy basta con conectarlo en el aire; se felicita si el combo llega a 3).
-- [ ] Retratos de personajes en la selección
+- [x] Retratos de personajes en la selección
+  - 0.7.2 (`BrawlPortraits`): retrato de cabeza y hombros de cada aspecto (11), sacado del modelo real con una cámara aparte la primera vez que se pide y guardado para toda la sesión (uno por cuadro, fuera de OnGUI). Aparece en las cinco tarjetas de personaje (con el aspecto elegido), en los rivales y en las tarjetas de combate. `-hud-smoke`: cada retrato cubre ≥ 12 % del cuadro, los cinco personajes se distinguen (diferencia media por píxel 0,05) y no se vuelven a generar. Cuando haya arte final de retratos (GDD §11, CellCog) basta con sustituir la textura.
 
 ## Arte y animación
 

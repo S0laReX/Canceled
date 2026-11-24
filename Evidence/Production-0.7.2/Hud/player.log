@@ -1,0 +1,49 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.2/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.2/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.2/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.041 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.249200 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Hud\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS Retrato de cada aspecto (11: 5 personajes) generado desde su modelo; la figura ocupa ≥ 12 % del cuadro
+SIDE_CHECK_PASS Los retratos de los cinco personajes son distintos entre sí (diferencia media por píxel ≥ 0.02; mínima 0.050)
+SIDE_CHECK_PASS Los retratos se generan una sola vez y se reutilizan
+SIDE_CHECK_PASS El porcentaje se calienta al subir (blanco → amarillo → naranja → rojo; ΔE 0–150 % = 72)
+SIDE_CHECK_PASS El porcentaje se lee sobre la tarjeta a cualquier daño (≥ 4.5:1; ≥ 7:1 con alto contraste), en las cuatro paletas y simulando daltonismo
+SIDE_CHECK_PASS Selección: retrato en las cinco tarjetas de personaje y en los rivales (9 dibujados)
+SIDE_CHECK_PASS Tarjetas de combate: retrato de los 5 luchadores y una forma por vida (15 de 15)
+SIDE_CHECK_PASS Cada puesto P1–P5 tiene su forma (círculo, cuadrado, triángulo, rombo, estrella) además del color
+SIDE_CHECK_PASS Todo se lee a 720p: texto más pequeño 12.0 px con cinco luchadores
+SIDE_CHECK_PASS El porcentaje crece al recibir daño (×1.19) y vuelve a su tamaño en 0.28 s
+SIDE_CHECK_PASS Con efectos reducidos el porcentaje no se anima
+SIDE_CHECK_PASS El contador de combo aparece junto al atacante (P3, 2 golpes), no solo para P1
+SIDE_CHECK_PASS Un luchador fuera de cámara muestra en el borde su número y su forma
+SIDE_RESULT True checks=14 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

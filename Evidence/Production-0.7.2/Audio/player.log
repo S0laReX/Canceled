@@ -1,0 +1,67 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.2/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.2/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.2/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.040 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.812600 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\audio-checks\audio.json
+SIDE_CHECK_PASS Cinco buses: Master y una fuente propia para Música, SFX, Voces y UI
+SIDE_CHECK_PASS La música suena en bucle por el bus Música
+SIDE_CHECK_PASS Los 9 efectos del juego (salto, golpe, KO, super…) van al bus SFX
+SIDE_CHECK_PASS Sonidos de interfaz (foco, confirmar, pausa) van al bus UI
+SIDE_CHECK_PASS Frases de personaje van al bus Voces
+SIDE_CHECK_PASS El KO suena en SFX y añade su frase en Voces
+SIDE_CHECK_PASS Una sola frase a la vez: el KO interrumpe al super y el super no corta al KO
+SIDE_CHECK_PASS Cada fuente suena a ganancia × Master × bus
+SIDE_CHECK_PASS Volúmenes fuera de rango se limitan a 0–100 %
+SIDE_CHECK_PASS Silenciar un bus no afecta a los otros tres
+SIDE_CHECK_PASS Master al 0 % silencia todos los buses
+SIDE_CHECK_PASS Salida real del oyente: cada bus suena solo y calla al 0 %
+SIDE_CHECK_PASS Salida real con Master al 0 %: silencio con música, efectos, voz e interfaz sonando
+SIDE_CHECK_PASS Los cinco volúmenes se guardan en el formato versión 4
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\audio-checks\audio.json
+SIDE_CHECK_PASS Al recargar se recuperan los cinco volúmenes, también un bus en silencio
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\audio-checks\v1.json
+SIDE_CHECK_PASS Archivo versión 1 carga: conserva SFX y Música, Master/Voces/UI por defecto y se reescribe en v4
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\audio-checks\v2.json
+SIDE_CHECK_PASS Archivo versión 2 carga: conserva SFX y Música, Master/Voces/UI por defecto y se reescribe en v4
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\audio-checks\v3.json
+SIDE_CHECK_PASS Archivo versión 3 carga: conserva SFX y Música, Master/Voces/UI por defecto y se reescribe en v4
+SIDE_CHECK_PASS Archivo v4 sin el volumen de Voces no se acepta a medias
+SIDE_CHECK_PASS Volúmenes de bus fuera de rango se corrigen al cargar
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\audio-checks\audio.json
+SIDE_CHECK_PASS En partida, el salto suena por el bus SFX
+SIDE_CHECK_PASS Pausar y reanudar suenan por el bus UI
+SIDE_CHECK_PASS Pestaña AUDIO con una fila por bus, alcanzable con foco
+SIDE_CHECK_PASS Izquierda/derecha ajustan el bus enfocado y se guarda
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.2\Audio\player-options.json
+SIDE_RESULT True checks=25 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

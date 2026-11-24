@@ -1,0 +1,73 @@
+{
+    "version": "0.7.2",
+    "arenas": [
+        {
+            "arena": "Azotea Influencer",
+            "matches": 20,
+            "finishedByStocks": 0,
+            "finishedByTime": 20,
+            "kos": 218,
+            "credited": 216,
+            "selfDestructs": 2,
+            "respawns": 166,
+            "landed": 166,
+            "avgMatchSeconds": 300.0042419433594,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.08335113525390625,
+            "objectGrowth": 0,
+            "memoryGrowthMb": 2.4453125,
+            "problems": []
+        },
+        {
+            "arena": "Torre Corporativa",
+            "matches": 20,
+            "finishedByStocks": 0,
+            "finishedByTime": 20,
+            "kos": 209,
+            "credited": 209,
+            "selfDestructs": 0,
+            "respawns": 159,
+            "landed": 159,
+            "avgMatchSeconds": 300.0042419433594,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.866851806640625,
+            "objectGrowth": 0,
+            "memoryGrowthMb": 2.1484375,
+            "problems": []
+        },
+        {
+            "arena": "Estudio de Debate",
+            "matches": 20,
+            "finishedByStocks": 3,
+            "finishedByTime": 17,
+            "kos": 221,
+            "credited": 224,
+            "selfDestructs": 0,
+            "respawns": 166,
+            "landed": 166,
+            "avgMatchSeconds": 290.01666259765627,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.5666742324829102,
+            "objectGrowth": 0,
+            "memoryGrowthMb": 1.9140625,
+            "problems": []
+        },
+        {
+            "arena": "Plaza Colonial",
+            "matches": 20,
+            "finishedByStocks": 1,
+            "finishedByTime": 19,
+            "kos": 197,
+            "credited": 197,
+            "selfDestructs": 1,
+            "respawns": 150,
+            "landed": 150,
+            "avgMatchSeconds": 299.6184997558594,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.08335113525390625,
+            "objectGrowth": 0,
+            "memoryGrowthMb": -0.03125,
+            "problems": []
+        }
+    ]
+}

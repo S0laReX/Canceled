@@ -22,6 +22,7 @@ namespace CancelBrawl.Beta
         private Color PlayerTint(BrawlFighter fighter) => BrawlHudPalette.Player(fighter.PlayerIndex, match.ColorBlindPalette);
         private BrawlMatch match;
         private Camera markerCamera;
+        private bool portraitsWarmed;
         private Texture2D pixel;
         private GUIStyle title, heading, body, small, number, centered, button, markerText, tiny;
         private bool stylesReady;
@@ -35,6 +36,7 @@ namespace CancelBrawl.Beta
         private void OnDestroy()
         {
             if (pixel != null) Destroy(pixel);
+            DestroyCombatTextures();
         }
 
         private void EnsureStyles()
@@ -140,6 +142,7 @@ namespace CancelBrawl.Beta
                 else if (match.Phase == MatchPhase.Results) DrawResults();
             }
             CommitNavigation();
+            CommitCombatCounters();
             if (Event.current.type == EventType.Repaint) { FittedTexts = fittedThisFrame; fittedThisFrame = 0; }
             GUI.color = oldColor;
             GUI.matrix = oldMatrix;
@@ -183,14 +186,18 @@ namespace CancelBrawl.Beta
                 if (nearLimit) { label += " !"; danger++; }
 
                 GUI.matrix = top * BrawlHudLayout.About(position, Layout.HudScale);
-                Rect badge = new Rect(position.x - 39, position.y - 29, 78, 28);
+                Rect badge = new Rect(position.x - 50, position.y - 29, 100, 28);
                 Color tint = PlayerTint(fighter);
                 Fill(badge, nearLimit ? palette.DangerFill : palette.BadgeFill);
                 if (nearLimit) Outline(badge, 2, Pink);
                 else if (palette.HighContrast) Border(badge, 2, tint);
                 Fill(new Rect(badge.x, badge.yMax - 3, badge.width, 3), tint);
-                Label(new Rect(badge.x + 2, badge.y, badge.width - 4, badge.height - 3), label,
+                // Shape besides the number and colour (GDD 2.0 §10: edge marker with number and shape).
+                Shape(new Rect(badge.x + 6, badge.y + 6, 15, 15), fighter.PlayerIndex, nearLimit ? Paper : tint);
+                if (outside && Repainting) shapeMarkersThisFrame++;
+                Label(new Rect(badge.x + 22, badge.y, badge.width - 24, badge.height - 3), label,
                     markerText, nearLimit ? Paper : tint);
+                DrawComboNear(fighter, new Vector2(position.x, badge.yMax), outside);
             }
             GUI.matrix = top;
             if (Event.current.type == EventType.Repaint) { OffscreenMarkers = offscreen; DangerMarkers = danger; }
@@ -205,6 +212,7 @@ namespace CancelBrawl.Beta
         // ───────────────────────── Menu ─────────────────────────
         private void DrawMenu()
         {
+            if (!portraitsWarmed) { Portraits.Prewarm(); portraitsWarmed = true; }
             Fill(new Rect(80, 46, 65, 5), Cyan);
             Label(new Rect(80, 58, 800, 86), match.Title, title, Paper);
             Label(new Rect(84, 146, 820, 34), match.IsSideView ? "Combos aéreos. Golpes y poderes. Fuera de la plataforma." : "El último en pie se queda con la cancha.", heading, Muted);
@@ -280,7 +288,8 @@ namespace CancelBrawl.Beta
                 if (BrawlRoster.SkinCount(character) > 1)
                     Label(new Rect(chip.x + chip.width * .5f, chip.y + 4, chip.width * .5f - 6, 20),
                         $"aspecto {BrawlRoster.WrapSkin(character, match.SlotSkins[slot]) + 1}/{BrawlRoster.SkinCount(character)}", tiny, Muted, TextAnchor.UpperRight);
-                Label(new Rect(chip.x + 8, chip.y + 21, chip.width - 12, 22), match.CharacterName(character), small, Paper);
+                Portrait(new Rect(chip.xMax - 30, chip.y + 20, 24, 24), character, match.SlotSkins[slot], kit.Accent);
+                Label(new Rect(chip.x + 8, chip.y + 21, chip.width - 42, 22), match.CharacterName(character), small, Paper);
             }
             Rect coopRect = new Rect(104, 642, 852, 50), p1Rect = new Rect(104, 702, 320, 36);
             if (Button(coopRect,
@@ -316,12 +325,14 @@ namespace CancelBrawl.Beta
             if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) choose();
             Nav("char-" + index, rect, choose);
             Label(new Rect(rect.x + 13, rect.y + 12, rect.width - 18, 26), match.CharacterName(index).ToUpperInvariant(), small, selected ? kit.Accent : Paper);
-            Label(new Rect(rect.x + 13, rect.y + 38, rect.width - 18, 24), kit.Role, tiny, Muted);
+            // Portrait of the look that would be played (the chosen one on the selected card).
+            Portrait(new Rect(rect.xMax - 52, rect.y + 38, 44, 44), index, selected ? match.SlotSkins[0] : 0, selected ? kit.Accent : Muted * .6f);
+            Label(new Rect(rect.x + 13, rect.y + 38, rect.width - 70, 24), kit.Role, tiny, Muted);
             int skins = BrawlRoster.SkinCount(index);
             string look = selected
                 ? $"{BrawlRoster.SkinName(index, match.SlotSkins[0])}  {match.SlotSkins[0] + 1}/{skins}" + (skins > 1 ? "  ›" : "")
                 : skins > 1 ? $"{skins} aspectos" : "";
-            Label(new Rect(rect.x + 13, rect.y + 62, rect.width - 18, 24), look, tiny, selected ? Paper : Muted);
+            Label(new Rect(rect.x + 13, rect.y + 62, rect.width - 70, 24), look, tiny, selected ? Paper : Muted);
         }
 
         private void DrawOptions(Rect rect)
@@ -443,8 +454,6 @@ namespace CancelBrawl.Beta
             Panel(new Rect(25, 22, 360, 68));
             Label(new Rect(42, 31, 330, 28), match.Title, body, Paper);
             Label(new Rect(42, 63, 330, 20), (match.IsSideView ? "2.5D  ·  " : "BETA LOCAL  ·  ") + match.Arena.DisplayName.ToUpperInvariant(), small, Cyan);
-            if (match.IsSideView && match.Fighters.Length > 0 && match.Fighters[0].ComboHits >= 2)
-                Label(new Rect(45, 108, 330, 44), match.Fighters[0].ComboHits + " GOLPES", heading, Pink);
             GUI.matrix = Layout.TopScaled(new Vector2(Width * .5f, 0));
             Panel(new Rect(710, 18, 180, 72));
             int seconds = Mathf.CeilToInt(Mathf.Max(0, match.RemainingTime));
@@ -482,29 +491,6 @@ namespace CancelBrawl.Beta
                       $"{KeyLabel(BrawlAction.Special)} especial   ·   {KeyLabel(BrawlAction.Recovery)} recuperar   ·   {KeyLabel(BrawlAction.Dodge)} esquiva   ·   {KeyLabel(BrawlAction.Super)} super   ·   {KeyLabel(BrawlAction.FastFall)} caer",
                 small, Paper, TextAnchor.MiddleCenter);
             GUI.matrix = Layout.Top;
-        }
-
-        private void DrawFighter(Rect rect, BrawlFighter fighter)
-        {
-            Color accent = fighter.Eliminated ? Muted : PlayerTint(fighter);
-            Panel(rect);
-            Fill(new Rect(rect.x, rect.y, rect.width, 4), accent);
-            Label(new Rect(rect.x + 14, rect.y + 13, rect.width - 28, 24),
-                $"P{fighter.PlayerIndex + 1}  {match.CharacterName(fighter.CharacterIndex).ToUpperInvariant()}", small, accent);
-            Label(new Rect(rect.x + 14, rect.y + 36, 146, 57),
-                fighter.Eliminated ? "FUERA" : $"{Mathf.RoundToInt(fighter.Damage)}%",
-                fighter.Eliminated ? heading : number,
-                fighter.Damage >= 100f ? Pink : Paper);
-            string status = (match.MissingDeviceMask & (1 << fighter.PlayerIndex)) != 0 ? "SIN MANDO" : fighter.Eliminated ? $"PUESTO {fighter.Place}" :
-                fighter.IsRespawning ? "VOLVIENDO…" : match.IsTraining && fighter.PlayerIndex == 1 ? "OBJETIVO" : fighter.IsBot ? "IA" : "HUMANO";
-            Label(new Rect(rect.x + 164, rect.y + 41, rect.width - 176, 22),
-                $"{fighter.Stocks} VIDAS", small, Paper);
-            Label(new Rect(rect.x + 164, rect.y + 67, rect.width - 176, 24), status, small, Muted);
-            Fill(new Rect(rect.x + 14, rect.y + 103, rect.width - 28, 6), Track);
-            Fill(new Rect(rect.x + 14, rect.y + 103, (rect.width - 28) * Mathf.Clamp01(fighter.Meter / 100f), 6),
-                fighter.Meter >= 100f ? Pink : accent);
-            if (fighter.Meter >= 100f && !fighter.Eliminated)
-                Label(new Rect(rect.x + 154, rect.y + 85, rect.width - 168, 18), "SUPER LISTO", small, Pink);
         }
 
         private void DrawTraining()

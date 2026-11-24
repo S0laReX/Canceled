@@ -5,6 +5,13 @@
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
 
+## Relevo 0.7.2 (HUD de combate y retratos)
+
+- `BrawlHud.Combat.cs`: tarjeta nueva por luchador según el GDD 2.0 §10 (retrato, forma y puesto, porcentaje grande con color de calor y animación al subir, vidas como formas, estado y barra de ESCÁNDALO). Combo junto a cualquier atacante; marcadores del borde con forma. Sigue en IMGUI: la decisión D07 (uGUI o UI Toolkit) sigue abierta y este HUD es la referencia de qué debe mostrar.
+- `BrawlPortraits`: retratos generados del modelo real (capa 30, cámara ortográfica aparte, 256×256, caché por personaje y aspecto). Se usan en la selección, los rivales y el combate.
+- Suite `-hud-smoke` (registrada en `BrawlMatch` y `BrawlSideSmokeProbe`): retratos, calor y contraste del porcentaje, animación y efectos reducidos, vidas, formas, combo de P3, marcador fuera de cámara y capturas a 1280×720.
+- Checklist **45 de 63**. En paralelo, la sesión de rendimiento trabaja los efectos de impacto y supers con efectos reducidos (archivos de efectos, no de HUD).
+
 ## Relevo 0.7.1 (juntadas restauración, rendimiento, audio y UI)
 
 - Juntadas en `main`, en el orden de `PARALELO.md`: `chore/restauracion-licencias`, `perf/rendimiento`, `feat/audio-buses` y `feat/ui-accesibilidad`. Checklist **43 de 63**.

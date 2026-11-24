@@ -1,0 +1,18 @@
+﻿FUNADOS 0.7.2 (HUD de combate y retratos). RTX 4050 Laptop, sin mando fisico.
+Power exit=0 version=0.7.2 passed=True checks=32 failures=0
+Moves exit=0 version=0.7.2 passed=True checks=21 failures=0
+Kits exit=0 version=0.7.2 passed=True checks=91 failures=0
+Recovery exit=0 version=0.7.2 passed=True checks=16 failures=0
+Camera exit=0 version=0.7.2 passed=True checks=15 failures=0
+Coyote exit=0 version=0.7.2 passed=True checks=5 failures=0
+Arena exit=0 version=0.7.2 passed=True checks=46 failures=0
+SideControls exit=0 version=0.7.2 passed=True checks=157 failures=0
+Side exit=0 version=0.7.2 passed=True checks=405 failures=0
+Controls exit=0 version=0.3.0 passed=True checks=125 failures=0
+Full exit=0 version=0.3.0 passed=True checks=208 failures=0
+Audio exit=0 version=0.7.2 passed=True checks=25 failures=0
+Ui exit=0 version=0.7.2 passed=True checks=31 failures=0
+Hud exit=0 version=0.7.2 passed=True checks=14 failures=0
+Perf exit=0 version=0.7.2 passed=True checks=35 failures=0
+SoakShort exit=0 version=0.7.2 passed=True checks=6 failures=0
+ArenaStress exit=0 version=0.7.2 passed=True checks=25 failures=0
