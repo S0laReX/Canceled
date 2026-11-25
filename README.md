@@ -40,6 +40,8 @@ El entrenamiento respeta la arena, personajes y aspectos seleccionados en el men
 
 Se reutilizan los once modelos/texturas existentes de `Assets/CancelBrawlBeta/Art/Characters` mediante `Data/CharacterArt.asset`. No se generaron sustitutos. Don Decreto → Don Promesio y Lola Loop → Lola Viral son cambios de presentación en las escenas de producción; IDs, carpetas, GUID y kits permanecen estables. El rig automático sigue siendo temporal.
 
+**Créditos y licencias:** los modelos 3D de personajes y escenarios y el arte conceptual se crearon con Meshy (Model created with Meshy – CC BY 4.0 License). Los generó el autor con imágenes de referencia propias. La lista completa está en `Docs/Licencias/CREDITOS.md` y el inventario de procedencia en `Docs/Licencias/Procedencia_y_licencias.md`.
+
 ## Compilar y verificar
 
 Genera Windows desde el menú FUNADOS. Para repetir las pruebas en una carpeta de evidencia nueva:

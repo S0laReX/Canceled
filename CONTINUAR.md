@@ -4,6 +4,11 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo D04 cerrada (licencias, 25/11/2026)
+
+- Juntada la rama `chore/licencias-d04`. Santiago confirmó tres cosas: las imágenes de referencia eran suyas, los 11 personajes los generó él en Meshy y acepta la atribución CC BY 4.0. Por eso `Tools/inventario_licencias.py` marca los 110 archivos de Meshy como `confirmado` (120/120 archivos de arte y 68/68 paquetes) y los CSV están regenerados.
+- Créditos en `Docs/Licencias/CREDITOS.md` y en el README. La casilla SYS-017 está marcada y el checklist va en **49 de 63**. Solo documentación: sin cambios de código ni de versión (sigue la 0.7.3).
+- Antes de vender: pedir a Meshy por escrito que aclare el uso comercial del plan Free (o regenerar con un plan de pago) y quitar `com.unity.ai.assistant` y `com.unity.pipeline`.
 
 ## Relevo 0.7.3 (efectos, sonido por capas y shader toon)
 
@@ -27,6 +32,12 @@
 - Conflictos resueltos: las opciones `-perf-smoke`, `-soak-session`, `-audio-smoke` y `-ui-smoke` van juntas en `BrawlMatch` y en `BrawlSideSmokeProbe`. Opciones: formato **v4** (audio) con `highContrast` y `colorBlindPalette` como campos opcionales (UI). Los archivos v1–v3 se migran, así que `-ui-smoke` ahora espera `MigratedLegacy` para v3.
 - Evidencia en `Evidence/Production-0.7.1` (`suites.txt`): las 11 suites de siempre más audio, ui, perf, una sesión corta (`-soak-session -soak-seconds 120`) y arena-stress.
 - Pendiente de personas o de Santiago: licencias de Meshy (D04), jugadores daltónicos reales, claridad del tutorial, efectos finales de audio y volver a medir el rendimiento cuando llegue el arte final.
+
+## Relevo chore/licencias-d04
+
+- Términos de Meshy consultados (fuentes en `Docs/Licencias/Procedencia_y_licencias.md`): Free = CC BY 4.0 con atribución, de pago = propiedad privada, comunidad = CC0, y cada modelo conserva los derechos de su plan. Las imágenes de referencia necesitan derechos en cualquier plan. Un artículo de marketplaces contradice el uso comercial del plan Free: aclararlo con Meshy antes de vender.
+- `Docs/Licencias/CREDITOS.md` con la atribución «Model created with Meshy – CC BY 4.0 License», que cubre el peor caso. La casilla SYS-017 sigue abierta hasta que Santiago confirme las imágenes de referencia y el origen de los personajes, y acepte la atribución (D04). En el navegador integrado no había sesión de Meshy para ver el plan y los assets.
+- Solo documentación; sin cambios de código, versión ni recuento.
 
 ## Relevo chore/restauracion-licencias
 
