@@ -4,6 +4,48 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo perf/rendimiento: lectura en cámara lateral y fondo atenuado (sobre 0.7.4)
+
+- Suite nueva `-read-smoke` (`BrawlReadChecks.cs`): 20 comprobaciones sobre 4 arenas, 11 aspectos y 88 casos. Queda fuera de `run_all` hasta que se resuelva el hallazgo abierto.
+- Umbrales: el §9 del GDD es literal; el perfil viene del §11 y la altura a 720p del §10. Los de la propia suite son ΔE ≥ 10 y una separación ≥ 60 % en la silueta y en el borde.
+- Cuenta atrás: `BrawlFighter.RespawnAt` ya pone el luchador de perfil. Antes, sin `Tick`, salía de frente. Resultado: 120/120.
+- §9 sin atenuar. El fondo tenía más croma que los luchadores en tres arenas, y Torre lo cumplía por muy poco:
+
+  | Arena | Croma del fondo | Croma de los luchadores |
+  |---|---|---|
+  | Azotea | 46,5 | 26,5 |
+  | Estudio | 31,4 | 21,5 |
+  | Plaza | 27,9 | 21,8 |
+  | Torre | 24,0 | 24,3 |
+
+- Solución: `BrawlBackgroundGrade.cs`, con el shader `Resources/FunadosDesaturate.shader`.
+  - Al cargar la arena (`BeginRound`, una línea) copia en la GPU las texturas del escenario con menos saturación y las aplica con `MaterialPropertyBlock`. Los archivos de arte no cambian.
+  - Saturación del albedo que se conserva: Azotea 0,40, Torre 0,85, Estudio 0,30 y Plaza 0,60. El neón pierde la mitad de esa reducción.
+  - Cada factor es el mayor que deja la croma del fondo en ≤ 0,85 × la de los luchadores. La suite lo vuelve a comprobar con un barrido de calibración.
+  - Coste: 6,8 ms, una sola vez por arena.
+- Con el atenuado:
+
+  | Arena | Croma del fondo | Croma de los luchadores |
+  |---|---|---|
+  | Azotea | 22,4 | 26,5 |
+  | Torre | 20,5 | 24,3 |
+  | Estudio | 17,3 | 21,3 |
+  | Plaza | 17,7 | 21,8 |
+
+  El contraste L* del fondo también queda por debajo del de los luchadores en las cuatro arenas.
+- Con el atenuado, el resto de la suite:
+  - Daltonismo: el peor caso es The Dapper Tycoon en Estudio con protanopía, con un 64 %. Victoria Vexley, que estaba en 59 %, ya pasa.
+  - Separación: el peor caso es del 67 %.
+  - Borde: el peor caso es del 67 %.
+  - Altura mínima: 79 px.
+  - Neón: 100 %.
+- Opción «FONDO ATENUADO»: campo opcional `dimBackground` del archivo de opciones v4, activado por defecto. Todavía no tiene botón en el menú.
+- **Abierto**: de perfil, Commander Vex y Smirking Tycoon se solapan 0,86, por encima del umbral de 0,80. Por eso Read da `passed=false`. No se corrige en esta rama.
+- Regresión sobre 0.7.4: Audio 25/25, Ui 31/31, Music 34/34 y Perf 35/35. `-arena-stress` falló una de 24 comprobaciones en cada una de dos pasadas, y no fue la misma:
+  - Primera pasada (`ArenaStress`): en Torre, P4 seguía en el aire 3 s después de reaparecer, sin estar en hitstun, en la partida 19.
+  - Repetición (`ArenaStress-rerun`): en Azotea, un final por vidas dio los puestos 1,2,3,3,5. Dos luchadores eliminados en el mismo paso comparten puesto, y la prueba exige puestos distintos.
+  - Ninguno de los dos depende del atenuado ni de la rotación de la cuenta atrás: no tocan la física ni los puestos. Son casos raros que ya estaban; queda pendiente, aparte, decidir la regla del empate y el caso del aire. La corrida de las 23 suites sobre 0.7.5 irá en `Read-0.7.5`.
+
 ## Relevo perf/rendimiento: música, voces, subtítulos y créditos (sobre 0.7.4)
 
 - Archivos nuevos:
