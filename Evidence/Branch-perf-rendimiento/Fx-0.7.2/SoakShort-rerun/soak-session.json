@@ -1,0 +1,139 @@
+{
+    "version": "0.7.2",
+    "startedUtc": "2026-11-25T02:58:00.1121515Z",
+    "targetSeconds": 300.0,
+    "realSeconds": 374.71697998046877,
+    "matches": 4,
+    "rematches": 2,
+    "menuReturns": 1,
+    "arenaChanges": 1,
+    "kos": 14,
+    "errors": 0,
+    "hitchesOver100ms": 0,
+    "hitchesOver250ms": 0,
+    "lockups": 0,
+    "avgFps": 59.95526123046875,
+    "low1Fps": 56.11374282836914,
+    "maxFrameMs": 49.8087043762207,
+    "longestMatchGameSeconds": 90.00474548339844,
+    "frameMs": {
+        "median": 16.66699981689453,
+        "p95": 16.68229866027832,
+        "p99": 16.840290069580079,
+        "max": 49.8087043762207,
+        "mean": 16.67943572998047,
+        "samples": 22411
+    },
+    "cpuMainMs": {
+        "median": 2.9189000129699709,
+        "p95": 3.7661499977111818,
+        "p99": 4.501541614532471,
+        "max": 635.3804931640625,
+        "mean": 3.054269790649414,
+        "samples": 22411
+    },
+    "gpuMs": {
+        "median": 3.443711996078491,
+        "p95": 5.709824085235596,
+        "p99": 6.278143882751465,
+        "max": 32.701438903808597,
+        "mean": 3.6836962699890138,
+        "samples": 22406
+    },
+    "matchSeconds": 90.0,
+    "hitches": [],
+    "pauses": [],
+    "maxGameObjectGrowth": 1,
+    "maxAllObjectGrowth": 7,
+    "managedGrowthMb": 1.19921875,
+    "processGrowthMb": 1.390625,
+    "managedSlopeMbPer10Min": 2.8211216926574709,
+    "processSlopeMbPer10Min": 3.283424139022827,
+    "problems": [],
+    "samples": [
+        {
+            "match": 1,
+            "arena": "Azotea Influencer",
+            "kind": "inicio",
+            "realSeconds": 93.60301971435547,
+            "matchGameSeconds": 90.00474548339844,
+            "finishedByStocks": false,
+            "kos": 5,
+            "memory": {
+                "managedMb": 4.4453125,
+                "gcReservedMb": 12.6953125,
+                "unityTotalUsedMb": 213.04473876953126,
+                "unityTotalReservedMb": 290.6484375,
+                "systemUsedMb": 361.640625,
+                "processPrivateMb": 727.64453125,
+                "processWorkingSetMb": 361.640625,
+                "gameObjects": 159,
+                "allObjects": 4485
+            },
+            "growth": ""
+        },
+        {
+            "match": 2,
+            "arena": "Azotea Influencer",
+            "kind": "revancha",
+            "realSeconds": 187.1477508544922,
+            "matchGameSeconds": 90.00474548339844,
+            "finishedByStocks": false,
+            "kos": 2,
+            "memory": {
+                "managedMb": 4.73828125,
+                "gcReservedMb": 12.6953125,
+                "unityTotalUsedMb": 213.33682250976563,
+                "unityTotalReservedMb": 290.6484375,
+                "systemUsedMb": 361.3984375,
+                "processPrivateMb": 727.29296875,
+                "processWorkingSetMb": 361.3984375,
+                "gameObjects": 159,
+                "allObjects": 4487
+            },
+            "growth": ""
+        },
+        {
+            "match": 3,
+            "arena": "Azotea Influencer",
+            "kind": "revancha",
+            "realSeconds": 280.6788330078125,
+            "matchGameSeconds": 90.00474548339844,
+            "finishedByStocks": false,
+            "kos": 3,
+            "memory": {
+                "managedMb": 5.546875,
+                "gcReservedMb": 12.6953125,
+                "unityTotalUsedMb": 214.23838806152345,
+                "unityTotalReservedMb": 290.6484375,
+                "systemUsedMb": 362.58203125,
+                "processPrivateMb": 728.24609375,
+                "processWorkingSetMb": 362.58203125,
+                "gameObjects": 160,
+                "allObjects": 4494
+            },
+            "growth": "BrawlZone «Burbuja especulativa» +1; Transform «Burbuja especulativa» +1; GameObject «Burbuja especulativa» +1; AudioClip «trap» +1; Material «Universal Render Pipeline/Unlit» +1; TextAsset «» +1"
+        },
+        {
+            "match": 4,
+            "arena": "Torre Corporativa",
+            "kind": "menú",
+            "realSeconds": 374.7168884277344,
+            "matchGameSeconds": 90.00474548339844,
+            "finishedByStocks": false,
+            "kos": 4,
+            "memory": {
+                "managedMb": 5.64453125,
+                "gcReservedMb": 12.6953125,
+                "unityTotalUsedMb": 214.3514862060547,
+                "unityTotalReservedMb": 290.6484375,
+                "systemUsedMb": 363.44921875,
+                "processPrivateMb": 729.03515625,
+                "processWorkingSetMb": 363.44921875,
+                "gameObjects": 168,
+                "allObjects": 4529
+            },
+            "growth": ""
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "version": "0.7.2",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "El shader toon FUNADOS/Toon está en la build y es compatible",
+        "El material toon tiene contorno, sombra y profundidad",
+        "El material toon acepta color y textura (destello de golpe y aspectos)",
+        "Los cinco luchadores usan el material toon (5/5 renderers)",
+        "Los luchadores toon siguen proyectando sombra",
+        "El destello de golpe sigue tiñendo el material toon",
+        "Cada silueta tiene contorno oscuro (borde < 0,12 de luminancia sobre fondo gris 0,54, y más oscuro que el interior)",
+        "Las siluetas de prueba no dejan objetos en la escena"
+    ],
+    "failures": []
+}
