@@ -42,16 +42,23 @@ namespace CancelBrawl.Beta
             public float backgroundChroma, backgroundContrast, fighterChroma, fighterContrast, neonShare, separatedOverNeon;
             public int neonPixelsBehind;
         }
+        [Serializable] private sealed class Calibration
+        {
+            public string arena; public float tableAlbedo, tableEmission, suggestedAlbedo, targetChroma;
+            public List<float> albedo = new List<float>(), backgroundChroma = new List<float>();
+        }
         [Serializable] private sealed class ProfileRow { public string character, skin; public int area, widthPixels, heightPixels; public float profileToFrontArea; }
         [Serializable] private sealed class Report
         {
             public int countdownCaptures, countdownProfiles;
             public List<ArenaRow> arenas = new List<ArenaRow>();
             public List<FighterRow> fighters = new List<FighterRow>();
-            /// <summary>Same measurements with the background-desaturation prototype on (BrawlBackgroundGrade, not in the game yet).</summary>
-            public float gradeSaturation, gradeApplyMs;
-            public List<ArenaRow> gradedArenas = new List<ArenaRow>();
-            public List<FighterRow> gradedFighters = new List<FighterRow>();
+            /// <summary>arenas/fighters: the game as it ships («FONDO ATENUADO» on, BrawlBackgroundGrade). The «sin atenuar» lists
+            /// are the same measurements with the option off, for comparison.</summary>
+            public float gradeApplyMs;
+            public List<ArenaRow> ungradedArenas = new List<ArenaRow>();
+            public List<FighterRow> ungradedFighters = new List<FighterRow>();
+            public List<Calibration> calibration = new List<Calibration>();
             public List<ProfileRow> profiles = new List<ProfileRow>();
             public List<string> profileOverlaps = new List<string>();
             public float maxProfileOverlap;
@@ -73,12 +80,14 @@ namespace CancelBrawl.Beta
             var seen = new HashSet<string>();
             bool restored = true;
 
-            report.gradeSaturation = BrawlBackgroundGrade.Saturation;
+            bool optionBefore = BrawlBackgroundGrade.Enabled;
             for (int pass = 0; pass < 2; pass++)
             for (int arena = 0; arena < BrawlArena.Count; arena++)
             {
-                bool graded = pass == 1;
+                bool graded = pass == 0; // pass 0 = as shipped (option on); pass 1 = option off, for comparison
+                BrawlBackgroundGrade.Enabled = graded;
                 var arenaRow = new ArenaRow();
+                var sweep = new Calibration();
                 double bgChroma = 0, bgL = 0, bgL2 = 0, fChroma = 0, fL = 0, fL2 = 0; long bgCount = 0, fCount = 0, neon = 0;
                 int neonBehind = 0, neonSeparated = 0;
                 for (int round = 0; round < rounds; round++)
@@ -87,7 +96,7 @@ namespace CancelBrawl.Beta
                     for (int slot = 0; slot < BrawlMatch.MaxPlayers; slot++) match.SlotSkins[slot] = BrawlRoster.WrapSkin(match.SlotCharacters[slot], round);
                     match.StartMatch();
                     yield return null;
-                    if (graded) { BrawlBackgroundGrade.Apply(match.Arena, match.GroupCamera.View); report.gradeApplyMs = Mathf.Max(report.gradeApplyMs, BrawlBackgroundGrade.LastApplyMilliseconds); }
+                    if (graded) report.gradeApplyMs = Mathf.Max(report.gradeApplyMs, BrawlBackgroundGrade.LastApplyMilliseconds);
                     arenaRow.arena = match.Arena.DisplayName;
                     var layout = match.Arena.CurrentSideLayout;
                     for (int placement = 0; placement < 2; placement++)
@@ -103,7 +112,7 @@ namespace CancelBrawl.Beta
                         if (match.Phase != MatchPhase.Countdown) report.notes.Add($"Captura con la partida ya en marcha: {match.Arena.DisplayName}, ronda {round}, {(placement == 0 ? "suelo" : "plataformas")}");
                         foreach (var fighter in match.Fighters)
                         {
-                            if (graded) break;
+                            if (!graded) break;
                             report.countdownCaptures++;
                             if (Mathf.Abs(fighter.transform.forward.x) > .99f && Mathf.Sign(fighter.transform.forward.x) == fighter.FacingSign) report.countdownProfiles++;
                         }
@@ -117,6 +126,20 @@ namespace CancelBrawl.Beta
                             foreach (var renderer in fighter.GetComponentsInChildren<Renderer>())
                                 if (renderer.enabled) { renderer.enabled = false; hidden.Add(renderer); }
                         Color32[] behind = Grab(camera, read, texture, Color.black);
+                        if (graded && round == 0 && placement == 0)
+                        {
+                            // Calibration sweep: background chroma for every albedo factor, fighters hidden; then back to the table.
+                            for (int step = 20; step >= 4; step--)
+                            {
+                                float albedo = step * .05f;
+                                BrawlBackgroundGrade.Apply(match.Arena, view, albedo);
+                                camera.backgroundColor = view.backgroundColor;
+                                sweep.albedo.Add(albedo); sweep.backgroundChroma.Add(MeanChroma(Grab(camera, read, texture, Color.black), camera.pixelRect));
+                            }
+                            BrawlBackgroundGrade.Apply(match.Arena, view);
+                            camera.backgroundColor = view.backgroundColor;
+                            BrawlBackgroundGrade.ClearCache(true);
+                        }
                         foreach (var renderer in hidden) renderer.enabled = true;
 
                         if (round == 0)
@@ -128,7 +151,7 @@ namespace CancelBrawl.Beta
                                 bgChroma += chroma; bgL += l; bgL2 += l * l; bgCount++;
                                 if (IsNeon(l, chroma)) neon++;
                             }
-                            if (placement == 0) Save(full, read, Path.Combine(output, graded ? $"lectura-arena-{arena}-fondo-atenuado.png" : $"lectura-arena-{arena}.png"));
+                            if (placement == 0) Save(full, read, Path.Combine(output, graded ? $"lectura-arena-{arena}.png" : $"lectura-arena-{arena}-sin-atenuar.png"));
                         }
 
                         for (int i = 0; i < match.Fighters.Length; i++)
@@ -142,7 +165,7 @@ namespace CancelBrawl.Beta
                             row.arena = arenaRow.arena; row.character = BrawlRoster.Get(fighter.CharacterIndex).Name; row.skin = fighter.SkinName;
                             row.placement = placement == 0 ? "suelo" : "plataformas";
                             neonBehind += fighterNeon; neonSeparated += fighterNeonSeparated;
-                            (graded ? report.gradedFighters : report.fighters).Add(row);
+                            (graded ? report.fighters : report.ungradedFighters).Add(row);
                         }
                         camera.targetTexture = null;
                     }
@@ -154,8 +177,19 @@ namespace CancelBrawl.Beta
                 arenaRow.neonShare = bgCount > 0 ? neon / (float)bgCount : 0;
                 arenaRow.neonPixelsBehind = neonBehind;
                 arenaRow.separatedOverNeon = neonBehind > 0 ? neonSeparated / (float)neonBehind : 1;
-                (graded ? report.gradedArenas : report.arenas).Add(arenaRow);
+                (graded ? report.arenas : report.ungradedArenas).Add(arenaRow);
+                if (graded)
+                {
+                    sweep.arena = arenaRow.arena; sweep.tableAlbedo = BrawlBackgroundGrade.AlbedoFor(arena);
+                    sweep.tableEmission = BrawlBackgroundGrade.EmissionSaturation(sweep.tableAlbedo);
+                    sweep.targetChroma = BrawlBackgroundGrade.TargetShare * arenaRow.fighterChroma;
+                    sweep.suggestedAlbedo = 0;
+                    for (int i = 0; i < sweep.albedo.Count; i++)
+                        if (sweep.backgroundChroma[i] <= sweep.targetChroma) { sweep.suggestedAlbedo = Mathf.Max(sweep.suggestedAlbedo, sweep.albedo[i]); }
+                    report.calibration.Add(sweep);
+                }
             }
+            BrawlBackgroundGrade.Enabled = optionBefore;
             BrawlBackgroundGrade.Revert();
             match.ReturnToMenu();
             for (int i = 0; i < 3; i++) yield return null;
@@ -170,19 +204,15 @@ namespace CancelBrawl.Beta
                 $"En la cuenta atrás cada luchador ya está de perfil, mirando hacia su rival más cercano ({report.countdownProfiles}/{report.countdownCaptures})");
             check(restored, "Las capas de los luchadores vuelven a su sitio después de cada máscara");
 
-            // GDD §9, measured on the game as it ships (prototype off). A failure here is an open finding, not a test bug.
+            // GDD §9 on the game as it ships («FONDO ATENUADO» on by default). Passes only if the rule really holds.
             foreach (var a in report.arenas)
                 check(a.backgroundChroma < a.fighterChroma && a.backgroundContrast < a.fighterContrast,
-                    $"GDD §9 en {a.arena}: el fondo debe tener menos saturación y contraste que los luchadores. Croma del fondo {a.backgroundChroma:0.0} frente a {a.fighterChroma:0.0} de los luchadores ({(a.backgroundChroma < a.fighterChroma ? "cumple" : "NO cumple: fondo más saturado")}); contraste L* {a.backgroundContrast:0.0} frente a {a.fighterContrast:0.0} ({(a.backgroundContrast < a.fighterContrast ? "cumple" : "NO cumple")})");
-            // Prototype comparison (BrawlBackgroundGrade): reported for review, same rule and same separation threshold.
-            foreach (var a in report.gradedArenas)
-                check(a.backgroundChroma < a.fighterChroma && a.backgroundContrast < a.fighterContrast,
-                    $"Prototipo de fondo atenuado (saturación ×{report.gradeSaturation:0.00}) en {a.arena}: croma {a.backgroundChroma:0.0} frente a {a.fighterChroma:0.0}; contraste L* {a.backgroundContrast:0.0} frente a {a.fighterContrast:0.0}");
-            float gradedWorst = 1; string gradedWho = "";
-            foreach (var row in report.gradedFighters)
-                if (Mathf.Min(row.separated, row.separatedWorstVision) < gradedWorst) { gradedWorst = Mathf.Min(row.separated, row.separatedWorstVision); gradedWho = $"{row.character} {row.skin} en {row.arena}"; }
-            check(report.gradedFighters.Count == report.fighters.Count && gradedWorst >= MinSeparated,
-                $"Con el prototipo cada luchador se sigue separando de su fondo, también con daltonismo: peor {gradedWorst:P0} ({gradedWho}); atenuar cuesta {report.gradeApplyMs:0} ms al cargar la arena");
+                    $"GDD §9 en {a.arena}: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo {a.backgroundChroma:0.0} frente a {a.fighterChroma:0.0} ({(a.backgroundChroma < a.fighterChroma ? "cumple" : "NO cumple: fondo más saturado")}); contraste L* {a.backgroundContrast:0.0} frente a {a.fighterContrast:0.0} ({(a.backgroundContrast < a.fighterContrast ? "cumple" : "NO cumple")})");
+            foreach (var c in report.calibration)
+                check(c.suggestedAlbedo > 0 && Mathf.Abs(c.tableAlbedo - c.suggestedAlbedo) < .026f,
+                    $"Factor de {c.arena}: la tabla conserva {c.tableAlbedo:P0} de la saturación del albedo y {c.tableEmission:P0} de la del neón; el mayor factor con el fondo ≤ {BrawlBackgroundGrade.TargetShare:0.00} × la croma de los luchadores ({c.targetChroma:0.0}) es {c.suggestedAlbedo:P0}");
+            check(report.gradeApplyMs < 50, $"Atenuar el fondo se hace al cargar la arena, en la GPU: {report.gradeApplyMs:0.0} ms como máximo (< 50 ms)");
+            foreach (var a in report.ungradedArenas) report.notes.Add($"Sin atenuar (opción apagada) {a.arena}: croma del fondo {a.backgroundChroma:0.0} frente a {a.fighterChroma:0.0}; contraste L* {a.backgroundContrast:0.0} frente a {a.fighterContrast:0.0}");
 
             FighterRow worst = null, worstVision = null, worstEdge = null, smallest = null;
             foreach (var row in report.fighters)
@@ -257,6 +287,17 @@ namespace CancelBrawl.Beta
         {
             if (count < 2) return 0;
             double mean = sum / count; return (float)Math.Sqrt(Math.Max(0, sum2 / count - mean * mean));
+        }
+
+        private static float MeanChroma(Color32[] pixels, Rect inside)
+        {
+            double sum = 0; long count = 0;
+            for (int p = 0; p < pixels.Length; p += 3)
+            {
+                if (!inside.Contains(new Vector2(p % Width + .5f, p / Width + .5f))) continue;
+                Lab(pixels[p], ColorVision.Normal, out _, out float chroma); sum += chroma; count++;
+            }
+            return count > 0 ? (float)(sum / count) : 0;
         }
 
         private static bool IsNeon(float l, float chroma) => l > 70 && chroma > 45;
