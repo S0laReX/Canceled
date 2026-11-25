@@ -16,16 +16,20 @@ namespace CancelBrawl.Beta
     {
         public const int MatchesPerArena = 20, MinKosPerArena = 100;
         private const float StressDamage = 300, TimeScale = 16, MatchCap = 330;
+        // A bot's own chain (jump, a late air jump, then a recovery of 13.8 m/s with hover at a quarter gravity) can keep a
+        // fighter airborne for roughly 3.5 s without any hit (estimate from BrawlSettings), so 3 s flagged legitimate play. Stuck is what matters: a fighter that
+        // has not moved for StuckSeconds while airborne (a spawn that does not let go), or one still airborne after MaxAirSeconds.
+        private const float MaxAirSeconds = 6, StuckSeconds = .5f, StuckDistance = .05f, LongAirSeconds = 3;
 
         [Serializable] private sealed class Row
         {
             public string arena; public int matches, finishedByStocks, finishedByTime, kos, credited, selfDestructs, respawns, landed;
-            public float avgMatchSeconds, maxRespawnError, maxAirAfterRespawn; public int hitBeforeLanding, objectGrowth; public float memoryGrowthMb;
+            public float avgMatchSeconds, maxRespawnError, maxAirAfterRespawn; public int hitBeforeLanding, longAirAfterRespawn, objectGrowth; public float memoryGrowthMb;
             public List<string> problems = new List<string>();
         }
         [Serializable] private sealed class Report { public string version = BrawlMatch.ProductionVersion; public List<Row> arenas = new List<Row>(); }
 
-        private sealed class Track { public int stocks; public float koAt = -1, respawnAt = -1; public bool waitingLand; }
+        private sealed class Track { public int stocks; public float koAt = -1, respawnAt = -1, sampleAt; public bool waitingLand, longAir; public Vector3 sample; }
 
         public static IEnumerator Run(BrawlMatch match, Action<bool, string> check, string output)
         {
@@ -92,7 +96,7 @@ namespace CancelBrawl.Beta
                                     Vector3 p = f.transform.position;
                                     bool ok = error <= Time.fixedDeltaTime * 2.5f && !f.OutsideArena && Mathf.Abs(p.z) < .001f && f.Invulnerable && !f.Hittable;
                                     if (!ok) { respawnOk = false; row.problems.Add($"partida {m + 1}: reaparición de P{i + 1} en {p} tras {now - t.koAt:0.00} s protegida={f.Invulnerable}"); }
-                                    row.respawns++; t.koAt = -1; t.respawnAt = now; t.waitingLand = true;
+                                    row.respawns++; t.koAt = -1; t.respawnAt = now; t.waitingLand = true; t.longAir = false; t.sample = p; t.sampleAt = now;
                                 }
                                 // Once protection ends a bot may legitimately launch the fighter before it lands: that is
                                 // play, not a broken spawn. Protection itself is checked above (no hit, no second fall).
@@ -103,8 +107,16 @@ namespace CancelBrawl.Beta
                                     row.landed++; t.waitingLand = false;
                                     row.maxAirAfterRespawn = Mathf.Max(row.maxAirAfterRespawn, now - t.respawnAt);
                                 }
-                                if (t.waitingLand && now - t.respawnAt > 3)
-                                { spawnOk = false; t.waitingLand = false; row.problems.Add($"partida {m + 1}: P{i + 1} no tocó suelo 3 s después de reaparecer en {f.transform.position}"); }
+                                if (t.waitingLand && !t.longAir && now - t.respawnAt > LongAirSeconds) { t.longAir = true; row.longAirAfterRespawn++; }
+                                if (t.waitingLand && now - t.sampleAt >= StuckSeconds)
+                                {
+                                    Vector3 at = f.transform.position;
+                                    if ((at - t.sample).magnitude < StuckDistance)
+                                    { spawnOk = false; t.waitingLand = false; row.problems.Add($"partida {m + 1}: P{i + 1} quieto en el aire {StuckSeconds} s sin aterrizar tras reaparecer, en {at}"); }
+                                    t.sample = at; t.sampleAt = now;
+                                }
+                                if (t.waitingLand && now - t.respawnAt > MaxAirSeconds)
+                                { spawnOk = false; t.waitingLand = false; row.problems.Add($"partida {m + 1}: P{i + 1} no tocó suelo {MaxAirSeconds} s después de reaparecer en {f.transform.position}"); }
                                 Vector3 q = f.transform.position;
                                 if (!f.IsRespawning && (float.IsNaN(q.x) || float.IsNaN(q.y) || Mathf.Abs(q.z) > .001f)) planeOk = false;
                                 // Keep fighters in play at high damage so that real bot hits produce KOs quickly.
@@ -127,7 +139,10 @@ namespace CancelBrawl.Beta
                             int survivors = 0; foreach (var f in fighters) if (!f.Eliminated) survivors++;
                             if (survivors <= 1) row.finishedByStocks++; else row.finishedByTime++;
                             bool valid = winners >= 1 && places.TrueForAll(pl => pl >= 1 && pl <= fighters.Length);
-                            if (survivors <= 1) { places.Sort(); for (int k = 0; k < places.Count; k++) valid &= places[k] == k + 1; }
+                            // Standard competition ranking (1,2,3,3,5): fighters out in the same step share a place, and
+                            // each place is one more than the number of fighters ranked strictly ahead.
+                            places.Sort();
+                            for (int k = 0; k < places.Count; k++) valid &= places[k] == (k > 0 && places[k] == places[k - 1] ? places[k - 1] : k + 1);
                             if (!valid) { placesOk = false; row.problems.Add($"partida {m + 1}: puestos inválidos {string.Join(",", places)}"); }
                         }
                     }
@@ -146,7 +161,7 @@ namespace CancelBrawl.Beta
                     check(respawnOk && row.respawns > 0 && row.respawns <= row.kos,
                         $"{name}: {row.respawns} reapariciones a tiempo ({settings.respawnSeconds} s, error máx. {row.maxRespawnError:0.000} s), dentro de los límites, en el plano y protegidas");
                     check(spawnOk,
-                        $"{name}: tras reaparecer se aterriza en suelo real (máx. {row.maxAirAfterRespawn:0.00} s en el aire; {row.hitBeforeLanding} golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido");
+                        $"{name}: tras reaparecer se aterriza en suelo real (máx. {row.maxAirAfterRespawn:0.00} s en el aire; {row.longAirAfterRespawn} más de {LongAirSeconds} s por su propio movimiento; nadie quieto en el aire ni más de {MaxAirSeconds} s; {row.hitBeforeLanding} golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido");
                     check(planeOk, $"{name}: ninguna posición inválida ni fuera del plano lateral en {row.matches} partidas");
                     check(row.objectGrowth <= 5 && row.memoryGrowthMb < 32,
                         $"{name}: sin fugas entre partidas ({row.objectGrowth:+0;-0;0} objetos, {row.memoryGrowthMb:+0.0;-0.0;0} MB tras {row.matches - 1} partidas)");

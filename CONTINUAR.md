@@ -4,6 +4,58 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo perf/rendimiento: lectura en cámara lateral y fondo atenuado (sobre 0.7.4)
+
+- Suite nueva `-read-smoke` (`BrawlReadChecks.cs`): 20 comprobaciones sobre 4 arenas, 11 aspectos y 88 casos. Desde el 25/11/2026 el solapamiento de perfiles es una advertencia (umbral propio, no del GDD): Read pasa si se cumplen las reglas del GDD.
+- Umbrales: el §9 del GDD es literal; el perfil viene del §11 y la altura a 720p del §10. Los de la propia suite son ΔE ≥ 10 y una separación ≥ 60 % en la silueta y en el borde.
+- Cuenta atrás: `BrawlFighter.RespawnAt` ya pone el luchador de perfil. Antes, sin `Tick`, salía de frente. Resultado: 120/120.
+- §9 sin atenuar. El fondo tenía más croma que los luchadores en tres arenas, y Torre lo cumplía por muy poco:
+
+  | Arena | Croma del fondo | Croma de los luchadores |
+  |---|---|---|
+  | Azotea | 46,5 | 26,5 |
+  | Estudio | 31,4 | 21,5 |
+  | Plaza | 27,9 | 21,8 |
+  | Torre | 24,0 | 24,3 |
+
+- Solución: `BrawlBackgroundGrade.cs`, con el shader `Resources/FunadosDesaturate.shader`.
+  - Al cargar la arena (`BeginRound`, una línea) copia en la GPU las texturas del escenario con menos saturación y las aplica con `MaterialPropertyBlock`. Los archivos de arte no cambian.
+  - Saturación del albedo que se conserva: Azotea 0,40, Torre 0,85, Estudio 0,30 y Plaza 0,60. El neón pierde la mitad de esa reducción.
+  - Cada factor es el mayor que deja la croma del fondo en ≤ 0,85 × la de los luchadores. La suite lo vuelve a comprobar con un barrido de calibración.
+  - Coste: 6,8 ms, una sola vez por arena.
+  - Memoria: con copias a tamaño completo, el soak de 0.7.5 falló (+300 MB por arena: 7 texturas de 2048 px × albedo y neón, nunca liberadas; `Read-0.7.5/SoakShort-copias-completas`). Ahora las copias miden 1024 px como máximo (≈75 MB, fijo) y solo quedan las de la arena actual; con la opción apagada se libera todo. Read comprueba ≤ 96 MB.
+- Con el atenuado:
+
+  | Arena | Croma del fondo | Croma de los luchadores |
+  |---|---|---|
+  | Azotea | 22,4 | 26,5 |
+  | Torre | 20,5 | 24,3 |
+  | Estudio | 17,3 | 21,3 |
+  | Plaza | 17,7 | 21,8 |
+
+  El contraste L* del fondo también queda por debajo del de los luchadores en las cuatro arenas.
+- Con el atenuado, el resto de la suite:
+  - Daltonismo: el peor caso es The Dapper Tycoon en Estudio con protanopía, con un 64 %. Victoria Vexley, que estaba en 59 %, ya pasa.
+  - Separación: el peor caso es del 67 %.
+  - Borde: el peor caso es del 67 %.
+  - Altura mínima: 79 px.
+  - Neón: 100 %.
+- Opción «FONDO ATENUADO»: campo opcional `dimBackground` del archivo de opciones v4, activado por defecto. Todavía no tiene botón en el menú.
+- **Abierto (advertencia)**: de perfil, Commander Vex y Smirking Tycoon se solapan 0,86, por encima del umbral propio de 0,80. No se corrige en esta rama.
+- Regresión sobre 0.7.4: Audio 25/25, Ui 31/31, Music 34/34 y Perf 35/35. `-arena-stress` falló una de 24 comprobaciones en cada una de dos pasadas, y no fue la misma:
+  - Primera pasada (`ArenaStress`): en Torre, P4 seguía en el aire 3 s después de reaparecer, sin estar en hitstun, en la partida 19.
+  - Repetición (`ArenaStress-rerun`): en Azotea, un final por vidas dio los puestos 1,2,3,3,5. Dos luchadores eliminados en el mismo paso comparten puesto, y la prueba exige puestos distintos.
+  - Ninguno de los dos depende del atenuado ni de la rotación de la cuenta atrás: no tocan la física ni los puestos.
+  - Empate (decisión del padre): se usa el ranking de competición estándar. El juego ya lo hacía (`BrawlMatch`: los eliminados en el mismo paso reciben `survivors + 1`) y la pantalla de resultados ya ordena por puesto y muestra «#3» dos veces. Ahora `-arena-stress` lo acepta en finales por vidas y por tiempo: cada puesto es 1 más el número de luchadores por delante.
+  - P4 en el aire en Torre, investigado con el código:
+    - No es la protección: se agota en 2 s pase lo que pase y no toca la gravedad.
+    - No hay plataforma de reaparición: se reaparece en el suelo, 0,12 m por encima.
+    - Los golpes ponen al menos 0,035 s de pausa (`InHitstun`), y la prueba muestrea cada paso fijo, así que un golpe no se le escapa.
+    - Queda el movimiento propio del bot: salto, doble salto tardío y recuperación (13,8 m/s, 0,55 s a ¼ de gravedad). Puede tenerlo unos 3,5 s en el aire (estimado), y a los 3 s estaba a 5,48 m, bajando de esa altura.
+    - No se reprodujo en la repetición (160/160 aterrizajes en Torre).
+    - Cambio en la prueba: «atascado» es ahora quedarse quieto (< 5 cm en 0,5 s) en el aire, o pasar más de 6 s sin aterrizar. Las esperas de más de 3 s se cuentan aparte (`longAirAfterRespawn`).
+    - Sin corrida todavía: se validará con las 23 suites sobre 0.7.5. La corrida de las 23 suites sobre 0.7.5 irá en `Read-0.7.5`.
+
 ## Relevo 0.7.5 (música, voces, subtítulos y créditos)
 
 - Merge de `claude/rendimiento-095c80` (3de3dd5). Versión 0.7.5. Recuento 51/63.

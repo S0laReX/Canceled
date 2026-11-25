@@ -1,0 +1,28 @@
+{
+    "version": "0.7.5",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Medido en partida real con la cámara lateral: 4 arenas, 11 de 11 aspectos, en el suelo y en las plataformas (88 casos)",
+        "En la cuenta atrás cada luchador ya está de perfil, mirando hacia su rival más cercano (120/120)",
+        "Las capas de los luchadores vuelven a su sitio después de cada máscara",
+        "GDD §9 en Azotea Influencer: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 22.3 frente a 26.5 (cumple); contraste L* 25.2 frente a 26.3 (cumple)",
+        "GDD §9 en Torre Corporativa: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 20.5 frente a 24.3 (cumple); contraste L* 21.2 frente a 28.5 (cumple)",
+        "GDD §9 en Estudio de Debate: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 17.2 frente a 21.2 (cumple); contraste L* 20.0 frente a 25.9 (cumple)",
+        "GDD §9 en Plaza Colonial: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 17.7 frente a 21.8 (cumple); contraste L* 16.7 frente a 26.6 (cumple)",
+        "Factor de Azotea Influencer: la tabla conserva 40 % de la saturación del albedo y 70 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (22.5) es 40 %",
+        "Factor de Torre Corporativa: la tabla conserva 85 % de la saturación del albedo y 93 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (20.7) es 85 %",
+        "Factor de Estudio de Debate: la tabla conserva 30 % de la saturación del albedo y 65 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (18.1) es 30 %",
+        "Factor de Plaza Colonial: la tabla conserva 60 % de la saturación del albedo y 80 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (18.5) es 60 %",
+        "Atenuar el fondo se hace al cargar la arena, en la GPU: 8.5 ms como máximo (< 50 ms)",
+        "Las copias atenuadas ocupan 75 MB como máximo con una arena cargada (≤ 96 MB; solo las de la arena actual)",
+        "Cada luchador se separa de lo que tiene detrás: ≥60 % de su silueta con ΔE ≥ 10 (peor: Don Decreto Victoria Vexley en Estudio de Debate, 67 %; mediana ΔE 30)",
+        "También con protanopía, deuteranopía y tritanopía: ≥60 % (peor: Don Decreto The Dapper Tycoon en Estudio de Debate, 65 % con Protanopia)",
+        "El contorno de la silueta se distingue del fondo: ≥60 % del borde con ΔE ≥ 10 (peor: Tío Antena Tin Foil Fred en Estudio de Debate, 67 %)",
+        "A 720p cada luchador mide al menos 64 px de alto con cinco en pantalla (el menor: Don Decreto The Dapper Tycoon en Plaza Colonial, 79 px)",
+        "Delante del neón el luchador sigue leyéndose: 100 % de los píxeles con neón detrás con ΔE ≥ 10 (2862 píxeles; más neón: Torre Corporativa, 4.0 % del fondo)",
+        "Silueta de perfil de los 11 aspectos, como la ve la cámara lateral (hoja `lectura-perfiles.png`: de frente arriba, de perfil abajo)",
+        "La prueba no deja objetos en la escena"
+    ],
+    "failures": []
+}

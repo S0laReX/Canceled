@@ -1,0 +1,57 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.5/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.5/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.5/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.054 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.216000 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\rendimiento-095c80\Evidence\Branch-perf-rendimiento\Read-0.7.5\Read\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS Medido en partida real con la cámara lateral: 4 arenas, 11 de 11 aspectos, en el suelo y en las plataformas (88 casos)
+SIDE_CHECK_PASS En la cuenta atrás cada luchador ya está de perfil, mirando hacia su rival más cercano (120/120)
+SIDE_CHECK_PASS Las capas de los luchadores vuelven a su sitio después de cada máscara
+SIDE_CHECK_PASS GDD §9 en Azotea Influencer: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 22.3 frente a 26.5 (cumple); contraste L* 25.2 frente a 26.3 (cumple)
+SIDE_CHECK_PASS GDD §9 en Torre Corporativa: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 20.5 frente a 24.3 (cumple); contraste L* 21.2 frente a 28.5 (cumple)
+SIDE_CHECK_PASS GDD §9 en Estudio de Debate: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 17.2 frente a 21.2 (cumple); contraste L* 20.0 frente a 25.9 (cumple)
+SIDE_CHECK_PASS GDD §9 en Plaza Colonial: el fondo tiene menos saturación y contraste que los luchadores. Croma del fondo 17.7 frente a 21.8 (cumple); contraste L* 16.7 frente a 26.6 (cumple)
+SIDE_CHECK_PASS Factor de Azotea Influencer: la tabla conserva 40 % de la saturación del albedo y 70 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (22.5) es 40 %
+SIDE_CHECK_PASS Factor de Torre Corporativa: la tabla conserva 85 % de la saturación del albedo y 93 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (20.7) es 85 %
+SIDE_CHECK_PASS Factor de Estudio de Debate: la tabla conserva 30 % de la saturación del albedo y 65 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (18.1) es 30 %
+SIDE_CHECK_PASS Factor de Plaza Colonial: la tabla conserva 60 % de la saturación del albedo y 80 % de la del neón; el mayor factor con el fondo ≤ 0.85 × la croma de los luchadores (18.5) es 60 %
+SIDE_CHECK_PASS Atenuar el fondo se hace al cargar la arena, en la GPU: 8.5 ms como máximo (< 50 ms)
+SIDE_CHECK_PASS Las copias atenuadas ocupan 75 MB como máximo con una arena cargada (≤ 96 MB; solo las de la arena actual)
+SIDE_CHECK_PASS Cada luchador se separa de lo que tiene detrás: ≥60 % de su silueta con ΔE ≥ 10 (peor: Don Decreto Victoria Vexley en Estudio de Debate, 67 %; mediana ΔE 30)
+SIDE_CHECK_PASS También con protanopía, deuteranopía y tritanopía: ≥60 % (peor: Don Decreto The Dapper Tycoon en Estudio de Debate, 65 % con Protanopia)
+SIDE_CHECK_PASS El contorno de la silueta se distingue del fondo: ≥60 % del borde con ΔE ≥ 10 (peor: Tío Antena Tin Foil Fred en Estudio de Debate, 67 %)
+SIDE_CHECK_PASS A 720p cada luchador mide al menos 64 px de alto con cinco en pantalla (el menor: Don Decreto The Dapper Tycoon en Plaza Colonial, 79 px)
+SIDE_CHECK_PASS Delante del neón el luchador sigue leyéndose: 100 % de los píxeles con neón detrás con ΔE ≥ 10 (2862 píxeles; más neón: Torre Corporativa, 4.0 % del fondo)
+SIDE_CHECK_PASS Silueta de perfil de los 11 aspectos, como la ve la cámara lateral (hoja `lectura-perfiles.png`: de frente arriba, de perfil abajo)
+SIDE_CHECK_WARN De perfil, las siluetas de personajes distintos no se confunden: solapamiento máximo 0.86 (umbral propio 0.80; Coach Tóxico Commander Vex y Cripto King Smirking Tycoon)
+SIDE_CHECK_PASS La prueba no deja objetos en la escena
+SIDE_RESULT True checks=21 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

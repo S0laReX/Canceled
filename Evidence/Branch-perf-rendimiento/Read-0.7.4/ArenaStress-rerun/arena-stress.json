@@ -1,0 +1,79 @@
+{
+    "version": "0.7.4",
+    "arenas": [
+        {
+            "arena": "Azotea Influencer",
+            "matches": 20,
+            "finishedByStocks": 1,
+            "finishedByTime": 19,
+            "kos": 219,
+            "credited": 220,
+            "selfDestructs": 0,
+            "respawns": 166,
+            "landed": 166,
+            "avgMatchSeconds": 298.29547119140627,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.8999862670898438,
+            "hitBeforeLanding": 0,
+            "objectGrowth": 0,
+            "memoryGrowthMb": 2.3828125,
+            "problems": [
+                "partida 14: puestos inválidos 1,2,3,3,5"
+            ]
+        },
+        {
+            "arena": "Torre Corporativa",
+            "matches": 20,
+            "finishedByStocks": 0,
+            "finishedByTime": 20,
+            "kos": 217,
+            "credited": 217,
+            "selfDestructs": 0,
+            "respawns": 160,
+            "landed": 160,
+            "avgMatchSeconds": 300.0042419433594,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.866851806640625,
+            "hitBeforeLanding": 0,
+            "objectGrowth": 0,
+            "memoryGrowthMb": 2.0859375,
+            "problems": []
+        },
+        {
+            "arena": "Estudio de Debate",
+            "matches": 20,
+            "finishedByStocks": 1,
+            "finishedByTime": 19,
+            "kos": 221,
+            "credited": 222,
+            "selfDestructs": 0,
+            "respawns": 165,
+            "landed": 165,
+            "avgMatchSeconds": 293.42584228515627,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.466766357421875,
+            "hitBeforeLanding": 0,
+            "objectGrowth": 0,
+            "memoryGrowthMb": 0.13671875,
+            "problems": []
+        },
+        {
+            "arena": "Plaza Colonial",
+            "matches": 20,
+            "finishedByStocks": 1,
+            "finishedByTime": 19,
+            "kos": 198,
+            "credited": 199,
+            "selfDestructs": 0,
+            "respawns": 154,
+            "landed": 153,
+            "avgMatchSeconds": 298.4787902832031,
+            "maxRespawnError": 0.01709747314453125,
+            "maxAirAfterRespawn": 0.08335113525390625,
+            "hitBeforeLanding": 1,
+            "objectGrowth": 0,
+            "memoryGrowthMb": 2.65625,
+            "problems": []
+        }
+    ]
+}

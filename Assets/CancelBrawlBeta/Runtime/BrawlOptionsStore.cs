@@ -33,6 +33,8 @@ namespace CancelBrawl.Beta
         public bool colorBlindPalette;
         // Optional, like the two above: files without it keep subtitles on.
         public bool subtitles = true;
+        // Optional: «FONDO ATENUADO» (BrawlBackgroundGrade, GDD §9); files without it keep it on.
+        public bool dimBackground = true;
         public List<BrawlBindingEntry> keyboard = new List<BrawlBindingEntry>();
         public List<BrawlBindingEntry> gamepad = new List<BrawlBindingEntry>();
     }
@@ -52,7 +54,7 @@ namespace CancelBrawl.Beta
         private static readonly string[] FieldsV3 = { "\"textScale\"", "\"hudScale\"" };
         private static readonly string[] FieldsV4 = { "\"master\"", "\"voice\"", "\"ui\"" };
         // Not in the required lists on purpose: a v1-v4 file without them loads as before (v4 "Loaded"; v1-v3 migrate).
-        public static readonly string[] OptionalFields = { "\"highContrast\"", "\"colorBlindPalette\"", "\"subtitles\"" };
+        public static readonly string[] OptionalFields = { "\"highContrast\"", "\"colorBlindPalette\"", "\"subtitles\"", "\"dimBackground\"" };
         public const string FileName = "funados-options.json";
 
         public static string DefaultPath => Path.Combine(Application.persistentDataPath, FileName);
