@@ -1,0 +1,25 @@
+﻿FUNADOS 0.7.4 (animaciones de perfil de los cinco kits). RTX 4050 Laptop, sin mando fisico.
+Power exit=0 version=0.7.4 passed=True checks=32 failures=0
+Moves exit=0 version=0.7.4 passed=True checks=21 failures=0
+Kits exit=0 version=0.7.4 passed=True checks=91 failures=0
+Recovery exit=0 version=0.7.4 passed=True checks=16 failures=0
+Camera exit=0 version=0.7.4 passed=True checks=15 failures=0
+Coyote exit=0 version=0.7.4 passed=True checks=5 failures=0
+Arena exit=0 version=0.7.4 passed=True checks=46 failures=0
+SideControls exit=0 version=0.7.4 passed=True checks=157 failures=0
+Side exit=0 version=0.7.4 passed=True checks=405 failures=0
+Controls exit=0 version=0.3.0 passed=True checks=125 failures=0
+Full exit=0 version=0.3.0 passed=True checks=208 failures=0
+Audio exit=0 version=0.7.4 passed=True checks=25 failures=0
+Ui exit=0 version=0.7.4 passed=True checks=31 failures=0
+Hud exit=0 version=0.7.4 passed=True checks=15 failures=0
+Perf exit=0 version=0.7.4 passed=True checks=35 failures=0
+SoakShort exit=0 version=0.7.4 passed=True checks=6 failures=0
+ArenaStress exit=0 version=0.7.4 passed=True checks=25 failures=0
+Fx exit=0 version=0.7.4 passed=True checks=33 failures=0
+Sfx exit=0 version=0.7.4 passed=True checks=18 failures=0
+Toon exit=0 version=0.7.4 passed=True checks=9 failures=0
+Anim exit=0 version=0.7.4 passed=True checks=15 failures=0
+
+Resultado: 21 de 21 suites pasan en una sola corrida.
+- Perf: el tirón conocido de Azotea volvió a salir a los 14,7 s de juego, más corto (56 ms, por debajo del límite de 100), con 0 KO y sin reapariciones. Sigue abierto (ver CONTINUAR 0.7.3).

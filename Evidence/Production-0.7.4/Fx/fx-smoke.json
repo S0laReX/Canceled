@@ -1,0 +1,101 @@
+{
+    "particleShader": true,
+    "postProcessing": true,
+    "depthOffset": 0.3499999940395355,
+    "rows": [
+        {
+            "mode": "completos",
+            "tier": "Strong",
+            "sparks": 18,
+            "rings": 1,
+            "flashes": 1,
+            "rays": 0,
+            "peakBloom": 0.550000011920929
+        },
+        {
+            "mode": "completos",
+            "tier": "Spike",
+            "sparks": 18,
+            "rings": 1,
+            "flashes": 1,
+            "rays": 3,
+            "peakBloom": 0.550000011920929
+        },
+        {
+            "mode": "completos",
+            "tier": "Light",
+            "sparks": 10,
+            "rings": 1,
+            "flashes": 1,
+            "rays": 0,
+            "peakBloom": 0.0
+        },
+        {
+            "mode": "completos",
+            "tier": "Super",
+            "sparks": 44,
+            "rings": 2,
+            "flashes": 2,
+            "rays": 8,
+            "peakBloom": 1.0
+        },
+        {
+            "mode": "completos",
+            "tier": "Ko",
+            "sparks": 34,
+            "rings": 1,
+            "flashes": 1,
+            "rays": 3,
+            "peakBloom": 1.0
+        },
+        {
+            "mode": "reducidos",
+            "tier": "Strong",
+            "sparks": 6,
+            "rings": 1,
+            "flashes": 0,
+            "rays": 0,
+            "peakBloom": 0.0
+        },
+        {
+            "mode": "reducidos",
+            "tier": "Spike",
+            "sparks": 6,
+            "rings": 1,
+            "flashes": 0,
+            "rays": 1,
+            "peakBloom": 0.0
+        },
+        {
+            "mode": "reducidos",
+            "tier": "Light",
+            "sparks": 3,
+            "rings": 1,
+            "flashes": 0,
+            "rays": 0,
+            "peakBloom": 0.0
+        },
+        {
+            "mode": "reducidos",
+            "tier": "Super",
+            "sparks": 14,
+            "rings": 2,
+            "flashes": 0,
+            "rays": 2,
+            "peakBloom": 0.0
+        },
+        {
+            "mode": "reducidos",
+            "tier": "Ko",
+            "sparks": 11,
+            "rings": 1,
+            "flashes": 0,
+            "rays": 1,
+            "peakBloom": 0.0
+        }
+    ],
+    "poolAlive": 1092,
+    "poolObjectsBefore": 112,
+    "poolObjectsAfter": 112,
+    "burstFrameMs": 2.9409000873565676
+}

@@ -4,6 +4,12 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.7.4 (animaciones de perfil)
+
+- Juntada `claude/rendimiento-095c80` (4ac02d2): animaciones de perfil para los cinco kits (giro, frenada, voltereta, caída, reaparición) en `BrawlFighter.cs` y `BrawlFighterVisual.Model.cs`, más la suite `-anim-smoke` (`BrawlAnimChecks.cs`, 15 comprobaciones). Las poses son procedurales sobre el rig automático: hay que cambiarlas por clips cuando se decida D01.
+- Evidencia: `Evidence/Production-0.7.4/suites.txt`, con las 21 suites en una sola corrida. El tirón de Azotea volvió a salir a los 14,7 s, esta vez de 56 ms: sigue abierto.
+- Checklist **50 de 63**. Siguiente en paralelo: la sesión de rendimiento hace música por arena, voces, subtítulos y créditos, en archivos nuevos y con una sola línea de llamada en el HUD y en el menú.
+
 ## Relevo D04 cerrada (licencias, 25/11/2026)
 
 - Juntada la rama `chore/licencias-d04`. Santiago confirmó tres cosas: las imágenes de referencia eran suyas, los 11 personajes los generó él en Meshy y acepta la atribución CC BY 4.0. Por eso `Tools/inventario_licencias.py` marca los 110 archivos de Meshy como `confirmado` (120/120 archivos de arte y 68/68 paquetes) y los CSV están regenerados.

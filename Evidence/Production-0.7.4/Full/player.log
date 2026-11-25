@@ -1,0 +1,298 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.4/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.4/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.4/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.036 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.926400 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\player-options.json
+BETA_CHECK_PASS Arranque al menú sin Editor
+BETA_CHECK_PASS Cuenta atrás e inicio de duelo
+BETA_CHECK_PASS Movimiento 3D continuo en pasos físicos
+BETA_CHECK_PASS Segundo salto real en el aire
+BETA_CHECK_PASS Recuperación aérea consume un uso
+BETA_CHECK_PASS Recuperación no se regenera en el aire
+BETA_CHECK_PASS Aterrizaje restablece recursos
+BETA_CHECK_PASS Básico conecta una vez por activación
+BETA_CHECK_PASS Cadena conectada carga 8 puntos
+BETA_CHECK_PASS Token impide daño duplicado al objetivo
+BETA_CHECK_PASS Daño superior a 100 no elimina
+BETA_CHECK_PASS Carga limitada a 100
+BETA_CHECK_PASS Super consume toda la carga al activar
+BETA_CHECK_PASS Protección de aparición bloquea impactos
+BETA_CHECK_PASS Atacar cancela protección de aparición
+BETA_CHECK_PASS Ventana de esquiva evita impactos
+BETA_CHECK_PASS Final de esquiva vuelve a ser vulnerable
+BETA_CHECK_PASS Geometría sólida bloquea proyectiles
+BETA_CHECK_PASS Expulsión descuenta vida y reinicia daño y carga
+BETA_CHECK_PASS Expulsión atribuida al último atacante dentro de 8 s
+BETA_CHECK_PASS Reaparición automática protegida tras dos segundos
+BETA_CHECK_PASS Pausa local congela reloj y simulación
+BETA_CHECK_PASS Últimas vidas simultáneas comparten primer puesto
+BETA_CHECK_PASS Dos eliminados de cinco comparten cuarto puesto
+BETA_CHECK_PASS Desempate exacto por tiempo conserva puestos compartidos
+BETA_CHECK_PASS El reloj termina la partida automáticamente
+BETA_CHECK_PASS Regreso al menú limpia la partida
+BETA_CHECK_PASS Don Decreto: Decreto exprés conecta
+BETA_CHECK_PASS Don Decreto: especial conectado carga 12 puntos
+BETA_CHECK_PASS Don Decreto: super Mayoría absoluta conecta y no recarga la barra
+BETA_CHECK_PASS Lola Loop: Ola de hate conecta
+BETA_CHECK_PASS Lola Loop: especial conectado carga 12 puntos
+BETA_CHECK_PASS Lola Loop: super Viralización masiva conecta y no recarga la barra
+BETA_CHECK_PASS Coach Tóxico: Serie al fallo conecta
+BETA_CHECK_PASS Coach Tóxico: especial conectado carga 12 puntos
+BETA_CHECK_PASS Coach Tóxico: super Preentreno nuclear conecta y no recarga la barra
+BETA_CHECK_PASS Cripto King: Token rebote conecta
+BETA_CHECK_PASS Cripto King: especial conectado carga 12 puntos
+BETA_CHECK_PASS Cripto King: token rebota en geometría sólida con rebotes limitados
+BETA_CHECK_PASS Cripto King: super Burbuja especulativa conecta y no recarga la barra
+BETA_CHECK_PASS Tío Antena: emisor visible y armado tras preparación
+BETA_CHECK_PASS Tío Antena: Interferencia lanza hacia arriba al primer rival
+BETA_CHECK_PASS Tío Antena: especial conectado carga 12 puntos
+BETA_CHECK_PASS Tío Antena: solo mantiene un emisor activo
+BETA_CHECK_PASS Tío Antena: super La señal definitiva conecta y no recarga la barra
+BETA_CHECK_PASS Tío Antena: sector seguro anunciado evita el super
+BETA_CHECK_PASS Azotea Neón: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Azotea Neón: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Azotea Neón: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Los cinco luchadores usan su modelo animado (The Dapper Tycoon, Pink Pop Princess, Turbo Max, Smirking Tycoon, Tin Foil Fred)
+BETA_CHECK_PASS El modelo de P1 tiene esqueleto generado con pesos
+BETA_CHECK_PASS Azotea Neón: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Mall del Ego: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Mall del Ego: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Mall del Ego: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Mall del Ego: la cámara atenúa el obstáculo que tapa a un luchador
+BETA_CHECK_PASS Mall del Ego: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Campus en Llamas: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Campus en Llamas: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Campus en Llamas: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Campus en Llamas: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Núcleo Cripto: cinco o más apariciones separadas sobre suelo sólido
+BETA_CHECK_PASS Núcleo Cripto: los cinco participantes aterrizan sin caer
+BETA_CHECK_PASS Núcleo Cripto: partida de cinco muestra a los cinco personajes
+BETA_CHECK_PASS Núcleo Cripto: la IA navega y combate durante 9 s
+BETA_CHECK_PASS Revancha de cinco avanza con IA activa
+BETA_CHECK_PASS Los bots navegan y conectan ataques en partida real
+BETA_CHECK_PASS CombatLab inicia dos puestos sin alterar el número de rivales de versus
+BETA_CHECK_PASS Objetivo inmóvil no genera entradas ni ataques
+BETA_CHECK_PASS Entrenamiento no agota el reloj
+BETA_CHECK_PASS Laboratorio reutiliza modelos y aspectos originales
+BETA_CHECK_PASS Daño ajustable a 100 sin perder stocks
+BETA_CHECK_PASS Daño de entrenamiento acotado a 300
+BETA_CHECK_PASS Daño de entrenamiento no negativo
+BETA_CHECK_PASS Entrenamiento permite practicar super sin grind
+BETA_CHECK_PASS Visualizador comparte alcance y tolerancia vertical del golpe real
+BETA_CHECK_PASS Golpe en laboratorio conecta una sola vez sobre el objetivo
+BETA_CHECK_PASS Reinicio conserva daño inicial y limpia ataque y barra
+BETA_CHECK_PASS Cien caídas dobles en laboratorio recuperan ambos luchadores sin agotar stocks
+BETA_CHECK_PASS Pausa de entrenamiento congela simulación
+BETA_CHECK_PASS Opción de volúmenes oculta las líneas de laboratorio
+BETA_CHECK_PASS Salir del laboratorio limpia sus visualizadores
+BETA_CHECK_PASS Volver a versus restaura cinco participantes y reloj normal
+BETA_CHECK_PASS Dos mandos: impide iniciar sin dispositivos suficientes
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+BETA_CHECK_PASS Dos mandos: un solo mando no crea un rival humano ficticio
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+BETA_CHECK_PASS Teclado y mandos: asignaciones P1/P2/P3 exclusivas
+BETA_CHECK_PASS Entrada real del Input System mueve solo el puesto dueño
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+BETA_CHECK_PASS Desconectar P2 pausa e identifica el puesto perdido
+BETA_CHECK_PASS Reordenar Gamepad.all no transfiere P3 a P2
+BETA_CHECK_PASS No permite reanudar mientras falta un mando
+BETA_CHECK_PASS Desconexión conserva reloj, posición, stocks y porcentaje
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+BETA_CHECK_PASS Reconectar el mismo dispositivo recupera P2 sin reanudación automática
+BETA_CHECK_PASS Confirmación explícita reanuda después de reconectar
+FUNADOS_INPUT HardReset Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=False
+FUNADOS_INPUT Disabled Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=False
+BETA_CHECK_PASS Dispositivo deshabilitado también bloquea la partida
+FUNADOS_INPUT HardReset Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=False
+FUNADOS_INPUT Enabled Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+BETA_CHECK_PASS Dispositivo rehabilitado conserva su puesto
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=16 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=17 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=19 | activo=True
+BETA_CHECK_PASS Dos bajas simultáneas: los nuevos mandos no ocupan puestos solos
+BETA_CHECK_PASS No se puede asignar un mando ausente
+BETA_CHECK_PASS Reemplazo explícito reclama un solo puesto sin duplicarlo
+BETA_CHECK_PASS Asignar disponibles rellena el otro puesto sin robar el recuperado
+BETA_CHECK_PASS Dos mandos: P1 y P2 humanos con dispositivos diferentes
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+BETA_CHECK_PASS Desconexión durante cuenta atrás congela la cuenta
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+BETA_CHECK_PASS Reconectar en cuenta atrás vuelve a esa fase y preserva P2
+BETA_CHECK_PASS Dos mandos: entrada de P1 no mueve P2
+BETA_CHECK_PASS Cruceta digital admite diagonales normalizadas
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=20 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=21 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=22 | activo=True
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=23 | activo=True
+BETA_CHECK_PASS Cinco jugadores con mandos únicos; el sexto queda fuera
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=23 | activo=True
+BETA_CHECK_PASS Desconectar un mando sobrante no pausa la partida
+BETA_CHECK_PASS Número de mandos sobrantes respeta los puestos elegidos
+BETA_CHECK_PASS Entrenamiento conserva mando de P1 y objetivo sin entradas
+BETA_CHECK_PASS Volver al menú libera reservas y aviso de desconexión
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=18 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=19 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=20 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=21 | activo=True
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=22 | activo=True
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\options-checks\live.json
+BETA_CHECK_PASS Sin archivo de opciones se usan controles por defecto
+BETA_CHECK_PASS Controles por defecto sin conflictos
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=26 | activo=True
+BETA_CHECK_PASS Remapeo de teclado asigna la nueva tecla
+BETA_CHECK_PASS La partida lee el control remapeado y deja de leer el anterior
+BETA_CHECK_PASS Tecla en conflicto se detecta e intercambia sin duplicados
+BETA_CHECK_PASS Vista previa de conflicto identifica la acción ocupante
+BETA_CHECK_PASS Esc reservado para pausa no se asigna
+BETA_CHECK_PASS Controles inexistentes, reservados o no remapeables se rechazan
+BETA_CHECK_PASS Conflicto de mando intercambia salto y fuerte
+BETA_CHECK_PASS Mando lee la asignación remapeada en ambos botones
+BETA_CHECK_PASS Botón de ratón remapeable; bloqueado sobre el panel del laboratorio
+BETA_CHECK_PASS Captura interactiva asigna la tecla pulsada
+BETA_CHECK_PASS Esc cancela la captura sin cambiar controles
+BETA_CHECK_PASS Captura en conflicto avisa e intercambia
+BETA_CHECK_PASS Captura de mando asigna el botón pulsado
+BETA_CHECK_PASS Start cancela la captura de mando
+BETA_CHECK_PASS Etiquetas de teclado y ratón salen de la misma tabla
+BETA_CHECK_PASS Nombres de tecla sin restos de teclas muertas; Ñ y AZERTY se conservan
+FUNADOS_INPUT Added PlayStation Controller | tipo=DualShock4GamepadHID | layout=DualShock4GamepadHID | interfaz= | producto= | fabricante= | id=27 | activo=True
+BETA_CHECK_PASS Mando PlayStation muestra sus botones reales
+FUNADOS_INPUT Added Xbox Controller | tipo=XInputControllerWindows | layout=XInputControllerWindows | interfaz= | producto= | fabricante= | id=28 | activo=True
+BETA_CHECK_PASS Mando Xbox muestra sus botones reales
+FUNADOS_INPUT Removed Xbox Controller | tipo=XInputControllerWindows | layout=XInputControllerWindows | interfaz= | producto= | fabricante= | id=28 | activo=True
+FUNADOS_INPUT Removed PlayStation Controller | tipo=DualShock4GamepadHID | layout=DualShock4GamepadHID | interfaz= | producto= | fabricante= | id=27 | activo=True
+BETA_CHECK_PASS Sin mando conectado las etiquetas siguen definidas
+BETA_CHECK_PASS Luchador salta con el botón remapeado durante la partida
+BETA_CHECK_PASS Remapeo disponible en pausa
+BETA_CHECK_PASS Remapeo y modo se guardan en archivo versionado
+BETA_CHECK_PASS Escritura deja copia válida y ningún temporal
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\options-checks\live.json
+BETA_CHECK_PASS Reinicio restaura controles guardados
+FUNADOS_OPTIONS cargadas estado=RecoveredBackup ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\options-checks\live.json
+BETA_CHECK_PASS Archivo truncado: se recupera la copia y se aparta el dañado
+BETA_CHECK_PASS La recuperación se comunica en opciones
+BETA_CHECK_PASS Archivo dañado sin copia restaura valores seguros
+BETA_CHECK_PASS Archivo vacío se trata como dañado
+BETA_CHECK_PASS Archivo incompleto no se acepta a medias
+BETA_CHECK_PASS Formato ajeno se rechaza
+BETA_CHECK_PASS Valores fuera de rango se corrigen
+BETA_CHECK_PASS Versión futura conserva campos conocidos
+FUNADOS_OPTIONS cargadas estado=RepairedFields ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\options-checks\live.json
+BETA_CHECK_PASS Controles duplicados, reservados o desconocidos vuelven a valores seguros
+BETA_CHECK_PASS El archivo reparado se reescribe limpio
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\options-checks\live.json
+BETA_CHECK_PASS Escritura interrumpida (temporal huérfano) no afecta al archivo válido
+FUNADOS_OPTIONS cargadas estado=RecoveredBackup ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\options-checks\live.json
+BETA_CHECK_PASS Sin archivo principal se recupera la copia
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=26 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\tuning-checks\tuning.json
+BETA_CHECK_PASS Zona muerta ignora deriva de la palanca
+BETA_CHECK_PASS Fuera de la zona muerta la escala recorre 0–1 sin saltos
+BETA_CHECK_PASS Respuesta rápida y fina cambian la curva
+BETA_CHECK_PASS Diagonal conserva dirección y magnitud máxima 1
+BETA_CHECK_PASS Ajustes de palanca limitados a rangos seguros
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=29 | activo=True
+BETA_CHECK_PASS Zonas muertas de mover y orientar se aplican al mando real
+BETA_CHECK_PASS Cruceta sigue siendo alternativa digital completa
+BETA_CHECK_PASS Vista previa de vibración termina sola
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\tuning-checks\tuning.json
+BETA_CHECK_PASS Ajustes de mando se guardan en el formato actual
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\tuning-checks\v1.json
+BETA_CHECK_PASS Archivo versión 1 se migra conservando controles y volúmenes
+BETA_CHECK_PASS Migración reescribe v2 y guarda la v1 como copia
+BETA_CHECK_PASS Archivo v2 sin campos de mando se trata como incompleto
+BETA_CHECK_PASS Ajustes de mando fuera de rango se corrigen
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\tuning-checks\tuning.json
+BETA_CHECK_PASS Golpes simultáneos al mismo objetivo no dependen del orden de jugadores
+BETA_CHECK_PASS Un solo golpe conserva la fórmula de empuje anterior
+BETA_CHECK_PASS Golpes opuestos suman daño y anulan el empuje horizontal
+BETA_CHECK_PASS Intercambio simultáneo: ambos reciben el golpe (P1 al sur)
+BETA_CHECK_PASS Intercambio simultáneo: mismo resultado con los puestos invertidos
+BETA_CHECK_PASS La ventana de impactos se cierra al final de cada paso
+BETA_CHECK_PASS Golpe recibido vibra el mando dueño con fuerza perceptible
+BETA_CHECK_PASS Vibración nunca queda bajo el mínimo perceptible; 0 % la apaga
+BETA_CHECK_PASS Pausa detiene la vibración
+BETA_CHECK_PASS Vibración apagada no hace vibrar
+BETA_CHECK_PASS Golpe a P1 con teclado no hace vibrar el mando de P2
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=29 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\menu-checks\menu.json
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=31 | activo=True
+BETA_CHECK_PASS Menú abre con el foco en ENTRAR
+BETA_CHECK_PASS Todos los controles del menú son alcanzables con foco
+BETA_CHECK_PASS Cruceta mueve el foco a la cancha de la derecha
+BETA_CHECK_PASS A elige la cancha enfocada
+BETA_CHECK_PASS Flecha arriba lleva al luchador alineado encima
+BETA_CHECK_PASS Enter elige el luchador enfocado sin iniciar la partida
+BETA_CHECK_PASS Elegir de nuevo cambia el aspecto, como con el ratón
+BETA_CHECK_PASS Izquierda/derecha ajustan el valor sin perder el foco
+BETA_CHECK_PASS Derecha en un rival cambia su aspecto
+BETA_CHECK_PASS Pestaña MANDO navegable sin perder el foco
+BETA_CHECK_PASS Palanca mantenida repite el movimiento del foco
+BETA_CHECK_PASS Remapeo accesible con el mando desde el foco
+BETA_CHECK_PASS Enter sobre ENTRAR inicia la partida como antes
+FUNADOS_INPUT Added Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=32 | activo=True
+BETA_CHECK_PASS Pausa abre con el foco en CONTINUAR
+BETA_CHECK_PASS Mando sobrante no mueve el foco de la pausa
+BETA_CHECK_PASS Mando del jugador navega la pausa
+BETA_CHECK_PASS B reanuda desde la pausa
+BETA_CHECK_PASS Resultados abren con el foco en REVANCHA
+BETA_CHECK_PASS Enter en resultados inicia la revancha
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=32 | activo=True
+BETA_CHECK_PASS Volumen de proyectil coincide con su distancia real de impacto
+BETA_CHECK_PASS Zonas y emisor se dibujan con su volumen real
+BETA_CHECK_PASS Opción de volúmenes oculta también proyectiles y zonas
+FUNADOS_INPUT Removed Gamepad | tipo=Gamepad | layout=Gamepad | interfaz= | producto= | fabricante= | id=31 | activo=True
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\player-options.json
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\display-checks\display.json
+BETA_CHECK_PASS 16:9 conserva el diseño y la franja del 19 %
+BETA_CHECK_PASS 4:3 extiende el lienzo hacia abajo en lugar de dejar bandas
+BETA_CHECK_PASS 21:9 añade espacio lateral y mantiene la altura
+BETA_CHECK_PASS Tarjetas y ayuda caben en 5 proporciones, de 1 a 5 jugadores y 3 tamaños de HUD
+BETA_CHECK_PASS En 16:9 y 21:9 desde 720p el texto más pequeño no baja de 12 px reales
+BETA_CHECK_PASS En 4:3 y 16:10 pequeños el texto más pequeño no baja de 10,5 px reales
+BETA_CHECK_PASS HUD grande agranda las tarjetas mientras quepan y amplía la franja reservada
+BETA_CHECK_PASS Tamaño de texto crece con la opción y tiene un tope para no romper paneles
+BETA_CHECK_PASS Tamaños limitados a 100–130 %
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\display-checks\display.json
+BETA_CHECK_PASS Tamaños de texto y HUD se guardan en formato versión 3
+FUNADOS_OPTIONS cargadas estado=MigratedLegacy ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\display-checks\v2.json
+BETA_CHECK_PASS Archivo versión 2 se migra conservando ajustes de mando
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\display-checks\display.json
+BETA_CHECK_PASS La cámara reserva exactamente la franja de las tarjetas
+BETA_CHECK_PASS Clics sobre el panel del laboratorio se reconocen con el HUD agrandado
+BETA_CHECK_PASS Capturas de menú, partida y pausa en 3 tamaños de ventana
+BETA_CHECK_PASS En cada tamaño: texto legible, franja de cámara correcta y menú navegable
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Full\player-options.json
+BETA_SMOKE_RESULT PASS checks=208 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

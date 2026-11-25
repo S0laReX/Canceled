@@ -4,7 +4,7 @@ Fuente: **GDD 2.0 (combate lateral 2.5D), sección 15** — `Docs/Produccion_202
 
 `[x]` = implementado con evidencia técnica (pruebas automáticas de la versión indicada), **no** aceptado con personas. `[ ]` = pendiente. **⧗** = implementado en 0.6.0, pero su verificación automática en 2.5D aún no se ha ejecutado: no se marca hasta que pasen las suites. No equiparar cantidad de pruebas con casillas cerradas.
 
-Recuento: **49 de 63** marcadas (20 del GDD 2.0 + 29 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.7.3 (`Evidence/Production-0.7.3`): 20 suites, ver `Evidence/Production-0.7.3/suites.txt`.
+Recuento: **50 de 63** marcadas (20 del GDD 2.0 + 30 desde 0.6.0). Ninguna en ⧗. Evidencia vigente 0.7.4 (`Evidence/Production-0.7.4`): 21 suites, ver `Evidence/Production-0.7.4/suites.txt`.
 
 ## Instrucciones para el siguiente agente
 

@@ -1,0 +1,44 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.4/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.4/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.4/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.040 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.925400 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.4\Toon\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS El shader toon FUNADOS/Toon está en la build y es compatible
+SIDE_CHECK_PASS El material toon tiene contorno, sombra y profundidad
+SIDE_CHECK_PASS El material toon acepta color y textura (destello de golpe y aspectos)
+SIDE_CHECK_PASS Los cinco luchadores usan el material toon (5/5 renderers)
+SIDE_CHECK_PASS Los luchadores toon siguen proyectando sombra
+SIDE_CHECK_PASS El destello de golpe sigue tiñendo el material toon
+SIDE_CHECK_PASS Cada silueta tiene contorno oscuro (borde < 0,12 de luminancia sobre fondo gris 0,54, y más oscuro que el interior)
+SIDE_CHECK_PASS Las siluetas de prueba no dejan objetos en la escena
+SIDE_RESULT True checks=9 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

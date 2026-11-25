@@ -21,7 +21,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.7.3";
+        public const string ProductionVersion = "0.7.4";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
