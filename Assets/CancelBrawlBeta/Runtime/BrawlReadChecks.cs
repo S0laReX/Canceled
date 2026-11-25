@@ -45,8 +45,13 @@ namespace CancelBrawl.Beta
         [Serializable] private sealed class ProfileRow { public string character, skin; public int area, widthPixels, heightPixels; public float profileToFrontArea; }
         [Serializable] private sealed class Report
         {
+            public int countdownCaptures, countdownProfiles;
             public List<ArenaRow> arenas = new List<ArenaRow>();
             public List<FighterRow> fighters = new List<FighterRow>();
+            /// <summary>Same measurements with the background-desaturation prototype on (BrawlBackgroundGrade, not in the game yet).</summary>
+            public float gradeSaturation, gradeApplyMs;
+            public List<ArenaRow> gradedArenas = new List<ArenaRow>();
+            public List<FighterRow> gradedFighters = new List<FighterRow>();
             public List<ProfileRow> profiles = new List<ProfileRow>();
             public List<string> profileOverlaps = new List<string>();
             public float maxProfileOverlap;
@@ -68,8 +73,11 @@ namespace CancelBrawl.Beta
             var seen = new HashSet<string>();
             bool restored = true;
 
+            report.gradeSaturation = BrawlBackgroundGrade.Saturation;
+            for (int pass = 0; pass < 2; pass++)
             for (int arena = 0; arena < BrawlArena.Count; arena++)
             {
+                bool graded = pass == 1;
                 var arenaRow = new ArenaRow();
                 double bgChroma = 0, bgL = 0, bgL2 = 0, fChroma = 0, fL = 0, fL2 = 0; long bgCount = 0, fCount = 0, neon = 0;
                 int neonBehind = 0, neonSeparated = 0;
@@ -79,6 +87,7 @@ namespace CancelBrawl.Beta
                     for (int slot = 0; slot < BrawlMatch.MaxPlayers; slot++) match.SlotSkins[slot] = BrawlRoster.WrapSkin(match.SlotCharacters[slot], round);
                     match.StartMatch();
                     yield return null;
+                    if (graded) { BrawlBackgroundGrade.Apply(match.Arena, match.GroupCamera.View); report.gradeApplyMs = Mathf.Max(report.gradeApplyMs, BrawlBackgroundGrade.LastApplyMilliseconds); }
                     arenaRow.arena = match.Arena.DisplayName;
                     var layout = match.Arena.CurrentSideLayout;
                     for (int placement = 0; placement < 2; placement++)
@@ -92,6 +101,12 @@ namespace CancelBrawl.Beta
                         yield return new WaitForEndOfFrame();
 
                         if (match.Phase != MatchPhase.Countdown) report.notes.Add($"Captura con la partida ya en marcha: {match.Arena.DisplayName}, ronda {round}, {(placement == 0 ? "suelo" : "plataformas")}");
+                        foreach (var fighter in match.Fighters)
+                        {
+                            if (graded) break;
+                            report.countdownCaptures++;
+                            if (Mathf.Abs(fighter.transform.forward.x) > .99f && Mathf.Sign(fighter.transform.forward.x) == fighter.FacingSign) report.countdownProfiles++;
+                        }
                         Camera view = match.GroupCamera.View;
                         camera.CopyFrom(view); camera.enabled = false; camera.targetTexture = texture;
                         Color32[] full = Grab(camera, read, texture, Color.black);
@@ -113,13 +128,13 @@ namespace CancelBrawl.Beta
                                 bgChroma += chroma; bgL += l; bgL2 += l * l; bgCount++;
                                 if (IsNeon(l, chroma)) neon++;
                             }
-                            if (placement == 0) Save(full, read, Path.Combine(output, $"lectura-arena-{arena}.png"));
+                            if (placement == 0) Save(full, read, Path.Combine(output, graded ? $"lectura-arena-{arena}-fondo-atenuado.png" : $"lectura-arena-{arena}.png"));
                         }
 
                         for (int i = 0; i < match.Fighters.Length; i++)
                         {
                             var fighter = match.Fighters[i];
-                            string key = arena + "/" + placement + "/" + fighter.CharacterIndex + "/" + fighter.SkinIndex;
+                            string key = pass + "/" + arena + "/" + placement + "/" + fighter.CharacterIndex + "/" + fighter.SkinIndex;
                             bool[] mask = Mask(camera, read, texture, fighter, out bool layersBack);
                             restored &= layersBack;
                             if (!seen.Add(key)) continue;
@@ -127,7 +142,7 @@ namespace CancelBrawl.Beta
                             row.arena = arenaRow.arena; row.character = BrawlRoster.Get(fighter.CharacterIndex).Name; row.skin = fighter.SkinName;
                             row.placement = placement == 0 ? "suelo" : "plataformas";
                             neonBehind += fighterNeon; neonSeparated += fighterNeonSeparated;
-                            report.fighters.Add(row);
+                            (graded ? report.gradedFighters : report.fighters).Add(row);
                         }
                         camera.targetTexture = null;
                     }
@@ -139,8 +154,9 @@ namespace CancelBrawl.Beta
                 arenaRow.neonShare = bgCount > 0 ? neon / (float)bgCount : 0;
                 arenaRow.neonPixelsBehind = neonBehind;
                 arenaRow.separatedOverNeon = neonBehind > 0 ? neonSeparated / (float)neonBehind : 1;
-                report.arenas.Add(arenaRow);
+                (graded ? report.gradedArenas : report.arenas).Add(arenaRow);
             }
+            BrawlBackgroundGrade.Revert();
             match.ReturnToMenu();
             for (int i = 0; i < 3; i++) yield return null;
             UnityEngine.Object.Destroy(cameraObject);
@@ -150,11 +166,23 @@ namespace CancelBrawl.Beta
             var lookSet = new HashSet<string>(); foreach (var row in report.fighters) lookSet.Add(row.character + "/" + row.skin);
             check(report.arenas.Count == BrawlArena.Count && lookSet.Count == looks,
                 $"Medido en partida real con la cámara lateral: {report.arenas.Count} arenas, {lookSet.Count} de {looks} aspectos, en el suelo y en las plataformas ({report.fighters.Count} casos)");
+            check(report.countdownCaptures > 0 && report.countdownProfiles == report.countdownCaptures,
+                $"En la cuenta atrás cada luchador ya está de perfil, mirando hacia su rival más cercano ({report.countdownProfiles}/{report.countdownCaptures})");
             check(restored, "Las capas de los luchadores vuelven a su sitio después de cada máscara");
 
+            // GDD §9, measured on the game as it ships (prototype off). A failure here is an open finding, not a test bug.
             foreach (var a in report.arenas)
                 check(a.backgroundChroma < a.fighterChroma && a.backgroundContrast < a.fighterContrast,
-                    $"{a.arena}: el fondo tiene menos saturación y contraste que los luchadores (croma {a.backgroundChroma:0.0} < {a.fighterChroma:0.0}; contraste L* {a.backgroundContrast:0.0} < {a.fighterContrast:0.0})");
+                    $"GDD §9 en {a.arena}: el fondo debe tener menos saturación y contraste que los luchadores. Croma del fondo {a.backgroundChroma:0.0} frente a {a.fighterChroma:0.0} de los luchadores ({(a.backgroundChroma < a.fighterChroma ? "cumple" : "NO cumple: fondo más saturado")}); contraste L* {a.backgroundContrast:0.0} frente a {a.fighterContrast:0.0} ({(a.backgroundContrast < a.fighterContrast ? "cumple" : "NO cumple")})");
+            // Prototype comparison (BrawlBackgroundGrade): reported for review, same rule and same separation threshold.
+            foreach (var a in report.gradedArenas)
+                check(a.backgroundChroma < a.fighterChroma && a.backgroundContrast < a.fighterContrast,
+                    $"Prototipo de fondo atenuado (saturación ×{report.gradeSaturation:0.00}) en {a.arena}: croma {a.backgroundChroma:0.0} frente a {a.fighterChroma:0.0}; contraste L* {a.backgroundContrast:0.0} frente a {a.fighterContrast:0.0}");
+            float gradedWorst = 1; string gradedWho = "";
+            foreach (var row in report.gradedFighters)
+                if (Mathf.Min(row.separated, row.separatedWorstVision) < gradedWorst) { gradedWorst = Mathf.Min(row.separated, row.separatedWorstVision); gradedWho = $"{row.character} {row.skin} en {row.arena}"; }
+            check(report.gradedFighters.Count == report.fighters.Count && gradedWorst >= MinSeparated,
+                $"Con el prototipo cada luchador se sigue separando de su fondo, también con daltonismo: peor {gradedWorst:P0} ({gradedWho}); atenuar cuesta {report.gradeApplyMs:0} ms al cargar la arena");
 
             FighterRow worst = null, worstVision = null, worstEdge = null, smallest = null;
             foreach (var row in report.fighters)

@@ -720,6 +720,7 @@ namespace CancelBrawl.Beta
                 basicBuffer = heavyBuffer = jumpBuffer = hitPause = dropRemaining = 0;
                 comboHitCount = 0; comboTarget = -1;
             }
+            transform.rotation = Quaternion.LookRotation(Facing); // the countdown does not Tick: show the profile from the start
             ClearPresentationClocks();
             spawnRemaining = grantProtection ? BrawlFighterVisual.SpawnSeconds : 0;
             if (visual != null) visual.gameObject.SetActive(true);
