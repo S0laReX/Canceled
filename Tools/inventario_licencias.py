@@ -12,6 +12,7 @@ Genera en Docs/Licencias/:
 
 Solo lee archivos; no cambia nada del proyecto. Las decisiones de licencia (D04) son del usuario:
 el estado "pendiente-usuario" significa que la evidencia del archivo no basta para confirmarla.
+Los assets de Meshy quedan confirmados por la decisión D04 del 25/11/2026.
 """
 import argparse
 import csv
@@ -25,8 +26,8 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 OUT = os.path.join(ROOT, "Docs", "Licencias")
 
-MESHY_PENDING = ("Meshy: Free = CC BY 4.0 con atribución (cubierta en CREDITOS.md); de pago = propiedad "
-                 "privada; comunidad = CC0. Falta confirmar derechos de las imágenes de referencia")
+MESHY_LICENSE = ("Meshy: generado por el autor (D04, confirmado por Santiago el 25/11/2026) con imágenes de "
+                 "referencia propias; CC BY 4.0 en el peor caso (plan Free), atribución en CREDITOS.md")
 
 
 def sha256(path):
@@ -81,8 +82,8 @@ def classify(rel, data):
                 "confirmado", "usa include de URP (Unity Companion License)")
     if "/art/characters/" in low:
         tool = fbx_tool(data) if ext == ".fbx" else png_size(data)
-        return ("personaje", "Meshy (preexistente en la beta local 0.3)", tool, MESHY_PENDING,
-                "pendiente-usuario", "sin XMP ni ID de tarea de Meshy en el archivo")
+        return ("personaje", "Meshy, generado por el autor (preexistente en la beta local 0.3)", tool, MESHY_LICENSE,
+                "confirmado", "sin XMP ni ID de tarea de Meshy en el archivo; origen confirmado por el autor")
     if "/environments/" in low:
         if "/concept/" in low and "unitypreview" in low:
             return ("escenario-captura", "captura propia del Editor Unity", png_size(data),
@@ -92,11 +93,11 @@ def classify(rel, data):
             if x:
                 system, cid, date, pub = x
                 return ("escenario-concepto", f"{pub} texto/imagen a imagen ({system})", png_size(data),
-                        MESHY_PENDING, "pendiente-usuario", f"XMP Meshy ContentID={cid} fecha={date}")
+                        MESHY_LICENSE, "confirmado", f"XMP Meshy ContentID={cid} fecha={date}")
             return ("escenario-concepto", "desconocido", png_size(data), "desconocida", "desconocido", "")
         tool = fbx_tool(data) if ext == ".fbx" else png_size(data)
-        return ("escenario-modelo", "Meshy imagen a 3D desde el concepto de la pieza", tool, MESHY_PENDING,
-                "pendiente-usuario", "exportado a FBX por la canalización de Meshy (Blender 4.4)")
+        return ("escenario-modelo", "Meshy imagen a 3D desde el concepto de la pieza", tool, MESHY_LICENSE,
+                "confirmado", "exportado a FBX por la canalización de Meshy (Blender 4.4)")
     return ("otro", "desconocido", "", "desconocida", "desconocido", "")
 
 

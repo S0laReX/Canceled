@@ -16,9 +16,9 @@ El guion solo lee archivos. La procedencia sale del propio archivo: cabecera FBX
 
 | Grupo | Archivos | Origen detectado | Licencia | Estado |
 |---|---|---|---|---|
-| Personajes (11 aspectos: FBX + albedo 2048²) | 22 | Meshy, ya en la beta local 0.3 (`README_BETA.md`). FBX exportados con *Blender FBX IO 4.4.0*, el exportador que usa Meshy. Sin XMP ni ID de tarea | Términos de Meshy según el plan de la cuenta al generarlos, o del autor si salieron de la comunidad de Meshy | **pendiente-usuario** |
-| Escenarios: modelos (4 arenas × 7 piezas, FBX + base color) | 56 | Meshy de imagen a 3D a partir del concepto de cada pieza (16/11/2026, commit `c2ad544`). Mismo exportador Blender 4.4.0 | Términos de Meshy según el plan | **pendiente-usuario** |
-| Escenarios: conceptos (4 generales + 28 piezas) | 32 | Meshy de texto/imagen a imagen. Según el XMP, se generaron con `fal-ai/nano-banana-pro` (y `/edit` en las piezas) entre las 22:07 y las 22:49 UTC del 16/11/2026. Cada uno lleva su `ContentID` | Términos de Meshy según el plan; el modelo de imagen es de terceros servido por Meshy | **pendiente-usuario** |
+| Personajes (11 aspectos: FBX + albedo 2048²) | 22 | Meshy, ya en la beta local 0.3 (`README_BETA.md`). FBX exportados con *Blender FBX IO 4.4.0*, el exportador que usa Meshy. Sin XMP ni ID de tarea | Términos de Meshy según el plan de la cuenta al generarlos, o del autor si salieron de la comunidad de Meshy | confirmado (D04) |
+| Escenarios: modelos (4 arenas × 7 piezas, FBX + base color) | 56 | Meshy de imagen a 3D a partir del concepto de cada pieza (16/11/2026, commit `c2ad544`). Mismo exportador Blender 4.4.0 | Términos de Meshy según el plan | confirmado (D04) |
+| Escenarios: conceptos (4 generales + 28 piezas) | 32 | Meshy de texto/imagen a imagen. Según el XMP, se generaron con `fal-ai/nano-banana-pro` (y `/edit` en las piezas) entre las 22:07 y las 22:49 UTC del 16/11/2026. Cada uno lleva su `ContentID` | Términos de Meshy según el plan; el modelo de imagen es de terceros servido por Meshy | confirmado (D04) |
 | Escenarios: capturas `*_UnityPreview.png` | 4 | Capturas propias del Editor | Propio | confirmado |
 | Cubo de validación `FUNADOS_MeterCube.fbx` | 1 | Hecho en Blender 4.5.16 LTS (descarga oficial con SHA256 verificado, `Docs/Produccion_2026-11-10/FUNADOS_Reporte_preparacion.md`) | Propio; Blender (GPL) no impone licencia a lo que exporta | confirmado |
 | Shader `FunadosToonStarter.shader` + material | 1 | Escrito para el proyecto | Propio; incluye bibliotecas HLSL de URP (Unity Companion License) | confirmado |
@@ -28,7 +28,7 @@ El guion solo lee archivos. La procedencia sale del propio archivo: cabecera FBX
 | Respaldos `Backups/*.zip` | 2 | Copias locales de código, ajustes y evidencia (sin arte de terceros) | Propio | confirmado |
 | Paquetes (`Packages/manifest.json` + dependencias) | 68 | Registro de Unity y paquetes integrados | Ver la tabla siguiente | confirmado (con dos avisos) |
 
-Total: **9 confirmados y 110 pendientes del usuario** entre los archivos de arte. El código C# es propio del proyecto.
+Total: **119 archivos de arte confirmados** (110 de Meshy cerrados con la decisión D04 del 25/11/2026). El código C# es propio del proyecto.
 
 ## Paquetes de `Packages/manifest.json`
 
@@ -79,16 +79,14 @@ Un artículo del Help Center (el de marketplaces) contradice a los demás: dice 
 
 **Conclusión:** sea cual sea el plan, el uso actual (juego local, sin venta) está permitido. **Añadir la atribución cubre el peor caso** (plan Free), así que el texto de [`CREDITOS.md`](CREDITOS.md) ya está preparado. Lo que de verdad queda abierto son las imágenes de referencia y la contradicción para la venta comercial.
 
-## Lo que falta para cerrar D04 (decisión del usuario)
+## Decisión D04 (cerrada el 25/11/2026)
 
-Los 110 archivos de Meshy siguen como `pendiente-usuario` hasta que Santiago confirme lo siguiente:
+Santiago confirmó lo siguiente:
 
-1. **Imágenes de referencia.** Hay que confirmar que las imágenes subidas para imagen a imagen y para imagen a 3D eran propias o tenían permiso. Es lo único que ningún plan cubre. Los conceptos de escenarios son de imagen a imagen (`nano-banana-pro/edit`), así que partieron de alguna imagen.
-2. **Origen de los personajes.** Nombres como `Commander_Vex`, `Neon_Rebel` o `Tin_Foil_Fred` no siguen la convención del proyecto. Hay que confirmar si los generó Santiago o si salieron de la comunidad (CC0). En ese segundo caso, también hay que confirmar que no imitan personajes ni marcas de terceros.
-3. **Plan de cada lote.** Los personajes son de antes del 11/11/2026 y los escenarios y conceptos del 16/11/2026. Hoy la cuenta tiene 25 créditos permanentes y 0 mensuales, sin suscripción, pero eso no prueba qué plan había en noviembre. Se puede ver en meshy.ai → *Settings → Billing* y en *My Assets*. Mirarlo requiere iniciar sesión: en el navegador integrado no había sesión.
-4. **Decisión D04:** aceptar la atribución (recomendado: `CREDITOS.md` ya está escrito) o regenerar o sustituir los modelos.
+1. **Imágenes de referencia:** todas las imágenes subidas a Meshy (imagen a imagen e imagen a 3D) son suyas.
+2. **Personajes:** los 11 personajes los generó él en Meshy; no salieron de la comunidad.
+3. **Atribución:** acepta la línea de crédito de [`CREDITOS.md`](CREDITOS.md), que cubre el peor caso (plan Free, CC BY 4.0).
 
-Cuando estén confirmados los puntos 1 y 2 y aceptada la atribución, hay que hacer tres cosas:
-- en `Tools/inventario_licencias.py`, cambiar a `confirmado` el estado de `personaje`, `escenario-modelo` y `escenario-concepto`;
-- regenerar los CSV;
-- marcar la casilla.
+Con eso, los 110 archivos de Meshy pasan a `confirmado` en el inventario y la casilla SYS-017 queda marcada.
+
+**Queda un aviso, sin bloqueo:** antes de vender el juego, conviene pedir a Meshy que aclare la contradicción del artículo de marketplaces sobre el uso comercial del plan Free. Otra opción es comprobar en *Settings → Billing* que los lotes se generaron con un plan de pago.

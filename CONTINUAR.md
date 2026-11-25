@@ -15,7 +15,8 @@
 ## Relevo chore/licencias-d04
 
 - Términos de Meshy consultados (fuentes en `Docs/Licencias/Procedencia_y_licencias.md`): Free = CC BY 4.0 con atribución, de pago = propiedad privada, comunidad = CC0, y cada modelo conserva los derechos de su plan. Las imágenes de referencia necesitan derechos en cualquier plan. Un artículo de marketplaces contradice el uso comercial del plan Free: aclararlo con Meshy antes de vender.
-- `Docs/Licencias/CREDITOS.md` con la atribución «Model created with Meshy – CC BY 4.0 License», que cubre el peor caso. La casilla SYS-017 sigue abierta hasta que Santiago confirme las imágenes de referencia y el origen de los personajes, y acepte la atribución (D04). En el navegador integrado no había sesión de Meshy para ver el plan y los assets.
+- `Docs/Licencias/CREDITOS.md` con la atribución «Model created with Meshy – CC BY 4.0 License», que cubre el peor caso. Atribución aceptada.
+- **D04 cerrada el 25/11/2026:** Santiago confirmó que las imágenes de referencia y los 11 personajes son suyos. Casilla SYS-017 marcada; inventario 119/119 archivos y 68/68 paquetes confirmados. Antes de vender: aclarar con Meshy el uso comercial del plan Free (o comprobar el plan en *Settings → Billing*).
 - Solo documentación; sin cambios de código, versión ni recuento.
 
 ## Relevo chore/restauracion-licencias
