@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace CancelBrawl.Beta
@@ -45,7 +46,11 @@ namespace CancelBrawl.Beta
         private static readonly AudioSource[] sources = new AudioSource[BusCount];
         private static readonly int[] plays = new int[BusCount];
         private static readonly Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
-        private static AudioClip musicClip;
+        private static AudioClip[] musicClips = new AudioClip[0];
+        /// <summary>Arena tracks and character lines rendered off the main thread; turned into clips by <see cref="Poll"/>.</summary>
+        private static Task<float[]>[] pendingMusic = new Task<float[]>[0];
+        private static readonly Dictionary<string, Task<float[]>> pendingVoices = new Dictionary<string, Task<float[]>>();
+        private static System.Diagnostics.Stopwatch backgroundClock;
         private static int voicePriority;
 
         public static string LastKind { get; private set; } = "";
@@ -58,7 +63,7 @@ namespace CancelBrawl.Beta
         {
             foreach (var clip in clips.Values) if (clip) Object.Destroy(clip);
             clips.Clear();
-            if (musicClip) Object.Destroy(musicClip);
+            foreach (var clip in musicClips) if (clip) Object.Destroy(clip);
             for (int bus = 1; bus < BusCount; bus++)
             {
                 if (sources[bus]) Object.Destroy(sources[bus].gameObject);
@@ -67,11 +72,30 @@ namespace CancelBrawl.Beta
                 sources[bus] = source; plays[bus] = 0;
             }
             var music = sources[(int)BrawlAudioBus.Music];
-            musicClip = BuildMusic(); music.clip = musicClip; music.loop = true;
+            // Menu track now; the arena tracks and the character lines render on worker threads while the menu is up,
+            // and become clips one per frame (Poll). Changing arena only swaps the clip: nothing is synthesised in play.
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            musicClips = new AudioClip[BrawlMusic.TrackCount];
+            musicClips[BrawlMusic.MenuTrack] = BrawlMusic.Build(BrawlMusic.MenuTrack);
+            MusicBuildMilliseconds = (float)clock.Elapsed.TotalMilliseconds;
+            backgroundClock = System.Diagnostics.Stopwatch.StartNew(); BackgroundMilliseconds = 0;
+            pendingMusic = new Task<float[]>[BrawlMusic.TrackCount];
+            for (int track = 0; track < musicClips.Length; track++)
+                if (track != BrawlMusic.MenuTrack) { int t = track; pendingMusic[track] = Task.Run(() => BrawlMusic.Render(t)); }
+            pendingVoices.Clear();
+            for (int character = 0; character < BrawlVoices.CharacterCount; character++)
+                for (int line = 0; line < BrawlVoices.LineCount; line++)
+                {
+                    string kind = BrawlVoices.Kind((VoiceLine)line, character);
+                    pendingVoices[kind] = Task.Run(() => BrawlVoices.RenderKind(kind));
+                }
+            CurrentMusicTrack = BrawlMusic.MenuTrack; music.clip = musicClips[CurrentMusicTrack]; music.loop = true;
             voicePriority = 0; LastKind = "";
             Apply();
             music.Play();
+            clock.Restart();
             Prewarm();
+            PrewarmMilliseconds = (float)clock.Elapsed.TotalMilliseconds;
         }
 
         /// <summary>Clips built so far (each kind once).</summary>
@@ -88,6 +112,101 @@ namespace CancelBrawl.Beta
                 for (int step = 1; step < ComboSteps; step++) Clip(kind + "#" + step);
             foreach (string kind in UiKinds) Clip(kind);
             foreach (string kind in VoiceKinds) Clip(kind);
+        }
+
+        /// <summary>Main-thread start-up cost of the menu track and of the effect clips.</summary>
+        public static float MusicBuildMilliseconds { get; private set; }
+        public static float PrewarmMilliseconds { get; private set; }
+        /// <summary>Time from start-up until every background track and line was a clip (0 while pending).</summary>
+        public static float BackgroundMilliseconds { get; private set; }
+        public static int BackgroundPending
+        {
+            get
+            {
+                int count = pendingVoices.Count;
+                foreach (var task in pendingMusic) if (task != null) count++;
+                return count;
+            }
+        }
+
+        /// <summary>Once per frame (BrawlMatch.Update): turns at most one finished background render into a clip.</summary>
+        public static void Poll()
+        {
+            for (int track = 0; track < pendingMusic.Length; track++)
+            {
+                var task = pendingMusic[track];
+                if (task == null || !task.IsCompleted) continue;
+                FinishTrack(track); return;
+            }
+            foreach (var pair in pendingVoices)
+            {
+                if (!pair.Value.IsCompleted) continue;
+                FinishVoice(pair.Key); return;
+            }
+        }
+
+        private static void FinishTrack(int track)
+        {
+            var task = pendingMusic[track]; pendingMusic[track] = null;
+            float[] data = task.Result; // waits only if it is still rendering
+            var clip = AudioClip.Create("music-" + track + " " + BrawlMusic.Name(track), data.Length, 1, BrawlMusic.Rate, false);
+            clip.SetData(data, 0); musicClips[track] = clip;
+            NoteBackgroundDone();
+        }
+
+        private static void NoteBackgroundDone()
+        {
+            if (backgroundClock != null && BackgroundPending == 0) { BackgroundMilliseconds = (float)backgroundClock.Elapsed.TotalMilliseconds; backgroundClock = null; }
+        }
+
+        private static void FinishVoice(string kind)
+        {
+            var task = pendingVoices[kind]; pendingVoices.Remove(kind);
+            float[] data = task.Result;
+            if (data == null) return;
+            var clip = AudioClip.Create(kind, data.Length, 1, BrawlVoices.Rate, false); clip.SetData(data, 0);
+            if (clips.TryGetValue(kind, out AudioClip old) && old && old != clip) Object.Destroy(old);
+            clips[kind] = clip;
+            NoteBackgroundDone();
+        }
+        /// <summary>Name shown for a speaker; the match sets it to its own (production names on the first two kits).</summary>
+        public static System.Func<int, string> SpeakerNames;
+        public static string SpeakerName(int character) =>
+            SpeakerNames != null ? SpeakerNames(character) : BrawlRoster.Get(Mathf.Clamp(character, 0, BrawlRoster.Count - 1)).Name;
+
+        /// <summary>Track on the music bus: <see cref="BrawlMusic.MenuTrack"/> or <see cref="BrawlMusic.ArenaTrack"/>.</summary>
+        public static int CurrentMusicTrack { get; private set; }
+        public static AudioClip MusicClip(int track)
+        {
+            if (track < 0 || track >= musicClips.Length) return null;
+            if (!musicClips[track] && pendingMusic.Length > track && pendingMusic[track] != null) FinishTrack(track);
+            return musicClips[track];
+        }
+
+        /// <summary>Switches the music bus to a track; the same track keeps playing where it is.</summary>
+        public static void PlayMusic(int track)
+        {
+            var source = sources[(int)BrawlAudioBus.Music];
+            AudioClip clip = MusicClip(track);
+            if (!source || !clip) return;
+            CurrentMusicTrack = track;
+            if (source.clip == clip) { if (!source.isPlaying) source.Play(); return; }
+            source.Stop(); source.clip = clip; source.loop = true; source.Play();
+        }
+
+        /// <summary>
+        /// A character's line on the voice bus, with its subtitle. Refused (false, no subtitle) when a line of higher
+        /// priority is still playing.
+        /// </summary>
+        public static bool Say(VoiceLine line, int character, int player)
+        {
+            var source = sources[(int)BrawlAudioBus.Voice];
+            if (!source) return false;
+            string kind = BrawlVoices.Kind(line, character);
+            LastKind = kind; LastBus = BrawlAudioBus.Voice; plays[(int)BrawlAudioBus.Voice]++;
+            if (!PlayVoice(kind, source)) return false;
+            BrawlSubtitles.Show(SpeakerName(character), BrawlVoices.Text(line, character), player, source.clip.length);
+            return true;
         }
 
         public static float Volume(BrawlAudioBus bus) => volumes[(int)bus];
@@ -124,7 +243,10 @@ namespace CancelBrawl.Beta
             return BrawlAudioBus.Sfx;
         }
 
-        public static void Play(string kind)
+        public static void Play(string kind) => Play(kind, -1, -1);
+
+        /// <summary>With a speaker (<paramref name="character"/> ≥ 0), the KO and super lines are that character's, subtitled.</summary>
+        public static void Play(string kind, int character, int player)
         {
             BrawlAudioBus bus = Route(kind);
             var source = sources[(int)bus];
@@ -134,17 +256,18 @@ namespace CancelBrawl.Beta
             if (bus == BrawlAudioBus.Voice) { PlayVoice(kind, source); return; }
             source.PlayOneShot(Clip(kind));
             // GDD §10: a character line accompanies the KO and the super warning.
-            if (kind == "ko") Play("voice-ko");
-            else if (kind == "super") Play("voice-super");
+            if (kind == "ko") { if (character >= 0) Say(VoiceLine.Ko, character, player); else Play("voice-ko"); }
+            else if (kind == "super") { if (character >= 0) Say(VoiceLine.Super, character, player); else Play("voice-super"); }
         }
 
-        /// <summary>One phrase at a time; a KO line interrupts a super line, never the other way round.</summary>
-        private static void PlayVoice(string kind, AudioSource source)
+        /// <summary>One phrase at a time; a KO line interrupts a super line, never the other way round; winning beats both.</summary>
+        private static bool PlayVoice(string kind, AudioSource source)
         {
-            int priority = kind == "voice-ko" ? 2 : 1;
-            if (source.isPlaying && priority < voicePriority) return;
+            int priority = BrawlVoices.Priority(kind);
+            if (source.isPlaying && priority < voicePriority) return false;
             source.Stop(); source.clip = Clip(kind); source.loop = false; source.Play();
             voicePriority = priority;
+            return true;
         }
 
         private static void Apply()
@@ -156,7 +279,8 @@ namespace CancelBrawl.Beta
         private static AudioClip Clip(string kind)
         {
             if (clips.TryGetValue(kind, out AudioClip clip) && clip) return clip;
-            clip = kind.StartsWith("voice-") ? BuildVoice(kind) : kind.StartsWith("ui-") ? BuildUi(kind) : BuildLayered(kind) ?? BuildEffect(kind);
+            if (pendingVoices.ContainsKey(kind)) { FinishVoice(kind); if (clips.TryGetValue(kind, out clip) && clip) return clip; }
+            clip = kind.StartsWith("voice-") ? (kind.IndexOf('@') > 0 ? BrawlVoices.Build(kind) : null) ?? BuildVoice(kind) : kind.StartsWith("ui-") ? BuildUi(kind) : BuildLayered(kind) ?? BuildEffect(kind);
             clips[kind] = clip; return clip;
         }
 
@@ -213,29 +337,6 @@ namespace CancelBrawl.Beta
                 data[i] = buzz * Mathf.Min(1, u * 12) * Mathf.Min(1, (1 - u) * 6) * .3f;
             }
             var clip = AudioClip.Create(kind, count, 1, 22050, false); clip.SetData(data, 0); return clip;
-        }
-
-        /// <summary>Short procedural loop (bass + pulse) so music and effects can be balanced separately.</summary>
-        private static AudioClip BuildMusic()
-        {
-            const int rate = 22050; const float bpm = 112; float beat = 60f / bpm;
-            int count = Mathf.CeilToInt(rate * beat * 16);
-            var data = new float[count];
-            float[] roots = { 55f, 55f, 65.4f, 49f };
-            for (int i = 0; i < count; i++)
-            {
-                float t = i / (float)rate;
-                int step = Mathf.FloorToInt(t / beat);
-                float local = t - step * beat;
-                float root = roots[(step / 4) % roots.Length];
-                float bass = Mathf.Sin(2 * Mathf.PI * root * t) * Mathf.Exp(-local * 3.2f) * .55f;
-                float off = Mathf.Repeat(t + beat * .5f, beat);
-                float pulse = (Mathf.PerlinNoise(i * .37f, 0) - .5f) * Mathf.Exp(-off * 40f) * .25f;
-                float pad = Mathf.Sin(2 * Mathf.PI * root * 4 * t) * .05f * (.6f + .4f * Mathf.Sin(t * .8f));
-                data[i] = bass + pulse + pad;
-            }
-            var clip = AudioClip.Create("Beta loop", count, 1, rate, false); clip.SetData(data, 0);
-            return clip;
         }
     }
 }
