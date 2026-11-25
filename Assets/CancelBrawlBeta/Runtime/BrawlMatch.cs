@@ -261,7 +261,7 @@ namespace CancelBrawl.Beta
             CleanupRound();
             ArenaIndex = Mathf.Clamp(ArenaIndex, 0, BrawlArena.Count - 1);
             BuildArena(ArenaIndex);
-            if (BrawlBackgroundGrade.Enabled) BrawlBackgroundGrade.Apply(Arena, groupCamera.View); else BrawlBackgroundGrade.Revert(); // GDD §9, at load only
+            if (BrawlBackgroundGrade.Enabled) BrawlBackgroundGrade.Apply(Arena, groupCamera.View); else BrawlBackgroundGrade.Off(); // GDD §9, at load only
             BrawlAudio.PlayMusic(BrawlMusic.ArenaTrack(ArenaIndex)); BrawlSubtitles.Clear();
             int count = IsTraining ? 2 : Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers);
             Fighters = new BrawlFighter[count];

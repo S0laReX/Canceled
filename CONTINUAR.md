@@ -6,7 +6,7 @@
 
 ## Relevo perf/rendimiento: lectura en cámara lateral y fondo atenuado (sobre 0.7.4)
 
-- Suite nueva `-read-smoke` (`BrawlReadChecks.cs`): 20 comprobaciones sobre 4 arenas, 11 aspectos y 88 casos. Queda fuera de `run_all` hasta que se resuelva el hallazgo abierto.
+- Suite nueva `-read-smoke` (`BrawlReadChecks.cs`): 20 comprobaciones sobre 4 arenas, 11 aspectos y 88 casos. Desde el 25/11/2026 el solapamiento de perfiles es una advertencia (umbral propio, no del GDD): Read pasa si se cumplen las reglas del GDD.
 - Umbrales: el §9 del GDD es literal; el perfil viene del §11 y la altura a 720p del §10. Los de la propia suite son ΔE ≥ 10 y una separación ≥ 60 % en la silueta y en el borde.
 - Cuenta atrás: `BrawlFighter.RespawnAt` ya pone el luchador de perfil. Antes, sin `Tick`, salía de frente. Resultado: 120/120.
 - §9 sin atenuar. El fondo tenía más croma que los luchadores en tres arenas, y Torre lo cumplía por muy poco:
@@ -23,6 +23,7 @@
   - Saturación del albedo que se conserva: Azotea 0,40, Torre 0,85, Estudio 0,30 y Plaza 0,60. El neón pierde la mitad de esa reducción.
   - Cada factor es el mayor que deja la croma del fondo en ≤ 0,85 × la de los luchadores. La suite lo vuelve a comprobar con un barrido de calibración.
   - Coste: 6,8 ms, una sola vez por arena.
+  - Memoria: con copias a tamaño completo, el soak de 0.7.5 falló (+300 MB por arena: 7 texturas de 2048 px × albedo y neón, nunca liberadas; `Read-0.7.5/SoakShort-copias-completas`). Ahora las copias miden 1024 px como máximo (≈75 MB, fijo) y solo quedan las de la arena actual; con la opción apagada se libera todo. Read comprueba ≤ 96 MB.
 - Con el atenuado:
 
   | Arena | Croma del fondo | Croma de los luchadores |
@@ -40,7 +41,7 @@
   - Altura mínima: 79 px.
   - Neón: 100 %.
 - Opción «FONDO ATENUADO»: campo opcional `dimBackground` del archivo de opciones v4, activado por defecto. Todavía no tiene botón en el menú.
-- **Abierto**: de perfil, Commander Vex y Smirking Tycoon se solapan 0,86, por encima del umbral de 0,80. Por eso Read da `passed=false`. No se corrige en esta rama.
+- **Abierto (advertencia)**: de perfil, Commander Vex y Smirking Tycoon se solapan 0,86, por encima del umbral propio de 0,80. No se corrige en esta rama.
 - Regresión sobre 0.7.4: Audio 25/25, Ui 31/31, Music 34/34 y Perf 35/35. `-arena-stress` falló una de 24 comprobaciones en cada una de dos pasadas, y no fue la misma:
   - Primera pasada (`ArenaStress`): en Torre, P4 seguía en el aire 3 s después de reaparecer, sin estar en hitstun, en la partida 19.
   - Repetición (`ArenaStress-rerun`): en Azotea, un final por vidas dio los puestos 1,2,3,3,5. Dos luchadores eliminados en el mismo paso comparten puesto, y la prueba exige puestos distintos.

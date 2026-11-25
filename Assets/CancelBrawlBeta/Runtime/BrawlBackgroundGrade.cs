@@ -22,6 +22,13 @@ namespace CancelBrawl.Beta
         public static readonly float[] AlbedoSaturation = { .40f, .85f, .30f, .60f };
         /// <summary>Background chroma allowed, as a share of the fighters' (margin under GDD §9's "less than").</summary>
         public const float TargetShare = .85f;
+        /// <summary>
+        /// Longest side of a graded copy. The stages use 2048 px textures; at full size the copies (albedo and emission,
+        /// with mips) cost ≈300 MB per arena and the soak flagged it. From the side camera a stage prop covers a few hundred
+        /// pixels at 720p, so 1024 keeps every texel that reaches the screen (≈75 MB per arena). Only the current arena's
+        /// copies are kept, so changing arena does not grow memory.
+        /// </summary>
+        public const int MaxCopySize = 1024;
 
         public static bool Enabled = true;
         public static bool Applied { get; private set; }
@@ -36,6 +43,9 @@ namespace CancelBrawl.Beta
 
         private static readonly Dictionary<(Texture, int), RenderTexture> cache = new Dictionary<(Texture, int), RenderTexture>();
         private static readonly List<Renderer> graded = new List<Renderer>();
+        private static readonly HashSet<(Texture, int)> used = new HashSet<(Texture, int)>();
+        /// <summary>GPU memory held by the graded copies (with mips).</summary>
+        public static long CachedBytes { get; private set; }
         private static readonly int BaseMap = Shader.PropertyToID("_BaseMap"), MainTex = Shader.PropertyToID("_MainTex"),
             EmissionMap = Shader.PropertyToID("_EmissionMap"), BaseColor = Shader.PropertyToID("_BaseColor"),
             ColorId = Shader.PropertyToID("_Color"), EmissionColor = Shader.PropertyToID("_EmissionColor"), SaturationId = Shader.PropertyToID("_Saturation");
@@ -55,6 +65,7 @@ namespace CancelBrawl.Beta
             }
             var clock = System.Diagnostics.Stopwatch.StartNew();
             float albedo = Mathf.Clamp01(albedoOverride ?? AlbedoFor(arena.Layout)), emission = EmissionSaturation(albedo);
+            used.Clear();
             var block = new MaterialPropertyBlock();
             foreach (var renderer in arena.GetComponentsInChildren<Renderer>())
             {
@@ -79,6 +90,7 @@ namespace CancelBrawl.Beta
                 gradedCamera = camera; originalBackground = camera.backgroundColor;
                 gradedBackground = camera.backgroundColor = Desaturate(originalBackground, albedo);
             }
+            ReleaseUnused();
             Applied = true; LastRenderers = graded.Count; LastAlbedo = albedo;
             LastApplyMilliseconds = (float)clock.Elapsed.TotalMilliseconds;
         }
@@ -93,6 +105,9 @@ namespace CancelBrawl.Beta
             gradedCamera = null; Applied = false; LastAlbedo = 1;
         }
 
+        /// <summary>Option off: undoes the grade and frees every copy.</summary>
+        public static void Off() { Revert(); used.Clear(); ReleaseUnused(); }
+
         /// <summary>Frees every graded copy (the calibration sweep makes one per factor).</summary>
         public static void ClearCache(bool keepTableFactors)
         {
@@ -101,6 +116,16 @@ namespace CancelBrawl.Beta
             var drop = new List<(Texture, int)>();
             foreach (var pair in cache) if (!keep.Contains(pair.Key.Item2)) drop.Add(pair.Key);
             foreach (var key in drop) { if (cache[key]) { cache[key].Release(); Object.Destroy(cache[key]); } cache.Remove(key); }
+        }
+
+        /// <summary>Frees the copies the arena just graded does not use (the previous arena's, or other sweep factors).</summary>
+        private static void ReleaseUnused()
+        {
+            var drop = new List<(Texture, int)>();
+            foreach (var pair in cache) if (!used.Contains(pair.Key)) drop.Add(pair.Key);
+            foreach (var key in drop) { if (cache[key]) { cache[key].Release(); Object.Destroy(cache[key]); } cache.Remove(key); }
+            CachedBytes = 0;
+            foreach (var pair in cache) if (pair.Value) CachedBytes += (long)pair.Value.width * pair.Value.height * 4 * 4 / 3;
         }
 
         private static int Key(float saturation) => Mathf.RoundToInt(saturation * 1000);
@@ -124,8 +149,12 @@ namespace CancelBrawl.Beta
         {
             if (saturation >= .999f) return source;
             var key = (source, Key(saturation));
+            used.Add(key);
             if (cache.TryGetValue(key, out RenderTexture done) && done && done.IsCreated()) return done;
-            var copy = new RenderTexture(source.width, source.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB)
+            // Downscaled copies sample the source's own mips (tex2D picks the level from the blit's derivatives).
+            float scale = Mathf.Min(1, (float)MaxCopySize / Mathf.Max(source.width, source.height));
+            int width = Mathf.Max(1, Mathf.RoundToInt(source.width * scale)), height = Mathf.Max(1, Mathf.RoundToInt(source.height * scale));
+            var copy = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB)
             {
                 name = source.name + " (fondo atenuado)", useMipMap = true, autoGenerateMips = true,
                 wrapMode = source.wrapMode, filterMode = source.filterMode, anisoLevel = source.anisoLevel,

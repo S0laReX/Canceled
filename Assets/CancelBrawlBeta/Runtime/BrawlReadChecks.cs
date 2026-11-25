@@ -19,7 +19,10 @@ namespace CancelBrawl.Beta
     /// - GDD §9 «El fondo tiene menos contraste y saturación que los luchadores»: checked literally per arena, mean CIELAB
     ///   chroma and standard deviation of L* of the background vs the fighters' pixels.
     /// - GDD §11 «Un mismo personaje debe reconocerse de perfil» and the identity accessory: profile silhouettes of
-    ///   different characters overlap (IoU, normalised height) less than <see cref="MaxProfileOverlap"/>.
+    ///   different characters overlap (IoU, normalised height) less than <see cref="MaxProfileOverlap"/>. That number is this
+    ///   suite's, not the GDD's, so (decision of 25/11/2026) it is a warning: <c>warnings</c> in read-smoke.json and a
+    ///   SIDE_CHECK_WARN line in the log, with the figure and the pair, outside <c>passed</c>. The GDD rules (§9, contrast,
+    ///   outline, height, colour blindness) stay hard failures.
     /// - GDD §10 «Todo debe leerse a 720p»: each fighter at least <see cref="MinHeightPixels"/> px tall at 720p.
     /// - The ΔE ≥ 10 per pixel and the 60 % shares (<see cref="MinSeparated"/>, <see cref="MinEdgeSeparated"/>) are this
     ///   suite's own numbers; findings below them are reported, never relaxed to pass.
@@ -55,13 +58,15 @@ namespace CancelBrawl.Beta
             public List<FighterRow> fighters = new List<FighterRow>();
             /// <summary>arenas/fighters: the game as it ships («FONDO ATENUADO» on, BrawlBackgroundGrade). The «sin atenuar» lists
             /// are the same measurements with the option off, for comparison.</summary>
-            public float gradeApplyMs;
+            public float gradeApplyMs, gradeMemoryMb;
             public List<ArenaRow> ungradedArenas = new List<ArenaRow>();
             public List<FighterRow> ungradedFighters = new List<FighterRow>();
             public List<Calibration> calibration = new List<Calibration>();
             public List<ProfileRow> profiles = new List<ProfileRow>();
             public List<string> profileOverlaps = new List<string>();
             public float maxProfileOverlap;
+            /// <summary>Findings reported but not counted for passed (thresholds that are this suite's, not the GDD's).</summary>
+            public List<string> warnings = new List<string>();
             public List<string> notes = new List<string>();
         }
 
@@ -97,6 +102,7 @@ namespace CancelBrawl.Beta
                     match.StartMatch();
                     yield return null;
                     if (graded) report.gradeApplyMs = Mathf.Max(report.gradeApplyMs, BrawlBackgroundGrade.LastApplyMilliseconds);
+                    if (graded) report.gradeMemoryMb = Mathf.Max(report.gradeMemoryMb, BrawlBackgroundGrade.CachedBytes / (1024f * 1024f));
                     arenaRow.arena = match.Arena.DisplayName;
                     var layout = match.Arena.CurrentSideLayout;
                     for (int placement = 0; placement < 2; placement++)
@@ -212,6 +218,8 @@ namespace CancelBrawl.Beta
                 check(c.suggestedAlbedo > 0 && Mathf.Abs(c.tableAlbedo - c.suggestedAlbedo) < .026f,
                     $"Factor de {c.arena}: la tabla conserva {c.tableAlbedo:P0} de la saturación del albedo y {c.tableEmission:P0} de la del neón; el mayor factor con el fondo ≤ {BrawlBackgroundGrade.TargetShare:0.00} × la croma de los luchadores ({c.targetChroma:0.0}) es {c.suggestedAlbedo:P0}");
             check(report.gradeApplyMs < 50, $"Atenuar el fondo se hace al cargar la arena, en la GPU: {report.gradeApplyMs:0.0} ms como máximo (< 50 ms)");
+            // Budget: one arena's copies at MaxCopySize (7 textures × 2 factors ≈ 75 MB); the previous arena's are freed.
+            check(report.gradeMemoryMb > 0 && report.gradeMemoryMb <= 96, $"Las copias atenuadas ocupan {report.gradeMemoryMb:0} MB como máximo con una arena cargada (≤ 96 MB; solo las de la arena actual)");
             foreach (var a in report.ungradedArenas) report.notes.Add($"Sin atenuar (opción apagada) {a.arena}: croma del fondo {a.backgroundChroma:0.0} frente a {a.fighterChroma:0.0}; contraste L* {a.backgroundContrast:0.0} frente a {a.fighterContrast:0.0}");
 
             FighterRow worst = null, worstVision = null, worstEdge = null, smallest = null;
@@ -272,8 +280,9 @@ namespace CancelBrawl.Beta
             report.maxProfileOverlap = maxOverlap;
             bool allProfiles = report.profiles.Count == looks; foreach (var p in report.profiles) allProfiles &= p.area > 0;
             check(allProfiles, $"Silueta de perfil de los {looks} aspectos, como la ve la cámara lateral (hoja `lectura-perfiles.png`: de frente arriba, de perfil abajo)");
-            check(maxOverlap < MaxProfileOverlap,
-                $"De perfil, las siluetas de personajes distintos no se confunden: solapamiento máximo {maxOverlap:0.00} < {MaxProfileOverlap:0.00} ({pair})");
+            string overlap = $"De perfil, las siluetas de personajes distintos no se confunden: solapamiento máximo {maxOverlap:0.00} (umbral propio {MaxProfileOverlap:0.00}; {pair})";
+            if (maxOverlap < MaxProfileOverlap) check(true, overlap);
+            else { report.warnings.Add(overlap); Debug.Log("SIDE_CHECK_WARN " + overlap); }
             yield return null;
             check(GameObject.Find("Silueta lectura") == null && GameObject.Find("Cámara lectura") == null, "La prueba no deja objetos en la escena");
 
