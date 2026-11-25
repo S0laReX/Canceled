@@ -10,6 +10,14 @@
 - Créditos en `Docs/Licencias/CREDITOS.md` y en el README. La casilla SYS-017 está marcada y el checklist va en **49 de 63**. Solo documentación: sin cambios de código ni de versión (sigue la 0.7.3).
 - Antes de vender: pedir a Meshy por escrito que aclare el uso comercial del plan Free (o regenerar con un plan de pago) y quitar `com.unity.ai.assistant` y `com.unity.pipeline`.
 
+## Relevo perf/rendimiento: animaciones de perfil (sobre 0.7.3)
+
+- `BrawlPose` lleva cinco relojes nuevos (`Braking`, `Turn`, `Flip`, `Tumble`, `Spawn`) que calcula `BrawlFighter.UpdatePresentationClocks` antes de animar: giro al cambiar de lado (solo en vista lateral), frenada al soltar una carrera, voltereta en el doble salto, giro del lanzamiento fuerte (`TumbleStrength` 0,4; termina en un múltiplo de 360°) y entrada al reaparecer con protección. `ClearPresentationClocks` en `RespawnAt`.
+- `BrawlFighterVisual.ApplyBody` aplica giro y escala sobre «Modelo» con pivote a 0,9 m, compuesto con la posición, rotación y escala que tenía en `Awake`; en reposo no toca nada (los retratos colocan ese objeto ellos mismos).
+- Suite `-anim-smoke` (`BrawlAnimChecks.cs`, registrada en `BrawlMatch` y `BrawlSideSmokeProbe`), 15 comprobaciones. Para mover a P1 en pruebas: `MakeBotForTest` + `AutomatedTest` y `Submit` en cada `WaitForFixedUpdate`; tras un golpe esperar 4 pasos fijos (el hitstop congela la pose).
+- Build sobre 0.7.3 (`Evidence/Branch-perf-rendimiento/Anim-0.7.3`): las 19 suites sin fallos (side 405, side-controls 157, beta 208, controls 125, kits 91, arena 46, fx 33, power 32, ui 31, audio 25, arena-stress 25, moves 21, sfx 18, recovery 16, camera 15, hud 15, anim 15, toon 9, coyote 5), sesión de 5 min 6/6 (20 KO, 0 frames >100 ms) y perf 35/35: 60,0 FPS, 1 % bajo 57,1–58,8, frame máximo 24 ms, CPU p95 ≤3,5 ms, GPU p95 ≤6,1 ms. En esta pasada no salió el tirón de GPU de 80–200 ms de la Azotea; sigue abierto hasta perfilarlo.
+- Pendiente: sustituir las poses por clips cuando se decida D01 (rig real); la hurtbox sigue siendo un rectángulo.
+
 ## Relevo 0.7.3 (efectos, sonido por capas y shader toon)
 
 - Junta la rama `claude/rendimiento-095c80` (antes `perf/rendimiento`): `BrawlImpactFx` (impactos, KO y super con partículas reutilizadas y modo reducido), `BrawlSfxSynth` + `BrawlAudio.PlayHit` (golpes por capas y escalera de combo) y el shader `FUNADOS/Toon` con contorno para todos los luchadores.

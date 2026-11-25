@@ -47,6 +47,12 @@ namespace CancelBrawl.Beta
         public bool InHitstun => stun > 0 || hitPause > 0;
         public float HitstunRemaining => stun;
         private float airborneTime;
+        // Presentation clocks for the profile animations (GDD 2.0 §11). Never read by the rules.
+        private float turnRemaining, flipRemaining, brakeRemaining, spawnRemaining, tumble, lastFacingSign = 1, lastRunX;
+        private bool launchTumbles;
+        /// <summary>Knockback share (of the maximum) from which a hit tumbles instead of flinching.</summary>
+        internal const float TumbleStrength = .4f;
+        private const float TumbleDegreesPerSecond = 720;
         private bool coyoteEligible;
         /// <summary>The last jump used the coyote window (for the measurement study).</summary>
         public bool LastJumpWasCoyote { get; private set; }
@@ -185,7 +191,8 @@ namespace CancelBrawl.Beta
                 { jumps = 0; LastJumpWasCoyote = true; }
                 else if (command.Jump) LastJumpWasCoyote = false;
                 if (command.Jump && jumps < 2 && dodgeRemaining <= 0)
-                { velocity.y = settings.jumpSpeed * (jumps == 1 ? .94f : 1); jumps++; jumpBuffer = 0; Grounded = false; hoverTimer = 0; coyoteEligible = false; BrawlFeedback.Sound("jump"); }
+                { velocity.y = settings.jumpSpeed * (jumps == 1 ? .94f : 1); jumps++; jumpBuffer = 0; Grounded = false; hoverTimer = 0; coyoteEligible = false; BrawlFeedback.Sound("jump");
+                  if (jumps == 2) flipRemaining = BrawlFighterVisual.FlipSeconds; }
                 if (command.Recovery && !Grounded && !recoveryUsed) Recover(move);
                 if (command.Dodge && dodgeCooldown <= 0 && (Grounded || !airDodgeUsed))
                 {
@@ -233,6 +240,7 @@ namespace CancelBrawl.Beta
             float drag = Mathf.Exp(-(Grounded ? 4.3f : 1.9f) * dt);
             velocity.x *= drag; velocity.z *= drag;
             transform.rotation = Quaternion.LookRotation(Facing);
+            UpdatePresentationClocks(dt, controlled);
             visual.Animate(new BrawlPose
             {
                 LocalVelocity = transform.InverseTransformDirection(controlled + new Vector3(velocity.x, 0, velocity.z)),
@@ -242,10 +250,50 @@ namespace CancelBrawl.Beta
                 AttackProgress = AttackProgress,
                 WindupEnd = attack.Duration > 0 ? attack.Windup / attack.Duration : 0,
                 ActiveEnd = attack.Duration > 0 ? (attack.Windup + attack.Active) / attack.Duration : 0,
-                VerticalAttack = AttackVertical, AirAttack = AttackAirborne
+                VerticalAttack = AttackVertical, AirAttack = AttackAirborne,
+                Braking = brakeRemaining / BrawlFighterVisual.BrakeSeconds,
+                Turn = lastFacingSign * turnRemaining / BrawlFighterVisual.TurnSeconds,
+                Flip = flipRemaining / BrawlFighterVisual.FlipSeconds,
+                Tumble = tumble,
+                Spawn = spawnRemaining / BrawlFighterVisual.SpawnSeconds
             });
             UpdateMarker();
             command.Jump = command.Basic = command.Heavy = command.Special = command.Recovery = command.Dodge = command.Super = false;
+        }
+
+        /// <summary>
+        /// Clocks behind the turn, braking, double-jump flip, launch tumble and respawn poses. They only follow what the
+        /// tick already decided: a hit, a dodge or landing cuts the flip, and the tumble always finishes upright.
+        /// </summary>
+        private void UpdatePresentationClocks(float dt, Vector3 controlled)
+        {
+            float sign = FacingSign;
+            if (sign != lastFacingSign) { turnRemaining = match.IsSideView ? BrawlFighterVisual.TurnSeconds : 0; lastFacingSign = sign; }
+            else turnRemaining = Mathf.Max(0, turnRemaining - dt);
+            // An attack, a hit or a dodge snaps to the new side: the body never points away from its own hitbox.
+            if (attacking || stun > 0 || dodgeRemaining > 0) turnRemaining = 0;
+            bool free = match.IsSideView && Grounded && !attacking && stun <= 0 && dodgeRemaining <= 0;
+            float run = free ? controlled.x : 0;
+            if (free && Mathf.Abs(lastRunX) > settings.moveSpeed * .6f && (Mathf.Abs(run) < Mathf.Abs(lastRunX) * .35f || run * lastRunX < 0))
+                brakeRemaining = BrawlFighterVisual.BrakeSeconds;
+            else brakeRemaining = free ? Mathf.Max(0, brakeRemaining - dt) : 0;
+            lastRunX = run;
+            flipRemaining = Grounded || stun > 0 || dodgeRemaining > 0 ? 0 : Mathf.Max(0, flipRemaining - dt);
+            spawnRemaining = Mathf.Max(0, spawnRemaining - dt);
+            if (stun > 0 && !Grounded && launchTumbles) tumble += dt * TumbleDegreesPerSecond;
+            else if (tumble > 0)
+            {
+                float upright = Mathf.Ceil(tumble / 360f - 1e-4f) * 360f;
+                tumble = Mathf.MoveTowards(tumble, upright, dt * TumbleDegreesPerSecond * 1.5f);
+                if (tumble >= upright - .01f) tumble = 0;
+            }
+            if (stun <= 0) launchTumbles = false;
+        }
+
+        private void ClearPresentationClocks()
+        {
+            turnRemaining = flipRemaining = brakeRemaining = spawnRemaining = tumble = lastRunX = 0;
+            launchTumbles = false; lastFacingSign = FacingSign;
         }
 
         /// <summary>One air recovery per airborne phase; its shape comes from the kit and needs a direction.</summary>
@@ -561,6 +609,8 @@ namespace CancelBrawl.Beta
             if (attacking && attack.Kind == AttackKind.Super && attackToken != null) BrawlZone.CancelFor(attackToken);
             attacking = false; comboWindow = 0; dodgeRemaining = 0;
             float strength = Mathf.Clamp01(result.Push / Mathf.Max(1, settings.maxKnockback));
+            flipRemaining = 0; brakeRemaining = 0;
+            launchTumbles = match.IsSideView && strength >= TumbleStrength;
             ImpactTier tier = ImpactTierFor(hits, result, strength);
             // GDD §10: one layer per kind of hit, one semitone higher per combo hit, and a whoosh when it launches.
             BrawlAudio.PlayHit(tier, comboHit - 1, strength > .6f);
@@ -670,6 +720,8 @@ namespace CancelBrawl.Beta
                 basicBuffer = heavyBuffer = jumpBuffer = hitPause = dropRemaining = 0;
                 comboHitCount = 0; comboTarget = -1;
             }
+            ClearPresentationClocks();
+            spawnRemaining = grantProtection ? BrawlFighterVisual.SpawnSeconds : 0;
             if (visual != null) visual.gameObject.SetActive(true);
             if (facingLine != null) facingLine.enabled = true;
         }
