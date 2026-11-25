@@ -170,6 +170,7 @@ namespace CancelBrawl.Beta
             HazardVolumes = gameObject.AddComponent<BrawlHazardVolumes>(); HazardVolumes.Configure(this);
             gameObject.AddComponent<BrawlHitResolver>().Configure(this);
             BrawlFeedback.Initialize(transform);
+            BrawlImpactFx.Create(this, view);
             OptionsPath = ResolveOptionsPath();
             LoadOptions();
             Bindings.Changed += SaveOptions;
@@ -178,7 +179,7 @@ namespace CancelBrawl.Beta
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
             else if (Array.IndexOf(Environment.GetCommandLineArgs(), "-haptics-probe") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlHapticsProbe>(); }
-            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0 || Array.IndexOf(args, "-perf-smoke") >= 0 || Array.IndexOf(args, "-soak-session") >= 0 || Array.IndexOf(args, "-audio-smoke") >= 0 || Array.IndexOf(args, "-ui-smoke") >= 0 || Array.IndexOf(args, "-hud-smoke") >= 0)
+            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0 || Array.IndexOf(args, "-perf-smoke") >= 0 || Array.IndexOf(args, "-soak-session") >= 0 || Array.IndexOf(args, "-audio-smoke") >= 0 || Array.IndexOf(args, "-ui-smoke") >= 0 || Array.IndexOf(args, "-hud-smoke") >= 0 || Array.IndexOf(args, "-fx-smoke") >= 0 || Array.IndexOf(args, "-sfx-smoke") >= 0 || Array.IndexOf(args, "-toon-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSideSmokeProbe>(); }
             // Support log: which pads the game sees and how, so field reports can be diagnosed from player.log.
             foreach (var device in InputSystem.devices) if (device is Gamepad) Debug.Log("FUNADOS_INPUT presente " + BrawlHapticsProbe.Describe(device));
@@ -725,6 +726,7 @@ namespace CancelBrawl.Beta
             foreach (var projectile in FindObjectsByType<BrawlProjectile>()) { projectile.gameObject.SetActive(false); Destroy(projectile.gameObject); }
             foreach (var hazard in FindObjectsByType<BrawlHazard>()) { hazard.gameObject.SetActive(false); Destroy(hazard.gameObject); }
             foreach (var effect in FindObjectsByType<BrawlTransient>()) { effect.gameObject.SetActive(false); Destroy(effect.gameObject); }
+            if (BrawlImpactFx.Instance) BrawlImpactFx.Instance.Clear();
         }
 
         public void Shake(float amount) { if (groupCamera) groupCamera.Shake(amount); }

@@ -67,6 +67,21 @@ namespace CancelBrawl.Beta
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
                 yield return BrawlPerfSuite.RunPerf(match,Check,output); Finish(); yield break;
             }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-toon-smoke")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlToonChecks.Run(match,Check,output); Finish(); yield break;
+            }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-sfx-smoke")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlSfxChecks.Run(match,Check,output); Finish(); yield break;
+            }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(),"-fx-smoke")>=0)
+            {
+                Check(match.IsSideView, "Producción usa reglas laterales 2.5D");
+                yield return BrawlImpactFxChecks.Run(match,Check,output); Finish(); yield break;
+            }
             if (Array.IndexOf(Environment.GetCommandLineArgs(),"-soak-session")>=0)
             {
                 Check(match.IsSideView, "Producción usa reglas laterales 2.5D");

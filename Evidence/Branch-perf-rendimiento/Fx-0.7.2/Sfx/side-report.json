@@ -1,0 +1,25 @@
+{
+    "version": "0.7.2",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Los siete efectos por capas son limpios: pico ≤ 0,9 (sin recortar), con nivel y sin clic al empezar o acabar",
+        "La esquiva no tiene golpe seco: ataque 115 ms frente a 5 ms del impacto",
+        "La esquiva es más aguda que el impacto (brillo 0.729 frente a 0.050)",
+        "El KO dura más del doble que un impacto (0.75 s) y suena más que un golpe ligero",
+        "El remate hacia abajo se distingue del golpe fuerte",
+        "Con la música al 100 % y las voces al 0 %, impacto, remate, esquiva y KO destacan (nivel ×1,5 o 4 veces más agudos que la música)",
+        "Escalera de combo: cada golpe sube un semitono (paso 6 / paso 1 = 1.35, esperado 1.33)",
+        "En partida, un combo sube de tono golpe a golpe (hit-light, hit-light#1, hit-light#2)",
+        "Un lanzamiento suma la capa de silbido al golpe fuerte",
+        "Esquiva con audio: suena «dodge» y se ve",
+        "Recuperación con audio: suena «recovery» y se ve",
+        "Impacto con audio: anillo y chispas visibles",
+        "KO con audio: estallido de KO visible",
+        "Esquiva con el audio apagado: queda la señal visual",
+        "Recuperación con el audio apagado: queda la señal visual",
+        "Impacto con el audio apagado: anillo y chispas visibles",
+        "KO con el audio apagado: estallido de KO visible"
+    ],
+    "failures": []
+}

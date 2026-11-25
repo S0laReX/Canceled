@@ -21,7 +21,23 @@ namespace CancelBrawl.Beta
         /// <summary>Fixed mix gain of each bus at 100 % (Master has none of its own).</summary>
         public static readonly float[] BusGain = { 1f, .12f, .2f, .3f, .15f };
         /// <summary>Sounds the game emits today, all on the SFX bus.</summary>
-        public static readonly string[] EffectKinds = { "jump", "hit", "ko", "ready", "super", "warning", "bounce", "trap", "swing" };
+        public static readonly string[] EffectKinds = { "jump", "hit", "ko", "ready", "super", "warning", "bounce", "trap", "swing",
+            "hit-light", "hit-heavy", "hit-spike", "dodge", "launch", "recovery" };
+        /// <summary>Combo ladder: each consecutive hit on the same rival plays one semitone higher, up to this many steps.</summary>
+        public const int ComboSteps = 6;
+        public static float ComboPitch(int step) => Mathf.Pow(2, Mathf.Clamp(step, 0, ComboSteps - 1) / 12f);
+
+        /// <summary>
+        /// Hit sound by presentation tier (light, strong, finisher; KO has its own), one semitone higher per combo hit,
+        /// plus a whoosh layer when the hit launches. Name: <c>hit-heavy#2</c> = strong hit, third in the combo.
+        /// </summary>
+        public static void PlayHit(ImpactTier tier, int comboStep, bool launch)
+        {
+            string kind = tier == ImpactTier.Spike ? "hit-spike" : tier == ImpactTier.Light ? "hit-light" : "hit-heavy";
+            int step = Mathf.Clamp(comboStep, 0, ComboSteps - 1);
+            Play(step > 0 ? kind + "#" + step : kind);
+            if (launch) Play("launch");
+        }
         public static readonly string[] UiKinds = { "ui-move", "ui-confirm", "ui-pause" };
         public static readonly string[] VoiceKinds = { "voice-ko", "voice-super" };
 
@@ -123,8 +139,19 @@ namespace CancelBrawl.Beta
         private static AudioClip Clip(string kind)
         {
             if (clips.TryGetValue(kind, out AudioClip clip) && clip) return clip;
-            clip = kind.StartsWith("voice-") ? BuildVoice(kind) : kind.StartsWith("ui-") ? BuildUi(kind) : BuildEffect(kind);
+            clip = kind.StartsWith("voice-") ? BuildVoice(kind) : kind.StartsWith("ui-") ? BuildUi(kind) : BuildLayered(kind) ?? BuildEffect(kind);
             clips[kind] = clip; return clip;
+        }
+
+        /// <summary>Layered effects from <see cref="BrawlSfxSynth"/>; <c>hit</c> is the light hit. Null for the older beeps.</summary>
+        private static AudioClip BuildLayered(string kind)
+        {
+            string name = kind == "hit" ? "hit-light" : kind;
+            int step = 0, hash = name.IndexOf('#');
+            if (hash > 0) { int.TryParse(name.Substring(hash + 1), out step); name = name.Substring(0, hash); }
+            if (!BrawlSfxSynth.Handles(name)) return null;
+            float[] data = BrawlSfxSynth.Build(name, ComboPitch(step));
+            var clip = AudioClip.Create(kind, data.Length, 1, BrawlSfxSynth.Rate, false); clip.SetData(data, 0); return clip;
         }
 
         private static AudioClip BuildEffect(string kind)

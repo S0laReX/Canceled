@@ -39,17 +39,10 @@ namespace CancelBrawl.Beta
         /// <summary>Plays a sound through its bus (<see cref="BrawlAudio.Route"/>).</summary>
         public static void Sound(string kind) => BrawlAudio.Play(kind);
 
+        /// <summary>Small pooled dust (jumps, dodges, swings); impacts, KOs and supers use <see cref="BrawlImpactFx"/>.</summary>
         public static void Burst(Vector3 position, Color color, int count)
         {
-            if (ReducedEffects) count = Mathf.Max(1, count / 3);
-            for (int i = 0; i < count; i++)
-            {
-                var spark = GameObject.CreatePrimitive(PrimitiveType.Cube); spark.name = "Impacto";
-                var collider = spark.GetComponent<Collider>(); collider.enabled = false; Object.Destroy(collider);
-                spark.transform.position = position; spark.transform.localScale = Vector3.one * Random.Range(.06f, .14f);
-                spark.GetComponent<Renderer>().sharedMaterial = Material(color);
-                spark.AddComponent<BrawlTransient>().Initialize(Random.onUnitSphere * Random.Range(2, 6), .3f);
-            }
+            if (BrawlImpactFx.Instance) BrawlImpactFx.Instance.Puff(position, color, count);
         }
 
         public static Vector3 FloorBelow(Vector3 point)

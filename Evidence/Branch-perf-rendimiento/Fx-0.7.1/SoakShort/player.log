@@ -1,0 +1,45 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.1/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.1/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/rendimiento-095c80/Builds/Funados/0.7.1/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.041 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.942100 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\rendimiento-095c80\Evidence\Branch-perf-rendimiento\Fx-0.7.1\SoakShort\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+FUNADOS_SOAK partida 1 (inicio, Azotea Influencer): 90 s de juego, KO 2, real 94 s, objetos 158/4462, gestionada 4.2 MB, proceso 641 MB, errores 0
+FUNADOS_SOAK partida 2 (revancha, Azotea Influencer): 90 s de juego, KO 4, real 187 s, objetos 158/4460, gestionada 4.5 MB, proceso 641 MB, errores 0
+FUNADOS_SOAK partida 3 (revancha, Azotea Influencer): 90 s de juego, KO 3, real 281 s, objetos 157/4457, gestionada 5.3 MB, proceso 641 MB, errores 0
+FUNADOS_SOAK partida 4 (menú, Torre Corporativa): 90 s de juego, KO 7, real 375 s, objetos 164/4489, gestionada 5.3 MB, proceso 644 MB, errores 0
+SIDE_CHECK_PASS Sesión de 6.2 min a velocidad real: 4 partidas de cinco luchadores (2 revanchas encadenadas, 1 vueltas al menú, 16 KO), sin bloqueos
+SIDE_CHECK_PASS Sesión sin errores ni excepciones en el registro (0)
+SIDE_CHECK_PASS Sesión fluida: 60.0 FPS medios, 1 % bajo 58.1, frame máx. 30 ms (0 >100 ms, 0 >250 ms); CPU p95 3.32 ms, GPU p95 5.17 ms
+SIDE_CHECK_PASS Sin crecimiento de entidades entre revanchas: 0 GameObjects y 0 objetos de Unity como máximo en la misma arena
+SIDE_CHECK_PASS Sin fugas de memoria: gestionada +1.1 MB (+2.62 MB/10 min), proceso +3 MB (+5.3 MB/10 min)
+SIDE_RESULT True checks=6 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed
