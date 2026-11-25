@@ -486,7 +486,7 @@ namespace CancelBrawl.Beta
             if (super && (Kit.Super == SuperStyle.Zone || Kit.Super == SuperStyle.Bubble)) return; // resolved by the zone
             if (super && BrawlImpactFx.Instance) BrawlImpactFx.Instance.Super(transform.position + Vector3.up * .9f + Facing * .5f, PlayerColor);
             else BrawlFeedback.Burst(transform.position + Vector3.up * .9f + Facing, PlayerColor, 5);
-            BrawlFeedback.Sound(super ? "super" : "swing");
+            if (super) BrawlAudio.Play("super", CharacterIndex, PlayerIndex); else BrawlFeedback.Sound("swing");
             if (super) match.Shake(.3f);
         }
 
@@ -688,7 +688,7 @@ namespace CancelBrawl.Beta
             Stocks--; Damage = 0; Meter = 0; command = default; velocity = Vector3.zero;
             attacking = false; protection = 0; stun = 0; chainCharged = false; comboWindow = 0; hoverTimer = 0; recoveryTimer = 0;
             if (activeTrap) Destroy(activeTrap.gameObject);
-            KoEffect(); BrawlFeedback.Sound("ko");
+            KoEffect(); BrawlAudio.Play("ko", CharacterIndex, PlayerIndex);
             match.Haptic(PlayerIndex, .95f, .9f, .5f);
             controller.enabled = false;
             transform.position = match.SafeSpawnFor(this);

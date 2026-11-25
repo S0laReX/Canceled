@@ -128,7 +128,7 @@ namespace CancelBrawl.Beta
                 fx.ResetStats();
                 match.Fighters[1].ResetPractice(new Vector3(40, 9, 0), 60);
                 match.Fighters[1].LoseStock();
-                check(fx.LastTier == ImpactTier.Ko && (muted || BrawlAudio.LastKind == "voice-ko" || BrawlAudio.LastKind == "ko"), $"KO {tag}: estallido de KO visible");
+                check(fx.LastTier == ImpactTier.Ko && (muted || BrawlAudio.LastKind.StartsWith("voice-ko") || BrawlAudio.LastKind == "ko"), $"KO {tag}: estallido de KO visible");
             }
             BrawlAudio.SetVolume(BrawlAudioBus.Master, master);
             match.ReturnToMenu();

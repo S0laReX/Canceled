@@ -89,7 +89,7 @@ namespace CancelBrawl.Beta
                 if (inside) token.Hit(fighter, flat.sqrMagnitude > .01f ? flat.normalized : Owner.Facing);
             }
             if (BrawlImpactFx.Instance) BrawlImpactFx.Instance.Impact(transform.position + Vector3.up * .6f, Owner.PlayerColor, ImpactTier.Super, Vector3.up);
-            BrawlFeedback.Sound("super");
+            BrawlAudio.Play("super", Owner.CharacterIndex, Owner.PlayerIndex);
             match.Shake(.35f);
             Destroy(gameObject);
         }

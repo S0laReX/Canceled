@@ -157,7 +157,14 @@ namespace CancelBrawl.Beta
             if (match.Phase == MatchPhase.Menu)
             {
                 Fill(screen, new Color(.02f, .03f, .065f, palette.HighContrast ? .97f : .9f));
-                GUI.matrix = Layout.Centre; DrawMenu();
+                GUI.matrix = Layout.Centre;
+                if (BrawlCredits.Open)
+                {
+                    BrawlCredits.Draw(Layout, palette, match.TextScale, match.DisplayVersion);
+                    if (Button(BrawlCredits.BackRect, "VOLVER  /  ESC · B", Cyan)) BrawlCredits.Close();
+                    Nav("credits-back", BrawlCredits.BackRect, BrawlCredits.Close);
+                }
+                else DrawMenu();
             }
             else
             {
@@ -169,6 +176,7 @@ namespace CancelBrawl.Beta
                 if (match.Phase == MatchPhase.Countdown) DrawCountdown();
                 else if (match.Phase == MatchPhase.Paused) DrawPause();
                 else if (match.Phase == MatchPhase.Results) DrawResults();
+                GUI.matrix = Layout.Canvas; BrawlSubtitles.Draw(Layout, palette, match.TextScale, match.ColorBlindPalette);
             }
             CommitNavigation();
             CommitCombatCounters();
@@ -246,6 +254,9 @@ namespace CancelBrawl.Beta
             Label(new Rect(80, 58, 800, 86), match.Title, title, Paper);
             Label(new Rect(84, 146, 820, 34), match.IsSideView ? "Combos aéreos. Golpes y poderes. Fuera de la plataforma." : "El último en pie se queda con la cancha.", heading, Muted);
             Label(new Rect(1010, 70, 510, 26), "LOCAL  /  " + match.DisplayVersion, body, Cyan, TextAnchor.UpperRight);
+            Rect creditsRect = new Rect(1010, 66, 140, 30);
+            if (SmallButton(creditsRect, "CRÉDITOS", Muted)) BrawlCredits.Show();
+            Nav("credits", creditsRect, BrawlCredits.Show);
             Label(new Rect(1010, 102, 510, 52), "Empuja a tus rivales fuera del escenario.\n100 % de daño no elimina por sí solo.", small, Paper, TextAnchor.UpperRight);
             bool menuEnabled = GUI.enabled;
             GUI.enabled = match.CanStartTraining;
@@ -419,8 +430,10 @@ namespace CancelBrawl.Beta
                 d => match.SetDisplayScale(match.TextScale, match.HudScale + d * .15f));
             y += row;
             // SYS-071: high contrast and colour-blind palette, one toggle each on a shared row.
-            float half = (width - 8) * .5f;
-            Rect contrastRect = new Rect(x, y, half, row - 4), colourRect = new Rect(x + half + 8, y, half, row - 4);
+            float half = (width - 16) / 3f;
+            Rect contrastRect = new Rect(x, y, half, row - 4), colourRect = new Rect(x + half + 8, y, half, row - 4), subtitleRect = new Rect(x + 2 * (half + 8), y, half, row - 4);
+            if (SmallButton(subtitleRect, "SUBTÍTULOS: " + (match.Subtitles ? "SÍ" : "NO"), match.Subtitles ? Cyan : Muted)) match.SetSubtitles(!match.Subtitles);
+            Nav("display-subtitles", subtitleRect, () => match.SetSubtitles(!match.Subtitles));
             if (SmallButton(contrastRect, "ALTO CONTRASTE: " + (match.HighContrast ? "SÍ" : "NO"), match.HighContrast ? Cyan : Muted))
                 match.SetAccessibility(!match.HighContrast, match.ColorBlindPalette);
             Nav("display-contrast", contrastRect, () => match.SetAccessibility(!match.HighContrast, match.ColorBlindPalette));

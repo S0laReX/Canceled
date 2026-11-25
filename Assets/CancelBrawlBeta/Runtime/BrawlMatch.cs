@@ -170,6 +170,7 @@ namespace CancelBrawl.Beta
             HazardVolumes = gameObject.AddComponent<BrawlHazardVolumes>(); HazardVolumes.Configure(this);
             gameObject.AddComponent<BrawlHitResolver>().Configure(this);
             BrawlFeedback.Initialize(transform);
+            BrawlAudio.SpeakerNames = CharacterName;
             BrawlImpactFx.Create(this, view);
             OptionsPath = ResolveOptionsPath();
             LoadOptions();
@@ -179,7 +180,7 @@ namespace CancelBrawl.Beta
             { AutomatedTest = true; gameObject.AddComponent<BrawlSmokeProbe>(); }
             else if (Array.IndexOf(Environment.GetCommandLineArgs(), "-haptics-probe") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlHapticsProbe>(); }
-            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0 || Array.IndexOf(args, "-perf-smoke") >= 0 || Array.IndexOf(args, "-soak-session") >= 0 || Array.IndexOf(args, "-audio-smoke") >= 0 || Array.IndexOf(args, "-ui-smoke") >= 0 || Array.IndexOf(args, "-hud-smoke") >= 0 || Array.IndexOf(args, "-fx-smoke") >= 0 || Array.IndexOf(args, "-sfx-smoke") >= 0 || Array.IndexOf(args, "-toon-smoke") >= 0 || Array.IndexOf(args, "-anim-smoke") >= 0)
+            if (Array.IndexOf(args, "-side-smoke") >= 0 || Array.IndexOf(args, "-power-smoke") >= 0 || Array.IndexOf(args, "-side-controls-smoke") >= 0 || Array.IndexOf(args, "-moves-smoke") >= 0 || Array.IndexOf(args, "-kits-smoke") >= 0 || Array.IndexOf(args, "-recovery-smoke") >= 0 || Array.IndexOf(args, "-camera-smoke") >= 0 || Array.IndexOf(args, "-coyote-study") >= 0 || Array.IndexOf(args, "-arena-smoke") >= 0 || Array.IndexOf(args, "-arena-stress") >= 0 || Array.IndexOf(args, "-perf-smoke") >= 0 || Array.IndexOf(args, "-soak-session") >= 0 || Array.IndexOf(args, "-audio-smoke") >= 0 || Array.IndexOf(args, "-ui-smoke") >= 0 || Array.IndexOf(args, "-hud-smoke") >= 0 || Array.IndexOf(args, "-fx-smoke") >= 0 || Array.IndexOf(args, "-sfx-smoke") >= 0 || Array.IndexOf(args, "-toon-smoke") >= 0 || Array.IndexOf(args, "-anim-smoke") >= 0 || Array.IndexOf(args, "-music-smoke") >= 0)
             { AutomatedTest = true; gameObject.AddComponent<BrawlSideSmokeProbe>(); }
             // Support log: which pads the game sees and how, so field reports can be diagnosed from player.log.
             foreach (var device in InputSystem.devices) if (device is Gamepad) Debug.Log("FUNADOS_INPUT presente " + BrawlHapticsProbe.Describe(device));
@@ -260,6 +261,7 @@ namespace CancelBrawl.Beta
             CleanupRound();
             ArenaIndex = Mathf.Clamp(ArenaIndex, 0, BrawlArena.Count - 1);
             BuildArena(ArenaIndex);
+            BrawlAudio.PlayMusic(BrawlMusic.ArenaTrack(ArenaIndex)); BrawlSubtitles.Clear();
             int count = IsTraining ? 2 : Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers);
             Fighters = new BrawlFighter[count];
             var targets = new Transform[count];
@@ -293,6 +295,7 @@ namespace CancelBrawl.Beta
         {
             PollDevices();
             UpdateHaptics();
+            BrawlAudio.Poll();
             if (RemapListening) { PollRemap(); return; }
             if (AutomatedTest) return;
             var keys = Keyboard.current;
@@ -303,6 +306,7 @@ namespace CancelBrawl.Beta
                 else if (DevicePause && pad.startButton.wasPressedThisFrame) Devices.ClaimMissing(pad);
             }
             // Enter/A in menus belong to the focused control (BrawlHud navigation, SYS-070); Start is a shortcut to play.
+            if (Phase == MatchPhase.Menu && BrawlCredits.Open) { if (pause) BrawlCredits.Close(); return; }
             if (Phase == MatchPhase.Menu || Phase == MatchPhase.Results) { if (pause && !(keys != null && keys.escapeKey.wasPressedThisFrame)) StartMatch(); return; }
             if (pause && (Phase == MatchPhase.Playing || Phase == MatchPhase.Paused || Phase == MatchPhase.Countdown)) { TogglePause(); return; }
             if (Phase != MatchPhase.Playing) return;
@@ -669,7 +673,7 @@ namespace CancelBrawl.Beta
             if (survivors <= 1)
             {
                 if (last != null) last.Place = 1;
-                Phase = MatchPhase.Results; ClearInputs();
+                Phase = MatchPhase.Results; ClearInputs(); SayWinner();
             }
         }
 
@@ -682,8 +686,20 @@ namespace CancelBrawl.Beta
             {
                 alive[i].Place = i > 0 && alive[i].Stocks == alive[i - 1].Stocks && Mathf.Abs(alive[i].Damage - alive[i - 1].Damage) < .0001f ? alive[i - 1].Place : i + 1;
             }
-            Phase = MatchPhase.Results; ClearInputs();
+            Phase = MatchPhase.Results; ClearInputs(); SayWinner();
         }
+
+        /// <summary>GDD §10: the winner's line (and subtitle) over the results screen.</summary>
+        private void SayWinner()
+        {
+            if (IsTraining || Fighters == null) return;
+            foreach (var fighter in Fighters)
+                if (fighter != null && fighter.Place == 1) { BrawlAudio.Say(VoiceLine.Win, fighter.CharacterIndex, fighter.PlayerIndex); return; }
+        }
+
+        /// <summary>Subtitles for character lines (PANTALLA option, saved).</summary>
+        public bool Subtitles => BrawlSubtitles.Enabled;
+        public void SetSubtitles(bool on) { BrawlSubtitles.Enabled = on; if (!on) BrawlSubtitles.Clear(); SaveOptions(); }
 
         public void TogglePause()
         {
@@ -713,6 +729,7 @@ namespace CancelBrawl.Beta
         {
             IsTraining = false;
             Phase = MatchPhase.Menu; CleanupRound(); RemainingTime = settings.matchSeconds;
+            BrawlAudio.PlayMusic(BrawlMusic.MenuTrack); BrawlSubtitles.Clear();
             groupCamera.Configure(null);
         }
 
@@ -787,7 +804,7 @@ namespace CancelBrawl.Beta
             localCoop = data.localCoop; p1UsesGamepad = data.p1UsesGamepad;
             MoveDeadzone = data.moveDeadzone; AimDeadzone = data.aimDeadzone; StickResponse = data.stickResponse; VibrationStrength = data.vibration;
             TextScale = data.textScale; HudScale = data.hudScale;
-            HighContrast = data.highContrast; ColorBlindPalette = data.colorBlindPalette;
+            HighContrast = data.highContrast; ColorBlindPalette = data.colorBlindPalette; BrawlSubtitles.Enabled = data.subtitles;
             bool keyboardClean = Bindings.TryLoad(BindingScheme.Keyboard, data.keyboard);
             bool gamepadClean = Bindings.TryLoad(BindingScheme.Gamepad, data.gamepad);
             if ((status == OptionsLoadStatus.Loaded || status == OptionsLoadStatus.MigratedLegacy) && (!keyboardClean || !gamepadClean))
@@ -806,7 +823,7 @@ namespace CancelBrawl.Beta
             master = BrawlAudio.Volume(BrawlAudioBus.Master), voice = BrawlAudio.Volume(BrawlAudioBus.Voice), ui = BrawlAudio.Volume(BrawlAudioBus.Ui),
             localCoop = localCoop, p1UsesGamepad = p1UsesGamepad,
             moveDeadzone = MoveDeadzone, aimDeadzone = AimDeadzone, stickResponse = StickResponse, vibration = VibrationStrength,
-            textScale = TextScale, hudScale = HudScale, highContrast = HighContrast, colorBlindPalette = ColorBlindPalette,
+            textScale = TextScale, hudScale = HudScale, highContrast = HighContrast, colorBlindPalette = ColorBlindPalette, subtitles = BrawlSubtitles.Enabled,
             keyboard = Bindings.Export(BindingScheme.Keyboard), gamepad = Bindings.Export(BindingScheme.Gamepad)
         };
 

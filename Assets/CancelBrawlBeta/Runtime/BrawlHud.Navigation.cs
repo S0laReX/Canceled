@@ -107,6 +107,7 @@ namespace CancelBrawl.Beta
             ReadNavigation(out Vector2Int move, out bool confirm, out bool back);
             NavItem focused = navItems[IndexOf(focusId)];
             if (confirm) { focused.Activate?.Invoke(); return; }
+            if (back && BrawlCredits.Open) { BrawlCredits.Close(); return; }
             if (back && match.Phase == MatchPhase.Paused && match.MissingDeviceMask == 0) { match.TogglePause(); return; }
             if (move.x != 0 && focused.Adjust != null) { focused.Adjust(move.x); return; }
             if (move != Vector2Int.zero) MoveFocus(focused, move);

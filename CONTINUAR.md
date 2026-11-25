@@ -4,6 +4,25 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo perf/rendimiento: música, voces, subtítulos y créditos (sobre 0.7.4)
+
+- Archivos nuevos:
+  - `BrawlMusic.cs`: cinco pistas de 8 compases sintetizadas por código, una para el menú y una por arena, con bucle sin salto y normalizadas a RMS 0,17.
+  - `BrawlVoices.cs`: 15 frases originales (KO, super y victoria por personaje), en un balbuceo sintetizado con tono propio por personaje. Sin grabaciones, sin clonar voces y sin imitar a nadie.
+  - `BrawlSubtitles.cs` y `BrawlCredits.cs`.
+  - `BrawlMusicChecks.cs`: la suite `-music-smoke`, 34 comprobaciones.
+- `BrawlAudio`: solo la pista del menú y los efectos se crean al arrancar (≈200 + 110 ms). Las pistas de arena y las frases se generan en hilos (`Task.Run`), y `BrawlAudio.Poll()`, desde `BrawlMatch.Update`, convierte una por frame en clip. Si hace falta una que aún no está, `MusicClip` y `Clip` la terminan en el momento.
+- `BrawlAudio.Play("ko"/"super", personaje, jugador)` dice la frase y muestra el subtítulo. Prioridad en el bus de voces: victoria > KO > super.
+- `BrawlAudio.SpeakerNames` usa `BrawlMatch.CharacterName`, así que los nombres son los de producción.
+- HUD, solo líneas mínimas:
+  - `BrawlHud.cs`: la rama del menú dibuja los créditos y el botón «VOLVER» (`credits-back`) cuando están abiertos. Hay una línea `BrawlSubtitles.Draw` después de las fases y un botón «CRÉDITOS» (`credits`) en el menú.
+  - Pantalla tiene un tercer interruptor, «SUBTÍTULOS» (`display-subtitles`).
+  - `BrawlHud.Navigation.cs`: atrás cierra los créditos.
+- Opciones: el campo opcional `subtitles` (por defecto `true`) sigue en v4. Un archivo sin ese campo carga como «Loaded».
+- Créditos: el texto sale de `Docs/Licencias/CREDITOS.md`, que ahora tiene un apartado «Audio», y la línea de Meshy está literal.
+- Evidencia: `Evidence/Branch-perf-rendimiento/Music-0.7.4`, con las 22 suites (Music es la 22) en una corrida. En la primera pasada de `-perf-smoke`, Azotea falló una condición de juego: los bots no hicieron ningún KO en 60 s, aunque los fotogramas estuvieron bien. Se repitió con la máquina libre y pasaron 35 de 35. El tirón de Azotea volvió a salir a los ≈14 s de juego, de 52 ms en la primera pasada y de 63 ms en la segunda, frente a los 56 ms de 0.7.4. La música no lo empeora de forma clara, pero sigue abierto. Los fotogramas por segundo medios fueron 59,9–60 en las cuatro arenas. `music-smoke` pasó 34 de 34 y el soak corto, 6 de 6.
+- Pendiente: sustituir música y voces por el audio final y que personas lo escuchen y lo valoren.
+
 ## Relevo 0.7.4 (animaciones de perfil)
 
 - Juntada `claude/rendimiento-095c80` (4ac02d2): animaciones de perfil para los cinco kits (giro, frenada, voltereta, caída, reaparición) en `BrawlFighter.cs` y `BrawlFighterVisual.Model.cs`, más la suite `-anim-smoke` (`BrawlAnimChecks.cs`, 15 comprobaciones). Las poses son procedurales sobre el rig automático: hay que cambiarlas por clips cuando se decida D01.

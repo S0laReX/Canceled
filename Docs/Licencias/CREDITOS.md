@@ -4,7 +4,12 @@
 
 - Modelos 3D de personajes y escenarios, y arte conceptual de escenarios: creados con **Meshy** ([meshy.ai](https://www.meshy.ai)) – CC BY 4.0 License. Imágenes conceptuales generadas en Meshy con el modelo de imagen *nano-banana-pro*.
 - Rig y animación de los personajes: generados por código en el proyecto (`BrawlAutoRig`).
-- Shader *FUNADOS Toon Starter*, efectos de sonido y música provisional: propios del proyecto (el audio se sintetiza en `BrawlFeedback`).
+- Atribución que se muestra en la pantalla de créditos del juego (`BrawlCredits`), literal: «Model created with Meshy – CC BY 4.0 License».
+- Shader *FUNADOS Toon Starter* y efectos visuales: propios del proyecto.
+
+## Audio
+
+- Música por arena (`BrawlMusic`), voces de personajes (`BrawlVoices`) y efectos de sonido (`BrawlSfxSynth`): sintetizados por código en el proyecto. Sin grabaciones, sin clonación de voz y sin imitar a personas reales; las voces son un balbuceo sintético y el texto llega por los subtítulos.
 
 ## Motor y paquetes
 
