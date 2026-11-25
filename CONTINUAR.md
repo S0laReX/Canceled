@@ -5,6 +5,15 @@
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
 
+## Relevo 0.7.3 (efectos, sonido por capas y shader toon)
+
+- Junta la rama `claude/rendimiento-095c80` (antes `perf/rendimiento`): `BrawlImpactFx` (impactos, KO y super con partículas reutilizadas y modo reducido), `BrawlSfxSynth` + `BrawlAudio.PlayHit` (golpes por capas y escalera de combo) y el shader `FUNADOS/Toon` con contorno para todos los luchadores.
+- Suites nuevas: `-fx-smoke`, `-sfx-smoke`, `-toon-smoke`. La evidencia de la rama está en `Evidence/Branch-perf-rendimiento/`; la de la build 0.7.3 (20 suites) en `Evidence/Production-0.7.3/suites.txt`.
+- Checklist 48/63: marcadas «Shader toon y contorno», «Efectos de impacto y supers» y «Efectos finales de golpes…».
+- Medir rendimiento con la máquina libre: un runner roto de 0.7.2 dejó una build abierta que causó el frame de 311 ms de la primera sesión de 5 min; ya está cerrado y se borraron sus carpetas basura (`Production-0.7.2/-`, `/s`).
+- Precalentamientos al arrancar: clips de audio (`BrawlAudio.Prewarm`), partículas y bloom (`BrawlImpactFx`, 3 frames invisibles), glifos de la fuente del HUD (`BrawlHud.WarmGlyphs`). Reparado el mojibake de `BrawlMatch.cs` que entró con 0.7.2.
+- **Problema conocido (pendiente):** un tirón de GPU de 80–200 ms, una vez por proceso, a ~14 s de juego en la primera arena (Azotea) de `-perf-smoke`; 4 de 5 corridas pasaron de 100 ms. No depende del KO (salió con 0 KO, sin reapariciones). Solo aparece desde que se juntó rendimiento con el HUD 0.7.2; por separado no lo tenían. Perf ahora anota último KO, reapariciones y cámara en cada tirón. Siguiente paso: perfilar con un Development Build y Profiler conectado en ese momento.
+
 ## Relevo 0.7.2 (HUD de combate y retratos)
 
 - `BrawlHud.Combat.cs`: tarjeta nueva por luchador según el GDD 2.0 §10 (retrato, forma y puesto, porcentaje grande con color de calor y animación al subir, vidas como formas, estado y barra de ESCÁNDALO). Combo junto a cualquier atacante; marcadores del borde con forma. Sigue en IMGUI: la decisión D07 (uGUI o UI Toolkit) sigue abierta y este HUD es la referencia de qué debe mostrar.

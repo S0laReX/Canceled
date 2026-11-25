@@ -81,7 +81,17 @@ namespace CancelBrawl.Beta
             volume = gameObject.AddComponent<Volume>();
             volume.isGlobal = true; volume.priority = 10; volume.weight = 0; volume.sharedProfile = profile;
             if (view) view.GetUniversalAdditionalCameraData().renderPostProcessing = true;
+            // First use of each system and of the bloom pass compiles and allocates on the GPU: do it now, invisibly.
+            foreach (var system in all) Emit(system, transform.position + Vector3.forward * DepthOffset, Vector3.zero, .01f, .05f, Color.clear);
+            warmFrames = WarmFrames;
         }
+
+        /// <summary>Frames after creation with the bloom pass on at a weight no one can see, so its first real pulse is cheap.</summary>
+        public const int WarmFrames = 3;
+        private const float WarmWeight = .0005f;
+        private int warmFrames;
+        /// <summary>True once the start-up warm-up of particles and bloom has run.</summary>
+        public bool Warmed => warmFrames == 0;
 
         private ParticleSystem System(string name, Material material, ParticleSystemRenderMode mode, int max, float gravity, bool grow)
         {
@@ -236,6 +246,8 @@ namespace CancelBrawl.Beta
             if (paused) return;
             bloomPulse = Mathf.Max(0, bloomPulse - Time.deltaTime / .22f);
             volume.weight = BrawlFeedback.ReducedEffects ? 0 : bloomPulse;
+            // The frame the count reaches 0 already renders at the real weight, so Warmed means "back at rest".
+            if (warmFrames > 0 && --warmFrames > 0) volume.weight = Mathf.Max(volume.weight, WarmWeight);
         }
 
         private void OnDestroy()

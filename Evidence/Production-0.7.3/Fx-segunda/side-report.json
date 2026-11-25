@@ -1,0 +1,41 @@
+{
+    "version": "0.7.3",
+    "passed": false,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "El sistema de efectos existe junto a la partida",
+        "La build incluye el shader de partículas de URP",
+        "Partículas y bloom se preparan al crear el sistema (3 frames invisibles), así el primer KO no compila nada",
+        "Básico flojo se lee como impacto ligero",
+        "Fuerte o especial se lee como impacto fuerte",
+        "Empuje alto se lee como impacto fuerte aunque sea básico",
+        "Lanzamiento hacia abajo se lee como remate",
+        "Efectos completos: golpe fuerte real usa su nivel y conserva el anillo",
+        "Efectos completos: el impacto queda detrás del luchador visto desde la cámara",
+        "Efectos completos: destello y pulso de bloom en golpe fuerte",
+        "Efectos completos: el volumen de bloom sube tras el golpe",
+        "Efectos completos: el bloom vuelve a 0 en menos de 0,4 s",
+        "Efectos completos: el remate marca su dirección con estelas y anillo",
+        "Efectos completos: el super muestra rayos y anillo al activarse",
+        "Efectos completos: super con destello y bloom máximo",
+        "Efectos completos: el KO se ve dentro del área de juego y apunta por dónde salió",
+        "Efectos reducidos: golpe fuerte real usa su nivel y conserva el anillo",
+        "Efectos reducidos: el impacto queda detrás del luchador visto desde la cámara",
+        "Efectos reducidos: sin destello ni bloom",
+        "Efectos reducidos: el remate marca su dirección con estelas y anillo",
+        "Efectos reducidos: el super muestra rayos y anillo al activarse",
+        "Efectos reducidos: super sin destello ni bloom y con menos rayos",
+        "Efectos reducidos: el KO se ve dentro del área de juego y apunta por dónde salió",
+        "Efectos reducidos: un tercio de chispas (6 de 18) y las mismas formas",
+        "La pausa congela las partículas",
+        "Al reanudar las partículas siguen y se apagan",
+        "120 efectos seguidos no crean objetos (112 → 112)",
+        "Las partículas vivas respetan el tope del grupo (1092)",
+        "Emitir 120 efectos cuesta menos de 8 ms (2.40 ms)",
+        "Volver al menú borra partículas y bloom",
+        "No quedan chispas antiguas como objetos sueltos"
+    ],
+    "failures": [
+        "Posproceso activo con el bloom en reposo (peso 0)"
+    ]
+}

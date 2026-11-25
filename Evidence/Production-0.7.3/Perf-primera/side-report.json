@@ -1,0 +1,43 @@
+{
+    "version": "0.7.3",
+    "passed": false,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Azotea Influencer: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (3 KO, 69 supers, efectos completos)",
+        "Azotea Influencer: 59.8 FPS medios (≥58), 1 % bajo 45.4 (≥45); frame mediana 16.67 ms, p95 16.68 ms",
+        "Azotea Influencer: FrameTimingManager mide CPU y GPU en la build (3589 muestras de CPU, 3589 de GPU)",
+        "Azotea Influencer: CPU principal mediana 2.85 ms, p95 3.67 ms (<13.5), pico 13.01 ms; hilo de render p95 1.59 ms",
+        "Azotea Influencer: GPU mediana 3.29 ms, p95 4.94 ms (<13.5), pico 199.66 ms",
+        "Azotea Influencer: carga de arena con cinco luchadores 5 ms (<2 s), primer frame 17 ms; vuelta al menú 18 ms (<0.5 s)",
+        "Azotea Influencer: memoria gestionada pico 7.3 MB (<256), nativa Unity 215 MB, proceso 748 MB (<2048); asignación GC mediana 0.0 KB/frame",
+        "Torre Corporativa: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (6 KO, 66 supers, efectos completos)",
+        "Torre Corporativa: 60.0 FPS medios (≥58), 1 % bajo 57.7 (≥45); frame mediana 16.67 ms, p95 16.68 ms",
+        "Torre Corporativa: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)",
+        "Torre Corporativa: CPU principal mediana 2.84 ms, p95 3.61 ms (<13.5), pico 8.77 ms; hilo de render p95 1.59 ms",
+        "Torre Corporativa: GPU mediana 3.54 ms, p95 5.88 ms (<13.5), pico 7.67 ms",
+        "Torre Corporativa: pico de frame 22.1 ms (<100); 1 frames >20 ms y 0 >33 ms de 3599",
+        "Torre Corporativa: carga de arena con cinco luchadores 4 ms (<2 s), primer frame 17 ms; vuelta al menú 19 ms (<0.5 s)",
+        "Torre Corporativa: memoria gestionada pico 5.3 MB (<256), nativa Unity 214 MB, proceso 727 MB (<2048); asignación GC mediana 0.0 KB/frame",
+        "Estudio de Debate: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (5 KO, 68 supers, efectos completos)",
+        "Estudio de Debate: 60.0 FPS medios (≥58), 1 % bajo 58.8 (≥45); frame mediana 16.67 ms, p95 16.69 ms",
+        "Estudio de Debate: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)",
+        "Estudio de Debate: CPU principal mediana 2.87 ms, p95 3.59 ms (<13.5), pico 8.71 ms; hilo de render p95 1.62 ms",
+        "Estudio de Debate: GPU mediana 3.62 ms, p95 6.27 ms (<13.5), pico 8.33 ms",
+        "Estudio de Debate: pico de frame 17.4 ms (<100); 0 frames >20 ms y 0 >33 ms de 3599",
+        "Estudio de Debate: carga de arena con cinco luchadores 4 ms (<2 s), primer frame 17 ms; vuelta al menú 15 ms (<0.5 s)",
+        "Estudio de Debate: memoria gestionada pico 5.7 MB (<256), nativa Unity 214 MB, proceso 726 MB (<2048); asignación GC mediana 0.0 KB/frame",
+        "Plaza Colonial: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (2 KO, 72 supers, efectos completos)",
+        "Plaza Colonial: 60.0 FPS medios (≥58), 1 % bajo 58.1 (≥45); frame mediana 16.67 ms, p95 16.68 ms",
+        "Plaza Colonial: FrameTimingManager mide CPU y GPU en la build (3599 muestras de CPU, 3599 de GPU)",
+        "Plaza Colonial: CPU principal mediana 2.85 ms, p95 3.61 ms (<13.5), pico 8.28 ms; hilo de render p95 1.56 ms",
+        "Plaza Colonial: GPU mediana 3.44 ms, p95 6.04 ms (<13.5), pico 10.17 ms",
+        "Plaza Colonial: pico de frame 24.6 ms (<100); 1 frames >20 ms y 0 >33 ms de 3599",
+        "Plaza Colonial: carga de arena con cinco luchadores 4 ms (<2 s), primer frame 17 ms; vuelta al menú 18 ms (<0.5 s)",
+        "Plaza Colonial: memoria gestionada pico 5.5 MB (<256), nativa Unity 214 MB, proceso 727 MB (<2048); asignación GC mediana 0.0 KB/frame",
+        "Cambiar de arena no deja objetos atrás: 5 ciclos por las 4 arenas, 0 objetos de Unity tras 3 ciclos (ninguno)",
+        "Rendimiento medido en las 4 arenas sin acelerar el tiempo y con efectos completos: 59.9 FPS medios, 1 % bajo 54.5, CPU p95 3.62 ms, GPU p95 5.71 ms (NVIDIA GeForce RTX 4050 Laptop GPU)"
+    ],
+    "failures": [
+        "Azotea Influencer: pico de frame 188.8 ms (<100); 1 frames >20 ms y 1 >33 ms de 3589"
+    ]
+}

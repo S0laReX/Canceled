@@ -71,6 +71,23 @@ namespace CancelBrawl.Beta
             voicePriority = 0; LastKind = "";
             Apply();
             music.Play();
+            Prewarm();
+        }
+
+        /// <summary>Clips built so far (each kind once).</summary>
+        public static int ClipCount => clips.Count;
+
+        /// <summary>
+        /// Builds every clip the game can play (effects, the combo ladder, interface and voices) at start-up, so the first
+        /// KO or the first combo does not synthesise its sound in the middle of a match (a one-off hitch on the first KO).
+        /// </summary>
+        public static void Prewarm()
+        {
+            foreach (string kind in EffectKinds) Clip(kind);
+            foreach (string kind in new[] { "hit-light", "hit-heavy", "hit-spike" })
+                for (int step = 1; step < ComboSteps; step++) Clip(kind + "#" + step);
+            foreach (string kind in UiKinds) Clip(kind);
+            foreach (string kind in VoiceKinds) Clip(kind);
         }
 
         public static float Volume(BrawlAudioBus bus) => volumes[(int)bus];

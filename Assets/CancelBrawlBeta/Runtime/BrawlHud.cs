@@ -78,6 +78,35 @@ namespace CancelBrawl.Beta
             markerText.fontSize = Layout.FontSize(17, t, 14);
             button.fontSize = Layout.FontSize(19, t, 15, 1.25f);
             smallButtonSize = Layout.FontSize(12, t, 11, 1.25f);
+            WarmGlyphs();
+        }
+
+        /// <summary>Every character the HUD can print (Spanish text, numbers, symbols of the announcements).</summary>
+        private const string HudCharacters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~" +
+                                             "áéíóúüñÁÉÍÓÚÜÑ¿¡·×–—…«»°ºª";
+        /// <summary>Glyph sets requested in the font so far (tests).</summary>
+        public int GlyphWarmups { get; private set; }
+
+        /// <summary>
+        /// Puts every HUD character into the dynamic font at each size the styles can use (including the shrink-to-fit
+        /// range), so the first KO announcement or a new label never rebuilds the font texture in the middle of a match.
+        /// </summary>
+        private void WarmGlyphs()
+        {
+            foreach (var style in new[] { body, small, tiny, centered, markerText, button, number })
+            {
+                Font font = style.font ? style.font : GUI.skin.font;
+                if (!font || !font.dynamic) continue;
+                int floor = Mathf.Max(9, Mathf.RoundToInt(style.fontSize * .7f));
+                for (int size = floor; size <= style.fontSize; size++) { font.RequestCharactersInTexture(HudCharacters, size, style.fontStyle); GlyphWarmups++; }
+            }
+            foreach (var style in new[] { title, heading })
+            {
+                Font font = style.font ? style.font : GUI.skin.font;
+                if (font && font.dynamic) { font.RequestCharactersInTexture(HudCharacters, style.fontSize, style.fontStyle); GlyphWarmups++; }
+            }
+            Font buttons = button.font ? button.font : GUI.skin.font;
+            if (buttons && buttons.dynamic) { buttons.RequestCharactersInTexture(HudCharacters, smallButtonSize, button.fontStyle); GlyphWarmups++; }
         }
 
         /// <summary>Real pixel height of the smallest text style at the current resolution (legibility check).</summary>

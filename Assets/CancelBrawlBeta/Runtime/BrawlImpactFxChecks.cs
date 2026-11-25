@@ -66,6 +66,8 @@ namespace CancelBrawl.Beta
             check(fx.UsesParticleShader, "La build incluye el shader de partículas de URP");
             var cameraData = Camera.main ? Camera.main.GetUniversalAdditionalCameraData() : null;
             report.postProcessing = cameraData && cameraData.renderPostProcessing;
+            float warmUntil = Time.realtimeSinceStartup + 2; while (!fx.Warmed && Time.realtimeSinceStartup < warmUntil) yield return null;
+            check(fx.Warmed, $"Partículas y bloom se preparan al crear el sistema ({BrawlImpactFx.WarmFrames} frames invisibles), así el primer KO no compila nada");
             check(report.postProcessing && fx.BloomWeight == 0, "Posproceso activo con el bloom en reposo (peso 0)");
 
             // Tier rules, deterministic.

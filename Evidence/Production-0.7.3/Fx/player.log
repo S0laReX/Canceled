@@ -1,0 +1,68 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.3/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.3/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.3/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.040 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.997700 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.3\Fx\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS El sistema de efectos existe junto a la partida
+SIDE_CHECK_PASS La build incluye el shader de partículas de URP
+SIDE_CHECK_PASS Partículas y bloom se preparan al crear el sistema (3 frames invisibles), así el primer KO no compila nada
+SIDE_CHECK_PASS Posproceso activo con el bloom en reposo (peso 0)
+SIDE_CHECK_PASS Básico flojo se lee como impacto ligero
+SIDE_CHECK_PASS Fuerte o especial se lee como impacto fuerte
+SIDE_CHECK_PASS Empuje alto se lee como impacto fuerte aunque sea básico
+SIDE_CHECK_PASS Lanzamiento hacia abajo se lee como remate
+SIDE_CHECK_PASS Efectos completos: golpe fuerte real usa su nivel y conserva el anillo
+SIDE_CHECK_PASS Efectos completos: el impacto queda detrás del luchador visto desde la cámara
+SIDE_CHECK_PASS Efectos completos: destello y pulso de bloom en golpe fuerte
+SIDE_CHECK_PASS Efectos completos: el volumen de bloom sube tras el golpe
+SIDE_CHECK_PASS Efectos completos: el bloom vuelve a 0 en menos de 0,4 s
+SIDE_CHECK_PASS Efectos completos: el remate marca su dirección con estelas y anillo
+SIDE_CHECK_PASS Efectos completos: el super muestra rayos y anillo al activarse
+SIDE_CHECK_PASS Efectos completos: super con destello y bloom máximo
+SIDE_CHECK_PASS Efectos completos: el KO se ve dentro del área de juego y apunta por dónde salió
+SIDE_CHECK_PASS Efectos reducidos: golpe fuerte real usa su nivel y conserva el anillo
+SIDE_CHECK_PASS Efectos reducidos: el impacto queda detrás del luchador visto desde la cámara
+SIDE_CHECK_PASS Efectos reducidos: sin destello ni bloom
+SIDE_CHECK_PASS Efectos reducidos: el remate marca su dirección con estelas y anillo
+SIDE_CHECK_PASS Efectos reducidos: el super muestra rayos y anillo al activarse
+SIDE_CHECK_PASS Efectos reducidos: super sin destello ni bloom y con menos rayos
+SIDE_CHECK_PASS Efectos reducidos: el KO se ve dentro del área de juego y apunta por dónde salió
+SIDE_CHECK_PASS Efectos reducidos: un tercio de chispas (6 de 18) y las mismas formas
+SIDE_CHECK_PASS La pausa congela las partículas
+SIDE_CHECK_PASS Al reanudar las partículas siguen y se apagan
+SIDE_CHECK_PASS 120 efectos seguidos no crean objetos (112 → 112)
+SIDE_CHECK_PASS Las partículas vivas respetan el tope del grupo (1092)
+SIDE_CHECK_PASS Emitir 120 efectos cuesta menos de 8 ms (2.46 ms)
+SIDE_CHECK_PASS Volver al menú borra partículas y bloom
+SIDE_CHECK_PASS No quedan chispas antiguas como objetos sueltos
+SIDE_RESULT True checks=33 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

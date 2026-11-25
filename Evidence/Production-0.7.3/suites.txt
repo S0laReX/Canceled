@@ -1,0 +1,34 @@
+﻿FUNADOS 0.7.3 (efectos de impacto y supers, sonido por capas, shader toon). RTX 4050 Laptop, sin mando fisico.
+Power exit=0 version=0.7.3 passed=True checks=32 failures=0
+Moves exit=0 version=0.7.3 passed=True checks=21 failures=0
+Kits exit=0 version=0.7.3 passed=True checks=91 failures=0
+Recovery exit=0 version=0.7.3 passed=True checks=16 failures=0
+Camera exit=0 version=0.7.3 passed=True checks=15 failures=0
+Coyote exit=0 version=0.7.3 passed=True checks=5 failures=0
+Arena exit=0 version=0.7.3 passed=True checks=46 failures=0
+SideControls exit=0 version=0.7.3 passed=True checks=157 failures=0
+Side exit=0 version=0.7.3 passed=True checks=405 failures=0
+Controls exit=0 version=0.3.0 passed=True checks=125 failures=0
+Full exit=0 version=0.3.0 passed=True checks=208 failures=0
+Audio exit=0 version=0.7.3 passed=True checks=25 failures=0
+Ui exit=0 version=0.7.3 passed=True checks=31 failures=0
+Hud exit=0 version=0.7.3 passed=True checks=15 failures=0
+Perf exit=0 version=0.7.3 passed=True checks=35 failures=0  (rebuild con diagnóstico de tirones; ver nota)
+SoakShort exit=0 version=0.7.3 passed=True checks=6 failures=0
+ArenaStress exit=0 version=0.7.3 passed=True checks=25 failures=0  (repetida junto a Perf, también pasa)
+Fx exit=0 version=0.7.3 passed=True checks=33 failures=0
+Sfx exit=0 version=0.7.3 passed=True checks=18 failures=0
+Toon exit=0 version=0.7.3 passed=True checks=9 failures=0
+
+Resultado: 20 de 20 suites pasan.
+
+Notas
+- Perf: en 4 de 5 corridas hubo UN tirón de GPU (81-200 ms) a unos 14 s de juego en la primera arena (Azotea), una sola vez por proceso.
+  La corrida con diagnóstico (Perf) muestra que NO depende del KO: ocurrió con 0 KO, sin reapariciones y cámara en 7.5.
+  CPU principal < 9 ms en ese frame; las otras tres arenas y SoakShort no lo tienen. Queda como problema conocido;
+  Perf ahora anota tiempo desde el último KO, reapariciones y tamaño de cámara para seguirlo.
+  Corridas fallidas conservadas: Perf-primera, Perf-segunda (además 0 KO en Plaza Colonial, corregido), Perf-tercera, Perf-cuarta.
+- ArenaStress-primera: P3 recibió un golpe al acabar la protección antes de aterrizar; la prueba ahora lo cuenta aparte.
+- Fx-primera / Fx-segunda: el bloom no estaba en peso 0 durante (y en el último) frame de precalentamiento; corregido.
+- Precalentamientos nuevos: clips de audio, partículas y bloom, glifos de la fuente del HUD.
+- Reparado texto con mojibake en BrawlMatch.cs (visible en 0.7.2, p. ej. el anuncio de KO).

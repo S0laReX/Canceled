@@ -20,7 +20,7 @@ namespace CancelBrawl.Beta
         [Serializable] private sealed class Row
         {
             public string arena; public int matches, finishedByStocks, finishedByTime, kos, credited, selfDestructs, respawns, landed;
-            public float avgMatchSeconds, maxRespawnError, maxAirAfterRespawn; public int objectGrowth; public float memoryGrowthMb;
+            public float avgMatchSeconds, maxRespawnError, maxAirAfterRespawn; public int hitBeforeLanding, objectGrowth; public float memoryGrowthMb;
             public List<string> problems = new List<string>();
         }
         [Serializable] private sealed class Report { public string version = BrawlMatch.ProductionVersion; public List<Row> arenas = new List<Row>(); }
@@ -94,6 +94,10 @@ namespace CancelBrawl.Beta
                                     if (!ok) { respawnOk = false; row.problems.Add($"partida {m + 1}: reaparición de P{i + 1} en {p} tras {now - t.koAt:0.00} s protegida={f.Invulnerable}"); }
                                     row.respawns++; t.koAt = -1; t.respawnAt = now; t.waitingLand = true;
                                 }
+                                // Once protection ends a bot may legitimately launch the fighter before it lands: that is
+                                // play, not a broken spawn. Protection itself is checked above (no hit, no second fall).
+                                if (t.waitingLand && f.InHitstun && now - t.respawnAt >= settings.protectionSeconds)
+                                { t.waitingLand = false; row.hitBeforeLanding++; }
                                 if (t.waitingLand && f.Grounded)
                                 {
                                     row.landed++; t.waitingLand = false;
@@ -142,7 +146,7 @@ namespace CancelBrawl.Beta
                     check(respawnOk && row.respawns > 0 && row.respawns <= row.kos,
                         $"{name}: {row.respawns} reapariciones a tiempo ({settings.respawnSeconds} s, error máx. {row.maxRespawnError:0.000} s), dentro de los límites, en el plano y protegidas");
                     check(spawnOk,
-                        $"{name}: tras reaparecer se aterriza en suelo real (máx. {row.maxAirAfterRespawn:0.00} s en el aire) y nadie cae de nuevo protegido");
+                        $"{name}: tras reaparecer se aterriza en suelo real (máx. {row.maxAirAfterRespawn:0.00} s en el aire; {row.hitBeforeLanding} golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido");
                     check(planeOk, $"{name}: ninguna posición inválida ni fuera del plano lateral en {row.matches} partidas");
                     check(row.objectGrowth <= 5 && row.memoryGrowthMb < 32,
                         $"{name}: sin fugas entre partidas ({row.objectGrowth:+0;-0;0} objetos, {row.memoryGrowthMb:+0.0;-0.0;0} MB tras {row.matches - 1} partidas)");

@@ -108,6 +108,8 @@ namespace CancelBrawl.Beta
             match.OpponentCount = 4; match.ReturnToMenu();
             yield return null; yield return null; yield return null;
             check(match.Hud.PortraitsDrawn >= BrawlRoster.Count + 4, $"Selección: retrato en las cinco tarjetas de personaje y en los rivales ({match.Hud.PortraitsDrawn} dibujados)");
+            check(match.Hud.GlyphWarmups > 0 && BrawlAudio.ClipCount >= BrawlAudio.EffectKinds.Length + BrawlAudio.VoiceKinds.Length,
+                $"Letras del HUD ({match.Hud.GlyphWarmups} tamaños) y sonidos ({BrawlAudio.ClipCount}) preparados antes de jugar: el primer KO no genera nada");
             yield return Capture(output, "hud-menu-1280x720.png");
         }
 

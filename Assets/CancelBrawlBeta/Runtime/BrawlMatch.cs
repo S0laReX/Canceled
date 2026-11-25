@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,7 +21,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.7.2";
+        public const string ProductionVersion = "0.7.3";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -32,7 +32,7 @@ namespace CancelBrawl.Beta
         public float SimTime { get; private set; }
         public BrawlFighter[] Fighters { get; private set; } = Array.Empty<BrawlFighter>();
         public string Announcement => announcementTime > 0 ? announcement : "";
-        /// <summary>Character of every slot P1â€“P5. P1 is <see cref="SelectedCharacter"/>.</summary>
+        /// <summary>Character of every slot P1–P5. P1 is <see cref="SelectedCharacter"/>.</summary>
         public int[] SlotCharacters { get; } = { 0, 1, 2, 3, 4 };
         public int SelectedCharacter
         {
@@ -88,14 +88,14 @@ namespace CancelBrawl.Beta
                 switch (OptionsStatus)
                 {
                     case OptionsLoadStatus.RecoveredBackup: return "Opciones recuperadas de la copia de seguridad.";
-                    case OptionsLoadStatus.RepairedFields: return "Opciones no vÃ¡lidas corregidas con valores seguros.";
-                    case OptionsLoadStatus.ResetCorrupt: return "Archivo de opciones daÃ±ado: valores seguros restaurados.";
+                    case OptionsLoadStatus.RepairedFields: return "Opciones no válidas corregidas con valores seguros.";
+                    case OptionsLoadStatus.ResetCorrupt: return "Archivo de opciones dañado: valores seguros restaurados.";
                     case OptionsLoadStatus.MigratedLegacy: return "Opciones anteriores importadas al nuevo formato.";
                     default: return "";
                 }
             }
         }
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Remap capture (SYS-025) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ───────────── Remap capture (SYS-025) ─────────────
         public bool RemapListening { get; private set; }
         public BindingScheme RemapScheme { get; private set; }
         public BrawlAction RemapAction { get; private set; }
@@ -138,7 +138,7 @@ namespace CancelBrawl.Beta
         {
             get { int count = 0; foreach (var pad in Gamepad.all) if (BrawlDeviceSlots.Available(pad)) count++; return count; }
         }
-        /// <summary>Pads beyond P2â€“P5 are rejected: a match never exceeds five participants.</summary>
+        /// <summary>Pads beyond P2–P5 are rejected: a match never exceeds five participants.</summary>
         public int RejectedPads => Mathf.Max(0, ConnectedPads - (LocalCoop ? Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers) - (P1UsesGamepad ? 0 : 1) : 1));
         public BrawlCamera GroupCamera => groupCamera;
         private BrawlCamera groupCamera;
@@ -159,7 +159,7 @@ namespace CancelBrawl.Beta
             Physics.IgnoreLayerCollision(8, 8, true);
             if (settings == null) settings = ScriptableObject.CreateInstance<BrawlSettings>();
             settings.ApplyKitTuning(); // SYS-011: editable kit numbers, validated; invalid data keeps the built-in values
-            var cameraObject = new GameObject("CÃ¡mara de grupo"); cameraObject.tag = "MainCamera";
+            var cameraObject = new GameObject("Cámara de grupo"); cameraObject.tag = "MainCamera";
             cameraObject.transform.SetParent(transform);
             view = cameraObject.AddComponent<Camera>();
             cameraObject.AddComponent<AudioListener>(); groupCamera = cameraObject.AddComponent<BrawlCamera>();
@@ -357,7 +357,7 @@ namespace CancelBrawl.Beta
             };
         }
 
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Stick tuning and vibration (SYS-026, SYS-072) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ───────────── Stick tuning and vibration (SYS-026, SYS-072) ─────────────
         public float MoveDeadzone { get; private set; } = .2f;
         public float AimDeadzone { get; private set; } = .25f;
         public float StickResponse { get; private set; } = 1f;
@@ -368,7 +368,7 @@ namespace CancelBrawl.Beta
         /// </summary>
         public const float HapticFloor = .55f, HapticMinSeconds = .18f;
 
-        /// <summary>Motor output for an event level (0â€“1) and the player's strength; zero only when either is zero.</summary>
+        /// <summary>Motor output for an event level (0–1) and the player's strength; zero only when either is zero.</summary>
         public static float HapticOutput(float level, float strength) =>
             strength <= 0 || level <= 0 ? 0 : Mathf.Clamp01(Mathf.Lerp(HapticFloor, 1f, Mathf.Clamp01(level)) * (.6f + .4f * Mathf.Clamp01(strength)));
         public BrawlHud Hud { get; private set; }
@@ -377,7 +377,7 @@ namespace CancelBrawl.Beta
         /// <summary>Options panel page: 0 GENERAL, 1 MANDO, 2 PANTALLA.</summary>
         public int OptionsPage { get; set; }
         public bool ShowPadOptions { get => OptionsPage == 1; set => OptionsPage = value ? 1 : 0; }
-        /// <summary>SYS-071: text size (1â€“1.3) for menus and HUD, and HUD element size (1â€“1.3) during play.</summary>
+        /// <summary>SYS-071: text size (1–1.3) for menus and HUD, and HUD element size (1–1.3) during play.</summary>
         public float TextScale { get; private set; } = 1f;
         public float HudScale { get; private set; } = 1f;
         /// <summary>SYS-071: opaque panels and brighter text; colour-blind player/warning palette (HUD at once, world effects next round).</summary>
@@ -491,12 +491,12 @@ namespace CancelBrawl.Beta
             if (!CanRemap || Array.IndexOf(BrawlBindings.Actions(scheme), action) < 0) return;
             RemapListening = true; RemapScheme = scheme; RemapAction = action;
             remapArmedFrame = Time.frameCount; remapStarted = Time.realtimeSinceStartup;
-            RemapMessage = $"{BrawlBindings.ActionName(action)}: pulsa {(scheme == BindingScheme.Keyboard ? "una tecla o botÃ³n del ratÃ³n" : "un botÃ³n del mando")}. Esc o Start cancelan.";
+            RemapMessage = $"{BrawlBindings.ActionName(action)}: pulsa {(scheme == BindingScheme.Keyboard ? "una tecla o botón del ratón" : "un botón del mando")}. Esc o Start cancelan.";
             RemapMessageIsWarning = false;
             ClearInputs();
         }
 
-        public void CancelRemap(string message = "ReasignaciÃ³n cancelada.")
+        public void CancelRemap(string message = "Reasignación cancelada.")
         {
             if (!RemapListening) return;
             RemapListening = false; RemapMessage = message; RemapMessageIsWarning = false;
@@ -515,7 +515,7 @@ namespace CancelBrawl.Beta
                     RemapMessage = $"CONFLICTO: {control} ya era {BrawlBindings.ActionName(result.Conflict.Value)}. Intercambiados: {BrawlBindings.ActionName(result.Conflict.Value)} pasa a {Bindings.Label(scheme, result.Conflict.Value, LabelPad)}.";
                     RemapMessageIsWarning = true; break;
                 case BindStatus.Reserved:
-                    RemapMessage = $"{control} estÃ¡ reservado para pausa/menÃº. No se cambiÃ³ nada."; RemapMessageIsWarning = true; break;
+                    RemapMessage = $"{control} está reservado para pausa/menú. No se cambió nada."; RemapMessageIsWarning = true; break;
                 case BindStatus.Invalid:
                 case BindStatus.NotRemappable:
                     RemapMessage = "Ese control no se puede asignar."; RemapMessageIsWarning = true; break;
@@ -532,7 +532,7 @@ namespace CancelBrawl.Beta
             ClearInputs();
             if (Time.frameCount <= remapArmedFrame) return;
             if (!CanRemap) { CancelRemap(); return; }
-            if (Time.realtimeSinceStartup - remapStarted > 10) { CancelRemap("Tiempo agotado: no se cambiÃ³ nada."); return; }
+            if (Time.realtimeSinceStartup - remapStarted > 10) { CancelRemap("Tiempo agotado: no se cambió nada."); return; }
             string path = BrawlBindings.CapturePressed(RemapScheme, Gamepad.all);
             if (path == null)
             {
@@ -603,7 +603,7 @@ namespace CancelBrawl.Beta
             if (!IsTraining && Phase == MatchPhase.Playing && RemainingTime <= 0) FinishByTime();
         }
 
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Simultaneous hits (SYS-045) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ───────────── Simultaneous hits (SYS-045) ─────────────
         /// <summary>True from the start of a playing step until <see cref="BrawlHitResolver"/> flushes it.</summary>
         public bool CollectingHits { get; private set; }
         private readonly List<PendingHit> pendingHits = new List<PendingHit>();
@@ -659,7 +659,7 @@ namespace CancelBrawl.Beta
                 BrawlFighter credited = fighter.LoseStock();
                 string who = "P" + (fighter.PlayerIndex + 1);
                 string by = credited != null ? "P" + (credited.PlayerIndex + 1) + " EXPULSA A " + who : who + " CAE SOLO";
-                Announce(by + (fighter.Eliminated ? "  Â·  FUERA DE LA PARTIDA" : "  Â·  PIERDE UNA VIDA"), 2);
+                Announce(by + (fighter.Eliminated ? "  ·  FUERA DE LA PARTIDA" : "  ·  PIERDE UNA VIDA"), 2);
                 Shake(.45f);
                 if (fighter.Eliminated) finalLosses.Add(fighter);
             }
@@ -731,7 +731,7 @@ namespace CancelBrawl.Beta
 
         public void Shake(float amount) { if (groupCamera) groupCamera.Shake(amount); }
 
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Options (per device; GDD Â§12 accessibility) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // ───────────── Options (per device; GDD §12 accessibility) ─────────────
         public void SetReducedEffects(bool value) { BrawlFeedback.ReducedEffects = value; SaveOptions(); }
         public void SetVolumes(float sfx, float music) { BrawlFeedback.SetVolumes(sfx, music); SaveOptions(); }
         /// <summary>AUDIO-428 to 434: one bus volume, saved; a short UI click previews the new level.</summary>

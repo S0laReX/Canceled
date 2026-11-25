@@ -28,7 +28,7 @@ namespace CancelBrawl.Beta
         public const int SoakMatchesPerArena = 3, ArenaCycles = 5;
         /// <summary>Soak match clock: bots rarely finish 300 s matches by stocks, so the session plays 90 s matches to chain many rematches.</summary>
         public const float SoakMatchSeconds = 90;
-        private const float HeldDamage = 130, MeterEvery = 4, WarmupSeconds = 1.5f;
+        private const float HeldDamage = 130, NoKoHeldDamage = 220, MeterEvery = 4, WarmupSeconds = 1.5f;
 
         // ───────────── Report data ─────────────
         [Serializable] public sealed class Dist { public float median, p95, p99, max, mean; public int samples; }
@@ -205,7 +205,7 @@ namespace CancelBrawl.Beta
         }
 
         /// <summary>Full effects during play: give bots their super and keep fighters launchable by real hits.</summary>
-        private static int Stoke(BrawlMatch match, ref float nextMeter)
+        private static int Stoke(BrawlMatch match, ref float nextMeter, float held = HeldDamage)
         {
             int supers = 0; bool refill = match.SimTime >= nextMeter;
             if (refill) nextMeter = match.SimTime + MeterEvery;
@@ -213,7 +213,7 @@ namespace CancelBrawl.Beta
             {
                 if (f == null || f.Eliminated || f.IsRespawning) continue;
                 if (refill && f.Meter < 100) { f.SetMeterForTest(100); supers++; }
-                if (f.Damage < HeldDamage) f.SetPracticeDamage(HeldDamage);
+                if (f.Damage < held) f.SetPracticeDamage(held);
             }
             return supers;
         }
@@ -294,6 +294,7 @@ namespace CancelBrawl.Beta
                     float playReal = 0, playSim = 0, lastSim = match.SimTime; int kosBefore = 0, kos0 = CountKos(match);
                     Memory peak = null; float nextMemory = 0; int gcSeen = GC.CollectionCount(0);
                     float lastProgress = Time.realtimeSinceStartup;
+                    int koSeen = CountKos(match); float lastKoAt = -1, lastRespawnAt = -1; int respawningSeen = 0;
                     while (playReal < PerfSecondsPerArena)
                     {
                         yield return null;
@@ -309,12 +310,17 @@ namespace CancelBrawl.Beta
                         if (lastSim < 0) { lastSim = match.SimTime; continue; }
                         sampler.Sample(); all.Sample();
                         int gcNow = GC.CollectionCount(0);
+                        int koNow = CountKos(match); if (koNow != koSeen) { koSeen = koNow; lastKoAt = match.SimTime; }
+                        int respawning = 0; foreach (var f in match.Fighters) if (f && f.IsRespawning) respawning++;
+                        if (respawning < respawningSeen) lastRespawnAt = match.SimTime; respawningSeen = respawning;
                         if (Time.unscaledDeltaTime > .05f && row.hitches.Count < 20)
-                            row.hitches.Add($"{DateTime.Now:HH:mm:ss.fff} juego {match.SimTime:0.00} s: {Time.unscaledDeltaTime * 1000:0} ms{(gcNow != gcSeen ? ", con GC" : ", sin GC")}");
+                            row.hitches.Add($"{DateTime.Now:HH:mm:ss.fff} juego {match.SimTime:0.00} s: {Time.unscaledDeltaTime * 1000:0} ms{(gcNow != gcSeen ? ", con GC" : ", sin GC")}, {kosBefore + CountKos(match) - kos0} KO y {row.supers} supers hasta aquí; último KO hace {(lastKoAt < 0 ? -1 : match.SimTime - lastKoAt):0.00} s, última reaparición hace {(lastRespawnAt < 0 ? -1 : match.SimTime - lastRespawnAt):0.00} s, {respawning} reapareciendo, cámara {(Camera.main ? Camera.main.orthographicSize : 0):0.0}");
                         gcSeen = gcNow;
                         lastProgress = Time.realtimeSinceStartup;
                         playReal += Time.unscaledDeltaTime; playSim += match.SimTime - lastSim; lastSim = match.SimTime;
-                        row.supers += Stoke(match, ref nextMeter);
+                        // The KO path must be measured: with no KO by half time, bots fight at higher damage (a real hit still has to land it).
+                        bool noKoYet = kosBefore + CountKos(match) - kos0 == 0 && playReal > PerfSecondsPerArena / 2;
+                        row.supers += Stoke(match, ref nextMeter, noKoYet ? NoKoHeldDamage : HeldDamage);
                         if (Time.realtimeSinceStartup >= nextMemory) { nextMemory = Time.realtimeSinceStartup + 5; peak = Max(peak, Snapshot(false)); }
                     }
                     row.seconds = playReal;

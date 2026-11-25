@@ -1,0 +1,395 @@
+{
+    "version": "0.7.3",
+    "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "cpu": "AMD Ryzen 7 7840HS w/ Radeon 780M Graphics ",
+    "graphicsApi": "Direct3D 11.0 [level 11.1]",
+    "startedUtc": "2026-11-25T07:20:57.1776639Z",
+    "processors": 16,
+    "systemMemoryMb": 31938,
+    "graphicsMemoryMb": 5920,
+    "screenWidth": 1280,
+    "screenHeight": 720,
+    "targetFrameRate": 60,
+    "vSyncCount": 0,
+    "frameTimingAvailable": true,
+    "gpuTimingAvailable": true,
+    "reducedEffects": false,
+    "timeScale": 1.0,
+    "budgetMs": 13.5,
+    "thresholds": "FPS medio ≥58; 1 % bajo ≥45; CPU principal y GPU mediana y p95 <13.5 ms; frame máx. <100 ms; carga de arena <2 s; vuelta al menú <0.5 s; gestionada <256 MB; proceso <2048 MB",
+    "arenas": [
+        {
+            "arena": "Azotea Influencer",
+            "fighters": 5,
+            "seconds": 60.01289749145508,
+            "frames": 3593,
+            "avgFps": 59.87016677856445,
+            "low1Fps": 48.54161834716797,
+            "maxFrameMs": 102.84419250488281,
+            "framesOver20ms": 2,
+            "framesOver33ms": 2,
+            "frameMs": {
+                "median": 16.666900634765626,
+                "p95": 16.674339294433595,
+                "p99": 16.82232666015625,
+                "max": 102.84419250488281,
+                "mean": 16.702699661254884,
+                "samples": 3593
+            },
+            "cpuMainMs": {
+                "median": 2.8447000980377199,
+                "p95": 3.604139804840088,
+                "p99": 4.290585041046143,
+                "max": 8.43340015411377,
+                "mean": 2.915940284729004,
+                "samples": 3593
+            },
+            "cpuRenderMs": {
+                "median": 1.2138999700546265,
+                "p95": 1.5763399600982667,
+                "p99": 1.8404520750045777,
+                "max": 6.59250020980835,
+                "mean": 1.248576283454895,
+                "samples": 3593
+            },
+            "gpuMs": {
+                "median": 3.2931840419769289,
+                "p95": 5.079040050506592,
+                "p99": 5.345741271972656,
+                "max": 69.99244689941406,
+                "mean": 3.7883760929107668,
+                "samples": 3592
+            },
+            "gcAllocKbPerFrame": {
+                "median": 0.0,
+                "p95": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0,
+                "samples": 0
+            },
+            "simRatio": 1.0000500679016114,
+            "fixedStepsPerSecond": 60.00300216674805,
+            "kos": 6,
+            "supers": 67,
+            "rematches": 0,
+            "hitches": [
+                "03:21:14.965 juego 13.68 s: 103 ms, sin GC, 1 KO y 14 supers hasta aquí",
+                "03:21:15.079 juego 13.80 s: 58 ms, sin GC, 1 KO y 14 supers hasta aquí"
+            ],
+            "pauses": [],
+            "lockup": false,
+            "arenaLoadSeconds": 0.004610199946910143,
+            "firstFrameMs": 16.668699264526368,
+            "menuReturnSeconds": 0.01920519955456257,
+            "memoryPeak": {
+                "managedMb": 7.17578125,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 217.04177856445313,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 418.02734375,
+                "processPrivateMb": 790.875,
+                "processWorkingSetMb": 418.03125,
+                "gameObjects": 159,
+                "allObjects": 4509
+            },
+            "memoryAfterMenu": {
+                "managedMb": 4.734375,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 214.77171325683595,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 381.0,
+                "processPrivateMb": 746.57421875,
+                "processWorkingSetMb": 381.0,
+                "gameObjects": 74,
+                "allObjects": 4304
+            }
+        },
+        {
+            "arena": "Torre Corporativa",
+            "fighters": 5,
+            "seconds": 60.00693130493164,
+            "frames": 3596,
+            "avgFps": 59.926170349121097,
+            "low1Fps": 54.08839797973633,
+            "maxFrameMs": 33.56590270996094,
+            "framesOver20ms": 6,
+            "framesOver33ms": 1,
+            "frameMs": {
+                "median": 16.666900634765626,
+                "p95": 16.682228088378908,
+                "p99": 16.879905700683595,
+                "max": 33.56590270996094,
+                "mean": 16.687091827392579,
+                "samples": 3596
+            },
+            "cpuMainMs": {
+                "median": 2.8874998092651369,
+                "p95": 3.6763250827789308,
+                "p99": 4.542120456695557,
+                "max": 23.87190055847168,
+                "mean": 2.9823222160339357,
+                "samples": 3596
+            },
+            "cpuRenderMs": {
+                "median": 1.240649938583374,
+                "p95": 1.6131500005722047,
+                "p99": 1.8499902486801148,
+                "max": 3.1068999767303469,
+                "mean": 1.279677152633667,
+                "samples": 3596
+            },
+            "gpuMs": {
+                "median": 3.619839906692505,
+                "p95": 5.926090717315674,
+                "p99": 6.443089962005615,
+                "max": 9.970687866210938,
+                "mean": 3.8429906368255617,
+                "samples": 3593
+            },
+            "gcAllocKbPerFrame": {
+                "median": 0.0,
+                "p95": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0,
+                "samples": 0
+            },
+            "simRatio": 1.0001494884490967,
+            "fixedStepsPerSecond": 60.00896453857422,
+            "kos": 3,
+            "supers": 68,
+            "rematches": 0,
+            "hitches": [],
+            "pauses": [],
+            "lockup": false,
+            "arenaLoadSeconds": 0.004577099811285734,
+            "firstFrameMs": 16.669401168823243,
+            "menuReturnSeconds": 0.01874770037829876,
+            "memoryPeak": {
+                "managedMb": 5.3125,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 215.71665954589845,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 381.05859375,
+                "processPrivateMb": 747.46484375,
+                "processWorkingSetMb": 381.05859375,
+                "gameObjects": 177,
+                "allObjects": 4577
+            },
+            "memoryAfterMenu": {
+                "managedMb": 5.05078125,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 215.29652404785157,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 381.34375,
+                "processPrivateMb": 746.8359375,
+                "processWorkingSetMb": 381.34375,
+                "gameObjects": 81,
+                "allObjects": 4339
+            }
+        },
+        {
+            "arena": "Estudio de Debate",
+            "fighters": 5,
+            "seconds": 60.008026123046878,
+            "frames": 3599,
+            "avgFps": 59.975181579589847,
+            "low1Fps": 58.39330291748047,
+            "maxFrameMs": 19.281299591064454,
+            "framesOver20ms": 0,
+            "framesOver33ms": 0,
+            "frameMs": {
+                "median": 16.666900634765626,
+                "p95": 16.680095672607423,
+                "p99": 16.851667404174806,
+                "max": 19.281299591064454,
+                "mean": 16.673439025878908,
+                "samples": 3599
+            },
+            "cpuMainMs": {
+                "median": 2.842900037765503,
+                "p95": 3.579439640045166,
+                "p99": 4.281464576721191,
+                "max": 5.819799900054932,
+                "mean": 2.905576229095459,
+                "samples": 3599
+            },
+            "cpuRenderMs": {
+                "median": 1.2319999933242798,
+                "p95": 1.5832397937774659,
+                "p99": 1.818127989768982,
+                "max": 6.81279993057251,
+                "mean": 1.2631956338882447,
+                "samples": 3599
+            },
+            "gpuMs": {
+                "median": 3.680255889892578,
+                "p95": 5.990808963775635,
+                "p99": 6.771773338317871,
+                "max": 11.04691219329834,
+                "mean": 3.888798475265503,
+                "samples": 3599
+            },
+            "gcAllocKbPerFrame": {
+                "median": 0.0,
+                "p95": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0,
+                "samples": 0
+            },
+            "simRatio": 1.0001312494277955,
+            "fixedStepsPerSecond": 60.00787353515625,
+            "kos": 6,
+            "supers": 65,
+            "rematches": 0,
+            "hitches": [],
+            "pauses": [],
+            "lockup": false,
+            "arenaLoadSeconds": 0.004662500228732824,
+            "firstFrameMs": 16.663299560546876,
+            "menuReturnSeconds": 0.016233399510383607,
+            "memoryPeak": {
+                "managedMb": 5.4765625,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 215.8298797607422,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 382.51171875,
+                "processPrivateMb": 748.81640625,
+                "processWorkingSetMb": 382.51171875,
+                "gameObjects": 145,
+                "allObjects": 4480
+            },
+            "memoryAfterMenu": {
+                "managedMb": 5.1328125,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 215.38641357421876,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 382.640625,
+                "processPrivateMb": 748.94140625,
+                "processWorkingSetMb": 382.640625,
+                "gameObjects": 60,
+                "allObjects": 4275
+            }
+        },
+        {
+            "arena": "Plaza Colonial",
+            "fighters": 5,
+            "seconds": 60.0040397644043,
+            "frames": 3599,
+            "avgFps": 59.97918701171875,
+            "low1Fps": 58.8546028137207,
+            "maxFrameMs": 17.533700942993165,
+            "framesOver20ms": 0,
+            "framesOver33ms": 0,
+            "frameMs": {
+                "median": 16.666900634765626,
+                "p95": 16.679903030395509,
+                "p99": 16.840307235717775,
+                "max": 17.533700942993165,
+                "mean": 16.6723575592041,
+                "samples": 3599
+            },
+            "cpuMainMs": {
+                "median": 2.880199909210205,
+                "p95": 3.6502797603607179,
+                "p99": 4.3291826248168949,
+                "max": 6.598100185394287,
+                "mean": 2.9453048706054689,
+                "samples": 3599
+            },
+            "cpuRenderMs": {
+                "median": 1.2231999635696412,
+                "p95": 1.5888398885726929,
+                "p99": 1.7723320722579957,
+                "max": 2.260499954223633,
+                "mean": 1.25454843044281,
+                "samples": 3599
+            },
+            "gpuMs": {
+                "median": 3.4836480617523195,
+                "p95": 6.083685874938965,
+                "p99": 6.468669414520264,
+                "max": 9.676799774169922,
+                "mean": 3.7545244693756105,
+                "samples": 3599
+            },
+            "gcAllocKbPerFrame": {
+                "median": 0.0,
+                "p95": 0.0,
+                "p99": 0.0,
+                "max": 0.0,
+                "mean": 0.0,
+                "samples": 0
+            },
+            "simRatio": 1.0001976490020753,
+            "fixedStepsPerSecond": 60.01185607910156,
+            "kos": 2,
+            "supers": 71,
+            "rematches": 0,
+            "hitches": [],
+            "pauses": [],
+            "lockup": false,
+            "arenaLoadSeconds": 0.004261100199073553,
+            "firstFrameMs": 16.6654052734375,
+            "menuReturnSeconds": 0.019608600065112115,
+            "memoryPeak": {
+                "managedMb": 5.45703125,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 215.8087921142578,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 383.59765625,
+                "processPrivateMb": 749.69140625,
+                "processWorkingSetMb": 383.59765625,
+                "gameObjects": 154,
+                "allObjects": 4500
+            },
+            "memoryAfterMenu": {
+                "managedMb": 5.109375,
+                "gcReservedMb": 12.67578125,
+                "unityTotalUsedMb": 215.30393981933595,
+                "unityTotalReservedMb": 296.62890625,
+                "systemUsedMb": 383.1015625,
+                "processPrivateMb": 748.47265625,
+                "processWorkingSetMb": 383.1015625,
+                "gameObjects": 65,
+                "allObjects": 4283
+            }
+        }
+    ],
+    "allFrameMs": {
+        "median": 16.666900634765626,
+        "p95": 16.679166793823243,
+        "p99": 16.84642791748047,
+        "max": 102.84419250488281,
+        "mean": 16.684398651123048,
+        "samples": 14387
+    },
+    "allCpuMainMs": {
+        "median": 2.8640999794006349,
+        "p95": 3.6276400089263918,
+        "p99": 4.33641242980957,
+        "max": 23.87190055847168,
+        "mean": 2.9372832775115969,
+        "samples": 14387
+    },
+    "allGpuMs": {
+        "median": 3.5594239234924318,
+        "p95": 5.752316951751709,
+        "p99": 6.533567905426025,
+        "max": 69.99244689941406,
+        "mean": 3.818675994873047,
+        "samples": 14383
+    },
+    "allAvgFps": 59.93262481689453,
+    "allLow1Fps": 54.72693634033203,
+    "arenaCycleObjects": [
+        4307,
+        4307,
+        4307,
+        4307,
+        4307
+    ],
+    "arenaCycleGrowth": "ninguno"
+}
