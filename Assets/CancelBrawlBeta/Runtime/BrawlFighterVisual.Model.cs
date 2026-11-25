@@ -16,6 +16,9 @@ namespace CancelBrawl.Beta
         public float AttackProgress, WindupEnd, ActiveEnd;
         public int VerticalAttack;
         public bool AirAttack;
+        /// <summary>Presentation clocks, all 0 when idle (GDD 2.0 §11 profile set): braking 0–1, turn signed by the new
+        /// facing (±1 just turned → 0), double-jump flip (1 → 0), launch tumble in degrees, respawn entry (1 → 0).</summary>
+        public float Braking, Turn, Flip, Tumble, Spawn;
     }
 
     public sealed partial class BrawlFighterVisual
@@ -31,6 +34,14 @@ namespace CancelBrawl.Beta
         /// <summary>Name of the look in use ("Provisional" for primitives).</summary>
         public string SkinName { get; private set; } = "Provisional";
         public bool UsesModel => skinned != null;
+
+        public const float TurnSeconds = .14f, FlipSeconds = .38f, BrakeSeconds = .16f, SpawnSeconds = .5f;
+        /// <summary>Whole-body turns, flips and tumbles rotate around the hips, not the feet.</summary>
+        private const float BodyPivot = .9f;
+        /// <summary>Last pose received and the whole-body rotation it produced (read by <c>-anim-smoke</c>).</summary>
+        internal BrawlPose LastPose { get; private set; }
+        internal float BodyYaw { get; private set; }
+        internal float BodyPitch { get; private set; }
 
         public void Build(int characterIndex, int skin, Color teamColor, BrawlCharacterArt art)
         {
@@ -92,6 +103,8 @@ namespace CancelBrawl.Beta
         public void Animate(BrawlPose pose, bool instant)
         {
             if (model == null) return;
+            LastPose = pose;
+            ApplyBody(pose);
             if (skinned == null)
             {
                 Vector3 world = transform.TransformDirection(pose.LocalVelocity);
@@ -112,6 +125,42 @@ namespace CancelBrawl.Beta
             model.localScale = new Vector3(1 + squash * .5f - stretch * .5f, 1 - squash + stretch, 1 + squash * .5f - stretch * .5f);
             Tint(pose.Hurt, pose.Protected);
         }
+
+        /// <summary>
+        /// Whole-body motion on this visual's own transform: the side turn swings the face through the camera, the double
+        /// jump is a forward flip and a strong launch tumbles backwards. Each ends exactly upright.
+        /// </summary>
+        private void ApplyBody(BrawlPose p)
+        {
+            float yaw = p.Turn == 0 ? 0 : Mathf.Sign(p.Turn) * 180 * Mathf.SmoothStep(0, 1, Mathf.Clamp01(Mathf.Abs(p.Turn)));
+            float pitch = 0;
+            if (p.Flip > 0) pitch = 360 * Mathf.SmoothStep(0, 1, 1 - Mathf.Clamp01(p.Flip));
+            if (p.Tumble != 0) pitch = -p.Tumble;
+            BodyYaw = yaw; BodyPitch = Mathf.Repeat(pitch + 180, 360) - 180;
+            float spawn = Mathf.Clamp01(p.Spawn);
+            bool still = yaw == 0 && pitch == 0 && spawn == 0;
+            // Portraits and previews place this object themselves: leave it alone unless a body motion is playing.
+            if (still && !bodyMoved) return;
+            bodyMoved = !still;
+            Quaternion rotation = Quaternion.Euler(0, yaw, 0) * Quaternion.AngleAxis(pitch, Vector3.right);
+            Vector3 pivot = Vector3.up * BodyPivot;
+            transform.localRotation = baseRotation * rotation;
+            transform.localPosition = basePosition + baseRotation * Vector3.Scale(baseScale, pivot - rotation * pivot);
+            // Respawn entry: grows from 60 % while settling on the spawn point.
+            transform.localScale = baseScale * Mathf.Lerp(1, .6f, spawn * spawn);
+        }
+
+        private Vector3 basePosition, baseScale = Vector3.one;
+        private Quaternion baseRotation = Quaternion.identity;
+        private bool bodyMoved;
+
+        private void Awake()
+        {
+            basePosition = transform.localPosition; baseRotation = transform.localRotation; baseScale = transform.localScale;
+        }
+
+        internal Quaternion BoneRotation(int bone) => bones != null ? bones[bone].localRotation : Quaternion.identity;
+        internal float ModelHeightScale => model != null ? model.localScale.y : 1;
 
         /// <summary>Gait phase override for previews (radians).</summary>
         public void SetGait(float phase) => gait = phase;
@@ -147,6 +196,27 @@ namespace CancelBrawl.Beta
             Set(BrawlAutoRig.Head, -4 * stride, Mathf.Sin(time * .7f) * 6 * (1 - stride), 0);
             hipsOffset.y = (-Mathf.Abs(s) * .055f + .025f) * stride * ground - landSquash * .09f;
 
+            // ── Braking: lean back on a planted front foot, arms thrown forward for balance.
+            if (p.Braking > 0 && p.Grounded)
+            {
+                float b = Mathf.Clamp01(p.Braking);
+                Blend(BrawlAutoRig.Chest, new Vector3(-18, 0, 0), b); Blend(BrawlAutoRig.Head, new Vector3(10, 0, 0), b);
+                Blend(BrawlAutoRig.ThighL, new Vector3(-40, 0, -4), b); Blend(BrawlAutoRig.ShinL, new Vector3(6, 0, 0), b);
+                Blend(BrawlAutoRig.ThighR, new Vector3(26, 0, 4), b); Blend(BrawlAutoRig.ShinR, new Vector3(52, 0, 0), b);
+                Blend(BrawlAutoRig.UpperArmL, new Vector3(-52, 0, -26), b); Blend(BrawlAutoRig.UpperArmR, new Vector3(-52, 0, 26), b);
+                Blend(BrawlAutoRig.ForearmL, new Vector3(-22, 0, 0), b); Blend(BrawlAutoRig.ForearmR, new Vector3(-22, 0, 0), b);
+                hipsOffset.y -= .08f * b;
+            }
+            // ── Side turn: a short crouch while the body swings through the camera.
+            if (p.Turn != 0)
+            {
+                float t = Mathf.Sin(Mathf.Clamp01(Mathf.Abs(p.Turn)) * Mathf.PI);
+                Blend(BrawlAutoRig.Chest, new Vector3(12, 0, 0), t); Blend(BrawlAutoRig.Head, new Vector3(-8, 0, 0), t);
+                Blend(BrawlAutoRig.ThighL, new Vector3(-22, 0, 0), t); Blend(BrawlAutoRig.ShinL, new Vector3(34, 0, 0), t);
+                Blend(BrawlAutoRig.ThighR, new Vector3(-22, 0, 0), t); Blend(BrawlAutoRig.ShinR, new Vector3(34, 0, 0), t);
+                hipsOffset.y -= .05f * t;
+            }
+
             // ── Air: knees tucked while rising, limbs open while falling.
             if (airBlend > 0)
             {
@@ -163,6 +233,28 @@ namespace CancelBrawl.Beta
                 Blend(BrawlAutoRig.ForearmR, new Vector3(-30, 0, 0), airBlend);
                 Blend(BrawlAutoRig.Chest, new Vector3(Mathf.Lerp(10, -6, falling), 0, 0), airBlend);
                 Blend(BrawlAutoRig.Head, new Vector3(Mathf.Lerp(-6, 8, falling), 0, 0), airBlend);
+            }
+
+            // ── Double jump: tight tuck during the flip.
+            if (p.Flip > 0 && !p.Grounded)
+            {
+                float tuck = Mathf.Sin((1 - Mathf.Clamp01(p.Flip)) * Mathf.PI);
+                Blend(BrawlAutoRig.ThighL, new Vector3(-100, 0, -6), tuck); Blend(BrawlAutoRig.ThighR, new Vector3(-92, 0, 6), tuck);
+                Blend(BrawlAutoRig.ShinL, new Vector3(125, 0, 0), tuck); Blend(BrawlAutoRig.ShinR, new Vector3(118, 0, 0), tuck);
+                Blend(BrawlAutoRig.UpperArmL, new Vector3(-62, 0, -12), tuck); Blend(BrawlAutoRig.UpperArmR, new Vector3(-62, 0, 12), tuck);
+                Blend(BrawlAutoRig.ForearmL, new Vector3(-105, 0, 0), tuck); Blend(BrawlAutoRig.ForearmR, new Vector3(-105, 0, 0), tuck);
+                Blend(BrawlAutoRig.Chest, new Vector3(28, 0, 0), tuck); Blend(BrawlAutoRig.Head, new Vector3(20, 0, 0), tuck);
+            }
+
+            // ── Respawn entry: arms open, legs together, settling onto the spawn point.
+            if (p.Spawn > 0)
+            {
+                float e = Mathf.Clamp01(p.Spawn);
+                Blend(BrawlAutoRig.UpperArmL, new Vector3(-12, 0, -78), e); Blend(BrawlAutoRig.UpperArmR, new Vector3(-12, 0, 78), e);
+                Blend(BrawlAutoRig.ForearmL, new Vector3(-8, 0, 0), e); Blend(BrawlAutoRig.ForearmR, new Vector3(-8, 0, 0), e);
+                Blend(BrawlAutoRig.ThighL, new Vector3(4, 0, 3), e); Blend(BrawlAutoRig.ThighR, new Vector3(4, 0, -3), e);
+                Blend(BrawlAutoRig.ShinL, new Vector3(6, 0, 0), e); Blend(BrawlAutoRig.ShinR, new Vector3(6, 0, 0), e);
+                Blend(BrawlAutoRig.Head, new Vector3(-12, 0, 0), e);
             }
 
             if (p.Recovering)
@@ -203,6 +295,15 @@ namespace CancelBrawl.Beta
                 Set(BrawlAutoRig.ForearmL, -45, 0, 0); Set(BrawlAutoRig.ForearmR, -45, 0, 0);
                 Set(BrawlAutoRig.ThighL, -28, 0, -6); Set(BrawlAutoRig.ThighR, 10, 0, 6);
                 Set(BrawlAutoRig.ShinL, 40, 0, 0); Set(BrawlAutoRig.ShinR, 25, 0, 0);
+                if (p.Tumble != 0)
+                {
+                    // Strong launch: spread-eagle while the body tumbles (plain hitstun is the hunched flinch above).
+                    Set(BrawlAutoRig.Chest, -26, 0, 0); Set(BrawlAutoRig.Head, -24, 0, 0);
+                    Set(BrawlAutoRig.UpperArmL, -10, 0, -118); Set(BrawlAutoRig.UpperArmR, -10, 0, 118);
+                    Set(BrawlAutoRig.ForearmL, -12, 0, 0); Set(BrawlAutoRig.ForearmR, -12, 0, 0);
+                    Set(BrawlAutoRig.ThighL, 22, 0, -24); Set(BrawlAutoRig.ThighR, 30, 0, 24);
+                    Set(BrawlAutoRig.ShinL, 18, 0, 0); Set(BrawlAutoRig.ShinR, 10, 0, 0);
+                }
             }
         }
 
@@ -218,7 +319,18 @@ namespace CancelBrawl.Beta
             switch (p.Attack)
             {
                 case AttackKind.Basic:
-                    if (p.Combo == 2)
+                    if (p.AirAttack && p.VerticalAttack == 0)
+                    {
+                        // Neutral aerial: knees drawn in, then the front leg kicks out.
+                        Pose(BrawlAutoRig.ThighL, new Vector3(-70, 0, -6), new Vector3(-82, 0, -4), windup, strike, hold);
+                        Pose(BrawlAutoRig.ShinL, new Vector3(110, 0, 0), new Vector3(4, 0, 0), windup, strike, hold);
+                        Pose(BrawlAutoRig.ThighR, new Vector3(-60, 0, 6), new Vector3(-20, 0, 4), windup, strike, hold);
+                        Pose(BrawlAutoRig.ShinR, new Vector3(100, 0, 0), new Vector3(70, 0, 0), windup, strike, hold);
+                        Pose(BrawlAutoRig.Chest, new Vector3(18, 0, 0), new Vector3(-24, 0, 0), windup, strike, hold);
+                        Pose(BrawlAutoRig.UpperArmL, new Vector3(-40, 0, -20), new Vector3(20, 0, -70), windup, strike, hold);
+                        Pose(BrawlAutoRig.UpperArmR, new Vector3(-40, 0, 20), new Vector3(20, 0, 70), windup, strike, hold);
+                    }
+                    else if (p.Combo == 2)
                     {
                         // Finisher: big spinning hook with a step in.
                         Pose(BrawlAutoRig.Chest, new Vector3(6, 40, 0), new Vector3(16, -48, 0), windup, strike, hold);
