@@ -1,0 +1,188 @@
+{
+    "musicBuildMs": 201.0980987548828,
+    "prewarmMs": 108.02259826660156,
+    "backgroundMs": 2182.83349609375,
+    "switchMs": 0.28949999809265139,
+    "tracks": [
+        {
+            "name": "Sala de espera",
+            "style": "menú, tranquilo",
+            "bpm": 100.0,
+            "seconds": 19.20290184020996,
+            "rms": 0.17000000178813935,
+            "peak": 0.7706418037414551,
+            "brightness": 0.05384271219372749,
+            "seamJump": 0.02845807373523712,
+            "typicalStep": 0.024772658944129945,
+            "lightSalience": 2.0825753211975099,
+            "dodgeSalience": 1.0678404569625855
+        },
+        {
+            "name": "Neón de madrugada",
+            "style": "synthwave",
+            "bpm": 118.0,
+            "seconds": 16.27138328552246,
+            "rms": 0.16391834616661073,
+            "peak": 0.7085533738136292,
+            "brightness": 0.06693115830421448,
+            "seamJump": 0.005240932106971741,
+            "typicalStep": 0.026217076927423478,
+            "lightSalience": 2.1598422527313234,
+            "dodgeSalience": 1.1074590682983399
+        },
+        {
+            "name": "Rebajas del ego",
+            "style": "funk",
+            "bpm": 104.0,
+            "seconds": 18.459863662719728,
+            "rms": 0.17000000178813935,
+            "peak": 0.7053407430648804,
+            "brightness": 0.05806197226047516,
+            "seamJump": 0.005553416907787323,
+            "typicalStep": 0.020515568554401399,
+            "lightSalience": 2.0825753211975099,
+            "dodgeSalience": 1.0678404569625855
+        },
+        {
+            "name": "Debate en llamas",
+            "style": "punk rápido",
+            "bpm": 150.0,
+            "seconds": 12.800000190734864,
+            "rms": 0.17000000178813935,
+            "peak": 0.847368061542511,
+            "brightness": 0.05456919968128204,
+            "seamJump": 0.003678344190120697,
+            "typicalStep": 0.02074260637164116,
+            "lightSalience": 2.0825753211975099,
+            "dodgeSalience": 1.0678404569625855
+        },
+        {
+            "name": "Bloque génesis",
+            "style": "techno",
+            "bpm": 126.0,
+            "seconds": 15.2380952835083,
+            "rms": 0.16400855779647828,
+            "peak": 0.703877866268158,
+            "brightness": 0.03931377828121185,
+            "seamJump": 0.013994568958878518,
+            "typicalStep": 0.01626046560704708,
+            "lightSalience": 2.15865421295166,
+            "dodgeSalience": 1.1068499088287354
+        }
+    ],
+    "voices": [
+        {
+            "kind": "voice-ko@0",
+            "text": "¡Esto no estaba en el programa!",
+            "seconds": 1.9049999713897706,
+            "peak": 0.800000011920929,
+            "pitch": 106.00961303710938
+        },
+        {
+            "kind": "voice-super@0",
+            "text": "¡Mayoría absoluta!",
+            "seconds": 1.2829999923706055,
+            "peak": 0.800000011920929,
+            "pitch": 110.25
+        },
+        {
+            "kind": "voice-win@0",
+            "text": "Lo prometido es deuda.",
+            "seconds": 1.4910000562667847,
+            "peak": 0.800000011920929,
+            "pitch": 99.32432556152344
+        },
+        {
+            "kind": "voice-ko@1",
+            "text": "¡Me dejaron en visto!",
+            "seconds": 1.090000033378601,
+            "peak": 0.800000011920929,
+            "pitch": 239.67391967773438
+        },
+        {
+            "kind": "voice-super@1",
+            "text": "¡Viralización masiva!",
+            "seconds": 1.1890000104904175,
+            "peak": 0.800000011920929,
+            "pitch": 242.3076934814453
+        },
+        {
+            "kind": "voice-win@1",
+            "text": "Esto va directo a mis historias.",
+            "seconds": 1.4789999723434449,
+            "peak": 0.800000011920929,
+            "pitch": 225.0
+        },
+        {
+            "kind": "voice-ko@2",
+            "text": "¡Eso no cuenta como repetición!",
+            "seconds": 1.593000054359436,
+            "peak": 0.800000011920929,
+            "pitch": 131.25
+        },
+        {
+            "kind": "voice-super@2",
+            "text": "¡Preentreno nuclear!",
+            "seconds": 0.8849999904632568,
+            "peak": 0.800000011920929,
+            "pitch": 137.8125
+        },
+        {
+            "kind": "voice-win@2",
+            "text": "Sin dolor no hay podio.",
+            "seconds": 1.2109999656677247,
+            "peak": 0.800000011920929,
+            "pitch": 122.5
+        },
+        {
+            "kind": "voice-ko@3",
+            "text": "¡Vendo, vendo, vendo!",
+            "seconds": 1.1820000410079957,
+            "peak": 0.800000011920929,
+            "pitch": 147.0
+        },
+        {
+            "kind": "voice-super@3",
+            "text": "¡Burbuja especulativa!",
+            "seconds": 1.0839999914169312,
+            "peak": 0.800000011920929,
+            "pitch": 157.5
+        },
+        {
+            "kind": "voice-win@3",
+            "text": "Compren mientras está barato.",
+            "seconds": 1.2269999980926514,
+            "peak": 0.800000011920929,
+            "pitch": 141.34616088867188
+        },
+        {
+            "kind": "voice-ko@4",
+            "text": "¡Me cortaron la señal!",
+            "seconds": 1.1690000295639039,
+            "peak": 0.800000011920929,
+            "pitch": 180.73770141601563
+        },
+        {
+            "kind": "voice-super@4",
+            "text": "¡La señal definitiva!",
+            "seconds": 1.343000054359436,
+            "peak": 0.800000011920929,
+            "pitch": 188.46153259277345
+        },
+        {
+            "kind": "voice-win@4",
+            "text": "Yo ya lo sabía.",
+            "seconds": 0.9860000014305115,
+            "peak": 0.800000011920929,
+            "pitch": 176.39999389648438
+        }
+    ],
+    "subtitles": [
+        "Lola Viral: ¡Me dejaron en visto!",
+        "Don Promesio: Lo prometido es deuda."
+    ],
+    "notes": [
+        "Azotea Influencer → Neón de madrugada · Torre Corporativa → Rebajas del ego · Estudio de Debate → Debate en llamas · Plaza Colonial → Bloque génesis",
+        "CREDITOS.md: D:\\Funados\\.claude\\worktrees\\rendimiento-095c80\\Docs\\Licencias\\CREDITOS.md"
+    ]
+}

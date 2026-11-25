@@ -1,0 +1,22 @@
+{
+    "version": "0.7.4",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Retrato de cada aspecto (11: 5 personajes) generado desde su modelo; la figura ocupa ≥ 12 % del cuadro",
+        "Los retratos de los cinco personajes son distintos entre sí (diferencia media por píxel ≥ 0.02; mínima 0.076)",
+        "Los retratos se generan una sola vez y se reutilizan",
+        "El porcentaje se calienta al subir (blanco → amarillo → naranja → rojo; ΔE 0–150 % = 72)",
+        "El porcentaje se lee sobre la tarjeta a cualquier daño (≥ 4.5:1; ≥ 7:1 con alto contraste), en las cuatro paletas y simulando daltonismo",
+        "Selección: retrato en las cinco tarjetas de personaje y en los rivales (9 dibujados)",
+        "Letras del HUD (58 tamaños) y sonidos (36) preparados antes de jugar: el primer KO no genera nada",
+        "Tarjetas de combate: retrato de los 5 luchadores y una forma por vida (15 de 15)",
+        "Cada puesto P1–P5 tiene su forma (círculo, cuadrado, triángulo, rombo, estrella) además del color",
+        "Todo se lee a 720p: texto más pequeño 12.0 px con cinco luchadores",
+        "El porcentaje crece al recibir daño (×1.19) y vuelve a su tamaño en 0.28 s",
+        "Con efectos reducidos el porcentaje no se anima",
+        "El contador de combo aparece junto al atacante (P3, 2 golpes), no solo para P1",
+        "Un luchador fuera de cámara muestra en el borde su número y su forma"
+    ],
+    "failures": []
+}
