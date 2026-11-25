@@ -1,0 +1,30 @@
+Evidencia 0.7.5 (25/11/2026): build Windows y 22 suites, 22/22 passed=True en una sola corrida.
+
+build exit=0
+Power exit=0 version=0.7.5 passed=True checks=32 failures=0
+Moves exit=0 version=0.7.5 passed=True checks=21 failures=0
+Kits exit=0 version=0.7.5 passed=True checks=91 failures=0
+Recovery exit=0 version=0.7.5 passed=True checks=16 failures=0
+Camera exit=0 version=0.7.5 passed=True checks=15 failures=0
+Coyote exit=0 version=0.7.5 passed=True checks=5 failures=0
+Arena exit=-1 version=0.7.5 passed=True checks=46 failures=0
+SideControls exit=0 version=0.7.5 passed=True checks=157 failures=0
+Side exit=0 version=0.7.5 passed=True checks=405 failures=0
+Controls exit=0 version=0.3.0 passed=True checks=125 failures=0
+Full exit=0 version=0.3.0 passed=True checks=208 failures=0
+Audio exit=0 version=0.7.5 passed=True checks=25 failures=0
+Ui exit=0 version=0.7.5 passed=True checks=31 failures=0
+Hud exit=0 version=0.7.5 passed=True checks=15 failures=0
+Perf exit=0 version=0.7.5 passed=True checks=35 failures=0
+SoakShort exit=0 version=0.7.5 passed=True checks=6 failures=0
+ArenaStress exit=0 version=0.7.5 passed=True checks=25 failures=0
+Fx exit=0 version=0.7.5 passed=True checks=33 failures=0
+Sfx exit=0 version=0.7.5 passed=True checks=18 failures=0
+Toon exit=0 version=0.7.5 passed=True checks=9 failures=0
+Anim exit=0 version=0.7.5 passed=True checks=15 failures=0
+Music exit=0 version=0.7.5 passed=True checks=34 failures=0
+
+Notas:
+- Arena: exit=-1 porque el player se quedó colgado al cerrar, tras escribir SIDE_RESULT True 46/46 (último log: CodeReloadManager destroyed). Se cerró a mano tras 2 h 40 min; coincidió con corridas de otra rama en paralelo. Vigilar si se repite.
+- Perf Azotea: pico de frame 61,4 ms (<100), tirón conocido a ~14 s, sigue abierto.
+- Music es nueva (-music-smoke, 34 comprobaciones): música por arena, voces sintetizadas, subtítulos y créditos.

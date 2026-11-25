@@ -1,0 +1,74 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.5/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.5/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.5/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.038 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.894800 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.5\Music\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.5\Music\music-options.json
+SIDE_CHECK_PASS Una pista para el menú y una por arena (5); las de arena y las frases se crean en segundo plano con el menú abierto (2205 ms)
+SIDE_CHECK_PASS Arrancar solo espera a la pista del menú y a los efectos: 199 + 98 ms (< 500 ms)
+SIDE_CHECK_PASS Cada pista dura exactamente 8 compases: el bucle no se desplaza respecto al pulso
+SIDE_CHECK_PASS El bucle no tiene costura: el salto entre el final y el principio es como un paso normal de la onda
+SIDE_CHECK_PASS Todas las pistas suenan igual de fuerte (RMS 0.17 ±12 %) y sin recortar (pico ≤ 0.9)
+SIDE_CHECK_PASS Las cinco pistas son distintas: tempos diferentes y correlación máxima 0.19 entre ellas
+SIDE_CHECK_PASS En cualquier pista al 100 %, el golpe ligero y la esquiva siguen destacando (nivel ×1,5 o, la esquiva, 4 veces más aguda)
+SIDE_CHECK_PASS Quince frases (KO, super y victoria de cada personaje), preparadas al arrancar (50 sonidos en memoria)
+SIDE_CHECK_PASS Cada frase dura entre 0,3 y 2,4 s y no recorta (pico 0,8)
+SIDE_CHECK_PASS Las quince frases son distintas; el super dice el nombre del super de su kit
+SIDE_CHECK_PASS Cada personaje tiene su voz: tonos 99, 225, 123, 141, 176 Hz, separados al menos un 8 % (15 %)
+SIDE_CHECK_PASS El menú tiene su propia pista («Sala de espera»)
+SIDE_CHECK_PASS Cada arena suena con su pista al empezar la partida y el menú recupera la suya al volver: Azotea Influencer → Neón de madrugada · Torre Corporativa → Rebajas del ego · Estudio de Debate → Debate en llamas · Plaza Colonial → Bloque génesis
+SIDE_CHECK_PASS Cambiar de pista no crea nada: 0.27 ms
+SIDE_CHECK_PASS Una revancha en la misma arena no reinicia la música
+SIDE_CHECK_PASS Un KO real dice la frase del personaje que cae (voice-ko@1)
+SIDE_CHECK_PASS …con su subtítulo: «Lola Viral: ¡Me dejaron en visto!»
+SIDE_CHECK_PASS El subtítulo queda centrado sobre la franja del HUD, dentro de la pantalla
+SIDE_CHECK_PASS Una frase a la vez: el KO corta al super, el super no corta al KO y el subtítulo sigue a la frase que suena
+SIDE_CHECK_PASS Con las voces al 0 % el subtítulo aparece igual
+SIDE_CHECK_PASS Con los subtítulos desactivados la frase suena sin texto
+SIDE_CHECK_PASS El subtítulo sigue el tamaño de texto: 18 px al 100 %, 23 px al 130 % (mínimo 16 px)
+SIDE_CHECK_PASS El subtítulo se lee sobre cualquier fondo: texto 10.6:1 y nombres 4.7:1 en el peor caso (≥ 7:1 con alto contraste), en las cuatro visiones, sin perder el color del jugador
+SIDE_CHECK_PASS Al terminar, el ganador dice su frase de victoria: «Don Promesio: Lo prometido es deuda.»
+SIDE_CHECK_PASS Volver al menú borra el subtítulo
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.5\Music\music-options.json
+SIDE_CHECK_PASS Quitar los subtítulos se guarda y se recupera, sin cambiar la versión del archivo (v4)
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.5\Music\music-options-sin-campo.json
+SIDE_CHECK_PASS Un archivo v4 sin el campo carga como antes («Loaded»), con los subtítulos activados
+FUNADOS_OPTIONS cargadas estado=Loaded ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.5\Music\music-options.json
+SIDE_CHECK_PASS El menú principal tiene «CRÉDITOS», alcanzable con teclado y mando
+SIDE_CHECK_PASS La pantalla de créditos solo deja enfocar VOLVER (credits-back); Esc, B o Start también vuelven
+SIDE_CHECK_PASS El texto cabe sobre VOLVER también con el texto al 130 % (termina en 666, botón en 806)
+SIDE_CHECK_PASS Los créditos llevan literal «Model created with Meshy – CC BY 4.0 License»
+SIDE_CHECK_PASS El texto coincide con Docs/Licencias/CREDITOS.md (Meshy, Unity, Blender, rig)
+SIDE_CHECK_PASS VOLVER regresa al menú principal
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.5\Music\player-options.json
+SIDE_RESULT True checks=34 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

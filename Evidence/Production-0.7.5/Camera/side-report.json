@@ -1,0 +1,22 @@
+{
+    "version": "0.7.5",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Azotea Influencer: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.1)",
+        "Azotea Influencer: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo",
+        "Azotea Influencer: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar",
+        "Torre Corporativa: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.0)",
+        "Torre Corporativa: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo",
+        "Torre Corporativa: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar",
+        "Estudio de Debate: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.0)",
+        "Estudio de Debate: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo",
+        "Estudio de Debate: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar",
+        "Plaza Colonial: cinco luchadores separados en X y altura quedan encuadrados bajo el HUD (zoom 10.1)",
+        "Plaza Colonial: cerca de los límites de expulsión el marcador avisa con «!» y el zoom no supera el máximo",
+        "Plaza Colonial: juntos acerca más que separados sin perder la arena; la cámara no gira y derecha sigue siendo derecha al apuntar",
+        "Luchador fuera de cámara: indicador en el borde y aviso de límite",
+        "Oclusión: un bloque delante del luchador se atenúa y el suelo jugable sigue visible"
+    ],
+    "failures": []
+}

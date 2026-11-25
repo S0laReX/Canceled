@@ -4,6 +4,13 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.7.5 (música, voces, subtítulos y créditos)
+
+- Merge de `claude/rendimiento-095c80` (3de3dd5). Versión 0.7.5. Recuento 51/63.
+- 22 suites pasan (ver `Evidence/Production-0.7.5/suites.txt`). Se añade `run_all22` con `-music-smoke`.
+- Conocido: el player de Arena se quedó colgado al cerrar una vez (pasó 46/46). Tirón de Azotea a ~14 s: 61 ms, sigue abierto.
+- En curso en la misma rama (sin merge todavía): `-read-smoke` (lectura y GDD §9) con fondo atenuado por arena (BrawlBackgroundGrade, opción dimBackground), corrección de orientación en la cuenta atrás y empates 1,2,3,3,5 en arena-stress. Hallazgo abierto: perfiles de Vex y Tycoon solapados al 0,86.
+
 ## Relevo perf/rendimiento: música, voces, subtítulos y créditos (sobre 0.7.4)
 
 - Archivos nuevos:
