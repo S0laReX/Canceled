@@ -44,7 +44,16 @@
 - Regresión sobre 0.7.4: Audio 25/25, Ui 31/31, Music 34/34 y Perf 35/35. `-arena-stress` falló una de 24 comprobaciones en cada una de dos pasadas, y no fue la misma:
   - Primera pasada (`ArenaStress`): en Torre, P4 seguía en el aire 3 s después de reaparecer, sin estar en hitstun, en la partida 19.
   - Repetición (`ArenaStress-rerun`): en Azotea, un final por vidas dio los puestos 1,2,3,3,5. Dos luchadores eliminados en el mismo paso comparten puesto, y la prueba exige puestos distintos.
-  - Ninguno de los dos depende del atenuado ni de la rotación de la cuenta atrás: no tocan la física ni los puestos. Son casos raros que ya estaban; queda pendiente, aparte, decidir la regla del empate y el caso del aire. La corrida de las 23 suites sobre 0.7.5 irá en `Read-0.7.5`.
+  - Ninguno de los dos depende del atenuado ni de la rotación de la cuenta atrás: no tocan la física ni los puestos.
+  - Empate (decisión del padre): se usa el ranking de competición estándar. El juego ya lo hacía (`BrawlMatch`: los eliminados en el mismo paso reciben `survivors + 1`) y la pantalla de resultados ya ordena por puesto y muestra «#3» dos veces. Ahora `-arena-stress` lo acepta en finales por vidas y por tiempo: cada puesto es 1 más el número de luchadores por delante.
+  - P4 en el aire en Torre, investigado con el código:
+    - No es la protección: se agota en 2 s pase lo que pase y no toca la gravedad.
+    - No hay plataforma de reaparición: se reaparece en el suelo, 0,12 m por encima.
+    - Los golpes ponen al menos 0,035 s de pausa (`InHitstun`), y la prueba muestrea cada paso fijo, así que un golpe no se le escapa.
+    - Queda el movimiento propio del bot: salto, doble salto tardío y recuperación (13,8 m/s, 0,55 s a ¼ de gravedad). Puede tenerlo unos 3,5 s en el aire (estimado), y a los 3 s estaba a 5,48 m, bajando de esa altura.
+    - No se reprodujo en la repetición (160/160 aterrizajes en Torre).
+    - Cambio en la prueba: «atascado» es ahora quedarse quieto (< 5 cm en 0,5 s) en el aire, o pasar más de 6 s sin aterrizar. Las esperas de más de 3 s se cuentan aparte (`longAirAfterRespawn`).
+    - Sin corrida todavía: se validará con las 23 suites sobre 0.7.5. La corrida de las 23 suites sobre 0.7.5 irá en `Read-0.7.5`.
 
 ## Relevo perf/rendimiento: música, voces, subtítulos y créditos (sobre 0.7.4)
 
