@@ -261,6 +261,7 @@ namespace CancelBrawl.Beta
             CleanupRound();
             ArenaIndex = Mathf.Clamp(ArenaIndex, 0, BrawlArena.Count - 1);
             BuildArena(ArenaIndex);
+            if (BrawlBackgroundGrade.Enabled) BrawlBackgroundGrade.Apply(Arena, groupCamera.View); else BrawlBackgroundGrade.Revert(); // GDD §9, at load only
             BrawlAudio.PlayMusic(BrawlMusic.ArenaTrack(ArenaIndex)); BrawlSubtitles.Clear();
             int count = IsTraining ? 2 : Mathf.Clamp(OpponentCount + 1, 2, MaxPlayers);
             Fighters = new BrawlFighter[count];
@@ -804,7 +805,7 @@ namespace CancelBrawl.Beta
             localCoop = data.localCoop; p1UsesGamepad = data.p1UsesGamepad;
             MoveDeadzone = data.moveDeadzone; AimDeadzone = data.aimDeadzone; StickResponse = data.stickResponse; VibrationStrength = data.vibration;
             TextScale = data.textScale; HudScale = data.hudScale;
-            HighContrast = data.highContrast; ColorBlindPalette = data.colorBlindPalette; BrawlSubtitles.Enabled = data.subtitles;
+            HighContrast = data.highContrast; ColorBlindPalette = data.colorBlindPalette; BrawlSubtitles.Enabled = data.subtitles; BrawlBackgroundGrade.Enabled = data.dimBackground;
             bool keyboardClean = Bindings.TryLoad(BindingScheme.Keyboard, data.keyboard);
             bool gamepadClean = Bindings.TryLoad(BindingScheme.Gamepad, data.gamepad);
             if ((status == OptionsLoadStatus.Loaded || status == OptionsLoadStatus.MigratedLegacy) && (!keyboardClean || !gamepadClean))
@@ -823,7 +824,7 @@ namespace CancelBrawl.Beta
             master = BrawlAudio.Volume(BrawlAudioBus.Master), voice = BrawlAudio.Volume(BrawlAudioBus.Voice), ui = BrawlAudio.Volume(BrawlAudioBus.Ui),
             localCoop = localCoop, p1UsesGamepad = p1UsesGamepad,
             moveDeadzone = MoveDeadzone, aimDeadzone = AimDeadzone, stickResponse = StickResponse, vibration = VibrationStrength,
-            textScale = TextScale, hudScale = HudScale, highContrast = HighContrast, colorBlindPalette = ColorBlindPalette, subtitles = BrawlSubtitles.Enabled,
+            textScale = TextScale, hudScale = HudScale, highContrast = HighContrast, colorBlindPalette = ColorBlindPalette, subtitles = BrawlSubtitles.Enabled, dimBackground = BrawlBackgroundGrade.Enabled,
             keyboard = Bindings.Export(BindingScheme.Keyboard), gamepad = Bindings.Export(BindingScheme.Gamepad)
         };
 
