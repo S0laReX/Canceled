@@ -1,0 +1,28 @@
+{
+    "version": "0.7.6",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Datos de golpes y kits válidos por defecto",
+        "Valores por defecto iguales a la tabla del GDD 2.0",
+        "Ajustes de los cinco kits presentes y aplicados al roster",
+        "Validación detecta repetidos, faltantes, cajas vacías y kits fuera de rango",
+        "Datos no válidos no se aplican: el kit conserva sus valores",
+        "Cajas por defecto reproducen exactamente el alcance anterior (cuadrícula de 1.089 puntos por golpe)",
+        "Cajas en espejo: mirar a la izquierda equivale a mirar a la derecha reflejado",
+        "En altura: el ascendente alcanza arriba y no abajo; el remate, abajo y no arriba",
+        "Fórmula de lanzamiento: cada golpe conserva su ángulo de 0 %",
+        "Lanzamiento: ascendentes suben y remates bajan a todo porcentaje; K crece con el daño",
+        "Resistencia divide el lanzamiento y la dirección se refleja",
+        "Con el lanzamiento angular desactivado se recupera la fórmula histórica",
+        "D03: hitstun 100 %, 80 %, 64 %… con suelo del 40 %",
+        "Cambiar el daño en los datos cambia el golpe real",
+        "La caja de golpe de los datos decide el contacto real",
+        "Espejo en partida: el mismo golpe conecta igual a izquierda y derecha",
+        "Borde: el ascendente alcanza a un rival fuera del suelo en ambos bordes",
+        "D03 en partida: el hitstun baja con golpes repetidos y se reinicia al pasar la ventana de combo",
+        "CombatLab dibuja la caja de golpe que usa el contacto y la hurtbox de cada luchador",
+        "Estudio de combos D03 completado: 6 pruebas con impactos registrados"
+    ],
+    "failures": []
+}

@@ -161,7 +161,10 @@ namespace CancelBrawl.Beta
             };
             copy.Create();
             blit.SetFloat(SaturationId, saturation);
+            // Graphics.Blit leaves the copy as RenderTexture.active; restore it so screenshots and ReadPixels keep the screen.
+            RenderTexture previous = RenderTexture.active;
             Graphics.Blit(source, copy, blit);
+            RenderTexture.active = previous;
             cache[key] = copy;
             return copy;
         }

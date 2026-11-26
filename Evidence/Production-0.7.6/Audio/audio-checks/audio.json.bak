@@ -1,0 +1,106 @@
+{
+    "format": "funados-options",
+    "version": 4,
+    "reducedEffects": false,
+    "sfx": 0.6000000238418579,
+    "music": 0.30000001192092898,
+    "localCoop": false,
+    "p1UsesGamepad": false,
+    "moveDeadzone": 0.20000000298023225,
+    "aimDeadzone": 0.25,
+    "stickResponse": 1.0,
+    "vibration": 0.75,
+    "textScale": 1.0,
+    "hudScale": 1.0,
+    "master": 0.8999999761581421,
+    "voice": 0.10000000149011612,
+    "ui": 0.4000000059604645,
+    "highContrast": false,
+    "colorBlindPalette": false,
+    "subtitles": true,
+    "dimBackground": true,
+    "keyboard": [
+        {
+            "action": "MoveUp",
+            "path": "Keyboard/w"
+        },
+        {
+            "action": "MoveDown",
+            "path": "Keyboard/s"
+        },
+        {
+            "action": "MoveLeft",
+            "path": "Keyboard/a"
+        },
+        {
+            "action": "MoveRight",
+            "path": "Keyboard/d"
+        },
+        {
+            "action": "Jump",
+            "path": "Keyboard/space"
+        },
+        {
+            "action": "Basic",
+            "path": "Mouse/leftButton"
+        },
+        {
+            "action": "Heavy",
+            "path": "Mouse/rightButton"
+        },
+        {
+            "action": "Special",
+            "path": "Keyboard/e"
+        },
+        {
+            "action": "Recovery",
+            "path": "Keyboard/r"
+        },
+        {
+            "action": "Dodge",
+            "path": "Keyboard/leftShift"
+        },
+        {
+            "action": "Super",
+            "path": "Keyboard/q"
+        },
+        {
+            "action": "FastFall",
+            "path": "Keyboard/leftCtrl"
+        }
+    ],
+    "gamepad": [
+        {
+            "action": "Jump",
+            "path": "buttonSouth"
+        },
+        {
+            "action": "Basic",
+            "path": "buttonWest"
+        },
+        {
+            "action": "Heavy",
+            "path": "buttonNorth"
+        },
+        {
+            "action": "Special",
+            "path": "buttonEast"
+        },
+        {
+            "action": "Recovery",
+            "path": "rightShoulder"
+        },
+        {
+            "action": "Dodge",
+            "path": "rightTrigger"
+        },
+        {
+            "action": "Super",
+            "path": "leftShoulder"
+        },
+        {
+            "action": "FastFall",
+            "path": "leftTrigger"
+        }
+    ]
+}

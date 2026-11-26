@@ -1,0 +1,22 @@
+{
+    "version": "0.7.6",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Los cinco kits usan su modelo con rig (no el provisional)",
+        "Los 19 estados de perfil se separan del reposo (≥15° en algún hueso) en los cinco kits",
+        "El aterrizaje aplasta el cuerpo (altura <95 %)",
+        "Estados vecinos se distinguen: carrera/frenado, salto/segundo salto, hitstun/lanzamiento, golpe/aéreo, salto/caída, caída/recuperación, carga/liberación, reposo/giro",
+        "Cada ataque muestra su anticipación: la pose de carga difiere ≥20° del golpe (siete ataques, cinco kits)",
+        "Las poses de prueba no dejan objetos en la escena",
+        "Giro de lado: el cuerpo pasa de cara a la cámara (forward.z -0.99) y acaba mirando al nuevo lado",
+        "Girar y atacar a la vez no hace el giro largo: el golpe sale ya mirando a su lado",
+        "Frenado al soltar la carrera, y se apaga solo",
+        "Segundo salto con voltereta completa (pasa por 171°) y cae derecho",
+        "Un golpe corta la voltereta al instante",
+        "Un golpe flojo es hitstun (encogido), sin voltereta",
+        "Un golpe fuerte lanza dando vueltas (354°) y el luchador termina derecho",
+        "Reaparición: entra desde el 63 % de tamaño y acaba en el 100 %"
+    ],
+    "failures": []
+}

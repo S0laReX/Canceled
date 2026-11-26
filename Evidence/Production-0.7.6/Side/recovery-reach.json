@@ -1,0 +1,42 @@
+{
+    "version": "0.7.6",
+    "edgeLeft": -7.95001220703125,
+    "edgeRight": 7.95001220703125,
+    "kits": [
+        {
+            "kit": "Don Promesio",
+            "rightLevel": 8.8125,
+            "leftLevel": 8.8125,
+            "rightBelow": 8.0625,
+            "leftBelow": 8.0625
+        },
+        {
+            "kit": "Lola Viral",
+            "rightLevel": 11.8125,
+            "leftLevel": 11.8125,
+            "rightBelow": 11.0625,
+            "leftBelow": 11.0625
+        },
+        {
+            "kit": "Coach Tóxico",
+            "rightLevel": 8.25,
+            "leftLevel": 8.25,
+            "rightBelow": 7.6875,
+            "leftBelow": 7.6875
+        },
+        {
+            "kit": "Cripto King",
+            "rightLevel": 9.375,
+            "leftLevel": 9.375,
+            "rightBelow": 8.625,
+            "leftBelow": 8.625
+        },
+        {
+            "kit": "Tío Antena",
+            "rightLevel": 11.8125,
+            "leftLevel": 11.8125,
+            "rightBelow": 11.8125,
+            "leftBelow": 11.8125
+        }
+    ]
+}

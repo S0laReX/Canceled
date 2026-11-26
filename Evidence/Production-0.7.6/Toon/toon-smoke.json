@@ -1,0 +1,73 @@
+{
+    "shaderFound": true,
+    "fighterRenderers": 5,
+    "toonRenderers": 5,
+    "rows": [
+        {
+            "character": "Don Decreto",
+            "skin": 0,
+            "edgeLuminance": 0.04565005376935005,
+            "innerLuminance": 0.2903900146484375
+        },
+        {
+            "character": "Don Decreto",
+            "skin": 1,
+            "edgeLuminance": 0.043318819254636767,
+            "innerLuminance": 0.20982152223587037
+        },
+        {
+            "character": "Lola Loop",
+            "skin": 0,
+            "edgeLuminance": 0.04427888244390488,
+            "innerLuminance": 0.4645421504974365
+        },
+        {
+            "character": "Lola Loop",
+            "skin": 1,
+            "edgeLuminance": 0.05419342592358589,
+            "innerLuminance": 0.33381006121635439
+        },
+        {
+            "character": "Lola Loop",
+            "skin": 2,
+            "edgeLuminance": 0.05258017033338547,
+            "innerLuminance": 0.3296429514884949
+        },
+        {
+            "character": "Coach Tóxico",
+            "skin": 0,
+            "edgeLuminance": 0.044975873082876208,
+            "innerLuminance": 0.39765721559524538
+        },
+        {
+            "character": "Coach Tóxico",
+            "skin": 1,
+            "edgeLuminance": 0.04493176192045212,
+            "innerLuminance": 0.20315712690353394
+        },
+        {
+            "character": "Cripto King",
+            "skin": 0,
+            "edgeLuminance": 0.04259294271469116,
+            "innerLuminance": 0.34990188479423525
+        },
+        {
+            "character": "Cripto King",
+            "skin": 1,
+            "edgeLuminance": 0.0658741146326065,
+            "innerLuminance": 0.2501356601715088
+        },
+        {
+            "character": "Tío Antena",
+            "skin": 0,
+            "edgeLuminance": 0.046821478754282,
+            "innerLuminance": 0.3442048728466034
+        },
+        {
+            "character": "Tío Antena",
+            "skin": 1,
+            "edgeLuminance": 0.04970961809158325,
+            "innerLuminance": 0.290886789560318
+        }
+    ]
+}

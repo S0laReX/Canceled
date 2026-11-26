@@ -1,0 +1,32 @@
+Evidencia 0.7.6 (25/11/2026): build Windows y 23 suites, 23/23 passed=True.
+
+build exit=0
+Power exit=0 version=0.7.6 passed=True checks=32 failures=0
+Moves exit=0 version=0.7.6 passed=True checks=21 failures=0
+Kits exit=0 version=0.7.6 passed=True checks=91 failures=0 (repetida)
+Recovery exit=0 version=0.7.6 passed=True checks=16 failures=0 (repetida)
+Camera exit=0 version=0.7.6 passed=True checks=15 failures=0
+Coyote exit=0 version=0.7.6 passed=True checks=5 failures=0
+Arena exit=0 version=0.7.6 passed=True checks=46 failures=0
+SideControls exit=0 version=0.7.6 passed=True checks=157 failures=0
+Side exit=0 version=0.7.6 passed=True checks=405 failures=0
+Controls exit=0 version=0.3.0 passed=True checks=125 failures=0
+Full exit=0 version=0.3.0 passed=True checks=208 failures=0
+Audio exit=0 version=0.7.6 passed=True checks=25 failures=0
+Ui exit=0 version=0.7.6 passed=True checks=31 failures=0
+Hud exit=0 version=0.7.6 passed=True checks=15 failures=0
+Perf exit=0 version=0.7.6 passed=True checks=35 failures=0
+SoakShort exit=0 version=0.7.6 passed=True checks=6 failures=0
+ArenaStress exit=0 version=0.7.6 passed=True checks=25 failures=0
+Fx exit=0 version=0.7.6 passed=True checks=33 failures=0
+Sfx exit=0 version=0.7.6 passed=True checks=18 failures=0
+Toon exit=0 version=0.7.6 passed=True checks=9 failures=0
+Anim exit=0 version=0.7.6 passed=True checks=15 failures=0
+Music exit=0 version=0.7.6 passed=True checks=34 failures=0
+Read exit=0 version=0.7.6 passed=True checks=21 failures=0
+
+Notas:
+- Read es nueva (-read-smoke, 21 comprobaciones): lectura lateral, GDD §9 con fondo atenuado por arena, daltonismo y perfil en la cuenta atrás. Advertencia fuera de passed: perfiles de Vex y Tycoon solapados al 0,86 (umbral propio 0,80).
+- Primera corrida: Side falló 4× con «Failed to capture screen shot» porque BrawlBackgroundGrade dejaba activa la RenderTexture de 1024 tras Graphics.Blit. Corregido: se restaura RenderTexture.active. SoakShort de esa corrida: 7 tirones >100 ms (máx. 443 ms) a mitad de partida; con la corrección pasó 6/6.
+- Segunda corrida: Kits y Recovery cerraron limpios a mitad de prueba sin informe (exit 0, como si se cerrara la ventana). Se repitieron solas y pasaron.
+- El runner ahora mata el player si no termina 120 s después de escribir el informe.

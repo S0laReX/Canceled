@@ -56,6 +56,18 @@
     - Cambio en la prueba: «atascado» es ahora quedarse quieto (< 5 cm en 0,5 s) en el aire, o pasar más de 6 s sin aterrizar. Las esperas de más de 3 s se cuentan aparte (`longAirAfterRespawn`).
     - Sin corrida todavía: se validará con las 23 suites sobre 0.7.5. La corrida de las 23 suites sobre 0.7.5 irá en `Read-0.7.5`.
 
+## Relevo 0.7.6 (lectura en cámara lateral y GDD §9)
+
+- Merge de `claude/rendimiento-read-075` (235c09f). Versión 0.7.6. Recuento 52/63.
+- Incluye `-read-smoke`, el fondo atenuado por arena (`BrawlBackgroundGrade`, opción `dimBackground` activada por defecto), el perfil desde la cuenta atrás y los empates 1,2,3,3,5 en arena-stress.
+- Corrección propia: `BrawlBackgroundGrade` restaura `RenderTexture.active` después del blit; sin esto fallaban las capturas.
+- 23 suites pasan (ver `Evidence/Production-0.7.6/suites.txt`).
+- Abierto:
+  - perfiles de Vex y Tycoon solapados al 0,86;
+  - tirón de Azotea, 66 ms en esta corrida;
+  - tirones del soak en una corrida, que no se repitieron.
+- `claude/rendimiento-095c80` en el remoto está obsoleta (anterior al rebase).
+
 ## Relevo 0.7.5 (música, voces, subtítulos y créditos)
 
 - Merge de `claude/rendimiento-095c80` (3de3dd5). Versión 0.7.5. Recuento 51/63.

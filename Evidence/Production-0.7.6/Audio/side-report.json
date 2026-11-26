@@ -1,0 +1,32 @@
+{
+    "version": "0.7.6",
+    "passed": true,
+    "checks": [
+        "Producción usa reglas laterales 2.5D",
+        "Cinco buses: Master y una fuente propia para Música, SFX, Voces y UI",
+        "La música suena en bucle por el bus Música",
+        "Los 15 efectos del juego (salto, golpe, KO, super…) van al bus SFX",
+        "Sonidos de interfaz (foco, confirmar, pausa) van al bus UI",
+        "Frases de personaje van al bus Voces",
+        "El KO suena en SFX y añade su frase en Voces",
+        "Una sola frase a la vez: el KO interrumpe al super y el super no corta al KO",
+        "Cada fuente suena a ganancia × Master × bus",
+        "Volúmenes fuera de rango se limitan a 0–100 %",
+        "Silenciar un bus no afecta a los otros tres",
+        "Master al 0 % silencia todos los buses",
+        "Salida real del oyente: cada bus suena solo y calla al 0 %",
+        "Salida real con Master al 0 %: silencio con música, efectos, voz e interfaz sonando",
+        "Los cinco volúmenes se guardan en el formato versión 4",
+        "Al recargar se recuperan los cinco volúmenes, también un bus en silencio",
+        "Archivo versión 1 carga: conserva SFX y Música, Master/Voces/UI por defecto y se reescribe en v4",
+        "Archivo versión 2 carga: conserva SFX y Música, Master/Voces/UI por defecto y se reescribe en v4",
+        "Archivo versión 3 carga: conserva SFX y Música, Master/Voces/UI por defecto y se reescribe en v4",
+        "Archivo v4 sin el volumen de Voces no se acepta a medias",
+        "Volúmenes de bus fuera de rango se corrigen al cargar",
+        "En partida, el salto suena por el bus SFX",
+        "Pausar y reanudar suenan por el bus UI",
+        "Pestaña AUDIO con una fila por bus, alcanzable con foco",
+        "Izquierda/derecha ajustan el bus enfocado y se guarda"
+    ],
+    "failures": []
+}
