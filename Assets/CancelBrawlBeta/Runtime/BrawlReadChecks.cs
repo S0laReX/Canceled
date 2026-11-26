@@ -107,11 +107,16 @@ namespace CancelBrawl.Beta
                     var layout = match.Arena.CurrentSideLayout;
                     for (int placement = 0; placement < 2; placement++)
                     {
-                        Vector3[] points = placement == 0
-                            ? new[] { new Vector3(-6, .05f, 0), new Vector3(-3, .05f, 0), new Vector3(0, .05f, 0), new Vector3(3, .05f, 0), new Vector3(6, .05f, 0) }
-                            : new[] { new Vector3(-layout.PlatformX, layout.PlatformTop + .05f, 0), new Vector3(layout.PlatformX, layout.PlatformTop + .05f, 0),
-                                      new Vector3(-4.5f, .05f, 0), new Vector3(1.5f, .05f, 0), new Vector3(5, .05f, 0) };
-                        for (int i = 0; i < match.Fighters.Length; i++) match.Fighters[i].RespawnAt(points[i % points.Length], false);
+                        // Floor: five points spread over the main floor (±6, ±3, 0 on the 16 m floors), out of any pit.
+                        // Platforms: every one-way platform top, then the floor fills the rest.
+                        var points = new List<Vector3>();
+                        if (placement == 0) foreach (float f in new[] { -.75f, -.375f, 0, .375f, .75f }) points.Add(new Vector3(layout.FloorX(f), .05f, 0));
+                        else
+                        {
+                            foreach (var top in layout.PlatformTops) points.Add(new Vector3(top.x, top.y + .05f, 0));
+                            foreach (float f in new[] { -.5625f, .1875f, .625f, -.25f }) if (points.Count < 5) points.Add(new Vector3(layout.FloorX(f), .05f, 0));
+                        }
+                        for (int i = 0; i < match.Fighters.Length; i++) match.Fighters[i].RespawnAt(points[i % points.Count], false);
                         yield return new WaitForSecondsRealtime(.7f);
                         yield return new WaitForEndOfFrame();
 
@@ -132,7 +137,7 @@ namespace CancelBrawl.Beta
                             foreach (var renderer in fighter.GetComponentsInChildren<Renderer>())
                                 if (renderer.enabled) { renderer.enabled = false; hidden.Add(renderer); }
                         Color32[] behind = Grab(camera, read, texture, Color.black);
-                        if (graded && round == 0 && placement == 0)
+                        if (graded && round == 0 && placement == 0 && match.Arena.UsesStageArt)
                         {
                             // Calibration sweep: background chroma for every albedo factor, fighters hidden; then back to the table.
                             for (int step = 20; step >= 4; step--)
@@ -184,7 +189,7 @@ namespace CancelBrawl.Beta
                 arenaRow.neonPixelsBehind = neonBehind;
                 arenaRow.separatedOverNeon = neonBehind > 0 ? neonSeparated / (float)neonBehind : 1;
                 (graded ? report.arenas : report.ungradedArenas).Add(arenaRow);
-                if (graded)
+                if (graded && sweep.albedo.Count > 0)
                 {
                     sweep.arena = arenaRow.arena; sweep.tableAlbedo = BrawlBackgroundGrade.AlbedoFor(arena);
                     sweep.tableEmission = BrawlBackgroundGrade.EmissionSaturation(sweep.tableAlbedo);

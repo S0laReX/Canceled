@@ -1,0 +1,85 @@
+{
+    "rows": [
+        {
+            "vision": "Normal",
+            "normalPlayers": 63.24683380126953,
+            "colorBlindPlayers": 47.62078857421875,
+            "normalWorstPair": "P2-P5",
+            "colorBlindWorstPair": "P1-P3",
+            "warningVsMuted": 95.255126953125,
+            "warningVsAccent": 116.96104431152344,
+            "dangerBadge": 52.392391204833987,
+            "telegraph": 97.02056121826172
+        },
+        {
+            "vision": "Protanopia",
+            "normalPlayers": 16.277795791625978,
+            "colorBlindPlayers": 43.29528045654297,
+            "normalWorstPair": "P3-P4",
+            "colorBlindWorstPair": "P1-P3",
+            "warningVsMuted": 83.21859741210938,
+            "warningVsAccent": 78.20897674560547,
+            "dangerBadge": 41.87665557861328,
+            "telegraph": 64.75060272216797
+        },
+        {
+            "vision": "Deuteranopia",
+            "normalPlayers": 20.34147834777832,
+            "colorBlindPlayers": 43.043331146240237,
+            "normalWorstPair": "P3-P4",
+            "colorBlindWorstPair": "P2-P5",
+            "warningVsMuted": 89.41783905029297,
+            "warningVsAccent": 89.67293548583985,
+            "dangerBadge": 49.53523635864258,
+            "telegraph": 68.28412628173828
+        },
+        {
+            "vision": "Tritanopia",
+            "normalPlayers": 13.505060195922852,
+            "colorBlindPlayers": 42.693145751953128,
+            "normalWorstPair": "P1-P4",
+            "colorBlindWorstPair": "P1-P4",
+            "warningVsMuted": 71.64067840576172,
+            "warningVsAccent": 110.56222534179688,
+            "dangerBadge": 46.87237548828125,
+            "telegraph": 102.1455078125
+        }
+    ],
+    "contrast": [
+        "normal Normal texto0: 16.3:1 → alto contraste 17.0:1",
+        "normal Normal texto1: 7.4:1 → alto contraste 13.2:1",
+        "normal Normal texto2: 12.4:1 → alto contraste 13.9:1",
+        "normal Normal texto3: 6.0:1 → alto contraste 8.7:1",
+        "normal Protanopia texto0: 16.3:1 → alto contraste 16.9:1",
+        "normal Protanopia texto1: 7.6:1 → alto contraste 13.3:1",
+        "normal Protanopia texto2: 13.6:1 → alto contraste 15.3:1",
+        "normal Protanopia texto3: 4.6:1 → alto contraste 7.8:1",
+        "normal Deuteranopia texto0: 16.3:1 → alto contraste 17.0:1",
+        "normal Deuteranopia texto1: 7.3:1 → alto contraste 13.1:1",
+        "normal Deuteranopia texto2: 11.5:1 → alto contraste 12.9:1",
+        "normal Deuteranopia texto3: 7.0:1 → alto contraste 9.4:1",
+        "normal Tritanopia texto0: 16.3:1 → alto contraste 16.9:1",
+        "normal Tritanopia texto1: 7.5:1 → alto contraste 13.2:1",
+        "normal Tritanopia texto2: 12.9:1 → alto contraste 13.5:1",
+        "normal Tritanopia texto3: 5.4:1 → alto contraste 8.4:1",
+        "daltonismo Normal texto0: 16.3:1 → alto contraste 17.0:1",
+        "daltonismo Normal texto1: 7.4:1 → alto contraste 13.2:1",
+        "daltonismo Normal texto2: 12.4:1 → alto contraste 13.9:1",
+        "daltonismo Normal texto3: 7.7:1 → alto contraste 9.5:1",
+        "daltonismo Protanopia texto0: 16.3:1 → alto contraste 16.9:1",
+        "daltonismo Protanopia texto1: 7.6:1 → alto contraste 13.3:1",
+        "daltonismo Protanopia texto2: 13.6:1 → alto contraste 15.3:1",
+        "daltonismo Protanopia texto3: 6.3:1 → alto contraste 8.4:1",
+        "daltonismo Deuteranopia texto0: 16.3:1 → alto contraste 17.0:1",
+        "daltonismo Deuteranopia texto1: 7.3:1 → alto contraste 13.1:1",
+        "daltonismo Deuteranopia texto2: 11.5:1 → alto contraste 12.9:1",
+        "daltonismo Deuteranopia texto3: 8.6:1 → alto contraste 10.2:1",
+        "daltonismo Tritanopia texto0: 16.3:1 → alto contraste 16.9:1",
+        "daltonismo Tritanopia texto1: 7.5:1 → alto contraste 13.2:1",
+        "daltonismo Tritanopia texto2: 12.9:1 → alto contraste 13.5:1",
+        "daltonismo Tritanopia texto3: 6.7:1 → alto contraste 8.6:1"
+    ],
+    "tutorial": [
+        "reinicios de combo 1, reintentos de recuperación 1, combo del remate 1"
+    ]
+}

@@ -1,0 +1,53 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.7/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.7/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.7/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.043 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 1.670300 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.7\Sfx\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+SIDE_CHECK_PASS Los siete efectos por capas son limpios: pico ≤ 0,9 (sin recortar), con nivel y sin clic al empezar o acabar
+SIDE_CHECK_PASS La esquiva no tiene golpe seco: ataque 115 ms frente a 5 ms del impacto
+SIDE_CHECK_PASS La esquiva es más aguda que el impacto (brillo 0.729 frente a 0.050)
+SIDE_CHECK_PASS El KO dura más del doble que un impacto (0.75 s) y suena más que un golpe ligero
+SIDE_CHECK_PASS El remate hacia abajo se distingue del golpe fuerte
+SIDE_CHECK_PASS Con la música al 100 % y las voces al 0 %, impacto, remate, esquiva y KO destacan (nivel ×1,5 o 4 veces más agudos que la música)
+SIDE_CHECK_PASS Escalera de combo: cada golpe sube un semitono (paso 6 / paso 1 = 1.35, esperado 1.33)
+SIDE_CHECK_PASS En partida, un combo sube de tono golpe a golpe (hit-light, hit-light#1, hit-light#2)
+SIDE_CHECK_PASS Un lanzamiento suma la capa de silbido al golpe fuerte
+SIDE_CHECK_PASS Esquiva con audio: suena «dodge» y se ve
+SIDE_CHECK_PASS Recuperación con audio: suena «recovery» y se ve
+SIDE_CHECK_PASS Impacto con audio: anillo y chispas visibles
+SIDE_CHECK_PASS KO con audio: estallido de KO visible
+SIDE_CHECK_PASS Esquiva con el audio apagado: queda la señal visual
+SIDE_CHECK_PASS Recuperación con el audio apagado: queda la señal visual
+SIDE_CHECK_PASS Impacto con el audio apagado: anillo y chispas visibles
+SIDE_CHECK_PASS KO con el audio apagado: estallido de KO visible
+SIDE_RESULT True checks=18 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

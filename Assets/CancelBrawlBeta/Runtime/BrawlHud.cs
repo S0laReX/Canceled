@@ -287,9 +287,13 @@ namespace CancelBrawl.Beta
 
             // 02 · court
             Label(new Rect(104, 410, 700, 28), "02  CANCHA", body, Muted);
-            for (int i = 0; i < BrawlArena.Count; i++)
+            int arenas = match.ArenaCount;
+            bool twoRows = arenas > 4; // eight arenas: two rows of four, the description of the selected one beside the heading
+            if (twoRows)
+                Label(new Rect(260, 412, 696, 24), BrawlArena.DescriptionOf(match.ArenaIndex, match.UsesStageArt(match.ArenaIndex) || match.IsSideView), small, Muted);
+            for (int i = 0; i < arenas; i++)
             {
-                Rect rect = new Rect(104 + i * 214, 444, 206, 78);
+                Rect rect = twoRows ? new Rect(104 + (i % 4) * 214, 444 + (i / 4) * 42, 206, 38) : new Rect(104 + i * 214, 444, 206, 78);
                 bool selected = match.ArenaIndex == i;
                 Fill(rect, selected ? new Color(Cyan.r * .16f, Cyan.g * .16f, Cyan.b * .16f, 1f) : Card);
                 Fill(new Rect(rect.x, rect.y, 4, rect.height), selected ? Cyan : Muted * .5f);
@@ -297,8 +301,8 @@ namespace CancelBrawl.Beta
                 int arena = i;
                 if (GUI.Button(rect, GUIContent.none, GUIStyle.none)) match.ArenaIndex = arena;
                 Nav("arena-" + i, rect, () => match.ArenaIndex = arena);
-                Label(new Rect(rect.x + 14, rect.y + 10, rect.width - 22, 24), BrawlArena.NameOf(i, match.UsesStageArt(i)).ToUpperInvariant(), small, selected ? Cyan : Paper);
-                Label(new Rect(rect.x + 14, rect.y + 34, rect.width - 22, 40), BrawlArena.DescriptionOf(i, match.UsesStageArt(i)), tiny, Muted);
+                Label(new Rect(rect.x + 14, rect.y + (twoRows ? 7 : 10), rect.width - 22, 24), BrawlArena.NameOf(i, match.UsesStageArt(i) || match.IsSideView).ToUpperInvariant(), small, selected ? Cyan : Paper);
+                if (!twoRows) Label(new Rect(rect.x + 14, rect.y + 34, rect.width - 22, 40), BrawlArena.DescriptionOf(i, match.UsesStageArt(i)), tiny, Muted);
             }
 
             // 03 · rivals

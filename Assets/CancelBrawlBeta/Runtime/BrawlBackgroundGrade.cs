@@ -19,7 +19,8 @@ namespace CancelBrawl.Beta
         /// of 0.05 that leaves the background's mean CIELAB chroma at most <see cref="TargetShare"/> of the fighters'
         /// chroma, measured by <c>-read-smoke</c> (its calibration sweep is in <c>read-smoke.json</c>).
         /// </summary>
-        public static readonly float[] AlbedoSaturation = { .40f, .85f, .30f, .60f };
+        // Slots 4-7 are greyboxes (no stage art, never graded): their palettes are muted by design, so the factor is 1.
+        public static readonly float[] AlbedoSaturation = { .40f, .85f, .30f, .60f, 1f, 1f, 1f, 1f };
         /// <summary>Background chroma allowed, as a share of the fighters' (margin under GDD §9's "less than").</summary>
         public const float TargetShare = .85f;
         /// <summary>

@@ -1,0 +1,308 @@
+Mono path[0] = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.7/Windows/FUNADOS_Data/Managed'
+Mono config path = 'D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.7/Windows/MonoBleedingEdge/etc'
+CodeReloadManager initialized
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.5.7f1 (017862109af0)
+[Subsystems] Discovering subsystems at path D:/Funados/.claude/worktrees/funados-implementation-continue-db5f40/Builds/Funados/0.7.7/Windows/FUNADOS_Data/UnitySubsystems
+Forcing GfxDevice: Direct3D 11
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 4050 Laptop GPU (ID=0x28e1)
+    Vendor:   NVIDIA
+    VRAM:     5920 MB
+    Driver:   32.0.16.1088
+Begin MonoManager ReloadAssembly
+- Finished resetting the current domain, in  0.038 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+Using Windows.Gaming.Input
+UnloadTime: 0.874800 ms
+FUNADOS_OPTIONS cargadas estado=Defaults ruta=D:\Funados\.claude\worktrees\funados-implementation-continue-db5f40\Evidence\Production-0.7.7\ArenaStress\player-options.json
+SIDE_CHECK_PASS Producción usa reglas laterales 2.5D
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 1: fase=Results juego=300.0 s KO acumulados=12 real=23 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 2: fase=Results juego=300.0 s KO acumulados=21 real=42 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 3: fase=Results juego=300.0 s KO acumulados=34 real=61 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 4: fase=Results juego=300.0 s KO acumulados=44 real=80 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 5: fase=Results juego=300.0 s KO acumulados=56 real=99 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 6: fase=Results juego=300.0 s KO acumulados=65 real=118 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 7: fase=Results juego=300.0 s KO acumulados=77 real=137 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 8: fase=Results juego=300.0 s KO acumulados=89 real=156 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 9: fase=Results juego=300.0 s KO acumulados=101 real=175 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 10: fase=Results juego=300.0 s KO acumulados=111 real=194 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 11: fase=Results juego=300.0 s KO acumulados=117 real=213 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 12: fase=Results juego=300.0 s KO acumulados=124 real=232 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 13: fase=Results juego=300.0 s KO acumulados=135 real=251 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 14: fase=Results juego=300.0 s KO acumulados=146 real=270 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 15: fase=Results juego=300.0 s KO acumulados=153 real=289 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 16: fase=Results juego=300.0 s KO acumulados=162 real=308 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 17: fase=Results juego=300.0 s KO acumulados=173 real=327 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 18: fase=Results juego=300.0 s KO acumulados=185 real=346 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 19: fase=Results juego=300.0 s KO acumulados=196 real=365 s
+FUNADOS_STRESS_PROGRESO Azotea Influencer partida 20: fase=Results juego=300.0 s KO acumulados=207 real=384 s
+SIDE_CHECK_PASS Azotea Influencer: 20 partidas completas de cinco luchadores con resultados válidos (0 por vidas, 20 por tiempo)
+SIDE_CHECK_PASS Azotea Influencer: 207 KO reales (≥100); cada uno descuenta una vida y se atribuye (207 KO, 0 autodestrucciones)
+SIDE_CHECK_PASS Azotea Influencer: 156 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Azotea Influencer: tras reaparecer se aterriza en suelo real (máx. 0.92 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Azotea Influencer: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Azotea Influencer: sin fugas entre partidas (0 objetos, +1.6 MB tras 19 partidas)
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 1: fase=Results juego=300.0 s KO acumulados=9 real=403 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 2: fase=Results juego=300.0 s KO acumulados=20 real=422 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 3: fase=Results juego=300.0 s KO acumulados=32 real=441 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 4: fase=Results juego=300.0 s KO acumulados=45 real=460 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 5: fase=Results juego=300.0 s KO acumulados=57 real=479 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 6: fase=Results juego=300.0 s KO acumulados=70 real=498 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 7: fase=Results juego=300.0 s KO acumulados=80 real=517 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 8: fase=Results juego=300.0 s KO acumulados=90 real=536 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 9: fase=Results juego=300.0 s KO acumulados=100 real=555 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 10: fase=Results juego=274.7 s KO acumulados=111 real=572 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 11: fase=Results juego=300.0 s KO acumulados=123 real=591 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 12: fase=Results juego=300.0 s KO acumulados=133 real=610 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 13: fase=Results juego=300.0 s KO acumulados=146 real=629 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 14: fase=Results juego=300.0 s KO acumulados=156 real=648 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 15: fase=Results juego=300.0 s KO acumulados=166 real=667 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 16: fase=Results juego=300.0 s KO acumulados=176 real=686 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 17: fase=Results juego=300.0 s KO acumulados=187 real=705 s
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.58 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.57 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.55 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.53 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.52 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.50 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.48 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.47 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.45 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.43 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.42 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.40 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.38 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.37 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.35 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.33 sim=0.0
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 18: fase=Results juego=300.0 s KO acumulados=199 real=724 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 19: fase=Results juego=300.0 s KO acumulados=211 real=743 s
+FUNADOS_STRESS_PROGRESO Torre Corporativa partida 20: fase=Results juego=300.0 s KO acumulados=222 real=762 s
+SIDE_CHECK_PASS Torre Corporativa: 20 partidas completas de cinco luchadores con resultados válidos (1 por vidas, 19 por tiempo)
+SIDE_CHECK_PASS Torre Corporativa: 222 KO reales (≥100); cada uno descuenta una vida y se atribuye (223 KO, 0 autodestrucciones)
+SIDE_CHECK_PASS Torre Corporativa: 168 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Torre Corporativa: tras reaparecer se aterriza en suelo real (máx. 0.85 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Torre Corporativa: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Torre Corporativa: sin fugas entre partidas (0 objetos, +1.2 MB tras 19 partidas)
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 1: fase=Results juego=300.0 s KO acumulados=11 real=781 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 2: fase=Results juego=300.0 s KO acumulados=21 real=800 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 3: fase=Results juego=300.0 s KO acumulados=32 real=819 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 4: fase=Results juego=300.0 s KO acumulados=43 real=838 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 5: fase=Results juego=300.0 s KO acumulados=54 real=857 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 6: fase=Results juego=300.0 s KO acumulados=65 real=876 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 7: fase=Results juego=300.0 s KO acumulados=76 real=894 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 8: fase=Results juego=300.0 s KO acumulados=87 real=913 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 9: fase=Results juego=300.0 s KO acumulados=97 real=932 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 10: fase=Results juego=300.0 s KO acumulados=108 real=951 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 11: fase=Results juego=300.0 s KO acumulados=119 real=970 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 12: fase=Results juego=300.0 s KO acumulados=129 real=989 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 13: fase=Results juego=300.0 s KO acumulados=139 real=1008 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 14: fase=Results juego=300.0 s KO acumulados=151 real=1027 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 15: fase=Results juego=300.0 s KO acumulados=163 real=1046 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 16: fase=Results juego=300.0 s KO acumulados=174 real=1065 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 17: fase=Results juego=300.0 s KO acumulados=183 real=1084 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 18: fase=Results juego=300.0 s KO acumulados=194 real=1103 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 19: fase=Results juego=300.0 s KO acumulados=206 real=1122 s
+FUNADOS_STRESS_PROGRESO Estudio de Debate partida 20: fase=Results juego=300.0 s KO acumulados=217 real=1141 s
+SIDE_CHECK_PASS Estudio de Debate: 20 partidas completas de cinco luchadores con resultados válidos (0 por vidas, 20 por tiempo)
+SIDE_CHECK_PASS Estudio de Debate: 217 KO reales (≥100); cada uno descuenta una vida y se atribuye (217 KO, 0 autodestrucciones)
+SIDE_CHECK_PASS Estudio de Debate: 157 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Estudio de Debate: tras reaparecer se aterriza en suelo real (máx. 0.48 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Estudio de Debate: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Estudio de Debate: sin fugas entre partidas (0 objetos, +1.0 MB tras 19 partidas)
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 1: fase=Results juego=300.0 s KO acumulados=9 real=1160 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 2: fase=Results juego=300.0 s KO acumulados=19 real=1179 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 3: fase=Results juego=300.0 s KO acumulados=29 real=1198 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 4: fase=Results juego=300.0 s KO acumulados=40 real=1217 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 5: fase=Results juego=300.0 s KO acumulados=51 real=1236 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 6: fase=Results juego=300.0 s KO acumulados=64 real=1255 s
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.58 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.57 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.55 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.53 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.52 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.50 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.48 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.47 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.45 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.43 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.42 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.40 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.38 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.37 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.35 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.33 sim=0.0
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 7: fase=Results juego=300.0 s KO acumulados=74 real=1274 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 8: fase=Results juego=300.0 s KO acumulados=86 real=1293 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 9: fase=Results juego=300.0 s KO acumulados=95 real=1312 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 10: fase=Results juego=300.0 s KO acumulados=106 real=1331 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 11: fase=Results juego=300.0 s KO acumulados=117 real=1350 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 12: fase=Results juego=300.0 s KO acumulados=126 real=1369 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 13: fase=Results juego=300.0 s KO acumulados=136 real=1388 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 14: fase=Results juego=300.0 s KO acumulados=146 real=1407 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 15: fase=Results juego=300.0 s KO acumulados=158 real=1426 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 16: fase=Results juego=300.0 s KO acumulados=168 real=1445 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 17: fase=Results juego=300.0 s KO acumulados=177 real=1464 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 18: fase=Results juego=300.0 s KO acumulados=186 real=1483 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 19: fase=Results juego=300.0 s KO acumulados=198 real=1502 s
+FUNADOS_STRESS_PROGRESO Plaza Colonial partida 20: fase=Results juego=296.9 s KO acumulados=209 real=1520 s
+SIDE_CHECK_PASS Plaza Colonial: 20 partidas completas de cinco luchadores con resultados válidos (1 por vidas, 19 por tiempo)
+SIDE_CHECK_PASS Plaza Colonial: 209 KO reales (≥100); cada uno descuenta una vida y se atribuye (208 KO, 2 autodestrucciones)
+SIDE_CHECK_PASS Plaza Colonial: 157 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Plaza Colonial: tras reaparecer se aterriza en suelo real (máx. 1.07 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Plaza Colonial: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Plaza Colonial: sin fugas entre partidas (0 objetos, +2.7 MB tras 19 partidas)
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 1: fase=Results juego=300.0 s KO acumulados=7 real=1539 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 2: fase=Results juego=300.0 s KO acumulados=16 real=1558 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 3: fase=Results juego=300.0 s KO acumulados=26 real=1577 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 4: fase=Results juego=300.0 s KO acumulados=32 real=1596 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 5: fase=Results juego=300.0 s KO acumulados=43 real=1615 s
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.98 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.97 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.95 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.93 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.92 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.90 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.88 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.87 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.85 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.83 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.82 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.80 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.78 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.77 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.75 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=2.73 sim=0.0
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 6: fase=Results juego=300.0 s KO acumulados=53 real=1634 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 7: fase=Results juego=300.0 s KO acumulados=63 real=1653 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 8: fase=Results juego=300.0 s KO acumulados=75 real=1672 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 9: fase=Results juego=300.0 s KO acumulados=84 real=1691 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 10: fase=Results juego=300.0 s KO acumulados=93 real=1710 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 11: fase=Results juego=300.0 s KO acumulados=102 real=1729 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 12: fase=Results juego=300.0 s KO acumulados=113 real=1748 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 13: fase=Results juego=300.0 s KO acumulados=124 real=1767 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 14: fase=Results juego=300.0 s KO acumulados=137 real=1786 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 15: fase=Results juego=300.0 s KO acumulados=147 real=1805 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 16: fase=Results juego=300.0 s KO acumulados=158 real=1824 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 17: fase=Results juego=300.0 s KO acumulados=165 real=1843 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 18: fase=Results juego=300.0 s KO acumulados=176 real=1862 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 19: fase=Results juego=300.0 s KO acumulados=188 real=1881 s
+FUNADOS_STRESS_PROGRESO Mall del Ego partida 20: fase=Results juego=300.0 s KO acumulados=197 real=1900 s
+SIDE_CHECK_PASS Mall del Ego: 20 partidas completas de cinco luchadores con resultados válidos (0 por vidas, 20 por tiempo)
+SIDE_CHECK_PASS Mall del Ego: 197 KO reales (≥100); cada uno descuenta una vida y se atribuye (197 KO, 0 autodestrucciones)
+SIDE_CHECK_PASS Mall del Ego: 147 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Mall del Ego: tras reaparecer se aterriza en suelo real (máx. 0.72 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Mall del Ego: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Mall del Ego: sin fugas entre partidas (0 objetos, +1.0 MB tras 19 partidas)
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 1: fase=Results juego=300.0 s KO acumulados=13 real=1919 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 2: fase=Results juego=300.0 s KO acumulados=22 real=1938 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 3: fase=Results juego=300.0 s KO acumulados=31 real=1957 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 4: fase=Results juego=300.0 s KO acumulados=41 real=1976 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 5: fase=Results juego=300.0 s KO acumulados=50 real=1995 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 6: fase=Results juego=226.1 s KO acumulados=62 real=2009 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 7: fase=Results juego=300.0 s KO acumulados=73 real=2028 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 8: fase=Results juego=300.0 s KO acumulados=83 real=2047 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 9: fase=Results juego=300.0 s KO acumulados=95 real=2066 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 10: fase=Results juego=300.0 s KO acumulados=107 real=2085 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 11: fase=Results juego=300.0 s KO acumulados=114 real=2104 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 12: fase=Results juego=300.0 s KO acumulados=123 real=2123 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 13: fase=Results juego=300.0 s KO acumulados=133 real=2142 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 14: fase=Results juego=300.0 s KO acumulados=143 real=2161 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 15: fase=Results juego=300.0 s KO acumulados=154 real=2180 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 16: fase=Results juego=300.0 s KO acumulados=165 real=2199 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 17: fase=Results juego=300.0 s KO acumulados=176 real=2218 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 18: fase=Results juego=300.0 s KO acumulados=182 real=2237 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 19: fase=Results juego=300.0 s KO acumulados=193 real=2256 s
+FUNADOS_STRESS_PROGRESO Cumbre de la Liquidez partida 20: fase=Results juego=300.0 s KO acumulados=202 real=2275 s
+SIDE_CHECK_PASS Cumbre de la Liquidez: 20 partidas completas de cinco luchadores con resultados válidos (1 por vidas, 19 por tiempo)
+SIDE_CHECK_PASS Cumbre de la Liquidez: 202 KO reales (≥100); cada uno descuenta una vida y se atribuye (202 KO, 1 autodestrucciones)
+SIDE_CHECK_PASS Cumbre de la Liquidez: 158 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Cumbre de la Liquidez: tras reaparecer se aterriza en suelo real (máx. 0.60 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Cumbre de la Liquidez: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Cumbre de la Liquidez: sin fugas entre partidas (0 objetos, +1.1 MB tras 19 partidas)
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 1: fase=Results juego=291.9 s KO acumulados=13 real=2293 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 2: fase=Results juego=300.0 s KO acumulados=26 real=2312 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 3: fase=Results juego=300.0 s KO acumulados=38 real=2331 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 4: fase=Results juego=300.0 s KO acumulados=49 real=2350 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 5: fase=Results juego=300.0 s KO acumulados=60 real=2369 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 6: fase=Results juego=300.0 s KO acumulados=72 real=2388 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 7: fase=Results juego=300.0 s KO acumulados=84 real=2407 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 8: fase=Results juego=300.0 s KO acumulados=97 real=2426 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 9: fase=Results juego=216.9 s KO acumulados=109 real=2440 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 10: fase=Results juego=298.7 s KO acumulados=121 real=2459 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 11: fase=Results juego=176.6 s KO acumulados=133 real=2470 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 12: fase=Results juego=300.0 s KO acumulados=143 real=2489 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 13: fase=Results juego=259.7 s KO acumulados=156 real=2505 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 14: fase=Results juego=158.9 s KO acumulados=169 real=2516 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 15: fase=Results juego=300.0 s KO acumulados=181 real=2535 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 16: fase=Results juego=165.2 s KO acumulados=192 real=2545 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 17: fase=Results juego=300.0 s KO acumulados=202 real=2564 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 18: fase=Results juego=300.0 s KO acumulados=212 real=2583 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 19: fase=Results juego=300.0 s KO acumulados=225 real=2602 s
+FUNADOS_STRESS_PROGRESO Palacio del Privilegio partida 20: fase=Results juego=300.0 s KO acumulados=237 real=2621 s
+SIDE_CHECK_PASS Palacio del Privilegio: 20 partidas completas de cinco luchadores con resultados válidos (7 por vidas, 13 por tiempo)
+SIDE_CHECK_PASS Palacio del Privilegio: 237 KO reales (≥100); cada uno descuenta una vida y se atribuye (244 KO, 0 autodestrucciones)
+SIDE_CHECK_PASS Palacio del Privilegio: 178 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Palacio del Privilegio: tras reaparecer se aterriza en suelo real (máx. 1.28 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Palacio del Privilegio: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Palacio del Privilegio: sin fugas entre partidas (0 objetos, +1.4 MB tras 19 partidas)
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 1: fase=Results juego=300.0 s KO acumulados=9 real=2640 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 2: fase=Results juego=300.0 s KO acumulados=19 real=2659 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 3: fase=Results juego=300.0 s KO acumulados=28 real=2678 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 4: fase=Results juego=300.0 s KO acumulados=41 real=2697 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 5: fase=Results juego=300.0 s KO acumulados=51 real=2716 s
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.58 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.57 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.55 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.53 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.52 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.50 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.48 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.47 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.45 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.43 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.42 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.40 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.38 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.37 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.35 sim=0.0
+FUNADOS_STRESS_PROGRESO fase=Countdown cuenta=0.33 sim=0.0
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 6: fase=Results juego=300.0 s KO acumulados=62 real=2735 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 7: fase=Results juego=300.0 s KO acumulados=73 real=2754 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 8: fase=Results juego=300.0 s KO acumulados=84 real=2773 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 9: fase=Results juego=300.0 s KO acumulados=92 real=2792 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 10: fase=Results juego=300.0 s KO acumulados=103 real=2811 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 11: fase=Results juego=300.0 s KO acumulados=115 real=2830 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 12: fase=Results juego=300.0 s KO acumulados=124 real=2849 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 13: fase=Results juego=247.6 s KO acumulados=136 real=2864 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 14: fase=Results juego=300.0 s KO acumulados=148 real=2883 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 15: fase=Results juego=300.0 s KO acumulados=158 real=2902 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 16: fase=Results juego=300.0 s KO acumulados=167 real=2921 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 17: fase=Results juego=300.0 s KO acumulados=180 real=2940 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 18: fase=Results juego=300.0 s KO acumulados=192 real=2959 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 19: fase=Results juego=300.0 s KO acumulados=203 real=2978 s
+FUNADOS_STRESS_PROGRESO Centro de Cumplimiento partida 20: fase=Results juego=300.0 s KO acumulados=214 real=2997 s
+SIDE_CHECK_PASS Centro de Cumplimiento: 20 partidas completas de cinco luchadores con resultados válidos (1 por vidas, 19 por tiempo)
+SIDE_CHECK_PASS Centro de Cumplimiento: 214 KO reales (≥100); cada uno descuenta una vida y se atribuye (214 KO, 1 autodestrucciones)
+SIDE_CHECK_PASS Centro de Cumplimiento: 166 reapariciones a tiempo (2 s, error máx. 0.017 s), dentro de los límites, en el plano y protegidas
+SIDE_CHECK_PASS Centro de Cumplimiento: tras reaparecer se aterriza en suelo real (máx. 0.08 s en el aire; 0 más de 3 s por su propio movimiento; nadie quieto en el aire ni más de 6 s; 0 golpeados al acabar la protección antes de aterrizar) y nadie cae de nuevo protegido
+SIDE_CHECK_PASS Centro de Cumplimiento: ninguna posición inválida ni fuera del plano lateral en 20 partidas
+SIDE_CHECK_PASS Centro de Cumplimiento: sin fugas entre partidas (0 objetos, +2.1 MB tras 19 partidas)
+SIDE_RESULT True checks=49 failures=0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+CodeReloadManager destroyed

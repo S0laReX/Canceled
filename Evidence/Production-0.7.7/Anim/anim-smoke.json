@@ -1,0 +1,665 @@
+{
+    "states": [
+        {
+            "character": "Don Decreto",
+            "state": "carrera",
+            "fromRest": 43.999996185302737
+        },
+        {
+            "character": "Don Decreto",
+            "state": "frenado",
+            "fromRest": 56.50786590576172
+        },
+        {
+            "character": "Don Decreto",
+            "state": "giro",
+            "fromRest": 90.0
+        },
+        {
+            "character": "Don Decreto",
+            "state": "salto",
+            "fromRest": 78.0
+        },
+        {
+            "character": "Don Decreto",
+            "state": "segundo salto",
+            "fromRest": 180.0
+        },
+        {
+            "character": "Don Decreto",
+            "state": "caída",
+            "fromRest": 71.94104766845703
+        },
+        {
+            "character": "Don Decreto",
+            "state": "golpe neutral",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Don Decreto",
+            "state": "golpe ascendente",
+            "fromRest": 153.92230224609376
+        },
+        {
+            "character": "Don Decreto",
+            "state": "aéreo neutral",
+            "fromRest": 82.08025360107422
+        },
+        {
+            "character": "Don Decreto",
+            "state": "remate descendente",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Don Decreto",
+            "state": "fuerte",
+            "fromRest": 60.000003814697269
+        },
+        {
+            "character": "Don Decreto",
+            "state": "especial",
+            "fromRest": 95.03434753417969
+        },
+        {
+            "character": "Don Decreto",
+            "state": "recuperación",
+            "fromRest": 128.2834014892578
+        },
+        {
+            "character": "Don Decreto",
+            "state": "esquiva",
+            "fromRest": 95.0
+        },
+        {
+            "character": "Don Decreto",
+            "state": "hitstun",
+            "fromRest": 72.84415435791016
+        },
+        {
+            "character": "Don Decreto",
+            "state": "lanzamiento",
+            "fromRest": 120.00000762939453
+        },
+        {
+            "character": "Don Decreto",
+            "state": "reaparición",
+            "fromRest": 70.23904418945313
+        },
+        {
+            "character": "Don Decreto",
+            "state": "carga del super",
+            "fromRest": 94.91999816894531
+        },
+        {
+            "character": "Don Decreto",
+            "state": "liberación del super",
+            "fromRest": 115.4765625
+        },
+        {
+            "character": "Lola Loop",
+            "state": "carrera",
+            "fromRest": 43.999996185302737
+        },
+        {
+            "character": "Lola Loop",
+            "state": "frenado",
+            "fromRest": 55.983333587646487
+        },
+        {
+            "character": "Lola Loop",
+            "state": "giro",
+            "fromRest": 90.0
+        },
+        {
+            "character": "Lola Loop",
+            "state": "salto",
+            "fromRest": 78.0
+        },
+        {
+            "character": "Lola Loop",
+            "state": "segundo salto",
+            "fromRest": 180.0
+        },
+        {
+            "character": "Lola Loop",
+            "state": "caída",
+            "fromRest": 70.59202575683594
+        },
+        {
+            "character": "Lola Loop",
+            "state": "golpe neutral",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Lola Loop",
+            "state": "golpe ascendente",
+            "fromRest": 153.8898162841797
+        },
+        {
+            "character": "Lola Loop",
+            "state": "aéreo neutral",
+            "fromRest": 82.08025360107422
+        },
+        {
+            "character": "Lola Loop",
+            "state": "remate descendente",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Lola Loop",
+            "state": "fuerte",
+            "fromRest": 60.000003814697269
+        },
+        {
+            "character": "Lola Loop",
+            "state": "especial",
+            "fromRest": 95.00904083251953
+        },
+        {
+            "character": "Lola Loop",
+            "state": "recuperación",
+            "fromRest": 126.89778900146485
+        },
+        {
+            "character": "Lola Loop",
+            "state": "esquiva",
+            "fromRest": 95.0
+        },
+        {
+            "character": "Lola Loop",
+            "state": "hitstun",
+            "fromRest": 71.61619567871094
+        },
+        {
+            "character": "Lola Loop",
+            "state": "lanzamiento",
+            "fromRest": 120.00000762939453
+        },
+        {
+            "character": "Lola Loop",
+            "state": "reaparición",
+            "fromRest": 68.84424591064453
+        },
+        {
+            "character": "Lola Loop",
+            "state": "carga del super",
+            "fromRest": 94.91999816894531
+        },
+        {
+            "character": "Lola Loop",
+            "state": "liberación del super",
+            "fromRest": 114.142822265625
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "carrera",
+            "fromRest": 43.999996185302737
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "frenado",
+            "fromRest": 56.12315368652344
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "giro",
+            "fromRest": 90.0
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "salto",
+            "fromRest": 78.0
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "segundo salto",
+            "fromRest": 180.0
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "caída",
+            "fromRest": 70.95865631103516
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "golpe neutral",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "golpe ascendente",
+            "fromRest": 153.89825439453126
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "aéreo neutral",
+            "fromRest": 82.08025360107422
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "remate descendente",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "fuerte",
+            "fromRest": 60.000003814697269
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "especial",
+            "fromRest": 83.0
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "recuperación",
+            "fromRest": 127.27458190917969
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "esquiva",
+            "fromRest": 95.0
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "hitstun",
+            "fromRest": 71.94953155517578
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "lanzamiento",
+            "fromRest": 120.00000762939453
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "reaparición",
+            "fromRest": 69.22347259521485
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "carga del super",
+            "fromRest": 94.91999816894531
+        },
+        {
+            "character": "Coach Tóxico",
+            "state": "liberación del super",
+            "fromRest": 114.50540924072266
+        },
+        {
+            "character": "Cripto King",
+            "state": "carrera",
+            "fromRest": 43.999996185302737
+        },
+        {
+            "character": "Cripto King",
+            "state": "frenado",
+            "fromRest": 56.518890380859378
+        },
+        {
+            "character": "Cripto King",
+            "state": "giro",
+            "fromRest": 90.0
+        },
+        {
+            "character": "Cripto King",
+            "state": "salto",
+            "fromRest": 78.0
+        },
+        {
+            "character": "Cripto King",
+            "state": "segundo salto",
+            "fromRest": 180.0
+        },
+        {
+            "character": "Cripto King",
+            "state": "caída",
+            "fromRest": 71.9686508178711
+        },
+        {
+            "character": "Cripto King",
+            "state": "golpe neutral",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Cripto King",
+            "state": "golpe ascendente",
+            "fromRest": 153.9230194091797
+        },
+        {
+            "character": "Cripto King",
+            "state": "aéreo neutral",
+            "fromRest": 82.08025360107422
+        },
+        {
+            "character": "Cripto King",
+            "state": "remate descendente",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Cripto King",
+            "state": "fuerte",
+            "fromRest": 60.000003814697269
+        },
+        {
+            "character": "Cripto King",
+            "state": "especial",
+            "fromRest": 95.0350341796875
+        },
+        {
+            "character": "Cripto King",
+            "state": "recuperación",
+            "fromRest": 128.31173706054688
+        },
+        {
+            "character": "Cripto King",
+            "state": "esquiva",
+            "fromRest": 95.0
+        },
+        {
+            "character": "Cripto King",
+            "state": "hitstun",
+            "fromRest": 72.86932373046875
+        },
+        {
+            "character": "Cripto King",
+            "state": "lanzamiento",
+            "fromRest": 120.00000762939453
+        },
+        {
+            "character": "Cripto King",
+            "state": "reaparición",
+            "fromRest": 70.2675552368164
+        },
+        {
+            "character": "Cripto King",
+            "state": "carga del super",
+            "fromRest": 94.91999816894531
+        },
+        {
+            "character": "Cripto King",
+            "state": "liberación del super",
+            "fromRest": 115.50384521484375
+        },
+        {
+            "character": "Tío Antena",
+            "state": "carrera",
+            "fromRest": 43.999996185302737
+        },
+        {
+            "character": "Tío Antena",
+            "state": "frenado",
+            "fromRest": 56.940216064453128
+        },
+        {
+            "character": "Tío Antena",
+            "state": "giro",
+            "fromRest": 90.0
+        },
+        {
+            "character": "Tío Antena",
+            "state": "salto",
+            "fromRest": 78.0
+        },
+        {
+            "character": "Tío Antena",
+            "state": "segundo salto",
+            "fromRest": 180.0
+        },
+        {
+            "character": "Tío Antena",
+            "state": "caída",
+            "fromRest": 73.00341033935547
+        },
+        {
+            "character": "Tío Antena",
+            "state": "golpe neutral",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Tío Antena",
+            "state": "golpe ascendente",
+            "fromRest": 153.95074462890626
+        },
+        {
+            "character": "Tío Antena",
+            "state": "aéreo neutral",
+            "fromRest": 82.08025360107422
+        },
+        {
+            "character": "Tío Antena",
+            "state": "remate descendente",
+            "fromRest": 97.99999237060547
+        },
+        {
+            "character": "Tío Antena",
+            "state": "fuerte",
+            "fromRest": 60.000003814697269
+        },
+        {
+            "character": "Tío Antena",
+            "state": "especial",
+            "fromRest": 99.99999237060547
+        },
+        {
+            "character": "Tío Antena",
+            "state": "recuperación",
+            "fromRest": 129.373046875
+        },
+        {
+            "character": "Tío Antena",
+            "state": "esquiva",
+            "fromRest": 95.0
+        },
+        {
+            "character": "Tío Antena",
+            "state": "hitstun",
+            "fromRest": 73.8138656616211
+        },
+        {
+            "character": "Tío Antena",
+            "state": "lanzamiento",
+            "fromRest": 120.00000762939453
+        },
+        {
+            "character": "Tío Antena",
+            "state": "reaparición",
+            "fromRest": 71.33636474609375
+        },
+        {
+            "character": "Tío Antena",
+            "state": "carga del super",
+            "fromRest": 94.91999816894531
+        },
+        {
+            "character": "Tío Antena",
+            "state": "liberación del super",
+            "fromRest": 116.52607727050781
+        }
+    ],
+    "attacks": [
+        {
+            "character": "Don Decreto",
+            "attack": "golpe neutral",
+            "anticipation": 118.07913970947266
+        },
+        {
+            "character": "Don Decreto",
+            "attack": "golpe ascendente",
+            "anticipation": 37.51052474975586
+        },
+        {
+            "character": "Don Decreto",
+            "attack": "aéreo neutral",
+            "anticipation": 102.91999816894531
+        },
+        {
+            "character": "Don Decreto",
+            "attack": "remate descendente",
+            "anticipation": 23.719993591308595
+        },
+        {
+            "character": "Don Decreto",
+            "attack": "fuerte",
+            "anticipation": 88.13313293457031
+        },
+        {
+            "character": "Don Decreto",
+            "attack": "especial",
+            "anticipation": 134.8711395263672
+        },
+        {
+            "character": "Don Decreto",
+            "attack": "super",
+            "anticipation": 155.31863403320313
+        },
+        {
+            "character": "Lola Loop",
+            "attack": "golpe neutral",
+            "anticipation": 118.07913970947266
+        },
+        {
+            "character": "Lola Loop",
+            "attack": "golpe ascendente",
+            "anticipation": 37.51052474975586
+        },
+        {
+            "character": "Lola Loop",
+            "attack": "aéreo neutral",
+            "anticipation": 102.91999816894531
+        },
+        {
+            "character": "Lola Loop",
+            "attack": "remate descendente",
+            "anticipation": 23.719993591308595
+        },
+        {
+            "character": "Lola Loop",
+            "attack": "fuerte",
+            "anticipation": 88.13313293457031
+        },
+        {
+            "character": "Lola Loop",
+            "attack": "especial",
+            "anticipation": 134.8711395263672
+        },
+        {
+            "character": "Lola Loop",
+            "attack": "super",
+            "anticipation": 155.31863403320313
+        },
+        {
+            "character": "Coach Tóxico",
+            "attack": "golpe neutral",
+            "anticipation": 118.07913970947266
+        },
+        {
+            "character": "Coach Tóxico",
+            "attack": "golpe ascendente",
+            "anticipation": 37.51052474975586
+        },
+        {
+            "character": "Coach Tóxico",
+            "attack": "aéreo neutral",
+            "anticipation": 102.91999816894531
+        },
+        {
+            "character": "Coach Tóxico",
+            "attack": "remate descendente",
+            "anticipation": 23.719993591308595
+        },
+        {
+            "character": "Coach Tóxico",
+            "attack": "fuerte",
+            "anticipation": 88.13313293457031
+        },
+        {
+            "character": "Coach Tóxico",
+            "attack": "especial",
+            "anticipation": 61.156620025634769
+        },
+        {
+            "character": "Coach Tóxico",
+            "attack": "super",
+            "anticipation": 155.31863403320313
+        },
+        {
+            "character": "Cripto King",
+            "attack": "golpe neutral",
+            "anticipation": 118.07913970947266
+        },
+        {
+            "character": "Cripto King",
+            "attack": "golpe ascendente",
+            "anticipation": 37.51052474975586
+        },
+        {
+            "character": "Cripto King",
+            "attack": "aéreo neutral",
+            "anticipation": 102.91999816894531
+        },
+        {
+            "character": "Cripto King",
+            "attack": "remate descendente",
+            "anticipation": 23.719993591308595
+        },
+        {
+            "character": "Cripto King",
+            "attack": "fuerte",
+            "anticipation": 88.13313293457031
+        },
+        {
+            "character": "Cripto King",
+            "attack": "especial",
+            "anticipation": 134.8711395263672
+        },
+        {
+            "character": "Cripto King",
+            "attack": "super",
+            "anticipation": 155.31863403320313
+        },
+        {
+            "character": "Tío Antena",
+            "attack": "golpe neutral",
+            "anticipation": 118.07913970947266
+        },
+        {
+            "character": "Tío Antena",
+            "attack": "golpe ascendente",
+            "anticipation": 37.51052474975586
+        },
+        {
+            "character": "Tío Antena",
+            "attack": "aéreo neutral",
+            "anticipation": 102.91999816894531
+        },
+        {
+            "character": "Tío Antena",
+            "attack": "remate descendente",
+            "anticipation": 23.719993591308595
+        },
+        {
+            "character": "Tío Antena",
+            "attack": "fuerte",
+            "anticipation": 88.13313293457031
+        },
+        {
+            "character": "Tío Antena",
+            "attack": "especial",
+            "anticipation": 61.1199951171875
+        },
+        {
+            "character": "Tío Antena",
+            "attack": "super",
+            "anticipation": 155.31863403320313
+        }
+    ],
+    "turnMinForwardZ": -0.9937218427658081,
+    "turnMaxYaw": 180.0,
+    "flipMaxPitch": 170.53033447265626,
+    "tumbleMax": 354.0,
+    "spawnMinScale": 0.6262222528457642,
+    "brakeSeen": true,
+    "flipCutByHit": true,
+    "turnCutByAttack": true,
+    "lightHitNoTumble": true
+}

@@ -192,6 +192,10 @@ namespace CancelBrawl.Beta
         private Material FadeOf(Material original)
         {
             if (fadeCache.TryGetValue(original, out Material fade) && fade) return fade;
+            // Greybox arenas build fresh materials each time: drop the fades of originals that no longer exist.
+            var stale = new List<Material>();
+            foreach (var pair in fadeCache) if (!pair.Key) { stale.Add(pair.Key); if (pair.Value) Destroy(pair.Value); }
+            foreach (var key in stale) fadeCache.Remove(key);
             fade = new Material(fadeTemplate) { name = original.name + " (atenuado)" };
             Color color = original.color; color.a = .3f; fade.color = color;
             if (fade.HasProperty("_BaseColor")) fade.SetColor("_BaseColor", color);

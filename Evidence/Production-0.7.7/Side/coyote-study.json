@@ -1,0 +1,177 @@
+{
+    "version": "0.7.7",
+    "rows": [
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 0,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 1,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 2,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 3,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 4,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 6,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 8,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 0,
+            "pressDelayTicks": 10,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 0,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 1,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 2,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 3,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 4,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 6,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 8,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 3,
+            "pressDelayTicks": 10,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 0,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 1,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 2,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 3,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 4,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 6,
+            "groundJumpKept": true,
+            "takeoffSpeed": 9.966666221618653,
+            "jumpsLeftAfter": 1
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 8,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        },
+        {
+            "coyoteTicks": 6,
+            "pressDelayTicks": 10,
+            "groundJumpKept": false,
+            "takeoffSpeed": 9.318666458129883,
+            "jumpsLeftAfter": 0
+        }
+    ],
+    "abuseAfterJump": false,
+    "abuseAfterHit": false,
+    "abuseAfterDrop": false,
+    "abuseAfterSpawn": false
+}

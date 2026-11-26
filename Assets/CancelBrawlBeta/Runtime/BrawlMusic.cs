@@ -46,6 +46,19 @@ namespace CancelBrawl.Beta
             new Track { Name = "Bloque génesis", Style = "techno", Bpm = 126, Root = 48, Scale = Phrygian, Chords = new[] { 0, 1, 0, 6 },
                 Kick = "x...x...x...x...", Snare = "........x.......", Hat = "..x.xxx...x.xxx.", Bass = "..x...x...x...xo",
                 LeadWave = 1, Arp = true, LeadOctave = 2, Seed = 53, PadLevel = .25f, LeadLevel = .3f, BassLevel = .9f },
+            // Catalogue arenas 4-7 (Mall del Ego, Cumbre de la Liquidez, Palacio del Privilegio, Centro de Cumplimiento).
+            new Track { Name = "Liquidación total", Style = "disco", Bpm = 112, Root = 55, Scale = Dorian, Chords = new[] { 0, 3, 4, 3 },
+                Kick = "x...x...x...x...", Snare = "....x.......x...", Hat = ".x.x.x.x.x.x.x.x", Bass = "x.o.x.o.x.o.x.o.",
+                LeadWave = 0, Arp = true, LeadOctave = 1, Seed = 67, PadLevel = .4f, LeadLevel = .4f, BassLevel = .85f },
+            new Track { Name = "Mercado alcista", Style = "trance barato", Bpm = 136, Root = 51, Scale = Minor, Chords = new[] { 0, 6, 5, 4 },
+                Kick = "x...x...x...x...", Snare = "........x.......", Hat = "..x...x...x...x.", Bass = ".xx..xx..xx..xx.",
+                LeadWave = 2, Arp = true, LeadOctave = 2, Seed = 71, PadLevel = .35f, LeadLevel = .3f, BassLevel = .8f },
+            new Track { Name = "Reloj detenido", Style = "barroco sintético", Bpm = 92, Root = 50, Scale = Major, Chords = new[] { 0, 4, 5, 3 },
+                Kick = "x.......x.......", Snare = "....x.......x...", Hat = "x...x...x...x...", Bass = "x...5...o...5...",
+                LeadWave = 1, Arp = true, LeadOctave = 1, Seed = 79, PadLevel = .5f, LeadLevel = .45f, BassLevel = .75f },
+            new Track { Name = "Ventanilla única", Style = "lounge de oficina", Bpm = 86, Root = 56, Scale = Dorian, Chords = new[] { 0, 2, 3, 1 },
+                Kick = "x.....x...x.....", Snare = "....x.......x...", Hat = "x.x.x.x.x.x.x.x.", Bass = "x.....o...5.....",
+                LeadWave = 0, Arp = false, LeadOctave = 1, Seed = 83, PadLevel = .55f, LeadLevel = .5f, BassLevel = .7f },
         };
 
         public static string Name(int track) => Tracks[Mathf.Clamp(track, 0, Tracks.Length - 1)].Name;

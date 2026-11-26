@@ -296,7 +296,7 @@ namespace CancelBrawl.Beta
 
         private IEnumerator ArenaChecks()
         {
-            for (int arena = 0; arena < BrawlArena.Count; arena++)
+            for (int arena = 0; arena < BrawlArena.BetaCount; arena++)
             {
                 match.AutomatedTest = true; match.ArenaIndex = arena; match.SelectedCharacter = arena; match.OpponentCount = 4;
                 match.StartMatch();

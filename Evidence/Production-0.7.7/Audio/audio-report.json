@@ -1,0 +1,108 @@
+{
+    "version": "0.7.7",
+    "routes": [
+        {
+            "kind": "jump",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "hit",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "ko",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "ready",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "super",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "warning",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "bounce",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "trap",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "swing",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "hit-light",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "hit-heavy",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "hit-spike",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "dodge",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "launch",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "recovery",
+            "bus": "Sfx"
+        },
+        {
+            "kind": "ui-move",
+            "bus": "Ui"
+        },
+        {
+            "kind": "ui-confirm",
+            "bus": "Ui"
+        },
+        {
+            "kind": "ui-pause",
+            "bus": "Ui"
+        },
+        {
+            "kind": "voice-ko",
+            "bus": "Voice"
+        },
+        {
+            "kind": "voice-super",
+            "bus": "Voice"
+        }
+    ],
+    "output": [
+        {
+            "bus": "Music",
+            "audible": 0.01807493343949318,
+            "silenced": 0.0
+        },
+        {
+            "bus": "Sfx",
+            "audible": 0.05270332470536232,
+            "silenced": 0.0
+        },
+        {
+            "bus": "Voice",
+            "audible": 0.05398784577846527,
+            "silenced": 0.0
+        },
+        {
+            "bus": "Ui",
+            "audible": 0.023430658504366876,
+            "silenced": 0.0
+        }
+    ],
+    "masterSilenced": 0.0
+}

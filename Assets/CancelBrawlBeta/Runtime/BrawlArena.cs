@@ -20,22 +20,36 @@ namespace CancelBrawl.Beta
             "Camino seguro o salto corto junto al vacío."
         };
         private static readonly string[] Calls = { "¡A LA AZOTEA!", "¡AL MALL!", "¡AL CAMPUS!", "¡AL NÚCLEO!" };
-        public static int Count => Names.Length;
+        /// <summary>Historical 3D beta courts (legacy regression only).</summary>
+        public static int BetaCount => Names.Length;
+        /// <summary>Production 2.5D arenas: the four stages with art plus the four catalogue arenas (CIERRE-460/461).</summary>
+        public static int Count => StageNames.Length;
 
-        // Production stages (FunadosProduction/Environments) that replace the greyboxes slot by slot.
-        public static readonly string[] StageNames = { "Azotea Influencer", "Torre Corporativa", "Estudio de Debate", "Plaza Colonial" };
+        // Production stages (FunadosProduction/Environments) that replace the greyboxes slot by slot. Slots 4-7 are the rest of
+        // the GDD catalogue (GDD 1.0 §12.3 ST04-ST06 and the beta's Mall del Ego, adapted to the side plane); they are greybox
+        // layouts until their art is produced, so they have no stage prefab.
+        public static readonly string[] StageNames =
+        {
+            "Azotea Influencer", "Torre Corporativa", "Estudio de Debate", "Plaza Colonial",
+            "Mall del Ego", "Cumbre de la Liquidez", "Palacio del Privilegio", "Centro de Cumplimiento"
+        };
         public static readonly string[] StageDescriptions =
         {
             "Tarima central y dos plataformas flotantes.",
             "Atrio ejecutivo con dos plataformas colgantes.",
             "Plató central y dos plataformas simétricas.",
-            "Tarima de piedra entre dos balcones."
+            "Tarima de piedra entre dos balcones.",
+            "Kiosco bajo y dos entresuelos: tres alturas.",
+            "Foso central bajo una pasarela alta.",
+            "Salón corto con una sola tarima alta.",
+            "Suelo largo, ventanillas bajas y archivo alto."
         };
-        private static readonly string[] StageCalls = { "¡A LA AZOTEA!", "¡A LA TORRE!", "¡AL DEBATE!", "¡A LA PLAZA!" };
+        private static readonly string[] StageCalls = { "¡A LA AZOTEA!", "¡A LA TORRE!", "¡AL DEBATE!", "¡A LA PLAZA!", "¡AL MALL!", "¡A LA CUMBRE!", "¡AL PALACIO!", "¡A VENTANILLA!" };
         public static readonly Color DefaultBackdrop = new Color(0.025f, 0.045f, 0.085f);
 
-        public static string NameOf(int layout, bool stageArt) => (stageArt ? StageNames : Names)[layout];
-        public static string DescriptionOf(int layout, bool stageArt) => (stageArt ? StageDescriptions : Descriptions)[layout];
+        /// <param name="stageArt">Production naming (2.5D). Slots past the beta's four only exist in production.</param>
+        public static string NameOf(int layout, bool stageArt) => (stageArt || layout >= Names.Length ? StageNames : Names)[layout];
+        public static string DescriptionOf(int layout, bool stageArt) => (stageArt || layout >= Names.Length ? StageDescriptions : Descriptions)[layout];
 
         private const string GeneratedName = "Arena geometry";
 
@@ -45,8 +59,41 @@ namespace CancelBrawl.Beta
         /// </summary>
         public readonly struct SideLayout
         {
-            public readonly float PlatformX, PlatformTop; public readonly string Decision;
-            public SideLayout(float x, float top, string decision) { PlatformX = x; PlatformTop = top; Decision = decision; }
+            /// <summary>Symmetric pair of one-way platforms (x = ±PlatformX, top at PlatformTop); none when PlatformX ≤ 0.</summary>
+            public readonly float PlatformX, PlatformTop;
+            /// <summary>Half width of the main floor (top at y = 0).</summary>
+            public readonly float FloorHalf;
+            /// <summary>Central one-way platform (top, half width); none when CenterTop ≤ 0.</summary>
+            public readonly float CenterTop, CenterHalf;
+            /// <summary>Half width of a gap in the middle of the main floor (a pit to the bottom KO); none when 0.</summary>
+            public readonly float PitHalf;
+            public readonly string Decision;
+            public SideLayout(float x, float top, string decision) : this(x, top, MainFloorHalfWidth, 0, 0, 0, decision) { }
+            public SideLayout(float x, float top, float floorHalf, float centerTop, float centerHalf, float pitHalf, string decision)
+            { PlatformX = x; PlatformTop = top; FloorHalf = floorHalf; CenterTop = centerTop; CenterHalf = centerHalf; PitHalf = pitHalf; Decision = decision; }
+            public bool HasPair => PlatformX > 0;
+            public bool HasCenter => CenterTop > 0;
+            public bool HasPit => PitHalf > 0;
+            public int OneWayCount => (HasPair ? 2 : 0) + (HasCenter ? 1 : 0);
+            public const float PairHalf = 1.9f;
+            /// <summary>Tops of the one-way platforms, as (x, top): left, right, then centre.</summary>
+            public Vector2[] PlatformTops
+            {
+                get
+                {
+                    var tops = new List<Vector2>();
+                    if (HasPair) { tops.Add(new Vector2(-PlatformX, PlatformTop)); tops.Add(new Vector2(PlatformX, PlatformTop)); }
+                    if (HasCenter) tops.Add(new Vector2(0, CenterTop));
+                    return tops.ToArray();
+                }
+            }
+            /// <summary>x on solid main floor at a fraction of its half width, pushed out of the pit if it falls inside.</summary>
+            public float FloorX(float fraction)
+            {
+                float x = fraction * FloorHalf;
+                if (HasPit && Mathf.Abs(x) < PitHalf + .7f) x = (x < 0 ? -1 : 1) * (PitHalf + .9f);
+                return x;
+            }
         }
 
         public static readonly SideLayout[] SideLayouts =
@@ -55,9 +102,17 @@ namespace CancelBrawl.Beta
             new SideLayout(6.0f, 3.6f, "Vertical: plataformas altas y separadas, solo con doble salto; los combos llegan antes al KO superior."),
             new SideLayout(5.6f, 2.1f, "Atriles bajos: un solo salto basta; se pelea cerca del suelo y de los bordes."),
             new SideLayout(10.0f, 2.2f, "Balcones sobre el vacío: recuperaciones arriesgadas y el control del borde pesa más."),
+            // Catalogue arenas (greybox until their art exists). Measured against the 2.5D metrics: single jump ≈ 2.3 m, double ≈ 4.3 m.
+            new SideLayout(6.4f, 3.2f, 9f, 1.5f, 1.6f, 0, "Tres alturas: el kiosco bajo del centro se toma con un salto y los entresuelos altos piden doble salto; se rota entre niveles."),
+            new SideLayout(6.0f, 2.4f, 9.5f, 3.3f, 2.0f, 1.75f, "Foso central: cruzar por la pasarela alta o pelear a un lado; caer al foso exige recuperarse o cuesta una vida."),
+            new SideLayout(0, 0, 6.5f, 3.0f, 2.6f, 0, "Salón corto y una sola tarima alta: dominar el centro alto; los bordes están cerca y cualquier lanzamiento lateral amenaza."),
+            new SideLayout(7.0f, 2.25f, 10f, 3.7f, 1.8f, 0, "Suelo largo con ventanillas bajas y un archivo alto central: cuesta más sacar al rival y gana quien controla la altura."),
         };
         public SideLayout CurrentSideLayout => SideLayouts[Mathf.Clamp(Layout, 0, SideLayouts.Length - 1)];
+        /// <summary>Half width of the stage prefabs' main floor (and of the first four layouts).</summary>
         public const float MainFloorHalfWidth = 8f;
+        /// <summary>Half width of this arena's main floor in 2.5D.</summary>
+        public float FloorHalfWidth => IsSideView ? CurrentSideLayout.FloorHalf : MainFloorHalfWidth;
 
         /// <summary>Area the camera always keeps in view in 2.5D: main floor plus every raised platform, even empty.</summary>
         public Rect PlayBounds
@@ -65,8 +120,9 @@ namespace CancelBrawl.Beta
             get
             {
                 var layout = CurrentSideLayout;
-                float half = Mathf.Max(MainFloorHalfWidth, layout.PlatformX + 2.3f);
-                return Rect.MinMaxRect(-half, -.5f, half, Mathf.Max(5.5f, layout.PlatformTop + 2.4f));
+                float half = Mathf.Max(layout.FloorHalf, layout.HasPair ? layout.PlatformX + 2.3f : 0, layout.HasCenter ? layout.CenterHalf + 2.3f : 0);
+                float top = Mathf.Max(layout.HasPair ? layout.PlatformTop : 0, layout.HasCenter ? layout.CenterTop : 0);
+                return Rect.MinMaxRect(-half, -.5f, half, Mathf.Max(5.5f, top + 2.4f));
             }
         }
         private Vector3[] spawns = new Vector3[0];
@@ -87,8 +143,8 @@ namespace CancelBrawl.Beta
         public bool UsesStageArt { get; private set; }
         /// <summary>Clear colour the group camera should use behind this court.</summary>
         public Color Backdrop { get; private set; } = DefaultBackdrop;
-        public string DisplayName => NameOf(Layout, UsesStageArt);
-        public string StartCall => (UsesStageArt ? StageCalls : Calls)[Layout];
+        public string DisplayName => NameOf(Layout, UsesStageArt || IsSideView);
+        public string StartCall => (UsesStageArt || IsSideView ? StageCalls : Calls)[Layout];
         public Vector3[] SpawnPoints => spawns;
         /// <summary>Half extents (x, z) of the side elimination volumes.</summary>
         public Vector2 OuterLimits { get; private set; } = new Vector2(23, 19);
@@ -120,7 +176,7 @@ namespace CancelBrawl.Beta
         public void Build(int layout, GameObject stage = null, bool sideView = false)
         {
             IsSideView = sideView;
-            Layout = Mathf.Clamp(layout, 0, Count - 1);
+            Layout = Mathf.Clamp(layout, 0, (sideView ? Count : BetaCount) - 1);
             UsesStageArt = stage != null;
             Backdrop = DefaultBackdrop;
             gameObject.name = UsesStageArt ? DisplayName : DisplayName + " · beta";
@@ -148,18 +204,116 @@ namespace CancelBrawl.Beta
         private void SideMetrics()
         {
             OuterLimits = new Vector2(22, 1); LowerLimit = -10; CameraClamp = new Vector2(19, 1);
-            spawns = new[] { P(-4, 0, 0), P(4, 0, 0), P(-6, 0, 0), P(6, 0, 0), P(0, 0, 0) };
+            var layout = CurrentSideLayout;
+            if (Layout < 4) { spawns = new[] { P(-4, 0, 0), P(4, 0, 0), P(-6, 0, 0), P(6, 0, 0), P(0, 0, 0) }; return; }
+            // Catalogue arenas: two near and two far on solid floor, the fifth on the centre platform when there is one.
+            float near = layout.FloorX(.4f), far = layout.FloorX(.78f);
+            spawns = new[] { P(-near, 0, 0), P(near, 0, 0), P(-far, 0, 0), P(far, 0, 0),
+                             layout.HasCenter && (layout.HasPit || layout.CenterTop < 2.2f) ? P(0, layout.CenterTop, 0) : P(0, 0, 0) };
         }
 
         private void BuildSideGreybox(Transform root)
         {
-            SideMetrics(); Palette(new Color(.12f,.17f,.27f), new Color(.2f,.9f,1), new Color(1,.3f,.6f));
-            Platform(root, "Side main", Vector3.zero, new Vector3(16,.8f,3), surface, cyan);
+            SideMetrics();
             var layout = CurrentSideLayout;
-            Platform(root, "Side left", new Vector3(-layout.PlatformX, layout.PlatformTop - .15f, 0), new Vector3(3.8f,.3f,3), bridge, pink);
-            Platform(root, "Side right", new Vector3(layout.PlatformX, layout.PlatformTop - .15f, 0), new Vector3(3.8f,.3f,3), bridge, pink);
-            OneWayPlatforms = new[] { root.Find("Side left").GetComponent<Collider>(), root.Find("Side right").GetComponent<Collider>() };
-            AddLight(root, Color.white, new Color(.5f,.55f,.65f), DefaultBackdrop);
+            // GDD §9: muted floors and backdrops, accents only on the edges, so the fighters keep the most saturation.
+            Color floor, accentA, accentB, key, ambient, walls = new Color(0.035f, 0.055f, 0.095f);
+            switch (Layout)
+            {
+                case 4: floor = new Color(.30f, .27f, .29f); accentA = new Color(.85f, .55f, .72f); accentB = new Color(.85f, .74f, .45f);
+                        key = new Color(1f, .93f, .9f); ambient = new Color(.48f, .45f, .5f); Backdrop = new Color(.24f, .22f, .26f); walls = new Color(.19f, .18f, .21f); break;
+                case 5: floor = new Color(.34f, .36f, .4f); accentA = new Color(.85f, .76f, .42f); accentB = new Color(.5f, .8f, .64f);
+                        key = new Color(.9f, .96f, 1f); ambient = new Color(.4f, .44f, .48f); Backdrop = new Color(.3f, .32f, .36f); walls = new Color(.24f, .26f, .3f); break;
+                case 6: floor = new Color(.32f, .26f, .22f); accentA = new Color(.8f, .66f, .42f); accentB = new Color(.62f, .42f, .5f);
+                        key = new Color(1f, .92f, .8f); ambient = new Color(.48f, .43f, .4f); Backdrop = new Color(.19f, .19f, .16f); walls = new Color(.15f, .15f, .12f); break;
+                case 7: floor = new Color(.3f, .32f, .33f); accentA = new Color(.55f, .7f, .78f); accentB = new Color(.78f, .74f, .6f);
+                        key = new Color(.96f, .98f, 1f); ambient = new Color(.5f, .52f, .54f); Backdrop = new Color(.31f, .33f, .35f); walls = new Color(.25f, .27f, .29f); break;
+                default: floor = new Color(.12f, .17f, .27f); accentA = new Color(.2f, .9f, 1); accentB = new Color(1, .3f, .6f);
+                        key = Color.white; ambient = new Color(.5f, .55f, .65f); Backdrop = DefaultBackdrop; break;
+            }
+            Palette(floor, accentA, accentB);
+            if (Layout >= 4) dark = Material("Walls", walls); // close to the backdrop: low background contrast (GDD §9)
+            float half = layout.FloorHalf;
+            if (layout.HasPit)
+            {
+                float width = half - layout.PitHalf;
+                Platform(root, "Side main left", new Vector3(-(layout.PitHalf + width * .5f), 0, 0), new Vector3(width, .8f, 3), surface, cyan);
+                Platform(root, "Side main right", new Vector3(layout.PitHalf + width * .5f, 0, 0), new Vector3(width, .8f, 3), surface, cyan);
+            }
+            else Platform(root, "Side main", Vector3.zero, new Vector3(half * 2, .8f, 3), surface, cyan);
+            var oneWay = new List<Collider>();
+            if (layout.HasPair)
+                foreach (int side in new[] { -1, 1 })
+                {
+                    string name = side < 0 ? "Side left" : "Side right";
+                    Platform(root, name, new Vector3(side * layout.PlatformX, layout.PlatformTop, 0), new Vector3(SideLayout.PairHalf * 2, OneWayThickness, 3), bridge, pink);
+                    oneWay.Add(root.Find(name).GetComponent<Collider>());
+                }
+            if (layout.HasCenter)
+            {
+                Platform(root, "Side centre", new Vector3(0, layout.CenterTop, 0), new Vector3(layout.CenterHalf * 2, OneWayThickness, 3), bridge, white);
+                oneWay.Add(root.Find("Side centre").GetComponent<Collider>());
+            }
+            OneWayPlatforms = oneWay.ToArray();
+            if (Layout >= 4) SideScenery(root, layout);
+            AddLight(root, key, ambient, Backdrop);
+        }
+
+        /// <summary>
+        /// Background of the catalogue greyboxes: no colliders, behind the plane (z ≥ 4), dark and low-contrast (GDD §9), and nothing
+        /// that continues a platform's line (a ledge without collision must not look walkable).
+        /// </summary>
+        private void SideScenery(Transform root, SideLayout layout)
+        {
+            float half = layout.FloorHalf;
+            // Fascia under the floor: shows the floor ends where its collision ends.
+            if (layout.HasPit)
+                foreach (int side in new[] { -1, 1 })
+                    Box(root, "Floor fascia", new Vector3(side * (layout.PitHalf + (half - layout.PitHalf) * .5f), -2.4f, 0), new Vector3(half - layout.PitHalf, 4f, 2.6f), dark, false);
+            else Box(root, "Floor fascia", new Vector3(0, -2.4f, 0), new Vector3(half * 2 - .1f, 4f, 2.6f), dark, false);
+            switch (Layout)
+            {
+                case 4: // Mall del Ego: storefronts with dimmed signs; the kiosk stands on a slim column.
+                    for (int i = 0; i < 9; i++)
+                    {
+                        float x = -24f + i * 6f;
+                        Box(root, "Storefront", new Vector3(x, 2.5f, 9f), new Vector3(5.2f, 9f, 1.5f), dark, false);
+                        Box(root, "Store sign", new Vector3(x, 6.2f, 8.2f), new Vector3(3.2f, .45f, .05f), i % 2 == 0 ? cyan : pink, false);
+                    }
+                    Box(root, "Kiosk column", new Vector3(0, .6f, .9f), new Vector3(.35f, 1.2f, .35f), dark, false);
+                    break;
+                case 5: // Cumbre de la Liquidez: cheap auditorium, chart bars and a cardboard rocket screen, all far back.
+                    for (int i = 0; i < 12; i++)
+                    {
+                        float x = -22f + i * 4f, height = 2f + (i * 5) % 7;
+                        Box(root, "Chart bar", new Vector3(x, height * .5f - 1f, 10f), new Vector3(2.4f, height, .6f), i % 3 == 0 ? bridge : dark, false);
+                    }
+                    Box(root, "Rocket screen", new Vector3(0, 8.5f, 11f), new Vector3(9f, 5f, .2f), dark, false);
+                    Box(root, "Rocket", new Vector3(0, 8.5f, 10.8f), new Vector3(1.2f, 3.4f, .1f), cyan, false);
+                    foreach (int side in new[] { -1, 1 })
+                        Box(root, "Bridge cable", new Vector3(side * 1.95f, layout.CenterTop + 2.6f, .9f), new Vector3(.06f, 5f, .06f), dark, false);
+                    break;
+                case 6: // Palacio del Privilegio Perpetuo: tapestries and a stopped clock behind the single high dais.
+                    for (int i = 0; i < 6; i++)
+                        Box(root, "Tapestry", new Vector3(-17.5f + i * 7f, 4f, 9f), new Vector3(3.6f, 7f, .2f), i % 2 == 0 ? Material("Tapestry", new Color(.2f, .26f, .28f)) : dark, false); // cool slate: away from skin, hair and pink outfits
+                    Box(root, "Clock face", new Vector3(0, 9.5f, 10f), new Vector3(4.2f, 4.2f, .2f), dark, false);
+                    Box(root, "Clock hand hour", new Vector3(0, 10.1f, 9.85f), new Vector3(.18f, 1.3f, .05f), cyan, false);
+                    Box(root, "Clock hand minute", new Vector3(.6f, 9.5f, 9.85f), new Vector3(1.4f, .14f, .05f), cyan, false);
+                    foreach (int side in new[] { -1, 1 })
+                        Box(root, "Dais pillar", new Vector3(side * (layout.CenterHalf - .4f), layout.CenterTop * .5f - .15f, 1.2f), new Vector3(.45f, layout.CenterTop - .3f, .45f), Material("Dais stone", new Color(.42f, .4f, .36f)), false); // mid stone: dark outlines stay visible in front of it
+                    break;
+                case 7: // Centro de Cumplimiento: service windows, giant folders and a tall archive cabinet.
+                    for (int i = 0; i < 8; i++)
+                    {
+                        float x = -21f + i * 6f;
+                        Box(root, "Service window", new Vector3(x, 3f, 9f), new Vector3(4.6f, 3.4f, .4f), dark, false);
+                        Box(root, "Window number", new Vector3(x, 5.1f, 8.75f), new Vector3(1.2f, .45f, .05f), i % 2 == 0 ? cyan : pink, false);
+                    }
+                    Box(root, "Archive cabinet", new Vector3(0, layout.CenterTop * .5f - .2f, 1.4f), new Vector3(layout.CenterHalf * 1.6f, layout.CenterTop - .4f, .6f), Material("Cabinet", new Color(.42f, .44f, .46f)), false);
+                    foreach (int side in new[] { -1, 1 })
+                        Box(root, "Giant folder", new Vector3(side * 13f, 2.5f, 7f), new Vector3(2.4f, 5f, .6f), pink, false);
+                    break;
+            }
         }
 
         private void AdaptSideStage(Transform root)

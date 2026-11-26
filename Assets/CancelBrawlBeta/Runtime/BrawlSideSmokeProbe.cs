@@ -36,7 +36,9 @@ namespace CancelBrawl.Beta
         private void Check(bool value, string name)
         { (value ? report.checks : report.failures).Add(name); Debug.Log("SIDE_CHECK_" + (value ? "PASS " : "FAIL ") + name); }
         // The 30-minute session needs more than the usual 40-minute ceiling once startup and its last match are added.
-        private static readonly float TimeLimit = Array.IndexOf(Environment.GetCommandLineArgs(), "-soak-session") >= 0 ? BrawlPerfSuite.SoakSeconds + 1500 : 2400;
+        // arena-stress plays 20 matches in each of the eight arenas: twice the time of the other suites.
+        private static readonly float TimeLimit = Array.IndexOf(Environment.GetCommandLineArgs(), "-soak-session") >= 0 ? BrawlPerfSuite.SoakSeconds + 1500
+            : Array.IndexOf(Environment.GetCommandLineArgs(), "-arena-stress") >= 0 ? 5400 : 2400;
         private void Update() { if (!finished && Time.realtimeSinceStartup - started > TimeLimit) { Check(false, "Tiempo máximo agotado"); Finish(); } }
         private void Finish()
         {
@@ -201,9 +203,9 @@ namespace CancelBrawl.Beta
             {
                 match.ArenaIndex=stage; match.SelectedCharacter=0; match.OpponentCount=4; match.StartMatch();
                 yield return new WaitForSeconds(3.3f);
-                bool valid=match.Fighters.Length==5 && match.Arena.OneWayPlatforms.Length==2;
+                bool valid=match.Fighters.Length==5 && match.Arena.OneWayPlatforms.Length==match.Arena.CurrentSideLayout.OneWayCount;
                 foreach(var fighter in match.Fighters) valid &= fighter.Grounded && fighter.Stocks==3 && Mathf.Abs(fighter.transform.position.z)<.001f;
-                Check(valid,"Arena " + stage + ": cinco participantes sobre el plano y dos plataformas atravesables");
+                Check(valid,"Arena " + stage + ": cinco participantes sobre el plano y " + match.Arena.CurrentSideLayout.OneWayCount + " plataformas atravesables");
                 Check(Camera.main.orthographic && Vector3.Dot(Camera.main.transform.forward,Vector3.forward)>.999f,"Arena " + stage + ": cámara lateral sin inclinación");
                 yield return new WaitForEndOfFrame(); ScreenCapture.CaptureScreenshot(Path.Combine(output,"stage-"+stage+".png"));
             }

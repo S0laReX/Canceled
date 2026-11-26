@@ -1,0 +1,73 @@
+{
+    "shaderFound": true,
+    "fighterRenderers": 5,
+    "toonRenderers": 5,
+    "rows": [
+        {
+            "character": "Don Decreto",
+            "skin": 0,
+            "edgeLuminance": 0.045660052448511127,
+            "innerLuminance": 0.33887746930122378
+        },
+        {
+            "character": "Don Decreto",
+            "skin": 1,
+            "edgeLuminance": 0.04349123314023018,
+            "innerLuminance": 0.24659721553325654
+        },
+        {
+            "character": "Lola Loop",
+            "skin": 0,
+            "edgeLuminance": 0.04460492730140686,
+            "innerLuminance": 0.5389549732208252
+        },
+        {
+            "character": "Lola Loop",
+            "skin": 1,
+            "edgeLuminance": 0.05484916642308235,
+            "innerLuminance": 0.38740789890289309
+        },
+        {
+            "character": "Lola Loop",
+            "skin": 2,
+            "edgeLuminance": 0.05318517982959747,
+            "innerLuminance": 0.3792872726917267
+        },
+        {
+            "character": "Coach Tóxico",
+            "skin": 0,
+            "edgeLuminance": 0.045034028589725497,
+            "innerLuminance": 0.45674705505371096
+        },
+        {
+            "character": "Coach Tóxico",
+            "skin": 1,
+            "edgeLuminance": 0.04496584087610245,
+            "innerLuminance": 0.2369651347398758
+        },
+        {
+            "character": "Cripto King",
+            "skin": 0,
+            "edgeLuminance": 0.04259294271469116,
+            "innerLuminance": 0.40448275208473208
+        },
+        {
+            "character": "Cripto King",
+            "skin": 1,
+            "edgeLuminance": 0.06844384223222733,
+            "innerLuminance": 0.2879239022731781
+        },
+        {
+            "character": "Tío Antena",
+            "skin": 0,
+            "edgeLuminance": 0.04724198579788208,
+            "innerLuminance": 0.40007129311561587
+        },
+        {
+            "character": "Tío Antena",
+            "skin": 1,
+            "edgeLuminance": 0.050330761820077899,
+            "innerLuminance": 0.3386942446231842
+        }
+    ]
+}

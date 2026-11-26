@@ -4,6 +4,29 @@
 
 **Empezar por `CHECKLIST_2p5D.md`**, que ahora sigue las 63 tareas del **GDD 2.0** (`Docs/Produccion_2026-11-22/FUNADOS_GDD_2.0.docx`, vigente desde el 22/11/2026). Los apartados 0.5.1/0.5.0/0.4.1 siguientes son historial.
 
+## Relevo 0.7.7 (las cuatro arenas restantes del catálogo)
+
+- Versión 0.7.7. Recuento 53/63.
+- Cuatro arenas greybox jugables en 2.5D (ranuras 4 a 7 de `BrawlArena`):
+  - Mall del Ego
+  - Cumbre de la Liquidez, con foso
+  - Palacio del Privilegio
+  - Centro de Cumplimiento
+- Diseño, distribuciones y revisión de nombres en `Docs/Produccion_2026-11-25/Arenas_catalogo.md`.
+- Producción 2.5D usa `BrawlArena.Count` (8); la beta 3D usa `BetaCount` (4). `BrawlMatch.ArenaCount` elige entre las dos.
+- `SideLayout` añade suelo, tarima central y foso. `PlatformTops` y `FloorX` alimentan las apariciones y las pruebas.
+- El menú muestra dos filas de cuatro arenas y la descripción de la arena elegida.
+- Cuatro pistas de música nuevas.
+- Arreglos:
+  - `BrawlCamera.fadeCache` purga las copias de materiales destruidos (fuga al cambiar entre arenas greybox).
+  - `-arena-stress` tiene un límite de 5400 s.
+  - Paletas ajustadas hasta pasar `-read-smoke`.
+- 23 suites pasan (`Evidence/Production-0.7.7/suites.txt`).
+- Abierto:
+  - Perf puede dar 0 KO de los bots en Estudio de Debate en 60 s; es azar, porque las corridas previas dan entre 1 y 5.
+  - Las arenas nuevas no tienen arte de producción: generarlo con Meshy requiere aprobar el coste.
+  - Falta calibrar las arenas nuevas con personas.
+
 ## Relevo perf/rendimiento: lectura en cámara lateral y fondo atenuado (sobre 0.7.4)
 
 - Suite nueva `-read-smoke` (`BrawlReadChecks.cs`): 20 comprobaciones sobre 4 arenas, 11 aspectos y 88 casos. Desde el 25/11/2026 el solapamiento de perfiles es una advertencia (umbral propio, no del GDD): Read pasa si se cumplen las reglas del GDD.

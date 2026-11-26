@@ -99,7 +99,7 @@ namespace CancelBrawl.Beta
             float maxCorrelation = 0;
             for (int a = 0; a < datas.Count; a++)
                 for (int b = a + 1; b < datas.Count; b++) maxCorrelation = Mathf.Max(maxCorrelation, Mathf.Abs(Correlation(datas[a], datas[b], BrawlMusic.Rate * 4)));
-            check(bpms.Count == BrawlMusic.TrackCount && maxCorrelation < .5f, $"Las cinco pistas son distintas: tempos diferentes y correlación máxima {maxCorrelation:0.00} entre ellas");
+            check(bpms.Count == BrawlMusic.TrackCount && maxCorrelation < .5f, $"Las {BrawlMusic.TrackCount} pistas son distintas: tempos diferentes y correlación máxima {maxCorrelation:0.00} entre ellas");
             check(audible, "En cualquier pista al 100 %, el golpe ligero y la esquiva siguen destacando (nivel ×1,5 o, la esquiva, 4 veces más aguda)");
         }
 

@@ -1,0 +1,44 @@
+FUNADOS 0.7.7: 23 suites (Windows, D3D11, 1280x720, sin mando físico)
+
+Corrida completa (build con las arenas 4-7, antes de los dos arreglos de abajo):
+Power exit=0 version=0.7.7 passed=True checks=32 failures=0
+Moves exit=0 version=0.7.7 passed=True checks=21 failures=0
+Kits exit=0 version=0.7.7 passed=True checks=91 failures=0
+Recovery exit=0 version=0.7.7 passed=True checks=16 failures=0
+Camera exit=0 version=0.7.7 passed=True checks=27 failures=0
+Coyote exit=0 version=0.7.7 passed=True checks=5 failures=0
+Arena exit=0 version=0.7.7 passed=True checks=91 failures=0
+SideControls exit=0 version=0.7.7 passed=True checks=157 failures=0
+Side exit=0 version=0.7.7 passed=True checks=470 failures=0
+Controls exit=0 version=0.3.0 passed=True checks=125 failures=0
+Full exit=0 version=0.3.0 passed=True checks=208 failures=0
+Audio exit=0 version=0.7.7 passed=True checks=25 failures=0
+Ui exit=0 version=0.7.7 passed=True checks=31 failures=0
+Hud exit=0 version=0.7.7 passed=True checks=15 failures=0
+Perf exit=1 version=0.7.7 passed=False checks=66 failures=1
+   FAIL: Cambiar de arena no deja objetos atrás: 5 ciclos por las 8 arenas, +12 objetos de Unity tras 3 ciclos (Material «Beta Bridge (atenuado)» +6; Material «Beta Floor (atenuado)» +6)
+SoakShort exit=0 version=0.7.7 passed=True checks=6 failures=0
+ArenaStress exit=1 version=0.7.7 passed=False checks=37 failures=1
+   FAIL: Tiempo máximo agotado
+Fx exit=0 version=0.7.7 passed=True checks=33 failures=0
+Sfx exit=0 version=0.7.7 passed=True checks=18 failures=0
+Toon exit=0 version=0.7.7 passed=True checks=9 failures=0
+Anim exit=0 version=0.7.7 passed=True checks=15 failures=0
+Music exit=0 version=0.7.7 passed=True checks=34 failures=0
+Read exit=0 version=0.7.7 passed=True checks=25 failures=0
+
+Arreglos tras la corrida completa:
+- Perf: BrawlCamera.fadeCache conservaba las copias «(atenuado)» de materiales destruidos (las arenas greybox crean materiales nuevos en cada carga). Ahora se purgan.
+- ArenaStress: con ocho arenas superaba el límite general de 2400 s. -arena-stress tiene ahora 5400 s.
+
+Repetición sobre el build final (Camera, Side, Perf y ArenaStress):
+Camera exit=0 version=0.7.7 passed=True checks=27 failures=0
+Side exit=0 version=0.7.7 passed=True checks=470 failures=0
+Perf exit=1 version=0.7.7 passed=False checks=66 failures=1
+   FAIL: Estudio de Debate: 5 luchadores bot a velocidad real 60 s, simulación 60.0 Hz (0 KO, 72 supers, efectos completos)
+ArenaStress exit=0 version=0.7.7 passed=True checks=49 failures=0
+Perf, segunda repetición: el fallo anterior fue 0 KO de los bots en Estudio de Debate en 60 s; es azar, porque las corridas previas dan entre 1 y 5 KO en esa arena:
+Perf exit=0 version=0.7.7 passed=True checks=67 failures=0
+
+Read: pasa tras ajustar paletas (paredes medias en Mall, Cumbre y Centro; Palacio oliva con tapices pizarra; pilares y archivador en piedra media).
+Controls y Full informan 0.3.0: es la versión de la beta 3D histórica, como en las entregas anteriores.

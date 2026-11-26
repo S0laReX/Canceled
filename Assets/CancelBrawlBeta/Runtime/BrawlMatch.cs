@@ -21,7 +21,7 @@ namespace CancelBrawl.Beta
         public bool ShowCombatVolumes { get; set; } = true;
         public float TrainingDamage { get; private set; }
         public string Title => IsProduction ? "FUNADOS" : "CANCEL BRAWL";
-        public const string ProductionVersion = "0.7.6";
+        public const string ProductionVersion = "0.7.7";
         public string DisplayVersion => IsProduction ? ProductionVersion : Version;
         public string CharacterName(int character) => !IsProduction ? BrawlRoster.Get(character).Name :
             character == 0 ? "Don Promesio" : character == 1 ? "Lola Viral" : BrawlRoster.Get(character).Name;
@@ -74,6 +74,8 @@ namespace CancelBrawl.Beta
         private readonly int[] resolvedSkins = new int[MaxPlayers];
         public int OpponentCount { get; set; } = 1;
         public int ArenaIndex { get; set; }
+        /// <summary>Arenas this mode offers: eight in production 2.5D, the beta's four in the legacy 3D regression.</summary>
+        public int ArenaCount => IsSideView ? BrawlArena.Count : BrawlArena.BetaCount;
         public bool LocalCoop { get => localCoop; set { if (localCoop == value) return; localCoop = value; SaveOptions(); } }
         public bool P1UsesGamepad { get => p1UsesGamepad; set { if (p1UsesGamepad == value) return; p1UsesGamepad = value; SaveOptions(); } }
         private bool localCoop, p1UsesGamepad;
@@ -197,7 +199,7 @@ namespace CancelBrawl.Beta
 
         private void BuildArena(int index)
         {
-            index = Mathf.Clamp(index, 0, BrawlArena.Count - 1);
+            index = Mathf.Clamp(index, 0, ArenaCount - 1);
             if (Arena != null && Arena.Layout == index) return;
             if (Arena != null) { Arena.gameObject.SetActive(false); Destroy(Arena.gameObject); }
             Arena = new GameObject("Cancha").AddComponent<BrawlArena>();
@@ -259,7 +261,7 @@ namespace CancelBrawl.Beta
         private void BeginRound()
         {
             CleanupRound();
-            ArenaIndex = Mathf.Clamp(ArenaIndex, 0, BrawlArena.Count - 1);
+            ArenaIndex = Mathf.Clamp(ArenaIndex, 0, ArenaCount - 1);
             BuildArena(ArenaIndex);
             if (BrawlBackgroundGrade.Enabled) BrawlBackgroundGrade.Apply(Arena, groupCamera.View); else BrawlBackgroundGrade.Off(); // GDD §9, at load only
             BrawlAudio.PlayMusic(BrawlMusic.ArenaTrack(ArenaIndex)); BrawlSubtitles.Clear();

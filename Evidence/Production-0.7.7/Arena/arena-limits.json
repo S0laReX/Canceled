@@ -1,0 +1,85 @@
+{
+    "version": "0.7.7",
+    "arenas": [
+        {
+            "arena": "Azotea Influencer",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        },
+        {
+            "arena": "Torre Corporativa",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        },
+        {
+            "arena": "Estudio de Debate",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        },
+        {
+            "arena": "Plaza Colonial",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.0
+        },
+        {
+            "arena": "Mall del Ego",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 3.419999361038208
+        },
+        {
+            "arena": "Cumbre de la Liquidez",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 3.609999895095825
+        },
+        {
+            "arena": "Palacio del Privilegio",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 2.4699995517730715
+        },
+        {
+            "arena": "Centro de Cumplimiento",
+            "left": -22.0,
+            "right": 22.0,
+            "bottom": -10.0,
+            "top": 20.0,
+            "cameraClamp": 19.0,
+            "spawns": 5,
+            "minSpacing": 3.799999713897705
+        }
+    ]
+}

@@ -1,0 +1,97 @@
+{
+    "version": "0.7.7",
+    "startedUtc": "2026-11-26T10:09:37.2410948Z",
+    "targetSeconds": 120.0,
+    "realSeconds": 187.16976928710938,
+    "matches": 2,
+    "rematches": 1,
+    "menuReturns": 0,
+    "arenaChanges": 0,
+    "kos": 6,
+    "errors": 0,
+    "hitchesOver100ms": 0,
+    "hitchesOver250ms": 0,
+    "lockups": 0,
+    "avgFps": 59.94969177246094,
+    "low1Fps": 55.75530242919922,
+    "maxFrameMs": 51.678096771240237,
+    "longestMatchGameSeconds": 90.00474548339844,
+    "frameMs": {
+        "median": 16.666950225830079,
+        "p95": 16.67409896850586,
+        "p99": 16.735097885131837,
+        "max": 51.678096771240237,
+        "mean": 16.679637908935548,
+        "samples": 11200
+    },
+    "cpuMainMs": {
+        "median": 3.3811001777648927,
+        "p95": 4.505640029907227,
+        "p99": 5.655776500701904,
+        "max": 1122.0767822265625,
+        "mean": 3.580164909362793,
+        "samples": 11200
+    },
+    "gpuMs": {
+        "median": 2.6521599292755129,
+        "p95": 4.658175945281982,
+        "p99": 5.03916597366333,
+        "max": 7.8540802001953129,
+        "mean": 2.8622024059295656,
+        "samples": 11195
+    },
+    "matchSeconds": 90.0,
+    "hitches": [],
+    "pauses": [],
+    "maxGameObjectGrowth": 0,
+    "maxAllObjectGrowth": 0,
+    "managedGrowthMb": 0.17578125,
+    "processGrowthMb": -1.82421875,
+    "managedSlopeMbPer10Min": 1.1274926662445069,
+    "processSlopeMbPer10Min": -11.701883316040039,
+    "problems": [],
+    "samples": [
+        {
+            "match": 1,
+            "arena": "Azotea Influencer",
+            "kind": "inicio",
+            "realSeconds": 93.61907196044922,
+            "matchGameSeconds": 90.00474548339844,
+            "finishedByStocks": false,
+            "kos": 4,
+            "memory": {
+                "managedMb": 4.3359375,
+                "gcReservedMb": 63.23828125,
+                "unityTotalUsedMb": 231.71217346191407,
+                "unityTotalReservedMb": 363.19140625,
+                "systemUsedMb": 502.671875,
+                "processPrivateMb": 940.95703125,
+                "processWorkingSetMb": 502.671875,
+                "gameObjects": 159,
+                "allObjects": 4559
+            },
+            "growth": ""
+        },
+        {
+            "match": 2,
+            "arena": "Azotea Influencer",
+            "kind": "revancha",
+            "realSeconds": 187.16221618652345,
+            "matchGameSeconds": 90.00474548339844,
+            "finishedByStocks": false,
+            "kos": 2,
+            "memory": {
+                "managedMb": 4.51171875,
+                "gcReservedMb": 63.23828125,
+                "unityTotalUsedMb": 232.04075622558595,
+                "unityTotalReservedMb": 363.19140625,
+                "systemUsedMb": 500.765625,
+                "processPrivateMb": 939.1328125,
+                "processWorkingSetMb": 500.765625,
+                "gameObjects": 159,
+                "allObjects": 4559
+            },
+            "growth": ""
+        }
+    ]
+}

@@ -58,7 +58,7 @@ namespace CancelBrawl.Beta
                         lost[sideIndex++] = before - p2.Stocks;
                     }
                     check(Array.TrueForAll(lost, l => l == 1), $"{name}: cruzar cada uno de los cuatro límites descuenta exactamente una vida");
-                    check(side > arena.CameraClamp.x && side - 8 >= 10 && top - 0 >= 15 && bottom <= -8,
+                    check(side > arena.CameraClamp.x && side - arena.FloorHalfWidth >= 10 && top - 0 >= 15 && bottom <= -8,
                         $"{name}: límites coherentes con la arena: más allá del encuadre lateral, ±{side} m, {bottom} m abajo y {top} m arriba");
 
                     // ── ARENA-359: spawns ──
@@ -81,13 +81,22 @@ namespace CancelBrawl.Beta
                     check(grounded && clear, $"{name}: cada aparición está sobre suelo real y no se solapa con la geometría");
                     bool thin = true;
                     var layout = arena.CurrentSideLayout;
+                    var tops = layout.PlatformTops;
+                    thin &= arena.OneWayPlatforms.Length == tops.Length;
                     foreach (var platform in arena.OneWayPlatforms)
-                        thin &= platform && platform.bounds.size.y <= BrawlArena.OneWayThickness + .05f && Mathf.Abs(platform.bounds.max.y - layout.PlatformTop) < .15f &&
-                                Mathf.Abs(Mathf.Abs(platform.bounds.center.x) - layout.PlatformX) < .2f;
+                    {
+                        bool placed = false;
+                        if (platform) foreach (var t in tops) placed |= Mathf.Abs(platform.bounds.max.y - t.y) < .15f && Mathf.Abs(platform.bounds.center.x - t.x) < .2f;
+                        thin &= placed && platform.bounds.size.y <= BrawlArena.OneWayThickness + .05f;
+                    }
+                    string where = string.Join(", ", Array.ConvertAll(tops, t => $"x {t.x:0.#} m a {t.y:0.##} m"));
                     bool lineClear = !Physics.Linecast(new Vector3(-6, .85f, 0), new Vector3(-3.6f, .85f, 0), 1, QueryTriggerInteraction.Ignore) &&
                                      !Physics.Linecast(new Vector3(6, .85f, 0), new Vector3(3.6f, .85f, 0), 1, QueryTriggerInteraction.Ignore) &&
                                      !Physics.CheckSphere(new Vector3(-4.8f, .85f, 0), .22f, 1, QueryTriggerInteraction.Ignore);
-                    check(thin && lineClear, $"{name}: plataformas atravesables finas en su sitio (±{layout.PlatformX} m, cara a {layout.PlatformTop} m); bajo ellas nada invisible bloquea golpes ni proyectiles");
+                    check(thin && lineClear, $"{name}: {tops.Length} plataformas atravesables finas en su sitio ({where}); bajo ellas nada invisible bloquea golpes ni proyectiles");
+                    if (layout.HasPit)
+                        check(!Physics.Raycast(new Vector3(0, 1, 0), Vector3.down, 12, 1, QueryTriggerInteraction.Ignore) && Physics.Raycast(new Vector3(layout.PitHalf + .3f, 1, 0), Vector3.down, 2, 1, QueryTriggerInteraction.Ignore),
+                            $"{name}: el foso central (±{layout.PitHalf} m) no tiene suelo y sus bordes sí: caer en él lleva al límite inferior");
 
                     // ── Distinct layout (GDD 2.0 §9): reachable with a double jump, a drop leads down, always in view ──
                     var empty = new bool[1];
@@ -98,23 +107,25 @@ namespace CancelBrawl.Beta
                             Vector3 v = match.GroupCamera.View.WorldToViewportPoint(corner);
                             platformsVisible &= v.x >= 0 && v.x <= 1 && v.y >= 0 && v.y <= 1 - match.GroupCamera.TopReserve + .01f;
                         }
-                    check(platformsVisible, $"{name}: la cámara muestra las dos plataformas aunque estén vacías");
+                    check(platformsVisible, $"{name}: la cámara muestra las {tops.Length} plataformas aunque estén vacías");
 
                     match.ReturnToMenu(); match.SelectedCharacter = 2; match.ArenaIndex = index; match.StartTraining(); match.ShowCombatVolumes = false;
                     yield return null;
                     var climber = match.Fighters[0];
                     match.Fighters[1].ResetPractice(new Vector3(-2, .05f, 0), 0);
-                    bool[] reached = new bool[2];
-                    for (int s = 0; s < 2; s++)
+                    bool[] reached = new bool[tops.Length];
+                    for (int s = 0; s < tops.Length; s++)
                     {
-                        float dir = s == 0 ? 1 : -1;
-                        float start = Mathf.Min(layout.PlatformX - 2.2f, BrawlArena.MainFloorHalfWidth - .6f) * dir;
+                        float targetX = tops[s].x, targetTop = tops[s].y;
+                        // Pair platforms: start 2.2 m inside them. Centre: start just beside it (and beside the pit).
+                        float start = targetX != 0 ? Mathf.Min(Mathf.Abs(targetX) - 2.2f, layout.FloorHalf - .6f) * Mathf.Sign(targetX)
+                                                   : -(Mathf.Max(layout.CenterHalf, layout.PitHalf) + .6f);
                         climber.ResetPractice(new Vector3(start, .05f, 0), 0); yield return new WaitForSeconds(.35f);
                         bool first = false, second = false;
                         for (float t = 0; t < 2.5f; t += Time.fixedDeltaTime)
                         {
                             float x = climber.transform.position.x;
-                            var command = new BrawlCommand { Move = new Vector2(Mathf.Abs(x - layout.PlatformX * dir) > .4f ? Mathf.Sign(layout.PlatformX * dir - x) : 0, 0) };
+                            var command = new BrawlCommand { Move = new Vector2(Mathf.Abs(x - targetX) > .4f ? Mathf.Sign(targetX - x) : 0, 0) };
                             // One press per jump: the first on the ground, the second near the apex.
                             if (!first) { command.Jump = true; first = true; }
                             else if (!second && climber.Velocity.y < .5f && !climber.Grounded) { command.Jump = true; second = true; }
@@ -122,17 +133,18 @@ namespace CancelBrawl.Beta
                             yield return new WaitForFixedUpdate();
                             if (second && climber.Grounded) break;
                         }
-                        reached[s] = climber.Grounded && Mathf.Abs(climber.transform.position.y - layout.PlatformTop) < .25f;
+                        reached[s] = climber.Grounded && Mathf.Abs(climber.transform.position.y - targetTop) < .25f;
                         climber.ClearInput();
                     }
-                    check(reached[0] && reached[1], $"{name}: el kit de peor alcance sube a ambas plataformas con doble salto");
+                    check(Array.TrueForAll(reached, r => r), $"{name}: el kit de peor alcance sube a las {tops.Length} plataformas con doble salto");
 
-                    climber.ResetPractice(new Vector3(layout.PlatformX, layout.PlatformTop + .05f, 0), 0); yield return new WaitForSeconds(.4f);
+                    Vector2 dropFrom = tops[layout.HasPair ? 1 : 0];
+                    climber.ResetPractice(new Vector3(dropFrom.x, dropFrom.y + .05f, 0), 0); yield return new WaitForSeconds(.4f);
                     bool onTop = climber.Grounded;
                     climber.Submit(new BrawlCommand { Move = Vector2.down, Jump = true });
                     float lowest = climber.transform.position.y;
                     for (float t = 0; t < 1.2f; t += Time.fixedDeltaTime) { yield return new WaitForFixedUpdate(); lowest = Mathf.Min(lowest, climber.transform.position.y); }
-                    bool overVoid = layout.PlatformX - 1.9f > BrawlArena.MainFloorHalfWidth - .4f;
+                    bool overVoid = (dropFrom.x != 0 ? Mathf.Abs(dropFrom.x) - BrawlArena.SideLayout.PairHalf > layout.FloorHalf - .4f : layout.HasPit);
                     bool dropOk = onTop && (overVoid ? lowest < -1f : climber.Grounded && climber.transform.position.y < .3f);
                     check(dropOk, overVoid ? $"{name}: bajar del balcón lleva al vacío (riesgo real de caída)" : $"{name}: bajar de la plataforma lleva al suelo principal");
                     match.SelectedCharacter = 0;
@@ -149,7 +161,7 @@ namespace CancelBrawl.Beta
                     int free = 2;
                     for (int i = 0; i < spawns.Length; i++)
                         if (i != free) traps.Add(BrawlTrap.Create(match, token, spawns[i]).gameObject);
-                    foreach (var other in match.Fighters) if (other != match.Fighters[3]) other.RespawnAt(new Vector3(spawns[free].x > 0 ? -7.5f : 7.5f, .05f, 0), false);
+                    foreach (var other in match.Fighters) if (other != match.Fighters[3]) other.RespawnAt(new Vector3((spawns[free].x > 0 ? -1 : 1) * (layout.FloorHalf - 1f), .05f, 0), false);
                     var victim = match.Fighters[3];
                     victim.RespawnAt(new Vector3(0, bottom - 1, 0), false);
                     yield return new WaitForSeconds(match.Settings.respawnSeconds + .3f);
@@ -160,11 +172,17 @@ namespace CancelBrawl.Beta
                     report.arenas.Add(row);
                 }
                 File.WriteAllText(Path.Combine(output, "arena-limits.json"), JsonUtility.ToJson(report, true));
-                bool layoutsDiffer = true;
+                bool layoutsDiffer = true; float closest = float.PositiveInfinity;
                 for (int a = 0; a < BrawlArena.SideLayouts.Length; a++)
                     for (int b = a + 1; b < BrawlArena.SideLayouts.Length; b++)
-                        layoutsDiffer &= Mathf.Abs(BrawlArena.SideLayouts[a].PlatformX - BrawlArena.SideLayouts[b].PlatformX) + Mathf.Abs(BrawlArena.SideLayouts[a].PlatformTop - BrawlArena.SideLayouts[b].PlatformTop) >= .8f;
-                check(layoutsDiffer && BrawlArena.SideLayouts.Length == BrawlArena.Count, "Las cuatro arenas tienen distribuciones distintas (cada par difiere al menos 0,8 m en posición o altura)");
+                    {
+                        var p = BrawlArena.SideLayouts[a]; var q = BrawlArena.SideLayouts[b];
+                        float d = Mathf.Abs(p.PlatformX - q.PlatformX) + Mathf.Abs(p.PlatformTop - q.PlatformTop) + Mathf.Abs(p.FloorHalf - q.FloorHalf) +
+                                  Mathf.Abs(p.CenterTop - q.CenterTop) + Mathf.Abs(p.CenterHalf - q.CenterHalf) + Mathf.Abs(p.PitHalf - q.PitHalf);
+                        closest = Mathf.Min(closest, d); layoutsDiffer &= d >= .8f;
+                    }
+                check(layoutsDiffer && BrawlArena.SideLayouts.Length == BrawlArena.Count,
+                    $"Las {BrawlArena.Count} arenas tienen distribuciones distintas (suelo, plataformas y foso: cada par difiere al menos 0,8 m; el par más parecido, {closest:0.0} m)");
             }
             finally
             {
